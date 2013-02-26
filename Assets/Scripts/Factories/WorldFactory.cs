@@ -607,9 +607,9 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	}
 	
 	//get xsmex
-	public Vector3 GetXandYandAngleSmexForZ(float inz){
-		Vector3 returnXandYandAngle=terrainElementFactory.GetXandYandAngleSmexForZ(inz);
-		addDotToPathIndicator(new Vector3(returnXandYandAngle.x,returnXandYandAngle.y,inz));
+	public Vector3 GetXandYandAngleSmexForZ(Vector3 inposition){
+		Vector3 returnXandYandAngle=terrainElementFactory.GetXandYandAngleSmexForZ(inposition);
+		//addDotToPathIndicator(new Vector3(returnXandYandAngle.x,returnXandYandAngle.y,inposition.z));
 		
 		
 		return returnXandYandAngle;
@@ -631,7 +631,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	
 	public override Vector3 GetPrevTerrainPos()
 	{
-		TerrainTag prev=terrainElementFactory.GetCurrentTerrainForZ(GlobalOptions.GetPlayerScript().GetCharacterPosition().z).GetComponent<TerrainTag>().GetPrevTerrain();
+		TerrainTag prev=terrainElementFactory.GetCurrentTerrainForZ(GlobalOptions.GetPlayerScript().GetCharacterPosition()).GetComponent<TerrainTag>().GetPrevTerrain();
 		
 		if(prev)
 		{
@@ -649,12 +649,12 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	
 	public override Vector3 GetCurTerrainPos()
 	{
-		return terrainElementFactory.GetCurrentTerrainForZ(GlobalOptions.GetPlayerScript().GetCharacterPosition().z).transform.position;
+		return terrainElementFactory.GetCurrentTerrainForZ(GlobalOptions.GetPlayerScript().GetCharacterPosition()).transform.position;
 	}
 	
 	public override float GetTerrainLength()
 	{
-		return terrainElementFactory.GetCurrentTerrainForZ(GlobalOptions.GetPlayerScript().GetCharacterPosition().z).GetComponent<TerrainTag>().sizeOfPlane;
+		return terrainElementFactory.GetCurrentTerrainForZ(GlobalOptions.GetPlayerScript().GetCharacterPosition()).GetComponent<TerrainTag>().sizeOfPlane;
 	}
 	
 	public override float GetLastTerrainLength()

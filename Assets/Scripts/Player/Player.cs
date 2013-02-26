@@ -252,18 +252,12 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	{
 		Transform curtransform=Character.transform;
 		
-		centerXandYandAngle=worldFactoryScript.GetXandYandAngleSmexForZ(curtransform.position.z);
-		if(GlobalOptions.whereToGo.z<0)
-		{ 
-			centerXandYandAngle.x=-centerXandYandAngle.x;
-		}
-		
+		centerXandYandAngle=worldFactoryScript.GetXandYandAngleSmexForZ(curtransform.position);		
 		
 		float posx,posy,posz;
 		posx=curtransform.localPosition.x;
 		posy=CharacterFirstPos.y+centerXandYandAngle.y;
 		posz=curtransform.localPosition.z;
-		
 		//смена дорожки
 		if(GlobalOptions.playerStates==PlayerStates.LEFT&&!PathChanging){
 			PathChanging=true;
@@ -326,7 +320,6 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 			Character.transform.rotation=Quaternion.Euler(18, angle+singleTransform.eulerAngles.y, Character.transform.rotation.z);
 			WhereToLook.transform.rotation=Quaternion.Euler(0, angle+singleTransform.eulerAngles.y, WhereToLook.transform.rotation.z);
 		}
-		
 		
 		PlaceCharacter(new Vector3(posx,posy,posz));
 	}

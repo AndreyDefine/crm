@@ -53,16 +53,18 @@ public class TerrainElementFactory: AbstractElementFactory{
 		}
 	}
 	
-	public GameObject GetCurrentTerrainForZ(float inz)
+	public GameObject GetCurrentTerrainForZ(Vector3 inposition)
 	{
 		GameObject terrainToTest;
 		GameObject curTerrain=null;
 		TerrainTag terrainTag;
 		float terz=0f;
+		float inz=GlobalOptions.NormalizeVector3Smex(inposition,GlobalOptions.whereToGo).z;
+		int i;	
 		
-		for(int i=0;i<terrainsListToDel.Count&&!curTerrain;i++){
-			terrainToTest=terrainsListToDel[i] as GameObject;
-			terz=terrainToTest.transform.position.z;
+		for(i=0;i<terrainsList.Count&&!curTerrain;i++){
+			terrainToTest=terrainsList[i] as GameObject;
+			terz=GlobalOptions.NormalizeVector3Smex(terrainToTest.transform.position,GlobalOptions.whereToGo).z;
 			terrainTag=terrainToTest.GetComponent("TerrainTag") as TerrainTag;
 			if(inz<=terrainTag.sizeOfPlane/2+terz&&inz>=terz-terrainTag.sizeOfPlane/2)
 			{
@@ -71,13 +73,14 @@ public class TerrainElementFactory: AbstractElementFactory{
 			}
 		}
 		
-		
-		for(int i=0;i<terrainsList.Count&&!curTerrain;i++){
-			terrainToTest=terrainsList[i] as GameObject;
-			terz=terrainToTest.transform.position.z;
+		for(i=0;i<terrainsListToDel.Count&&!curTerrain;i++){
+			terrainToTest=terrainsListToDel[i] as GameObject;
+			
+			terz=GlobalOptions.NormalizeVector3Smex(terrainToTest.transform.position,GlobalOptions.whereToGo).z;			
 			terrainTag=terrainToTest.GetComponent("TerrainTag") as TerrainTag;
 			if(inz<=terrainTag.sizeOfPlane/2+terz&&inz>=terz-terrainTag.sizeOfPlane/2)
 			{
+				Debug.Log ("Del inz= terz="+inz+" "+terz);
 				//нашли то что искали
 				curTerrain=terrainToTest;
 			}
@@ -87,19 +90,32 @@ public class TerrainElementFactory: AbstractElementFactory{
 	}
 	
 	//get xsmex
-	public Vector3 GetXandYandAngleSmexForZ(float inz)
+	public Vector3 GetXandYandAngleSmexForZ(Vector3 inposition)
 	{
 		GameObject curTerrain=null;
 		TerrainTag terrainTag;
 		float terz=0f;
+		float inz=GlobalOptions.NormalizeVector3Smex(inposition,GlobalOptions.whereToGo).z;
+		float razn;
 		Vector3 returnXandYandAngle=new Vector3(0f,0f,0f);
 		
-		curTerrain=GetCurrentTerrainForZ(inz);
+		curTerrain=GetCurrentTerrainForZ(inposition);
 		
 		if(curTerrain){
-			terz=curTerrain.transform.position.z;
+			terz=GlobalOptions.NormalizeVector3Smex(curTerrain.transform.position,GlobalOptions.whereToGo).z;
+			if(GlobalOptions.whereToGo.z>0||GlobalOptions.whereToGo.x>0){
+				razn=inz-terz;
+			}
+			else
+			{
+				razn=-inz+terz;
+			}
 			terrainTag=curTerrain.GetComponent("TerrainTag") as TerrainTag;
-			returnXandYandAngle=terrainTag.GetXandYandAngleSmexForZ(inz-terz);
+			returnXandYandAngle=terrainTag.GetXandYandAngleSmexForZ(razn);
+		}
+		else
+		{
+			Debug.Log ("TerrainTag Not Found");
 		}
 		
 		return returnXandYandAngle;

@@ -49,8 +49,8 @@ public class GlobalOptions {
 	public static int countsOfTerrains=0;
 	public static int neededCountOfTerrains=22;
 	
-	public static Vector3 whereToGo=new Vector3(0,0,1);
-	public static Vector3 whereToBuild=new Vector3(0,0,1);
+	public static Vector3 whereToGo=new Vector3(-1,0,0);
+	public static Vector3 whereToBuild=new Vector3(-1,0,0);
 	
 	public static GameStates gameState;
 	
@@ -181,7 +181,7 @@ public class GlobalOptions {
 	public static AccelerometerDispatcher GetSharedAccelerateDispatcher(){
 		if(!accelerometerDispatcher)
 		{
-			accelerometerDispatcher=GameObject.Find("/sharedAccelerometerDispatcher").GetComponent<AccelerometerDispatcher>();;
+			accelerometerDispatcher=GameObject.Find("/sharedAccelerometerDispatcher").GetComponent<AccelerometerDispatcher>();
 		}
 		return accelerometerDispatcher;
 	}

@@ -56,6 +56,7 @@ public class TerrainTag : AbstractTag{
 		}
 		else
 		{
+			Debug.Log ("No End Of Terrain");
 			endOfTerrain=new Vector3(0,0,0);
 		}
 		return endOfTerrain;
@@ -71,6 +72,7 @@ public class TerrainTag : AbstractTag{
 		}
 		else
 		{
+			Debug.Log ("No End Of Terrain");
 			endOfTerrain=new Vector3(0,0,0);
 		}
 		return endOfTerrain;
@@ -177,7 +179,16 @@ public class TerrainTag : AbstractTag{
 	private void ParsePath3D()
 	{		
 		Transform Path3D=singleTransform.FindChild("Path3D");
-		Transform rotationPoint=Path3D.FindChild("rotationpoint");
+		Transform rotationPoint;
+		bool FlagRight;
+		if(rotationPoint=Path3D.FindChild("rotationpointright"))
+		{
+			FlagRight=true;
+		}else
+		if(rotationPoint=Path3D.FindChild("rotationpointleft"))
+		{
+			FlagRight=false;
+		}
 		
 		int i;
 		int rotateCount=0;
@@ -187,7 +198,7 @@ public class TerrainTag : AbstractTag{
 		
 		roadPath= new Vector3[allChildrenPaht3D.Length-1];
 		
-		//sort array
+		//sort array bubblesort need to be changed to qsort or heapsort
 		int a, b;
   		Transform t;
 
@@ -216,6 +227,7 @@ public class TerrainTag : AbstractTag{
 		for (i=1;i<allChildrenPaht3D.Length-rotateCount;i++){
 			//normalized path
 			roadPath[i-1]=new Vector3(allChildrenPaht3D[i].position.x-singleTransform.position.x,allChildrenPaht3D[i].position.y-singleTransform.position.y,allChildrenPaht3D[i].position.z-singleTransform.position.z);
+			//roadPath[i-1]=new Vector3(allChildrenPaht3D[i].localPosition.x,allChildrenPaht3D[i].localPosition.y,allChildrenPaht3D[i].localPosition.z);
 		}
 	}
 	
@@ -256,7 +268,11 @@ public class TerrainTag : AbstractTag{
 		float t;
 		
 		float ysmex=singleTransform.position.y;
-		float xsmex=singleTransform.position.x;
+		float xsmex=GlobalOptions.NormalizeVector3Smex(singleTransform.position,GlobalOptions.whereToGo).x;
+		if(GlobalOptions.whereToGo.x!=0)
+		{
+			xsmex=-xsmex;
+		}
 		//calculate xpos
 		if(roadPath==null){
 			ParsePath();
@@ -264,6 +280,7 @@ public class TerrainTag : AbstractTag{
 		
 		if(roadPathArray.Count==0)
 		{
+			Debug.Log ("000");
 			return new Vector3(0,0,0);
 		}
 		
