@@ -35,6 +35,11 @@ public class TerrainTag : AbstractTag{
 	
 	private TerrainTag next=null,prev=null;
 	
+	//rotation
+	public int rotatePointIndex=0;
+	private	bool FlagLeft=false;
+	private int startindex=0;
+	
 	public bool isEndOfTerrain()
 	{
 		Transform EndOfTerrain=singleTransform.FindChild("EndOfTerrain");
@@ -94,9 +99,15 @@ public class TerrainTag : AbstractTag{
 		next=innext;
 		Vector3 []nextroadPath;
 		Vector3 curDot;
+		Vector3 NormalizeVector=new Vector3(0,0,1);
 		nextroadPath=next.getRoadPath();
 		
-		curDot=nextroadPath[0];
+		if(rotatePointIndex>0)
+		{
+			NormalizeVector=new Vector3(-1,0,0);
+		}
+		
+		curDot=GlobalOptions.NormalizeVector3Smex(nextroadPath[0],NormalizeVector);
 		curDot+=GetEndOfTerrainLocal();
 		if(!isEndOfTerrain())
 		{
@@ -104,11 +115,18 @@ public class TerrainTag : AbstractTag{
 		}
 		else
 		{
-			curDot.z+=next.sizeOfPlane/2;
+			if(rotatePointIndex>0)
+			{
+				curDot.x+=next.sizeOfPlane/2;
+			}
+			else
+			{
+				curDot.z+=next.sizeOfPlane/2;
+			}
 		}
 		roadPathArray.Add(curDot);		
 		
-		curDot=nextroadPath[1];
+		curDot=GlobalOptions.NormalizeVector3Smex(nextroadPath[1],NormalizeVector);
 		curDot+=GetEndOfTerrainLocal();
 		if(!isEndOfTerrain())
 		{
@@ -116,9 +134,21 @@ public class TerrainTag : AbstractTag{
 		}
 		else
 		{
-			curDot.z+=next.sizeOfPlane/2;
+			if(rotatePointIndex>0)
+			{
+				curDot.x+=next.sizeOfPlane/2;
+			}
+			else
+			{
+				curDot.z+=next.sizeOfPlane/2;
+			}
 		}
 		roadPathArray.Add(curDot);	
+		
+		for (int i=0;i<roadPathArray.Count&&rotatePointIndex>0;i++)
+		{
+			Debug.Log (rotatePointIndex+" "+roadPathArray[i]);
+		}
 	}
 	
 	public void SetPrev(TerrainTag inprev){
@@ -127,8 +157,15 @@ public class TerrainTag : AbstractTag{
 		Vector3 []prevroadPath;
 		Vector3 curDot;
 		prevroadPath=prev.getRoadPath();
+		Vector3 NormalizeVector=new Vector3(0,0,1);
 		
-		curDot=prevroadPath[prevroadPath.Length-1];
+		if(prev.rotatePointIndex>0)
+		{
+			NormalizeVector=new Vector3(-1,0,0);
+		}
+		
+		
+		curDot=GlobalOptions.NormalizeVector3Smex(prevroadPath[prevroadPath.Length-1],NormalizeVector);
 		curDot+=-prev.GetEndOfTerrainLocal();
 		if(!isEndOfTerrain())
 		{
@@ -136,11 +173,18 @@ public class TerrainTag : AbstractTag{
 		}
 		else
 		{
-			curDot.z+=-sizeOfPlane/2;
+			if(prev.rotatePointIndex>0)
+			{
+				curDot.z-=sizeOfPlane/2;
+			}
+			else
+			{
+				curDot.z-=sizeOfPlane/2;
+			}
 		}
 		roadPathArray.Insert(0,curDot);
 		
-		curDot=prevroadPath[prevroadPath.Length-2];
+		curDot=GlobalOptions.NormalizeVector3Smex(prevroadPath[prevroadPath.Length-2],NormalizeVector);
 		curDot+=-prev.GetEndOfTerrainLocal();
 		if(!isEndOfTerrain())
 		{
@@ -148,9 +192,21 @@ public class TerrainTag : AbstractTag{
 		}
 		else
 		{
-			curDot.z+=-sizeOfPlane/2;
+			if(prev.rotatePointIndex>0)
+			{
+				curDot.z-=sizeOfPlane/2;
+			}
+			else
+			{
+				curDot.z-=sizeOfPlane/2;
+			}
 		}
 		roadPathArray.Insert(0,curDot);
+		
+		for (int i=0;i<roadPathArray.Count&&prev.rotatePointIndex>0;i++)
+		{
+			Debug.Log (rotatePointIndex+" Prev "+roadPathArray[i]);
+		}
 	}
 	
 	public TerrainTag GetPrevTerrain()
@@ -180,18 +236,17 @@ public class TerrainTag : AbstractTag{
 	{		
 		Transform Path3D=singleTransform.FindChild("Path3D");
 		Transform rotationPoint;
-		bool FlagRight;
+
 		if(rotationPoint=Path3D.FindChild("rotationpointright"))
 		{
-			FlagRight=true;
+			FlagLeft=false;
 		}else
 		if(rotationPoint=Path3D.FindChild("rotationpointleft"))
 		{
-			FlagRight=false;
+			FlagLeft=true;
 		}
 		
 		int i;
-		int rotateCount=0;
 		
 		//find all marks
 		Transform[] allChildrenPaht3D = Path3D.gameObject.GetComponentsInChildren<Transform>();
@@ -203,31 +258,54 @@ public class TerrainTag : AbstractTag{
   		Transform t;
 
 	  	for(a=2; a < allChildrenPaht3D.Length; ++a)
-		    for(b=allChildrenPaht3D.Length-1; b >= a; --b) {
-		      if(allChildrenPaht3D[b-1].position.z >= allChildrenPaht3D[b].position.z) {
-		        /* exchange elements */
-		        t = allChildrenPaht3D[b-1];
-		        allChildrenPaht3D[b-1] = allChildrenPaht3D[b];
-		        allChildrenPaht3D[b] = t;
-		      }
+		{
+			for(b=allChildrenPaht3D.Length-1; b >= a; --b) 
+			{
+				if(allChildrenPaht3D[b-1].position.z >= allChildrenPaht3D[b].position.z) {
+					/* exchange elements */
+					t = allChildrenPaht3D[b-1];
+					allChildrenPaht3D[b-1] = allChildrenPaht3D[b];
+					allChildrenPaht3D[b] = t;
+				}
+			}
 			
 			//Если поворот отсечём два пути
 			if(nextGoingTo!=TerrainTagNextGoingTo.FORWARD&&rotationPoint)
 			{
-				if(rotationPoint.position.z<=allChildrenPaht3D[a].position.z)	
+				if(rotationPoint.position.z<allChildrenPaht3D[a].position.z)	
 				{
-					rotateCount++;
+					rotatePointIndex=a;
+					break;
 				}
 			}
-	    }
+		}
+		
+		//sort others
+		if(rotatePointIndex>0)
+		{
+			for(a=rotatePointIndex; a < allChildrenPaht3D.Length; ++a)
+			{
+			    for(b=allChildrenPaht3D.Length-1; b >= a; --b) 
+				{
+			      	if(((!FlagLeft)&&allChildrenPaht3D[b-1].position.x >= allChildrenPaht3D[b].position.x)||
+					((FlagLeft)&&allChildrenPaht3D[b-1].position.x <= allChildrenPaht3D[b].position.x))
+					{
+			        	/* exchange elements */
+			       	 	t = allChildrenPaht3D[b-1];
+			        	allChildrenPaht3D[b-1] = allChildrenPaht3D[b];
+			        	allChildrenPaht3D[b] = t;
+			     	}
+				}
+		    }
+		}
+		
 
 		//calculate mnoshitel
 		mnoshitel=1;
 		//получили массив пути
-		for (i=1;i<allChildrenPaht3D.Length-rotateCount;i++){
+		for (i=1;i<allChildrenPaht3D.Length;i++){
 			//normalized path
-			roadPath[i-1]=new Vector3(allChildrenPaht3D[i].position.x-singleTransform.position.x,allChildrenPaht3D[i].position.y-singleTransform.position.y,allChildrenPaht3D[i].position.z-singleTransform.position.z);
-			//roadPath[i-1]=new Vector3(allChildrenPaht3D[i].localPosition.x,allChildrenPaht3D[i].localPosition.y,allChildrenPaht3D[i].localPosition.z);
+			roadPath[i-1]=allChildrenPaht3D[i].position-singleTransform.position;
 		}
 	}
 	
@@ -247,6 +325,7 @@ public class TerrainTag : AbstractTag{
 	
 	public void RecalculateRoadPathArray()
 	{
+		startindex=0;
 		if(roadPath==null){
 			ParsePath();
 		}
@@ -257,18 +336,60 @@ public class TerrainTag : AbstractTag{
 		
 	}
 	
-	public Vector3 GetXandYandAngleSmexForZ(float inz)
+	public float GetLastPointPos()
 	{
+		float result=0;
+		if(startindex==0)
+		{
+			result=sizeOfPlane/2;
+		}
+		else
+		{
+			Vector3 localEndOfTerrain=GetEndOfTerrainLocal();
+			result=GlobalOptions.NormalizeVector3Smex(localEndOfTerrain,new Vector3(-1,0,0)).z;
+			Debug.Log ("result="+result);
+		}
+		
+		return result;
+	}
+	
+	public Vector3 GetXandYandAngleSmexForZ(Vector3 inposition)
+	{
+		float inz=GlobalOptions.NormalizeVector3Smex(inposition,GlobalOptions.whereToGo).z;
+		float terz=GlobalOptions.NormalizeVector3Smex(singleTransform.position,GlobalOptions.whereToGo).z;
+		float razn=0;
+		
+		if(GlobalOptions.whereToGo.z>0||GlobalOptions.whereToGo.x>0){
+			razn=inz-terz;
+		}
+		else
+		{
+			razn=-inz+terz;
+		}
+		
+		Debug.Log ("razn="+razn);
+	
+		bool RotationFlag=false;
 		Vector3 returnXandYandAngle;
 		float Epsilon=0.01f;
 		int i=0;
 		Vector2 BezieDoty;//,BezieDot2y;
 		Vector2 BezieDot,BezieDot2,origin,control,destination;
 		Vector2 originy,controly,destinationy;
+		Vector3 NormalizeVector=new Vector3(0,0,1);
 		float t;
+		
+		Vector3 vspDot1,vspDot2;
 		
 		float ysmex=singleTransform.position.y;
 		float xsmex=GlobalOptions.NormalizeVector3Smex(singleTransform.position,GlobalOptions.whereToGo).x;
+		
+		if(startindex!=0)
+		{
+			xsmex=GlobalOptions.NormalizeVector3Smex(singleTransform.position,GlobalOptions.whereToGo).z;
+		}
+		
+		Debug.Log("xsmex="+xsmex+" ysmex="+ysmex);
 		if(GlobalOptions.whereToGo.x!=0)
 		{
 			xsmex=-xsmex;
@@ -284,50 +405,127 @@ public class TerrainTag : AbstractTag{
 			return new Vector3(0,0,0);
 		}
 		
-		for (i=0;i<roadPathArray.Count;i++){
-			if(roadPathArray[i].z>=inz){
+		if (startindex!=0&&!FlagLeft)
+		{
+			NormalizeVector=new Vector3(-1,0,0);
+		}
+		
+		for (i=startindex;i<roadPathArray.Count;i++){
+			//rotation
+			if(startindex==0&&rotatePointIndex<i&&nextGoingTo!=TerrainTagNextGoingTo.FORWARD)
+			{
+				startindex=i;
+				GlobalOptions.whereToGo=GlobalOptions.TurnLeftRightVector(GlobalOptions.whereToGo,FlagLeft);
+				GlobalOptions.GetPlayerScript().rotatePersone();
+				RotationFlag=true;
+				break;
+				//need rotation
+			}
+			
+	
+			if(i<roadPathArray.Count-2)
+			{
+				vspDot1=GlobalOptions.NormalizeVector3Smex(roadPathArray[i],NormalizeVector);
+			}
+			else
+			{
+				vspDot1=roadPathArray[i];
+			}
+			
+			if(vspDot1.z>=razn)
+			{
+				Debug.Log (i+" Fount Point "+vspDot1);
 				break;
 			}
 		}	
 		
+		if(RotationFlag)
+		{
+			//call recursively
+			Debug.Log ("Recursively/////////////////////////////////////////  "+startindex);
+			return GetXandYandAngleSmexForZ(inposition);
+		}
+		
 		i=i>roadPathArray.Count-1?roadPathArray.Count-1:i;
 
-		origin=originy=new Vector2(roadPathArray[i].x,roadPathArray[i].z);
-		control=controly=new Vector2(roadPathArray[i].x,roadPathArray[i].z);
-		destination=destinationy=new Vector2(roadPathArray[i].x,roadPathArray[i].z);
+		origin=originy=new Vector2(0,0);
+		control=controly=new Vector2(0,0);
+		destination=destinationy=new Vector2(0,0);
 
 		//ищем середины	
 		do{
 			if(i>0){
-				origin=new Vector2((roadPathArray[i].x-roadPathArray[i-1].x)/2+roadPathArray[i-1].x+xsmex,(roadPathArray[i].z-roadPathArray[i-1].z)/2+roadPathArray[i-1].z);
-				originy=new Vector2((roadPathArray[i].y-roadPathArray[i-1].y)/2+roadPathArray[i-1].y+ysmex,(roadPathArray[i].z-roadPathArray[i-1].z)/2+roadPathArray[i-1].z);
+				
+				//if(i<roadPathArray.Count-2)
+				{
+					vspDot1=GlobalOptions.NormalizeVector3Smex(roadPathArray[i],NormalizeVector);
+					vspDot2=GlobalOptions.NormalizeVector3Smex(roadPathArray[i-1],NormalizeVector);
+				}
+				/*else
+				{
+					vspDot1=roadPathArray[i];
+					vspDot2=roadPathArray[i-1];
+				}*/
+				
+				vspDot1=GlobalOptions.NormalizeVector3Smex(roadPathArray[i],NormalizeVector);
+				vspDot2=GlobalOptions.NormalizeVector3Smex(roadPathArray[i-1],NormalizeVector);
+				
+				origin=new Vector2((vspDot1.x-vspDot2.x)/2+vspDot2.x+xsmex,(vspDot1.z-vspDot2.z)/2+vspDot2.z);
+				originy=new Vector2((vspDot1.y-vspDot2.y)/2+vspDot2.y+ysmex,(vspDot1.z-vspDot2.z)/2+vspDot2.z);
 			}else{
 				origin=new Vector2(roadPathArray[i].x+xsmex,roadPathArray[i].z);
 				originy=new Vector2(roadPathArray[i].y+ysmex,roadPathArray[i].z);
 			}
 			
 			//не угадали с положением точки
-			if(origin.y>inz)
+			if(origin.y>razn)
 			{
 				i--;
 			}
 		}
-		while(origin.y>inz&&i>=0); 
+		while(origin.y>razn&&i>=0); 
 		i=i<0?0:i;
 		
-		control=new Vector2(roadPathArray[i].x+xsmex,roadPathArray[i].z);
-		controly=new Vector2(roadPathArray[i].y+ysmex,roadPathArray[i].z);
+		//if(i<roadPathArray.Count-2)
+		{
+			vspDot1=GlobalOptions.NormalizeVector3Smex(roadPathArray[i],NormalizeVector);
+		}
+		/*else
+		{
+			vspDot1=roadPathArray[i];
+		}*/
+		
+		control=new Vector2(vspDot1.x+xsmex,vspDot1.z);
+		controly=new Vector2(vspDot1.y+ysmex,vspDot1.z);
 		
 		if(i!=roadPathArray.Count-1){
-			destination=new Vector2((roadPathArray[i+1].x-roadPathArray[i].x)/2+roadPathArray[i].x+xsmex,(roadPathArray[i+1].z-roadPathArray[i].z)/2+roadPathArray[i].z);
-			destinationy=new Vector2((roadPathArray[i+1].y-roadPathArray[i].y)/2+roadPathArray[i].y+ysmex,(roadPathArray[i+1].z-roadPathArray[i].z)/2+roadPathArray[i].z);
+			
+			//if(i<roadPathArray.Count-2)
+			{
+				vspDot1=GlobalOptions.NormalizeVector3Smex(roadPathArray[i],NormalizeVector);
+				vspDot2=GlobalOptions.NormalizeVector3Smex(roadPathArray[i+1],NormalizeVector);
+			}
+			/*else
+			{
+				vspDot1=roadPathArray[i];
+				vspDot2=roadPathArray[i+1];
+			}*/
+			
+			destination=new Vector2((vspDot2.x-vspDot1.x)/2+vspDot1.x+xsmex,(vspDot2.z-vspDot1.z)/2+vspDot1.z);
+			destinationy=new Vector2((vspDot2.y-vspDot1.y)/2+vspDot1.y+ysmex,(vspDot2.z-vspDot1.z)/2+vspDot1.z);
 		}else{
-			destination=new Vector2(roadPathArray[i].x+xsmex,roadPathArray[i].z);
-			destinationy=new Vector2(roadPathArray[i].y+ysmex,roadPathArray[i].z);
+			//last dot
+			vspDot1=GlobalOptions.NormalizeVector3Smex(roadPathArray[i],NormalizeVector);
+			
+			Debug.Log ("LAST DOT");
+			destination=new Vector2(vspDot1.x+xsmex,vspDot1.z);
+			destinationy=new Vector2(vspDot1.y+ysmex,vspDot1.z);
 		}			
 		
 		
-		t=(inz-origin.y)/(destination.y-origin.y);
+		Debug.Log ("origin="+origin+"control="+control+"destination="+destination);
+		
+		t=(razn-origin.y)/(destination.y-origin.y);
 		BezieDot=GetQuadBezieForT(origin,control,destination,t);
 		BezieDot2=GetQuadBezieForT(origin,control,destination,t-Epsilon);
 		

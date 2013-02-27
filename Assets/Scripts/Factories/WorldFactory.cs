@@ -485,7 +485,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 					treepos+=treeElementFactory.GetInitialPos();
 					zsmeh=-terrainTag.sizeOfPlane/2+shag*i;
 					if(terrainTag){
-						xsmeh=terrainTag.GetXandYandAngleSmexForZ(zsmeh).x;
+						xsmeh=terrainTag.GetXandYandAngleSmexForZ(new Vector3(0,0,zsmeh)).x;
 					}
 					
 					treepos.z+=zsmeh;
@@ -565,7 +565,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		inpos+=randompos;
 		
 		if(interrainTag){
-			xsmeh=interrainTag.GetXandYandAngleSmexForZ(randompos.z).x;
+			xsmeh=interrainTag.GetXandYandAngleSmexForZ(new Vector3(0,0,randompos.z)).x;
 		}
 		inpos.x+=xsmeh;
 		
@@ -587,7 +587,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		inpos+=randompos;
 		
 		if(interrainTag){
-			xsmeh=interrainTag.GetXandYandAngleSmexForZ(randompos.z).x;
+			xsmeh=interrainTag.GetXandYandAngleSmexForZ(new Vector3(0,0,randompos.z)).x;
 		}
 		inpos.x+=xsmeh;
 		

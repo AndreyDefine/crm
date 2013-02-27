@@ -66,7 +66,7 @@ public class TerrainElementFactory: AbstractElementFactory{
 			terrainToTest=terrainsList[i] as GameObject;
 			terz=GlobalOptions.NormalizeVector3Smex(terrainToTest.transform.position,GlobalOptions.whereToGo).z;
 			terrainTag=terrainToTest.GetComponent("TerrainTag") as TerrainTag;
-			if(inz<=terrainTag.sizeOfPlane/2+terz&&inz>=terz-terrainTag.sizeOfPlane/2)
+			if(inz<=terrainTag.GetLastPointPos()+terz&&inz>=terz-terrainTag.GetLastPointPos())
 			{
 				//нашли то что искали
 				curTerrain=terrainToTest;
@@ -78,7 +78,7 @@ public class TerrainElementFactory: AbstractElementFactory{
 			
 			terz=GlobalOptions.NormalizeVector3Smex(terrainToTest.transform.position,GlobalOptions.whereToGo).z;			
 			terrainTag=terrainToTest.GetComponent("TerrainTag") as TerrainTag;
-			if(inz<=terrainTag.sizeOfPlane/2+terz&&inz>=terz-terrainTag.sizeOfPlane/2)
+			if(inz<=terrainTag.GetLastPointPos()+terz&&inz>=terz-terrainTag.GetLastPointPos())
 			{
 				Debug.Log ("Del inz= terz="+inz+" "+terz);
 				//нашли то что искали
@@ -94,24 +94,13 @@ public class TerrainElementFactory: AbstractElementFactory{
 	{
 		GameObject curTerrain=null;
 		TerrainTag terrainTag;
-		float terz=0f;
-		float inz=GlobalOptions.NormalizeVector3Smex(inposition,GlobalOptions.whereToGo).z;
-		float razn;
 		Vector3 returnXandYandAngle=new Vector3(0f,0f,0f);
 		
 		curTerrain=GetCurrentTerrainForZ(inposition);
 		
 		if(curTerrain){
-			terz=GlobalOptions.NormalizeVector3Smex(curTerrain.transform.position,GlobalOptions.whereToGo).z;
-			if(GlobalOptions.whereToGo.z>0||GlobalOptions.whereToGo.x>0){
-				razn=inz-terz;
-			}
-			else
-			{
-				razn=-inz+terz;
-			}
 			terrainTag=curTerrain.GetComponent("TerrainTag") as TerrainTag;
-			returnXandYandAngle=terrainTag.GetXandYandAngleSmexForZ(razn);
+			returnXandYandAngle=terrainTag.GetXandYandAngleSmexForZ(inposition);
 		}
 		else
 		{

@@ -312,7 +312,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 			float angle;
 			
 			// dx/dy
-			angle=centerXandYandAngle.z/2f;
+			angle=centerXandYandAngle.z/1f;
 			
 			angle*=180/3.141592653589f;
 			//angle=0;

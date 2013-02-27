@@ -49,8 +49,8 @@ public class GlobalOptions {
 	public static int countsOfTerrains=0;
 	public static int neededCountOfTerrains=22;
 	
-	public static Vector3 whereToGo=new Vector3(-1,0,0);
-	public static Vector3 whereToBuild=new Vector3(-1,0,0);
+	public static Vector3 whereToGo=new Vector3(0,0,1);
+	public static Vector3 whereToBuild=new Vector3(0,0,1);
 	
 	public static GameStates gameState;
 	
@@ -153,7 +153,7 @@ public class GlobalOptions {
 		if(inwhere.x<0){
 			rotation=-90;
 		}
-		intransform.Rotate(new Vector3(0,rotation,0));
+		intransform.eulerAngles=new Vector3(0,rotation,0);
 	}	
 	
 	public static Vector3 NormalizeVector3Smex(Vector3 invector,Vector3 normal){
