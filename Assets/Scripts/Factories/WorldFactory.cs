@@ -176,11 +176,14 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		}
 	}
 	
+	public void TryAddTerrrain() {		
+		AddNextTerrain(true);
+		//удаляем старый кусочек земли
+		DeleteOneFirstTerrain();
+    }
+	
 	void Update () {
-		if(currentRoadPos<roadTerrainsNames.Length){
-			TryAddTerrrain();
-		}
-		else
+		if(currentRoadPos>=roadTerrainsNames.Length)
 		{
 			if(curLevelTag.gameType==GameType.Runner)
 			{

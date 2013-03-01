@@ -3,7 +3,7 @@ using System.Collections;
 using  System.Globalization;
 
 public class AbstractTag : Abstract{	
-	private AbstractElementFactory abstractElementFactory;
+	protected AbstractElementFactory abstractElementFactory;
 	
 	private AbstractEnemy enemyScript;
 	

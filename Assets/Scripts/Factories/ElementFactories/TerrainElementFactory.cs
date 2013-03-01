@@ -1,13 +1,12 @@
 using UnityEngine;
 using System.Collections;
 
-public class TerrainElementFactory: AbstractElementFactory{		
-	public override void addTagToObject(GameObject newTerrain){
-		//do nothing
-	}
+public class TerrainElementFactory: AbstractElementFactory{	
+	private GameObject currentTerrain=null;
 	
 	public override void ReStart(){
 		base.ReStart();
+		currentTerrain=null;
 		for(int i=0;i<terrainsListToDel.Count;i++)
 		{
 			GameObject newterrainToDel=terrainsListToDel[i] as GameObject;
@@ -55,38 +54,18 @@ public class TerrainElementFactory: AbstractElementFactory{
 	
 	public GameObject GetCurrentTerrainForZ(Vector3 inposition)
 	{
-		GameObject terrainToTest;
-		GameObject curTerrain=null;
-		TerrainTag terrainTag;
-		float terz=0f;
-		float inz=GlobalOptions.NormalizeVector3Smex(inposition,GlobalOptions.whereToGo).z;
-		int i;	
-		
-		for(i=0;i<terrainsList.Count&&!curTerrain;i++){
-			terrainToTest=terrainsList[i] as GameObject;
-			terz=GlobalOptions.NormalizeVector3Smex(terrainToTest.transform.position,GlobalOptions.whereToGo).z;
-			terrainTag=terrainToTest.GetComponent("TerrainTag") as TerrainTag;
-			if(inz<=terrainTag.GetLastPointPos()+terz&&inz>=terz-terrainTag.GetLastPointPos())
-			{
-				//нашли то что искали
-				curTerrain=terrainToTest;
-			}
+		if(!currentTerrain)
+		{
+			currentTerrain=terrainsList[0] as GameObject;
+			currentTerrain.GetComponent<TerrainTag>().SetCurDotIndexAndCurPos(2,0);
 		}
-		
-		for(i=0;i<terrainsListToDel.Count&&!curTerrain;i++){
-			terrainToTest=terrainsListToDel[i] as GameObject;
-			
-			terz=GlobalOptions.NormalizeVector3Smex(terrainToTest.transform.position,GlobalOptions.whereToGo).z;			
-			terrainTag=terrainToTest.GetComponent("TerrainTag") as TerrainTag;
-			if(inz<=terrainTag.GetLastPointPos()+terz&&inz>=terz-terrainTag.GetLastPointPos())
-			{
-				Debug.Log ("Del inz= terz="+inz+" "+terz);
-				//нашли то что искали
-				curTerrain=terrainToTest;
-			}
-		}
-		
-		return curTerrain;
+	
+		return currentTerrain;
+	}
+	
+	public void SetNextCurrentTerrain(GameObject interrain)
+	{
+		currentTerrain=interrain;
 	}
 	
 	//get xsmex

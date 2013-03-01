@@ -73,27 +73,6 @@ public class AbstractFactory : Abstract {
 		return terrainLength;
 	}
 	
-	protected void TryAddTerrrain() {		
-		Transform playertransform=Player.transform;
-		
-		float curposrazn=0;
-		
-		if(GlobalOptions.whereToGo.x!=0)
-		{
-			curposrazn=playertransform.position.x-GetLastTerrainPos().x;	
-		}else 
-		if(GlobalOptions.whereToGo.z!=0){
-			curposrazn=playertransform.position.z-GetLastTerrainPos().z;
-		}
-		
-		if(Mathf.Abs(curposrazn)>GetLastTerrainLength()/2)
-		{
-			AddNextTerrain(true);
-			//удаляем старый кусочек земли
-			DeleteOneFirstTerrain();
-		}
-    }
-	
 	public virtual void TestPlayerTurn(GameObject terrainToDel){
 		//do nothing
 	}
