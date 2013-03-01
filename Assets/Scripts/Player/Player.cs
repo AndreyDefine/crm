@@ -15,8 +15,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	public int typeOfControl;
 	public GameObject MainCamera;
 	
-	public float jumpForce;
-	public float jumpLong;
+	public float roadChangeForce;
 	
 	protected int accelPriority;
 	protected bool swallowAcceles;
@@ -28,8 +27,6 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	private float PlayerTurnRotation,curRotation;
 	private WorldFactory worldFactoryScript;
 	
-	private float localTime;
-	
 	private Vector3 PlayerFirstPos;
 	private Vector3 CharacterFirstPos;
 	private Vector3 raznFromWhereToLookAndCharacter;
@@ -39,7 +36,6 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	private int PathNumber;
 	
 	private bool PathChanging;
-	private bool Jumping;
 	
 	private float VelocityVodka;
 	private float VelocityMushroom;
@@ -52,11 +48,16 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	private float oldMetersz,allMeters;
 	
+	private CharacterMarioC characterMarioC;
+	
+	float posx;
+	
 	float FloatPathNumber;
 	
 	private GuiLayerInitializer guiLayer;
 	// Use this for initialization
 	void Start () {
+		characterMarioC=Character.GetComponent<CharacterMarioC>();
 		PlayerFirstPos=singleTransform.position;
 		CharacterFirstPos=Character.transform.localPosition;
 		firstWhereToLookLocalPos=WhereToLook.transform.localPosition;
@@ -69,18 +70,18 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		bearAnimation=Character.GetComponent("BearAnimation3D") as BearAnimation3D;
 		bearAnimation.SetWalkSpeed(GetRealVelocityWithNoDeltaTime()/startVelocity);
 		force=0;
-		localTime=0;
 		touchPriority=3;
 		swallowTouches=false;
 		PathNumber=0;
 		PathChanging=false;
 		FloatPathNumber=0;
-		Jumping=false;
 		VelocityVodka=1;
 		VelocityMushroom=1;
 		xSmexcontrol1=0;
 		oldMetersz=0;
 		allMeters=0;
+		
+		posx=0;
 		
 		accelPriority=1;
 		swallowAcceles=false;
@@ -104,15 +105,14 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	public void Restart()
 	{
-		Jumping=false;
 		PathChanging=false;
 		FloatPathNumber=0;
 		force=0;
 		PathNumber=0;
-		localTime=0;
 		xSmexcontrol1=0;
 		oldMetersz=0;
 		allMeters=0;
+		posx=0;
 		UnMakeVodka();
 		UnMakeMushrooms();
 		UnMakeHeadStars();
@@ -180,17 +180,23 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		bearAnimation.ShowCap();
 		guiLayer.RemoveStrobile();
 	}
+	
+	void FixedUpdate()
+	{
+		if(GlobalOptions.gameState==GameStates.GAME)
+		{
+			MakeMovingCharacterController();
+		}
+	}
+	
 
 	// Update is called once per frame
 	void Update () {		
 		if(GlobalOptions.gameState==GameStates.GAME)
 		{
-			//move straight
-			//MoveForNewPos();
-			//Moving left-right
-			MovingButtons();
 			MoveLeftRight(force);
-			MakeMovingUp();
+			MovingButtons();
+			PlaceBearToControl(posx);
 			//MakeMusicSpeed();
 		}
 		
@@ -206,6 +212,10 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		if(GlobalOptions.playerStates==PlayerStates.JUMP)
 		{
 			bearAnimation.Jump();
+		}
+		if(GlobalOptions.playerStates==PlayerStates.DOWN)
+		{
+			bearAnimation.Down();
 		}
 		if(GlobalOptions.playerStates==PlayerStates.DIE)
 			bearAnimation.Dead();
@@ -242,7 +252,6 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		
 		Transform curtransform=Character.transform;
 		
-		float posx;
 		posx=curtransform.localPosition.x;
 		//смена дорожки
 		if(GlobalOptions.playerStates==PlayerStates.LEFT&&!PathChanging){
@@ -270,7 +279,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 			posx=posx<centerx?centerx:posx;
 			//меняем дорожку
 			if(PathChanging){	
-				FloatPathNumber+=((PathNumber-FloatPathNumber))*GetRealVelocityWithDeltaTimeAndNoAcceleration(); 
+				FloatPathNumber+=((PathNumber-FloatPathNumber))*GetRealVelocityWithDeltaTimeAndNoAcceleration()*roadChangeForce; 
 				if(Mathf.Abs(FloatPathNumber-PathNumber)<0.1*GetRealVelocityWithDeltaTimeAndNoAcceleration())
 				{
 					FloatPathNumber=PathNumber;
@@ -291,8 +300,6 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 			xSmexcontrol1=xSmexcontrol1<=minX?minX:xSmexcontrol1;
 			posx+=xSmexcontrol1;
 		}
-		
-		PlaceBearToControl(posx);
 			
 			
 		///////////
@@ -327,6 +334,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 			
 			RotatePlayer(angle);
 		}
+		
 		PlaceCharacter(new Vector3(centerXandYandAngle.x,0,centerXandYandAngle.z));
 		
 		//meters;
@@ -342,11 +350,10 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	private void RotatePlayer(float inangle)
 	{
 		singleTransform.rotation=Quaternion.Euler(singleTransform.rotation.x, inangle, singleTransform.rotation.z);
-		MainCamera.transform.rotation=Quaternion.Euler(singleTransform.rotation.x, inangle, singleTransform.rotation.z);
 	}
 	
 	public void PlaceBearToControl(float inposx)
-	{		
+	{	
 		Vector3 charpos=Character.transform.localPosition;
 		Character.transform.localPosition=new Vector3(inposx,charpos.y,charpos.z);
 		WhereToLook.transform.localPosition=new Vector3(inposx*whereToLookParalax,charpos.y+raznFromWhereToLookAndCharacter.y,firstWhereToLookLocalPos.z);
@@ -354,11 +361,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	public void PlaceCharacter(Vector3 inpos)
 	{
-		
 		singleTransform.position=inpos;
-		
-		Vector3 charpos=Character.transform.localPosition;
-		WhereToLook.transform.localPosition=new Vector3(charpos.x*whereToLookParalax,charpos.y+raznFromWhereToLookAndCharacter.y,firstWhereToLookLocalPos.z);
 	}
 	
 	private void BearRespawn(){
@@ -463,44 +466,17 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		guiLayer.ShowGameOver();
 	}
 	
-	private void Jump(float inmoveForce)
-	{
-		Transform curtransform;
-		float posx,posy,posz;
-		curtransform=Character.transform;
-		posx=curtransform.localPosition.x;
-		posy=CharacterFirstPos.y;
-		posz=curtransform.localPosition.z;
-		posy+=inmoveForce+centerXandYandAngle.y;	
-		
-		PlaceCharacter(new Vector3(posx,posy,posz));
-	}
-	
-	private void MakeMovingUp(){
-		/*if(GlobalOptions.playerStates==PlayerStates.JUMP){
-			Debug.Log ("Jumping");
-			Character.rigidbody.AddForce(new Vector3(0,100,0));
+	private void MakeMovingCharacterController(){
+		if(GlobalOptions.playerStates==PlayerStates.JUMP)
+		{
+			characterMarioC.Jump();
 			GlobalOptions.playerStates=PlayerStates.WALK;
-			//Character.rigidbody.AddForce(new Vector3(0,100,0));
-			
-		}*/
-		if(GlobalOptions.playerStates==PlayerStates.JUMP||Jumping){
-			Jumping=true;
-			//float moveForce;
-	     	localTime+=jumpLong*GetRealVelocityWithDeltaTimeAndNoAcceleration()*0.5f;
-	        //moveForce=Mathf.Sin(localTime)*jumpForce;
-	        if(localTime>Mathf.PI)
-	        {
-				Jumping=false;
-	            localTime=0;
-	            GlobalOptions.playerStates=PlayerStates.WALK;
-	        }
-			else
-			{
-				Debug.Log ("Jumping"+localTime);
-	    		Character.rigidbody.AddForce(new Vector3(0,10,0));
-			}
+		}
+		
+		if(GlobalOptions.playerStates==PlayerStates.DOWN)
+		{
+			characterMarioC.Down();
+			GlobalOptions.playerStates=PlayerStates.WALK;
 		}
 	}
-	
 }

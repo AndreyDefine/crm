@@ -87,6 +87,10 @@ public class BearAnimation3D : Abstract{
 		//animation.CrossFade("jump");
 	}
 	
+	public void Down() {
+		//animation.CrossFade("down");
+	}
+	
 	public void SetWalkSpeed(float inspeed) {
 		
 		for(int i=0;i<clothesList.Count;i++)

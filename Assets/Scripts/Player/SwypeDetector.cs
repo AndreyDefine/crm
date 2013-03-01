@@ -67,6 +67,13 @@ public class SwypeDetector : SpriteTouch {
 			firstTouchLocation=currentTouchLocation;
 			SwypeUp(); 
 		}
+		
+		if(currentTouchLocation.y<(firstTouchLocation.y-Epsilonyy))//&&GlobalOptions.playerStates==PlayerStates.WALK)
+		{
+			alreadySwyped=true;
+			firstTouchLocation=currentTouchLocation;
+			SwypeDown(); 
+		}
 	}
 	
 	public override void TouchEnded(Vector2 position,int fingerId) {
@@ -85,7 +92,7 @@ public class SwypeDetector : SpriteTouch {
 	}
 	
 	private void SwypeDown(){
-		
+		GlobalOptions.playerStates=PlayerStates.DOWN;
 	}
 	
 	//right

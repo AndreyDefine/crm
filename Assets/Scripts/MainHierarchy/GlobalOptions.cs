@@ -15,6 +15,7 @@ public enum GameStates{
 
 public enum PlayerStates
 {
+	DOWN,
 	JUMP,
 	LEFT,
 	RIGHT,
