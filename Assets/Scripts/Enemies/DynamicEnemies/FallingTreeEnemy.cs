@@ -24,7 +24,10 @@ public class FallingTreeEnemy : AbstractEnemy {
 	{
 		if(!effectMade)
 		{
-			if(Mathf.Abs(singleTransform.position.z-playertransform.position.z)<=8)
+			float raznx,raznz;
+			raznx=singleTransform.position.x-playertransform.position.x;
+			raznz=singleTransform.position.z-playertransform.position.z;
+			if(raznx*raznx+raznz*raznz<=225)
 			{
 				PutToInactiveList();
 				MakeEffect();

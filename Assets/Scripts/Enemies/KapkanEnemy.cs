@@ -9,7 +9,6 @@ public class KapkanEnemy : AbstractEnemy {
 	
 	public override void OnHit(Collider other)
 	{
-		Debug.Log ("Life -3");
 		GuiLayer.AddToLife(-3);
 		GuiLayer.AddHeadStars();
 		AudioSource.PlayClipAtPoint(playOnHit, transform.position);

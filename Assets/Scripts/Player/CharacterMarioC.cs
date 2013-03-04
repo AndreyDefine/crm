@@ -11,6 +11,10 @@ public class CharacterMarioC : MonoBehaviour {
 	private bool grounded=false;
 	private bool jumping=false;
 	private bool downing=false;
+	
+	private bool freezed=false;
+	
+	private CharacterController controller;
 	// Update is called once per frame
 	
 	private void UpdateSmoothedMovementDirection ()
@@ -27,21 +31,28 @@ public class CharacterMarioC : MonoBehaviour {
 		}
 	}
 	
+	void Start()
+	{
+		controller = GetComponent<CharacterController>();
+	}
+	
 	void Update() {
 
 		UpdateSmoothedMovementDirection();
 	
-		if (grounded&&!jumping) {
+		if (grounded&&!jumping||freezed) {
 			verticalSpeed = 0;
 		}
 		// Apply gravity
-		verticalSpeed -= gravity * Time.deltaTime;
+		if(!freezed)
+		{
+			verticalSpeed -= gravity * Time.deltaTime;
+		}
 		
 		Vector3 movement = moveDirection + new Vector3 (0, verticalSpeed, 0);
 		movement *= Time.deltaTime;
 		
 		// Move the controller
-		CharacterController controller = GetComponent<CharacterController>();
 		CollisionFlags flags = controller.Move(movement);
 		grounded = (flags & CollisionFlags.CollidedBelow) != 0;
 		
@@ -76,5 +87,16 @@ public class CharacterMarioC : MonoBehaviour {
 			downing = true;
 			verticalSpeed = -jumpSpeed;
 		}
+	}
+	
+	public void Freeze()
+	{
+		freezed=true;
+	}
+	
+	public void Respawn()
+	{
+		freezed=false;
+		//controller.velocity=new Vector3(0,0,0);
 	}
 }

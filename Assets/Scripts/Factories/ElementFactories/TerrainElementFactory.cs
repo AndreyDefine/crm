@@ -52,7 +52,7 @@ public class TerrainElementFactory: AbstractElementFactory{
 		}
 	}
 	
-	public GameObject GetCurrentTerrainForZ(Vector3 inposition)
+	public GameObject GetCurrentTerrainForZ()
 	{
 		if(!currentTerrain)
 		{
@@ -75,7 +75,7 @@ public class TerrainElementFactory: AbstractElementFactory{
 		TerrainTag terrainTag;
 		Vector3 returnXandYandAngle=new Vector3(0f,0f,0f);
 		
-		curTerrain=GetCurrentTerrainForZ(inposition);
+		curTerrain=GetCurrentTerrainForZ();
 		
 		if(curTerrain){
 			terrainTag=curTerrain.GetComponent("TerrainTag") as TerrainTag;
@@ -87,5 +87,11 @@ public class TerrainElementFactory: AbstractElementFactory{
 		}
 		
 		return returnXandYandAngle;
+	}
+	
+	public float GetCurTerrainCenter(){
+		float returny=GetCurrentTerrainForZ().transform.position.y;
+		
+		return returny;
 	}
 }

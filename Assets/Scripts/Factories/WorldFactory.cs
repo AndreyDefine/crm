@@ -614,8 +614,13 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		Vector3 returnXandYandAngle=terrainElementFactory.GetXandYandAngleSmexForZ(inposition);
 		//addDotToPathIndicator(new Vector3(returnXandYandAngle.x,returnXandYandAngle.y,inposition.z));
 		
-		
 		return returnXandYandAngle;
+	}
+	
+	public float GetCurTerrainCenter(){
+		float returny=terrainElementFactory.GetCurTerrainCenter();
+		
+		return returny;
 	}
 	
 	private void addDotToPathIndicator(Vector3 indot)
@@ -634,7 +639,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	
 	public override Vector3 GetPrevTerrainPos()
 	{
-		TerrainTag prev=terrainElementFactory.GetCurrentTerrainForZ(GlobalOptions.GetPlayerScript().GetCharacterPosition()).GetComponent<TerrainTag>().GetPrevTerrain();
+		TerrainTag prev=terrainElementFactory.GetCurrentTerrainForZ().GetComponent<TerrainTag>().GetPrevTerrain();
 		
 		if(prev)
 		{
@@ -652,12 +657,12 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	
 	public override Vector3 GetCurTerrainPos()
 	{
-		return terrainElementFactory.GetCurrentTerrainForZ(GlobalOptions.GetPlayerScript().GetCharacterPosition()).transform.position;
+		return terrainElementFactory.GetCurrentTerrainForZ().transform.position;
 	}
 	
 	public override float GetTerrainLength()
 	{
-		return terrainElementFactory.GetCurrentTerrainForZ(GlobalOptions.GetPlayerScript().GetCharacterPosition()).GetComponent<TerrainTag>().sizeOfPlane;
+		return terrainElementFactory.GetCurrentTerrainForZ().GetComponent<TerrainTag>().sizeOfPlane;
 	}
 	
 	public override float GetLastTerrainLength()

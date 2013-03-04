@@ -4,7 +4,6 @@ using System.Collections;
 public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	public GameObject Character;
 	public GameObject WhereToLook;
-	public float maxX,minX;
 	public float startVelocity;
 	public float maxVelocity;
 	public float acceleration;
@@ -28,6 +27,8 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	private WorldFactory worldFactoryScript;
 	
 	private Vector3 PlayerFirstPos;
+	private Vector3 CameraFirstPos;
+	private Quaternion CameraFirstRotation;
 	private Vector3 CharacterFirstPos;
 	private Vector3 raznFromWhereToLookAndCharacter;
 	
@@ -59,6 +60,8 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	void Start () {
 		characterMarioC=Character.GetComponent<CharacterMarioC>();
 		PlayerFirstPos=singleTransform.position;
+		CameraFirstPos=MainCamera.transform.position;
+		CameraFirstRotation=MainCamera.transform.rotation;
 		CharacterFirstPos=Character.transform.localPosition;
 		firstWhereToLookLocalPos=WhereToLook.transform.localPosition;
 		raznFromWhereToLookAndCharacter=firstWhereToLookLocalPos-CharacterFirstPos;
@@ -197,6 +200,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 			MoveLeftRight(force);
 			MovingButtons();
 			PlaceBearToControl(posx);
+			TestIsFallen();
 			//MakeMusicSpeed();
 		}
 		
@@ -296,8 +300,8 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		{
 			xSmexcontrol1+=inmoveForce*mnoshOfForce*Time.deltaTime;
 			posx=centerx;
-			xSmexcontrol1=xSmexcontrol1>=maxX?maxX:xSmexcontrol1;
-			xSmexcontrol1=xSmexcontrol1<=minX?minX:xSmexcontrol1;
+			xSmexcontrol1=xSmexcontrol1>=meshPath?meshPath:xSmexcontrol1;
+			xSmexcontrol1=xSmexcontrol1<=-meshPath?-meshPath:xSmexcontrol1;
 			posx+=xSmexcontrol1;
 		}
 			
@@ -365,15 +369,20 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	}
 	
 	private void BearRespawn(){
-		GlobalOptions.playerStates=PlayerStates.WALK;
-		Transform curtransform;
-		curtransform=Character.transform;
-		
+		RotatePlayer(0);
+		GlobalOptions.playerStates=PlayerStates.WALK;		
 		singleTransform.position=PlayerFirstPos;
 		
-		PlaceCharacter(new Vector3(0,0,0));
-		curtransform.localPosition=new Vector3(0,0,0);
-		curtransform.position=new Vector3(curtransform.position.x,CharacterFirstPos.y,curtransform.position.z);
+		Character.transform.localPosition=new Vector3(0,0,0);
+		PlaceBearToControl(0);
+		
+		Debug.Log (PlayerFirstPos);
+		Debug.Log (Character.transform.position);
+		CharacterControllerRespawn();
+		
+		//MainCamera
+		MainCamera.transform.position=CameraFirstPos;
+		MainCamera.transform.rotation=CameraFirstRotation;
 	}
 	
 	
@@ -463,6 +472,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 
 	public void GameOver(){
+		characterMarioC.Freeze();
 		guiLayer.ShowGameOver();
 	}
 	
@@ -477,6 +487,17 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		{
 			characterMarioC.Down();
 			GlobalOptions.playerStates=PlayerStates.WALK;
+		}
+	}
+	
+	private void CharacterControllerRespawn(){
+		characterMarioC.Respawn();
+	}
+	
+	private void TestIsFallen(){
+		if(Character.transform.position.y+20<worldFactoryScript.GetCurTerrainCenter())
+		{
+			GameOver();
 		}
 	}
 }
