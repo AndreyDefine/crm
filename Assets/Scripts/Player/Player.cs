@@ -252,6 +252,8 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		}
 		Vector3 smex=new Vector3(0,0,GetRealVelocity());
 		Vector3 oldPos=singleTransform.position;
+		//Vector3 oldPos=Character.transform.position;
+		Debug.Log (oldPos);
 		centerXandYandAngle=worldFactoryScript.GetXandYandAngleSmexForZ(smex);	
 		
 		Transform curtransform=Character.transform;
@@ -353,6 +355,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	private void RotatePlayer(float inangle)
 	{
+		//MakeRotationCharacterController(inangle);
 		singleTransform.rotation=Quaternion.Euler(singleTransform.rotation.x, inangle, singleTransform.rotation.z);
 	}
 	
@@ -360,15 +363,17 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	{	
 		Vector3 charpos=Character.transform.localPosition;
 		Character.transform.localPosition=new Vector3(inposx,charpos.y,charpos.z);
-		WhereToLook.transform.localPosition=new Vector3(inposx*whereToLookParalax,charpos.y+raznFromWhereToLookAndCharacter.y,firstWhereToLookLocalPos.z);
+		WhereToLook.transform.localPosition=new Vector3(inposx*whereToLookParalax,charpos.y+raznFromWhereToLookAndCharacter.y,raznFromWhereToLookAndCharacter.z+charpos.z);
 	}
 	
 	public void PlaceCharacter(Vector3 inpos)
 	{
+		//MakeMovingCharacterControllerForward(inpos);
 		singleTransform.position=inpos;
 	}
 	
 	private void BearRespawn(){
+		GlobalOptions.whereToBuild=new Vector3(0,0,1);
 		RotatePlayer(0);
 		GlobalOptions.playerStates=PlayerStates.WALK;		
 		singleTransform.position=PlayerFirstPos;
@@ -490,14 +495,37 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		}
 	}
 	
+	private void MakeMovingCharacterControllerForward(Vector3 inpos){
+		Vector3 curpos=Character.transform.position;
+		
+		float forward=Mathf.Sqrt(Mathf.Pow (inpos.x-curpos.x,2)+Mathf.Pow (inpos.z-curpos.z,2));
+		//Debug.Log (forward);
+		characterMarioC.SetMovement(forward);
+	}
+	
+	private void MakeRotationCharacterController(float inangle)
+	{
+		//Debug.Log (inangle);
+		Character.transform.rotation=Quaternion.Euler(0, inangle, 0);
+		WhereToLook.transform.rotation=Quaternion.Euler(0, inangle, 0);
+	}
+	
 	private void CharacterControllerRespawn(){
 		characterMarioC.Respawn();
 	}
 	
 	private void TestIsFallen(){
-		if(Character.transform.position.y+20<worldFactoryScript.GetCurTerrainCenter())
+		if(Character.transform.position.y+10<worldFactoryScript.GetCurTerrainCenter())
 		{
 			GameOver();
 		}
+	}
+	
+	public void PlaceCharacterFirstly(Vector3 inpos)
+	{
+		/*Character.transform.position=inpos;
+		Vector3 charpos=Character.transform.localPosition;
+		WhereToLook.transform.localPosition=new Vector3(0,charpos.y+raznFromWhereToLookAndCharacter.y,raznFromWhereToLookAndCharacter.z+charpos.z);
+		*/
 	}
 }

@@ -20,8 +20,9 @@ public class CharacterMarioC : MonoBehaviour {
 	private void UpdateSmoothedMovementDirection ()
 	{
 		// Target direction relative to the camera	
-		Vector3 targetDirection=new Vector3(0,0,1);
+		//Vector3 targetDirection=new Vector3(0,0,1);
 		
+		//moveDirection =new  Vector3(0, 0, 1);
 		if(moveDirection.z>=0)
 		{
 			moveDirection =new  Vector3(0, 0, -0.1f);
@@ -47,6 +48,7 @@ public class CharacterMarioC : MonoBehaviour {
 		if(!freezed)
 		{
 			verticalSpeed -= gravity * Time.deltaTime;
+			controller.Move(new Vector3(0,0,0));
 		}
 		
 		Vector3 movement = moveDirection + new Vector3 (0, verticalSpeed, 0);
@@ -98,5 +100,11 @@ public class CharacterMarioC : MonoBehaviour {
 	{
 		freezed=false;
 		//controller.velocity=new Vector3(0,0,0);
+	}
+	
+	public void SetMovement(float inmovement)
+	{
+		moveDirection =new  Vector3(0, 0, inmovement);
+		Debug.Log (moveDirection);
 	}
 }

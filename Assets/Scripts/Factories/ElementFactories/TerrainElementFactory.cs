@@ -57,7 +57,12 @@ public class TerrainElementFactory: AbstractElementFactory{
 		if(!currentTerrain)
 		{
 			currentTerrain=terrainsList[0] as GameObject;
-			currentTerrain.GetComponent<TerrainTag>().SetCurDotIndexAndCurPos(2,0);
+			TerrainTag terrainTag=currentTerrain.GetComponent<TerrainTag>();
+			terrainTag.SetCurDotIndexAndCurPos(2,0);
+			
+			
+			Debug.Log ("Firstly");
+			GlobalOptions.GetPlayerScript().PlaceCharacterFirstly(terrainTag.GetXandYandAngleSmexForZ(new Vector3(0,0,0.001f)));
 		}
 	
 		return currentTerrain;
