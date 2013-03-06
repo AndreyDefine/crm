@@ -10,7 +10,7 @@ public class PostalEnemy : AbstractEnemy {
 		GuiLayer.AddMoney(50);
 		GuiLayer.AddScoreScale(1);
 		GuiLayer.AddPostal();
-		AudioSource.PlayClipAtPoint(playOnHit, transform.position);
+		PlayClipSound();
 		MakeInactive();
 	}
 	

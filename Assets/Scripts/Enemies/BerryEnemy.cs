@@ -8,8 +8,7 @@ public class BerryEnemy : AbstractEnemy {
 	public override void OnHit(Collider other)
 	{
 		GuiLayer.AddToLife(1);
-		AudioSource.PlayClipAtPoint(playOnHit, transform.position);
-		//audio.Play();
+		PlayClipSound();
 		MakeInactive();
 	}
 	

@@ -1,18 +1,23 @@
 using UnityEngine;
 using System.Collections;
 
-public class CharacterMarioC : MonoBehaviour {	
+public class CharacterMarioC : Abstract {	
 	public float jumpSpeed = 12f;
 	public float gravity = 9.81f;
 
-	private Vector3 moveDirection = Vector3.zero;
+	private float moveforward=0;
 	private float verticalSpeed = 0f;
 	
 	private bool grounded=false;
 	private bool jumping=false;
-	private bool downing=false;
+	private bool stumble=false;
+	//private bool downing=false;
 	
 	private bool freezed=false;
+	
+	private float forcex=0;
+	
+	private Player playerScript;
 	
 	private CharacterController controller;
 	// Update is called once per frame
@@ -23,17 +28,18 @@ public class CharacterMarioC : MonoBehaviour {
 		//Vector3 targetDirection=new Vector3(0,0,1);
 		
 		//moveDirection =new  Vector3(0, 0, 1);
-		if(moveDirection.z>=0)
+		if(moveforward>=0)
 		{
-			moveDirection =new  Vector3(0, 0, -0.1f);
+			moveforward=-0.1f;
 		}else
 		{
-			moveDirection =new  Vector3(0, 0, 0.1f);
+			moveforward=0.1f;
 		}
 	}
 	
 	void Start()
 	{
+		playerScript=GlobalOptions.GetPlayerScript();
 		controller = GetComponent<CharacterController>();
 	}
 	
@@ -41,22 +47,42 @@ public class CharacterMarioC : MonoBehaviour {
 
 		UpdateSmoothedMovementDirection();
 	
-		if (grounded&&!jumping||freezed) {
+		if (grounded&&!jumping) {
 			verticalSpeed = 0;
 		}
 		// Apply gravity
 		if(!freezed)
 		{
 			verticalSpeed -= gravity * Time.deltaTime;
-			controller.Move(new Vector3(0,0,0));
+		}
+		else
+		{
+			moveforward=0;
 		}
 		
-		Vector3 movement = moveDirection + new Vector3 (0, verticalSpeed, 0);
-		movement *= Time.deltaTime;
+		Vector3 right = singleTransform.TransformDirection(Vector3.right);
+		Vector3 forward = singleTransform.TransformDirection(Vector3.forward);
 		
+		Vector3 movement = moveforward*forward + new Vector3 (0, verticalSpeed, 0) + forcex*right;
+		
+		//Debug.Log (movement);
+		
+		if(freezed)
+		{
+			movement=Vector3.zero;
+		}
+		
+		movement *= Time.deltaTime;
 		// Move the controller
 		CollisionFlags flags = controller.Move(movement);
 		grounded = (flags & CollisionFlags.CollidedBelow) != 0;
+		
+		stumble = (flags & CollisionFlags.CollidedSides) != 0;
+		
+		if(stumble)
+		{
+			playerScript.Stumble();
+		}
 		
 		// We are in jump mode but just became grounded
 		if (grounded)
@@ -86,7 +112,7 @@ public class CharacterMarioC : MonoBehaviour {
 	public void Down()
 	{
 		if (grounded||jumping) {
-			downing = true;
+			//downing = true;
 			verticalSpeed = -jumpSpeed;
 		}
 	}
@@ -104,7 +130,13 @@ public class CharacterMarioC : MonoBehaviour {
 	
 	public void SetMovement(float inmovement)
 	{
-		moveDirection =new  Vector3(0, 0, inmovement);
-		Debug.Log (moveDirection);
+		moveforward=inmovement;
+		Debug.Log (moveforward);
+	}
+	
+	public void LeftRight(float inx)
+	{
+		//Debug.Log(inx);
+		forcex=inx;
 	}
 }

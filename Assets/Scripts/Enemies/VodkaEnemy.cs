@@ -8,7 +8,7 @@ public class VodkaEnemy : AbstractEnemy {
 	public override void OnHit(Collider other)
 	{
 		GuiLayer.AddVodka(1);
-		AudioSource.PlayClipAtPoint(playOnHit, transform.position);
+		PlayClipSound();
 		//audio.Play();
 		MakeInactive();
 	}

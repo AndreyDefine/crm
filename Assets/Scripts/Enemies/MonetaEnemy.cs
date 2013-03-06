@@ -8,18 +8,18 @@ public class MonetaEnemy : AbstractEnemy {
 	public override void OnHit(Collider other)
 	{
 		GuiLayer.AddMoney(300);
-		AudioSource.PlayClipAtPoint(playOnHit, transform.position);
+		PlayClipSound();
 		//audio.Play();
 		MakeInactive();
 	}
 	
 	void Update () {
-		//Rotate();
+		Rotate();
 	}
 	
 	public void Rotate()
 	{
-		singleTransform.Rotate(new Vector3(0,0,Time.deltaTime*100));
+		singleTransform.Rotate(new Vector3(0,Time.deltaTime*100,0));
 	}
 	
 	public override void ReStart()

@@ -9,6 +9,6 @@ public class WoodEnemy : AbstractEnemy {
 	{
 		GuiLayer.AddToLife(-3);
 		GuiLayer.AddHeadStars();
-		AudioSource.PlayClipAtPoint(playOnHit, transform.position);
+		PlayClipSound();
 	}
 }

@@ -9,6 +9,6 @@ public class ElkEnemy : AbstractEnemy {
 	{
 		GuiLayer.AddToLife(-50);
 		GuiLayer.AddHeadStars();
-		AudioSource.PlayClipAtPoint(playOnHit, transform.position);
+		PlayClipSound();
 	}
 }

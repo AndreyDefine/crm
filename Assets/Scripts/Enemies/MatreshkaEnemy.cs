@@ -8,7 +8,7 @@ public class MatreshkaEnemy : AbstractEnemy {
 	public override void OnHit(Collider other)
 	{
 		GuiLayer.AddScoreScale(1);
-		AudioSource.PlayClipAtPoint(playOnHit, transform.position);
+		PlayClipSound();
 		//audio.Play();
 		MakeInactive();
 	}

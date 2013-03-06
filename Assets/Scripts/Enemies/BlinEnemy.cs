@@ -9,7 +9,7 @@ public class BlinEnemy : AbstractEnemy {
 	{
 		//+1 к жизни
 		GuiLayer.AddToLife(5);
-		AudioSource.PlayClipAtPoint(playOnHit, transform.position);
+		PlayClipSound();
 		MakeInactive();
 	}
 	

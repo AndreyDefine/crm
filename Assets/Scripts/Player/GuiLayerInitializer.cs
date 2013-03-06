@@ -584,7 +584,7 @@ public class GuiLayerInitializer : Abstract {
 	private void MakeGameOver()
 	{
 		//stop mushroom
-		if(Time.time-GameOverTime>2)
+		if(Time.time-GameOverTime>0.3)
 		{
 			flagGameOver=false;
 			ScreenLoader screenLoader;
@@ -643,12 +643,14 @@ public class GuiLayerInitializer : Abstract {
 	}
 	
 	public void AddToLife(int inlife){
+		
+		int oldlife=curLife;
 		//препятствие и водка
 		if(inlife<0&&flagVodka){
 			return;
 		}
 		curLife+=inlife;
-		if(curLife<=0)
+		if(curLife<=0&&oldlife>0)
 		{
 			ShowGameOver();
 		}

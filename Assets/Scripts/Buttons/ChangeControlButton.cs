@@ -3,7 +3,7 @@ using System.Collections;
 
 public class ChangeControlButton : GuiButton {	
 	
-	private int maxControl=2;
+	private int maxControl=1;
 	
 	public override bool TouchBegan(Vector2 position,int fingerId) {
 		bool isTouchHandled=base.TouchBegan(position,fingerId)&&GlobalOptions.gameState==GameStates.GAME;

@@ -34,7 +34,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	private Vector3 firstWhereToLookLocalPos;
 	
-	private int PathNumber;
+	private int PathNumber,prevPathNumber;
 	
 	private bool PathChanging;
 	
@@ -52,8 +52,6 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	private CharacterMarioC characterMarioC;
 	
 	float posx;
-	
-	float FloatPathNumber;
 	
 	private GuiLayerInitializer guiLayer;
 	// Use this for initialization
@@ -76,8 +74,8 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		touchPriority=3;
 		swallowTouches=false;
 		PathNumber=0;
+		prevPathNumber=0;
 		PathChanging=false;
-		FloatPathNumber=0;
 		VelocityVodka=1;
 		VelocityMushroom=1;
 		xSmexcontrol1=0;
@@ -109,9 +107,9 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	public void Restart()
 	{
 		PathChanging=false;
-		FloatPathNumber=0;
 		force=0;
 		PathNumber=0;
+		prevPathNumber=0;
 		xSmexcontrol1=0;
 		oldMetersz=0;
 		allMeters=0;
@@ -184,14 +182,6 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		guiLayer.RemoveStrobile();
 	}
 	
-	void FixedUpdate()
-	{
-		if(GlobalOptions.gameState==GameStates.GAME)
-		{
-			MakeMovingCharacterController();
-		}
-	}
-	
 
 	// Update is called once per frame
 	void Update () {		
@@ -200,6 +190,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 			MoveLeftRight(force);
 			MovingButtons();
 			PlaceBearToControl(posx);
+			MakeMovingCharacterController();
 			TestIsFallen();
 			//MakeMusicSpeed();
 		}
@@ -253,25 +244,24 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		Vector3 smex=new Vector3(0,0,GetRealVelocity());
 		Vector3 oldPos=singleTransform.position;
 		//Vector3 oldPos=Character.transform.position;
-		Debug.Log (oldPos);
 		centerXandYandAngle=worldFactoryScript.GetXandYandAngleSmexForZ(smex);	
 		
 		Transform curtransform=Character.transform;
 		
 		posx=curtransform.localPosition.x;
 		//смена дорожки
-		if(GlobalOptions.playerStates==PlayerStates.LEFT&&!PathChanging){
+		if(GlobalOptions.playerStates==PlayerStates.LEFT){
 			PathChanging=true;
 			GlobalOptions.playerStates=PlayerStates.WALK;
-			FloatPathNumber=PathNumber;
+			prevPathNumber=PathNumber;
 			PathNumber--;
 			PathNumber=PathNumber<-pathNumberLeftRight?-pathNumberLeftRight:PathNumber;
 		}
 		
-		if(GlobalOptions.playerStates==PlayerStates.RIGHT&&!PathChanging){
+		if(GlobalOptions.playerStates==PlayerStates.RIGHT){
 			PathChanging=true;
 			GlobalOptions.playerStates=PlayerStates.WALK;
-			FloatPathNumber=PathNumber;
+			prevPathNumber=PathNumber;
 			PathNumber++;
 			PathNumber=PathNumber>pathNumberLeftRight?pathNumberLeftRight:PathNumber;
 		}
@@ -279,26 +269,25 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		float centerx=0;
 		
 		//Ezxtra test out of bounds
-		if(typeOfControl==0||typeOfControl==2)
+		if(typeOfControl==0||typeOfControl==1)
 		{		
-			posx=posx>centerx?centerx:posx;
-			posx=posx<centerx?centerx:posx;
+			float forcex=(-Character.transform.localPosition.x+PathNumber*meshPath)*roadChangeForce;
 			//меняем дорожку
 			if(PathChanging){	
-				FloatPathNumber+=((PathNumber-FloatPathNumber))*GetRealVelocityWithDeltaTimeAndNoAcceleration()*roadChangeForce; 
-				if(Mathf.Abs(FloatPathNumber-PathNumber)<0.1*GetRealVelocityWithDeltaTimeAndNoAcceleration())
+				if(Mathf.Abs (forcex)>0.01*roadChangeForce)
 				{
-					FloatPathNumber=PathNumber;
+					MoveCharacterControllerLeftRight(0);
 					PathChanging=false;
 				}
-				posx+=FloatPathNumber*meshPath;
 			}
 			else{
-				posx+=PathNumber*meshPath;
+				MoveCharacterControllerLeftRight(forcex);
 			}
 		}	
 		
-		if(typeOfControl==1)
+		
+		//accelerometer
+		if(typeOfControl==2)
 		{
 			xSmexcontrol1+=inmoveForce*mnoshOfForce*Time.deltaTime;
 			posx=centerx;
@@ -341,7 +330,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 			RotatePlayer(angle);
 		}
 		
-		PlaceCharacter(new Vector3(centerXandYandAngle.x,0,centerXandYandAngle.z));
+		PlaceCharacter(new Vector3(centerXandYandAngle.x,PlayerFirstPos.y,centerXandYandAngle.z));
 		
 		//meters;
 		oldMetersz+=smex.z;
@@ -362,8 +351,8 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	public void PlaceBearToControl(float inposx)
 	{	
 		Vector3 charpos=Character.transform.localPosition;
-		Character.transform.localPosition=new Vector3(inposx,charpos.y,charpos.z);
-		WhereToLook.transform.localPosition=new Vector3(inposx*whereToLookParalax,charpos.y+raznFromWhereToLookAndCharacter.y,raznFromWhereToLookAndCharacter.z+charpos.z);
+		//Character.transform.localPosition=new Vector3(inposx,charpos.y,charpos.z);
+		WhereToLook.transform.localPosition=new Vector3(charpos.x*whereToLookParalax,charpos.y+raznFromWhereToLookAndCharacter.y,raznFromWhereToLookAndCharacter.z+charpos.z);
 	}
 	
 	public void PlaceCharacter(Vector3 inpos)
@@ -380,9 +369,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		
 		Character.transform.localPosition=new Vector3(0,0,0);
 		PlaceBearToControl(0);
-		
-		Debug.Log (PlayerFirstPos);
-		Debug.Log (Character.transform.position);
+
 		CharacterControllerRespawn();
 		
 		//MainCamera
@@ -407,20 +394,20 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 				
 				PathChanging=true;
 				GlobalOptions.playerStates=PlayerStates.WALK;
-				FloatPathNumber=PathNumber;
+				prevPathNumber=PathNumber;
 				PathNumber=1;
 			}			
 			if(force<-epsilonForse&&PathNumber>=0)
 			{
 				PathChanging=true;
 				GlobalOptions.playerStates=PlayerStates.WALK;
-				FloatPathNumber=PathNumber;
+				prevPathNumber=PathNumber;
 				PathNumber=-1;
 			}
 			if(force>=-epsilonForse/3&&force<=epsilonForse/3&&PathNumber!=0){
 				PathChanging=true;
 				GlobalOptions.playerStates=PlayerStates.WALK;
-				FloatPathNumber=PathNumber;
+				prevPathNumber=PathNumber;
 				PathNumber=0;
 			}
 		}
@@ -495,6 +482,11 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		}
 	}
 	
+	private void MoveCharacterControllerLeftRight(float inx)
+	{
+		characterMarioC.LeftRight(inx);
+	}
+	
 	private void MakeMovingCharacterControllerForward(Vector3 inpos){
 		Vector3 curpos=Character.transform.position;
 		
@@ -519,6 +511,15 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		{
 			GameOver();
 		}
+	}
+	
+	public void Stumble()
+	{
+		MoveCharacterControllerLeftRight(0);
+		PathNumber=prevPathNumber;
+		PathChanging=true;
+		guiLayer.AddToLife(-3);
+		guiLayer.AddHeadStars();
 	}
 	
 	public void PlaceCharacterFirstly(Vector3 inpos)

@@ -66,4 +66,12 @@ public class AbstractEnemy : Abstract {
 	{
 		//do nothing;	
 	}
+	
+	protected void PlayClipSound()
+	{
+		if(playOnHit)
+		{
+			AudioSource.PlayClipAtPoint(playOnHit, transform.position);
+		}
+	}
 }

@@ -7,7 +7,7 @@ public class GrannyEnemy : AbstractEnemy {
 	
 	public override void OnHit(Collider other)
 	{
-		AudioSource.PlayClipAtPoint(playOnHit, transform.position);
+		PlayClipSound();
 		
 		MakeInactive();
 		MakeAction();

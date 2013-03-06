@@ -13,7 +13,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	public GameObject treeFactory;
 	public GameObject EnemiesFactory;
 	public GameObject BerriesFactory;
-	public GameObject StrobileFactory;
+	public GameObject MoneyFactory;
 	public GameObject []levelTags;
 	
 	private GameObject terrainFactoryObject;
@@ -28,8 +28,8 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	private GameObject berryFactoryObject;
 	private AbstractElementFactory berryElementFactory;
 	
-	private GameObject strobileFactoryObject;
-	private AbstractElementFactory strobileElementFactory;
+	private GameObject moneyFactoryObject;
+	private AbstractElementFactory moneyElementFactory;
 	
 	private GuiLayerInitializer guiLayer;
 	
@@ -65,9 +65,9 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		berryFactoryObject=Instantiate (BerriesFactory) as GameObject;
 		berryElementFactory=berryFactoryObject.GetComponent("AbstractElementFactory") as AbstractElementFactory;
 		
-		//strobiles
-		strobileFactoryObject=Instantiate (StrobileFactory) as GameObject;
-		strobileElementFactory=strobileFactoryObject.GetComponent("AbstractElementFactory") as AbstractElementFactory;
+		//money
+		moneyFactoryObject=Instantiate (MoneyFactory) as GameObject;
+		moneyElementFactory=moneyFactoryObject.GetComponent("AbstractElementFactory") as AbstractElementFactory;
 		
 		//ищем gui слой
 		guiLayer=GlobalOptions.GetGuiLayer();
@@ -168,7 +168,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		enemyElementFactory.ReStart();
 		treeElementFactory.ReStart();
 		berryElementFactory.ReStart();
-		strobileElementFactory.ReStart();
+		moneyElementFactory.ReStart();
 		
 		for(i=0;i<=numberOfTerrains;i++)
 		{
@@ -284,8 +284,8 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 				berryElementFactory.AddExtraObjectInPull();
 				if(FlagCoRoutine) yield return null;
 			}
-			if(strobileElementFactory.flagGenerate){
-				strobileElementFactory.AddExtraObjectInPull();
+			if(moneyElementFactory.flagGenerate){
+				moneyElementFactory.AddExtraObjectInPull();
 				if(FlagCoRoutine) yield return null;
 			}
 			//trees
@@ -308,6 +308,11 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		//berry
 		ArrayList markedObjectsBerry=new ArrayList();	
 		int neededNumberOfBerries=2;
+		
+		//money
+		ArrayList markedObjectsMoney=new ArrayList();	
+		int neededNumberOfMoney=20;
+		
 		//enemy
 		ArrayList markedObjectsEnemy=new ArrayList();	
 		int neededNumberOfEnemy=2;
@@ -331,6 +336,11 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 				//enemy
 				if(allChildren[i].name=="enemy"&&enemyElementFactory.flagGenerate){
 					markedObjectsEnemy.Add (allChildren[i]);
+				}
+				
+				//money
+				if(allChildren[i].name=="money"&&moneyElementFactory.flagGenerate){
+					markedObjectsMoney.Add (allChildren[i]);
 				}	
 			}
 		}
@@ -358,6 +368,23 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 					addOneEnemyAtMarker(markedObjectsEnemy[randIndex]as Transform,interrainTag);
 					markedObjectsEnemy.RemoveAt(randIndex);
 					if(FlagCoRoutine) yield return null;
+				}
+			}
+			
+			//money
+			//вероятность 0.5
+			if(Random.Range(0,10)>5)
+			{
+				if(markedObjectsMoney.Count!=0)
+				{
+					kolvo=neededNumberOfMoney>markedObjectsMoney.Count?markedObjectsMoney.Count:neededNumberOfMoney;
+					//Debug.Log (kolvo);
+					for(i=0;i<kolvo;i++){
+						randIndex=Random.Range(0,markedObjectsMoney.Count);
+						addOneMoneyAtMarker(markedObjectsMoney[randIndex]as Transform,interrainTag);
+						markedObjectsMoney.RemoveAt(randIndex);
+						if(FlagCoRoutine) yield return null;
+					}
 				}
 			}
 		}
@@ -402,6 +429,20 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	private void addOneBerryAtMarker(Transform marker,TerrainTag interrainTag){
 		GameObject newObject;
 		newObject	= berryElementFactory.GetNewObject();
+			
+		//set position & rotation
+		newObject.transform.position=marker.position;
+		
+		newObject.transform.rotation=marker.rotation;
+	
+		if(interrainTag){
+			interrainTag.PushToAllElements(newObject);
+		}
+	}
+	
+	private void addOneMoneyAtMarker(Transform marker,TerrainTag interrainTag){
+		GameObject newObject;
+		newObject	= moneyElementFactory.GetNewObject();
 			
 		//set position & rotation
 		newObject.transform.position=marker.position;
@@ -540,22 +581,17 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	
 	public GameObject AddTerrain()
 	{
-		GameObject newTerrain;
-		newTerrain=terrainElementFactory.GetNewObjectWithName(roadTerrainsNames[currentRoadPos]);
-		currentRoadPos++;		
-		return newTerrain;
-	}
-			
-	public void addStrobile(Vector3 inpos,TerrainTag interrainTag)
-	{
-		GameObject newObject;
-		inpos+=strobileElementFactory.GetInitialPos();
-		newObject=strobileElementFactory.GetNewObject();
-		
-		newObject.transform.Translate(inpos);
-		if(interrainTag){
-			interrainTag.PushToAllElements(newObject);
+		GameObject newTerrain=null;
+		if(firstTimeInit)
+		{
+			newTerrain=terrainElementFactory.GetNewObjectWithName(roadTerrainsNames[currentRoadPos]);
+			currentRoadPos++;
 		}
+		else
+		{
+			newTerrain=terrainElementFactory.GetNewObject();
+		}
+		return newTerrain;
 	}
 	
 	public void addEnemy(Vector3 inpos,TerrainTag interrainTag)

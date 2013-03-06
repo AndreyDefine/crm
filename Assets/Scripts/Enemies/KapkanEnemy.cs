@@ -11,7 +11,7 @@ public class KapkanEnemy : AbstractEnemy {
 	{
 		GuiLayer.AddToLife(-3);
 		GuiLayer.AddHeadStars();
-		AudioSource.PlayClipAtPoint(playOnHit, transform.position);
+		PlayClipSound();
 		MakeInactive();
 	}
 	

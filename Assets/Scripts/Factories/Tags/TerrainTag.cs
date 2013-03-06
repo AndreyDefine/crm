@@ -147,8 +147,6 @@ public class TerrainTag : AbstractTag{
 			FlagLeft=true;
 		}
 		
-		int i;
-		
 		//find all marks
 		Transform[] allChildrenPaht3D = Path3D.gameObject.GetComponentsInChildren<Transform>();
 		
@@ -230,12 +228,11 @@ public class TerrainTag : AbstractTag{
 		float testlength;
 		float needShag=inposition.z;
 		float t;
-		float Epsilon=0.01f;
 		
 		float length1=0,length2=0;
 		
 		//Vector2 BezieDoty;
-		Vector2 BezieDot,BezieDot2,origin,control,destination;
+		Vector2 BezieDot,origin,control,destination;
 		//Vector2 originy,controly,destinationy;
 		
 		for(i=curDotIndex;i<roadPathTransformArray.Count-1;i++)
@@ -358,7 +355,7 @@ public class TerrainTag : AbstractTag{
 		
 		
 		BezieDot=GetQuadBezieForT(origin,control,destination,t);
-		BezieDot2=GetQuadBezieForT(origin,control,destination,t-Epsilon);
+		//BezieDot2=GetQuadBezieForT(origin,control,destination,t-Epsilon);
 		
 		//BezieDoty=GetQuadBezieForT(originy,controly,destinationy,t);
 		

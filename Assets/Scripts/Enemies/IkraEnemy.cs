@@ -8,7 +8,7 @@ public class IkraEnemy : AbstractEnemy {
 	public override void OnHit(Collider other)
 	{
 		GuiLayer.AddMoney(100);
-		AudioSource.PlayClipAtPoint(playOnHit, transform.position);
+		PlayClipSound();
 		//audio.Play();
 		MakeInactive();
 	}

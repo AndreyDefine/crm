@@ -8,7 +8,7 @@ public class StrobileEnemy : AbstractEnemy {
 	public override void OnHit(Collider other)
 	{
 		GuiLayer.ShowQuestion(gameObject);
-		//AudioSource.PlayClipAtPoint(playOnHit, transform.position);
+		PlayClipSound();
 	}
 	
 	public override void OnExit(Collider other)
