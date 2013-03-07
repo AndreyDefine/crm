@@ -82,7 +82,7 @@ public class TerrainElementFactory: AbstractElementFactory{
 		
 		if(curTerrain){
 			terrainTag=curTerrain.GetComponent("TerrainTag") as TerrainTag;
-			returnXandYandAngle=terrainTag.GetXandYandAngleSmexForZ(inposition);
+			returnXandYandAngle=terrainTag.GetXandYandAngleSmexForZ(inposition,false);
 		}
 		else
 		{

@@ -577,6 +577,7 @@ public class GuiLayerInitializer : Abstract {
 	{
 		GlobalOptions.playerStates=PlayerStates.DIE;
 		GlobalOptions.gameState=GameStates.GAME_OVER;
+		playerScript.GameOver();
 		flagGameOver=true;
 		GameOverTime=Time.time;
 	}

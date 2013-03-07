@@ -301,31 +301,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		
 		if(typeOfControl==0||typeOfControl==1||typeOfControl==2)
 		{
-			float angle=0;
-			
-			if(oldPos.z-centerXandYandAngle.z<0&&oldPos.x-centerXandYandAngle.x<=0)
-			{
-				angle=Mathf.Atan ((oldPos.x-centerXandYandAngle.x)/(oldPos.z-centerXandYandAngle.z));
-			}
-			else
-			if(oldPos.z-centerXandYandAngle.z>=0&&oldPos.x-centerXandYandAngle.x<=0)
-			{
-				angle=3.141592653589f+Mathf.Atan ((oldPos.x-centerXandYandAngle.x)/(oldPos.z-centerXandYandAngle.z));
-			}
-			else
-			if(oldPos.z-centerXandYandAngle.z<0&&oldPos.x-centerXandYandAngle.x>0)
-			{
-				angle=3.141592653589f*2+Mathf.Atan ((oldPos.x-centerXandYandAngle.x)/(oldPos.z-centerXandYandAngle.z));
-			}
-			else
-			if(oldPos.z-centerXandYandAngle.z>=0&&oldPos.x-centerXandYandAngle.x>0)
-			{
-				angle=3.141592653589f+Mathf.Atan ((oldPos.x-centerXandYandAngle.x)/(oldPos.z-centerXandYandAngle.z));
-			}
-			
-			//Debug.Log ("angle="+angle+"oldPos.x-centerXandYandAngle.x="+(oldPos.x-centerXandYandAngle.x)+"oldPos.z-centerXandYandAngle.z="+(oldPos.z-centerXandYandAngle.z));
-			angle*=180/3.141592653589f;
-			//Debug.Log (angle);
+			float angle=GlobalOptions.GetAngleOfRotation(oldPos,centerXandYandAngle);
 			
 			RotatePlayer(angle);
 		}
@@ -386,7 +362,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	public virtual bool Accelerate(Vector3 acceleration,int infingerId) {
 		force = acceleration.x*2f;
-		if(typeOfControl==2){
+		if(typeOfControl==1){
 			float epsilonForse=0.6f;
 			//right??
 			if(force>epsilonForse&&PathNumber<=0)
@@ -464,8 +440,8 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 
 	public void GameOver(){
+		Debug.Log ("GameOver");
 		characterMarioC.Freeze();
-		guiLayer.ShowGameOver();
 	}
 	
 	private void MakeMovingCharacterController(){
@@ -509,7 +485,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	private void TestIsFallen(){
 		if(Character.transform.position.y+10<worldFactoryScript.GetCurTerrainCenter())
 		{
-			GameOver();
+			guiLayer.ShowGameOver();
 		}
 	}
 	

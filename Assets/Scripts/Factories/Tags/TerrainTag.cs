@@ -30,12 +30,17 @@ public class TerrainTag : AbstractTag{
 	float curPos=0;
 	
 	
+	int customDotIndex=1;
+	float customPos=0;
+	
 	protected ArrayList AllElements=new ArrayList();
 	protected ArrayList InactiveElements=new ArrayList();
 	
 	private float mnoshitel;
 	
 	private TerrainTag next=null,prev=null;
+	
+	private bool flagNextTerrainCustom;
 	
 	//rotation
 	public int rotatePointIndex=0;
@@ -220,7 +225,19 @@ public class TerrainTag : AbstractTag{
 		curPos=inpos;
 	}
 	
-	public Vector3 GetXandYandAngleSmexForZ(Vector3 inposition)
+	public bool GetflagNextTerrainCustom()
+	{
+		return flagNextTerrainCustom;
+	}
+	
+	public void SetCustomDotIndex(int inindex,float inpos)
+	{
+		customDotIndex=inindex;
+		customPos=inpos;
+		flagNextTerrainCustom=false;
+	}
+	
+	public Vector3 GetXandYandAngleSmexForZ(Vector3 inposition, bool usecustomDotIndexAndCustomPos)
 	{
 		Vector3 returnXandYandAngle=new Vector3(0,0,0);
 		int i;
@@ -229,24 +246,43 @@ public class TerrainTag : AbstractTag{
 		float needShag=inposition.z;
 		float t;
 		
+		int tekDotIndex=0;
+		float tekPos=0;
+		
+		if(usecustomDotIndexAndCustomPos)
+		{
+			tekDotIndex=customDotIndex;
+			tekPos=customPos;
+		}
+		else
+		{
+			tekDotIndex=curDotIndex;
+			tekPos=curPos;
+		}
+		
 		float length1=0,length2=0;
 		
 		//Vector2 BezieDoty;
 		Vector2 BezieDot,origin,control,destination;
 		//Vector2 originy,controly,destinationy;
 		
-		for(i=curDotIndex;i<roadPathTransformArray.Count-1;i++)
+		for(i=tekDotIndex;i<roadPathTransformArray.Count-1;i++)
 		{
-			//nextterrain
-			if(i>roadPathTransformArray.Count-3)
+			if(i>roadPathTransformArray.Count-2&&usecustomDotIndexAndCustomPos)
 			{
-				//Debug.Log ("i>roadPathTransformArray.Count-3");
+				Debug.Log ("i>roadPathTransformArray.Count");
+				flagNextTerrainCustom=true;
+				return Vector3.zero;
+			}
+			//nextterrain
+			if(i>roadPathTransformArray.Count-3&&!usecustomDotIndexAndCustomPos)
+			{
 				int newCurDot=1;
 				GlobalOptions.GetWorldFactory().GetComponent<WorldFactory>().TryAddTerrrain();
 				(abstractElementFactory as TerrainElementFactory).SetNextCurrentTerrain(next.gameObject);
-				//Debug.Log ("newCurDot="+newCurDot+"curPos="+curPos);
-				next.SetCurDotIndexAndCurPos(newCurDot,curPos);
-				return next.GetXandYandAngleSmexForZ(inposition);
+		
+				next.SetCurDotIndexAndCurPos(newCurDot,tekPos);
+				return next.GetXandYandAngleSmexForZ(inposition,usecustomDotIndexAndCustomPos);
 			}
 			
 			origin=new Vector2((roadPathTransformArray[i].position.x+roadPathTransformArray[i-1].position.x)/2,(roadPathTransformArray[i].position.z+roadPathTransformArray[i-1].position.z)/2);
@@ -255,60 +291,60 @@ public class TerrainTag : AbstractTag{
 			
 			/////
 			/*testlength=Mathf.Sqrt(Mathf.Pow (destination.x-origin.x,2)+Mathf.Pow (destination.y-origin.y,2));
-			Debug.Log (curPos);
-			if(testlength-curPos>=needShag-length)
+			Debug.Log (tekPos);
+			if(testlength-tekPos>=needShag-length)
 			{
 				//нашли
-				curPos+=needShag-length;
+				tekPos+=needShag-length;
 				break;
 			}
 			else
 			{
-				length+=testlength-curPos;
-				curPos=0;
+				length+=testlength-tekPos;
+				tekPos=0;
 			}*/
 				
 			//наматываем на длинну
-			if(curPos<0&&i==curDotIndex)
+			if(tekPos<0&&i==tekDotIndex)
 			{
-				if(-curPos>needShag)
+				if(-tekPos>needShag)
 				{
 					//нашли текущую точку
-					curPos+=needShag;
+					tekPos+=needShag;
 					break;
 				}
 				else
 				{
-					length+=-curPos;
-					curPos=0;
+					length+=-tekPos;
+					tekPos=0;
 				}
 				//Debug.Log ("0 Dot");
 			}
 			
-			if(curPos>=0&&i==curDotIndex)
+			if(tekPos>=0&&i==tekDotIndex)
 			{
 				testlength=Mathf.Sqrt(Mathf.Pow (destination.x-control.x,2)+Mathf.Pow (destination.y-control.y,2));
-				if(testlength-curPos>=needShag-length)
+				if(testlength-tekPos>=needShag-length)
 				{
 					//нашли текущую точку
-					curPos+=needShag-length;
+					tekPos+=needShag-length;
 					break;
 				}
 				else
 				{
-					length+=testlength-curPos;
+					length+=testlength-tekPos;
 				}
 			}
 			
 			
-			if(i!=curDotIndex)
+			if(i!=tekDotIndex)
 			{
 				testlength=Mathf.Sqrt(Mathf.Pow (control.x-origin.x,2)+Mathf.Pow (control.y-origin.y,2));
 				
 				if(testlength>=needShag-length)
 				{
 					//нашли текущую точку
-					curPos=-(testlength-(needShag-length));
+					tekPos=-(testlength-(needShag-length));
 					break;
 				}
 				else
@@ -320,7 +356,7 @@ public class TerrainTag : AbstractTag{
 				if(testlength>=needShag-length)
 				{
 					//нашли текущую точку
-					curPos=needShag-length;
+					tekPos=needShag-length;
 					break;
 				}
 				else
@@ -331,13 +367,30 @@ public class TerrainTag : AbstractTag{
 		}
 		
 		//фиксируем точку
-		curDotIndex=i;
+		if(usecustomDotIndexAndCustomPos)
+		{
+			customDotIndex=i;
+			customPos=tekPos;
+		}
+		else
+		{
+			curDotIndex=i;
+			curPos=tekPos;
+		}
+		
 		//Debug.Log ("i="+i+"roadPathTransformArray.Count="+roadPathTransformArray.Count);
 		
 		//теперь получим точки безье
 		origin=new Vector2((roadPathTransformArray[i].position.x+roadPathTransformArray[i-1].position.x)/2,(roadPathTransformArray[i].position.z+roadPathTransformArray[i-1].position.z)/2);
 		control=new Vector2(roadPathTransformArray[i].position.x,roadPathTransformArray[i].position.z);
-		destination=new Vector2((roadPathTransformArray[i+1].position.x+roadPathTransformArray[i].position.x)/2,(roadPathTransformArray[i+1].position.z+roadPathTransformArray[i].position.z)/2);
+		Debug.Log (i+"flag"+usecustomDotIndexAndCustomPos);
+		if(i>roadPathTransformArray.Count-2)
+		{
+			destination=control;
+		}else
+		{
+			destination=new Vector2((roadPathTransformArray[i+1].position.x+roadPathTransformArray[i].position.x)/2,(roadPathTransformArray[i+1].position.z+roadPathTransformArray[i].position.z)/2);
+		}
 		
 		//originy=new Vector2((roadPathTransformArray[i].position.y+roadPathTransformArray[i-1].position.y)/2,(roadPathTransformArray[i].position.z+roadPathTransformArray[i-1].position.z)/2);
 		//controly=new Vector2(roadPathTransformArray[i].position.y,roadPathTransformArray[i].position.y);
@@ -348,9 +401,9 @@ public class TerrainTag : AbstractTag{
 		
 		//length2=Mathf.Sqrt(Mathf.Pow (destination.x-origin.x,2)+Mathf.Pow (destination.y-origin.y,2));
 		
-		t=(length1+curPos)/(length1+length2);
+		t=(length1+tekPos)/(length1+length2);
 		
-		//t=(curPos)/(length2);
+		//t=(tekPos)/(length2);
 	
 		
 		
@@ -364,6 +417,10 @@ public class TerrainTag : AbstractTag{
 		returnXandYandAngle=new Vector3(BezieDot.x,0,BezieDot.y);			
 		
 		//returnXandYandAngle=new Vector3(BezieDot.x,BezieDoty.x,Mathf.Atan ((BezieDot.x-BezieDot2.x)/(BezieDot.y-BezieDot2.y)));
+		if(t>0.5&&usecustomDotIndexAndCustomPos&&i>roadPathTransformArray.Count-2)
+		{
+			flagNextTerrainCustom=true;
+		}
 		return returnXandYandAngle;	
 	}
 	

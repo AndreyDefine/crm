@@ -45,14 +45,14 @@ public class SwypeDetector : SpriteTouch {
 		if(playerScript.typeOfControl==0)
 		{
 			//right
-			if(currentTouchLocation.x>(firstTouchLocation.x+Epsilonxx))//&&GlobalOptions.playerStates==PlayerStates.WALK)
+			if(currentTouchLocation.x>(firstTouchLocation.x+Epsilonxx))
 			{
 				alreadySwyped=true;
 				firstTouchLocation=currentTouchLocation;
 				SwypeRight(); 
 			}
 			//left
-			if(currentTouchLocation.x<(firstTouchLocation.x-Epsilonxx))//&&GlobalOptions.playerStates==PlayerStates.WALK)
+			if(currentTouchLocation.x<(firstTouchLocation.x-Epsilonxx))
 			{
 				alreadySwyped=true;
 				firstTouchLocation=currentTouchLocation;
@@ -61,14 +61,14 @@ public class SwypeDetector : SpriteTouch {
 		}
 		
 		//up
-		if(currentTouchLocation.y>(firstTouchLocation.y+Epsilonyy))//&&GlobalOptions.playerStates==PlayerStates.WALK)
+		if(currentTouchLocation.y>(firstTouchLocation.y+Epsilonyy))
 		{
 			alreadySwyped=true;
 			firstTouchLocation=currentTouchLocation;
 			SwypeUp(); 
 		}
 		
-		if(currentTouchLocation.y<(firstTouchLocation.y-Epsilonyy))//&&GlobalOptions.playerStates==PlayerStates.WALK)
+		if(currentTouchLocation.y<(firstTouchLocation.y-Epsilonyy))
 		{
 			alreadySwyped=true;
 			firstTouchLocation=currentTouchLocation;

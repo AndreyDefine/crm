@@ -300,5 +300,34 @@ public class GlobalOptions {
 	{
 		ScoreScale=inScore;
 	}
+	
+	public static float GetAngleOfRotation(Vector3 p1, Vector3 p2)
+	{
+		float angle=0;
+		
+		if(p1.z-p2.z<0&&p1.x-p2.x<=0)
+		{
+			angle=Mathf.Atan ((p1.x-p2.x)/(p1.z-p2.z));
+		}
+		else
+		if(p1.z-p2.z>=0&&p1.x-p2.x<=0)
+		{
+			angle=3.141592653589f+Mathf.Atan ((p1.x-p2.x)/(p1.z-p2.z));
+		}
+		else
+		if(p1.z-p2.z<0&&p1.x-p2.x>0)
+		{
+			angle=3.141592653589f*2+Mathf.Atan ((p1.x-p2.x)/(p1.z-p2.z));
+		}
+		else
+		if(p1.z-p2.z>=0&&p1.x-p2.x>0)
+		{
+			angle=3.141592653589f+Mathf.Atan ((p1.x-p2.x)/(p1.z-p2.z));
+		}
+			
+		angle*=180/3.141592653589f;
+		
+		return angle;
+	}
 }
 

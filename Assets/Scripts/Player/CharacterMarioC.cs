@@ -26,8 +26,6 @@ public class CharacterMarioC : Abstract {
 	{
 		// Target direction relative to the camera	
 		//Vector3 targetDirection=new Vector3(0,0,1);
-		
-		//moveDirection =new  Vector3(0, 0, 1);
 		if(moveforward>=0)
 		{
 			moveforward=-0.1f;
@@ -125,7 +123,6 @@ public class CharacterMarioC : Abstract {
 	public void Respawn()
 	{
 		freezed=false;
-		//controller.velocity=new Vector3(0,0,0);
 	}
 	
 	public void SetMovement(float inmovement)

@@ -7,7 +7,7 @@ public class MonetaEnemy : AbstractEnemy {
 	
 	public override void OnHit(Collider other)
 	{
-		GuiLayer.AddMoney(300);
+		GuiLayer.AddMoney(1);
 		PlayClipSound();
 		//audio.Play();
 		MakeInactive();
@@ -19,11 +19,12 @@ public class MonetaEnemy : AbstractEnemy {
 	
 	public void Rotate()
 	{
-		singleTransform.Rotate(new Vector3(0,Time.deltaTime*100,0));
+		singleTransform.Rotate(new Vector3(0,Time.deltaTime*200,0));
 	}
 	
 	public override void ReStart()
 	{
 		gameObject.SetActiveRecursively(true);	
+		singleTransform.rotation=Quaternion.Euler(0, 0, 0);;
 	}
 }

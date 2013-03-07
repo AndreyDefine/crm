@@ -151,9 +151,11 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		{
 			enemyElementFactory.DestroyPullObjects();
 			berryElementFactory.DestroyPullObjects();
+			moneyElementFactory.DestroyPullObjects();
 			
 			enemyElementFactory.PreloadPullObjects();
 			berryElementFactory.PreloadPullObjects();
+			moneyElementFactory.PreloadPullObjects();
 		}
 	}
 	
@@ -311,7 +313,8 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		
 		//money
 		ArrayList markedObjectsMoney=new ArrayList();	
-		int neededNumberOfMoney=20;
+		int neededNumberOfMoney=3;
+		int moneykolvoinpack=30;
 		
 		//enemy
 		ArrayList markedObjectsEnemy=new ArrayList();	
@@ -378,10 +381,9 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 				if(markedObjectsMoney.Count!=0)
 				{
 					kolvo=neededNumberOfMoney>markedObjectsMoney.Count?markedObjectsMoney.Count:neededNumberOfMoney;
-					//Debug.Log (kolvo);
 					for(i=0;i<kolvo;i++){
 						randIndex=Random.Range(0,markedObjectsMoney.Count);
-						addOneMoneyAtMarker(markedObjectsMoney[randIndex]as Transform,interrainTag);
+						addSomeMoneyAtMarker(markedObjectsMoney[randIndex]as Transform,interrainTag,moneykolvoinpack);
 						markedObjectsMoney.RemoveAt(randIndex);
 						if(FlagCoRoutine) yield return null;
 					}
@@ -447,10 +449,39 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		//set position & rotation
 		newObject.transform.position=marker.position;
 		
-		newObject.transform.rotation=marker.rotation;
-	
 		if(interrainTag){
 			interrainTag.PushToAllElements(newObject);
+		}
+	}
+	
+	private void addSomeMoneyAtMarker(Transform marker,TerrainTag interrainTag,int kolvo)
+	{
+		GameObject newObject;
+		int i;
+		interrainTag.SetCustomDotIndex(1,0);
+		Vector3 XandYandAngleSmexForz;
+		Vector3 angle=Vector3.zero;
+		for(i=0;i<kolvo;i++)
+		{	
+			if(interrainTag.GetflagNextTerrainCustom())
+			{
+				Debug.Log ("interrainTag.GetflagNextTerrainCustom()");
+				break;
+			}
+			XandYandAngleSmexForz=interrainTag.GetXandYandAngleSmexForZ(new Vector3(0,0,2.5f),true);
+			if(!interrainTag.GetflagNextTerrainCustom())
+			{
+				newObject = moneyElementFactory.GetNewObject();
+				//set position & rotation
+				newObject.transform.position=new Vector3(XandYandAngleSmexForz.x,marker.position.y,XandYandAngleSmexForz.z);
+				newObject.transform.rotation=Quaternion.Euler(angle.x,angle.y,angle.z);
+				angle.y+=15;
+			
+		
+				if(interrainTag){
+					interrainTag.PushToAllElements(newObject);
+				}
+			}
 		}
 	}
 	
@@ -529,7 +560,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 					treepos+=treeElementFactory.GetInitialPos();
 					zsmeh=-terrainTag.sizeOfPlane/2+shag*i;
 					if(terrainTag){
-						xsmeh=terrainTag.GetXandYandAngleSmexForZ(new Vector3(0,0,zsmeh)).x;
+						xsmeh=terrainTag.GetXandYandAngleSmexForZ(new Vector3(0,0,zsmeh),false).x;
 					}
 					
 					treepos.z+=zsmeh;
@@ -574,7 +605,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		}		
 		//rotation
 		if(flagRotate){
-			Vector3 randrotation =new Vector3((float)(Random.Range(0,1f)-0.5)*10,(float)(Random.Range(0,1f)-0.5)*180,(float)(Random.Range(0,1f)-0.5)*10);
+			Vector3 randrotation =new Vector3((float)(Random.Range(0,1f)-0.5)*10,(float)(Random.Range(0,1f)-0.5)*10,(float)(Random.Range(0,1f)-0.5)*10);
 			newTree.transform.Rotate(randrotation);
 		}
 	}	
@@ -604,7 +635,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		inpos+=randompos;
 		
 		if(interrainTag){
-			xsmeh=interrainTag.GetXandYandAngleSmexForZ(new Vector3(0,0,randompos.z)).x;
+			xsmeh=interrainTag.GetXandYandAngleSmexForZ(new Vector3(0,0,randompos.z),false).x;
 		}
 		inpos.x+=xsmeh;
 		
@@ -626,7 +657,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		inpos+=randompos;
 		
 		if(interrainTag){
-			xsmeh=interrainTag.GetXandYandAngleSmexForZ(new Vector3(0,0,randompos.z)).x;
+			xsmeh=interrainTag.GetXandYandAngleSmexForZ(new Vector3(0,0,randompos.z),false).x;
 		}
 		inpos.x+=xsmeh;
 		
