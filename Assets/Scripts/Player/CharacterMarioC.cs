@@ -10,6 +10,7 @@ public class CharacterMarioC : Abstract {
 	
 	private bool grounded=false;
 	private bool jumping=false;
+	private bool downing=false;
 	private bool stumble=false;
 	//private bool downing=false;
 	
@@ -18,6 +19,11 @@ public class CharacterMarioC : Abstract {
 	private float forcex=0;
 	
 	private Player playerScript;
+	
+	private float glideTimer;
+	private bool glideFlag=false;
+	
+	private float heightnormal=1.5f, heightslide=0.5f;
 	
 	private CharacterController controller;
 	// Update is called once per frame
@@ -85,7 +91,38 @@ public class CharacterMarioC : Abstract {
 		// We are in jump mode but just became grounded
 		if (grounded)
 		{
+			if(downing)
+			{
+				Glide();
+			}
 			jumping = false;
+		}
+		downing = false;
+		
+		if(glideFlag)
+		{
+			MakeGlide();
+		}
+	}
+	
+	private void Glide()
+	{
+		if(!glideFlag)
+		{
+			glideFlag=true;
+			glideTimer=Time.time;
+			controller.height=heightslide;
+			controller.center=new Vector3(controller.center.x,controller.center.y-(heightnormal-heightslide)/2,controller.center.z);
+		}
+	}
+	
+	private void MakeGlide()
+	{
+		if(Time.time-glideTimer>1)
+		{
+			controller.height=heightnormal;
+			controller.center=new Vector3(controller.center.x,controller.center.y+(heightnormal-heightslide)/2,controller.center.z);
+			glideFlag=false;
 		}
 	}
 	
@@ -101,7 +138,7 @@ public class CharacterMarioC : Abstract {
 	
 	public void Jump()
 	{
-		if (grounded&&!jumping) {
+		if (grounded&&!jumping&&!glideFlag) {
 			jumping = true;
 			verticalSpeed = jumpSpeed;
 		}
@@ -110,7 +147,7 @@ public class CharacterMarioC : Abstract {
 	public void Down()
 	{
 		if (grounded||jumping) {
-			//downing = true;
+			downing = true;
 			verticalSpeed = -jumpSpeed;
 		}
 	}
