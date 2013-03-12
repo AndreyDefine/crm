@@ -313,8 +313,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		
 		//money
 		ArrayList markedObjectsMoney=new ArrayList();	
-		int neededNumberOfMoney=3;
-		int moneykolvoinpack=30;
+		int neededNumberOfMoney=3-Random.Range(0,2);
 		
 		//enemy
 		ArrayList markedObjectsEnemy=new ArrayList();	
@@ -376,14 +375,14 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 			
 			//money
 			//вероятность 0.5
-			if(Random.Range(0,10)>5)
+			//if(Random.Range(0,10)>5)
 			{
 				if(markedObjectsMoney.Count!=0)
 				{
 					kolvo=neededNumberOfMoney>markedObjectsMoney.Count?markedObjectsMoney.Count:neededNumberOfMoney;
 					for(i=0;i<kolvo;i++){
 						randIndex=Random.Range(0,markedObjectsMoney.Count);
-						addSomeMoneyAtMarker(markedObjectsMoney[randIndex]as Transform,interrainTag,moneykolvoinpack);
+						addSomeMoneyAtMarker(markedObjectsMoney[randIndex]as Transform,interrainTag);
 						markedObjectsMoney.RemoveAt(randIndex);
 						if(FlagCoRoutine) yield return null;
 					}
@@ -454,13 +453,24 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		}
 	}
 	
-	private void addSomeMoneyAtMarker(Transform marker,TerrainTag interrainTag,int kolvo)
+	private void addSomeMoneyAtMarker(Transform marker,TerrainTag interrainTag)
 	{
+		float angletesttransform;
+		Vector3 right;
+		MoneyMarker moneyMarker;
+		
+		moneyMarker=marker.GetComponent<MoneyMarker>();
+		
+		int pathnumber=moneyMarker.pathnumber;
+		int kolvo=moneyMarker.numberOfCoins;
+		int startPoint=moneyMarker.startPoint;
+
 		GameObject newObject;
 		int i;
-		interrainTag.SetCustomDotIndex(1,0);
-		Vector3 XandYandAngleSmexForz;
+		interrainTag.SetCustomDotIndex(startPoint,0);
+		Vector3 XandYandAngleSmexForz,oldXandYandAngleSmexForz;
 		Vector3 angle=Vector3.zero;
+		XandYandAngleSmexForz=interrainTag.GetXandYandAngleSmexForZ(new Vector3(0,0,0.1f),true);
 		for(i=0;i<kolvo;i++)
 		{	
 			if(interrainTag.GetflagNextTerrainCustom())
@@ -468,12 +478,19 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 				Debug.Log ("interrainTag.GetflagNextTerrainCustom()");
 				break;
 			}
+			
+			oldXandYandAngleSmexForz=XandYandAngleSmexForz;
 			XandYandAngleSmexForz=interrainTag.GetXandYandAngleSmexForZ(new Vector3(0,0,2.5f),true);
+			angletesttransform=GlobalOptions.GetAngleOfRotation(oldXandYandAngleSmexForz,XandYandAngleSmexForz);
+			marker.rotation=Quaternion.Euler(0,angletesttransform,0);
+			right=marker.TransformDirection(Vector3.right);
+			
+			
 			if(!interrainTag.GetflagNextTerrainCustom())
 			{
 				newObject = moneyElementFactory.GetNewObject();
 				//set position & rotation
-				newObject.transform.position=new Vector3(XandYandAngleSmexForz.x,marker.position.y,XandYandAngleSmexForz.z);
+				newObject.transform.position=new Vector3(XandYandAngleSmexForz.x,marker.position.y,XandYandAngleSmexForz.z)+right*GlobalOptions.GetPlayerScript().meshPath*pathnumber;
 				newObject.transform.rotation=Quaternion.Euler(angle.x,angle.y,angle.z);
 				angle.y+=15;
 			

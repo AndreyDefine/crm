@@ -3,11 +3,13 @@ using System.Collections;
 
 
 public class MonetaEnemy : AbstractEnemy {	
+	
+	public int numberOfMoney=1;
 	// Use this for initialization
 	
 	public override void OnHit(Collider other)
 	{
-		GuiLayer.AddMoney(1);
+		GuiLayer.AddMoney(numberOfMoney);
 		PlayClipSound();
 		//audio.Play();
 		MakeInactive();

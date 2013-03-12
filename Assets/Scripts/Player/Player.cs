@@ -51,7 +51,14 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	private CharacterMarioC characterMarioC;
 	
-	float posx;
+	private float posx;
+	
+	private bool flagOnlyFizik=false;
+	
+	public bool GetFlagOnlyFizik()
+	{
+		return flagOnlyFizik;
+	}
 	
 	private GuiLayerInitializer guiLayer;
 	// Use this for initialization
@@ -242,7 +249,15 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 			GlobalOptions.playerVelocity+=acceleration*Time.deltaTime;
 		}
 		Vector3 smex=new Vector3(0,0,GetRealVelocity());
-		Vector3 oldPos=singleTransform.position;
+		Vector3 oldPos=Vector3.zero;
+		if(flagOnlyFizik)
+		{
+			oldPos=Character.transform.position;
+		}
+		else
+		{
+			oldPos=singleTransform.position;
+		}
 		//Vector3 oldPos=Character.transform.position;
 		centerXandYandAngle=worldFactoryScript.GetXandYandAngleSmexForZ(smex);	
 		
@@ -320,8 +335,13 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	private void RotatePlayer(float inangle)
 	{
-		//MakeRotationCharacterController(inangle);
-		singleTransform.rotation=Quaternion.Euler(singleTransform.rotation.x, inangle, singleTransform.rotation.z);
+		if(flagOnlyFizik)
+		{
+			MakeRotationCharacterController(inangle);
+		}else
+		{
+			singleTransform.rotation=Quaternion.Euler(singleTransform.rotation.x, inangle, singleTransform.rotation.z);
+		}
 	}
 	
 	public void PlaceBearToControl(float inposx)
@@ -333,8 +353,15 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	public void PlaceCharacter(Vector3 inpos)
 	{
-		//MakeMovingCharacterControllerForward(inpos);
-		singleTransform.position=inpos;
+		if(flagOnlyFizik)
+		{
+			Debug.Log ("forward "+flagOnlyFizik);
+			MakeMovingCharacterControllerForward(inpos);
+		}
+		else
+		{
+			singleTransform.position=inpos;
+		}
 	}
 	
 	private void BearRespawn(){
@@ -465,9 +492,8 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	private void MakeMovingCharacterControllerForward(Vector3 inpos){
 		Vector3 curpos=Character.transform.position;
-		
+		Debug.Log ("MakeMovingCharacterControllerForward");
 		float forward=Mathf.Sqrt(Mathf.Pow (inpos.x-curpos.x,2)+Mathf.Pow (inpos.z-curpos.z,2));
-		//Debug.Log (forward);
 		characterMarioC.SetMovement(forward);
 	}
 	

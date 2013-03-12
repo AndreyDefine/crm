@@ -30,14 +30,15 @@ public class CharacterMarioC : Abstract {
 	
 	private void UpdateSmoothedMovementDirection ()
 	{
-		// Target direction relative to the camera	
-		//Vector3 targetDirection=new Vector3(0,0,1);
-		if(moveforward>=0)
+		if(!playerScript.GetFlagOnlyFizik())
 		{
-			moveforward=-0.1f;
-		}else
-		{
-			moveforward=0.1f;
+			if(moveforward>=0)
+			{
+				moveforward=-0.1f;
+			}else
+			{
+				moveforward=0.1f;
+			}
 		}
 	}
 	
@@ -69,7 +70,7 @@ public class CharacterMarioC : Abstract {
 		
 		Vector3 movement = moveforward*forward + new Vector3 (0, verticalSpeed, 0) + forcex*right;
 		
-		//Debug.Log (movement);
+		Debug.Log (movement);
 		
 		if(freezed)
 		{

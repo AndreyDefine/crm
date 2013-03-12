@@ -18,11 +18,11 @@ public class SwypeDetector : SpriteTouch {
 		touchPriority=3;
 		swallowTouches=false;
         init();
-		Epsilonxx=25*GlobalOptions.scaleFactorx;
+		Epsilonxx=40*GlobalOptions.scaleFactorx;
 		//Epsilonxy=6*GlobalOptions.scaleFactory;
 		
 		//Epsilonyx=6*GlobalOptions.scaleFactorx;
-		Epsilonyy=25*GlobalOptions.scaleFactory;
+		Epsilonyy=40*GlobalOptions.scaleFactory;
     }
 	
 	public override bool TouchBegan(Vector2 position,int fingerId) {
