@@ -2,12 +2,12 @@ using UnityEngine;
 using System.Collections;
 
 
-public class VodkaEnemy : AbstractEnemy {	
+public class MagnitEnemy : AbstractEnemy {	
 	// Use this for initialization
 	
 	public override void OnHit(Collider other)
 	{
-		GuiLayer.AddVodka(3);
+		GuiLayer.AddMagnit();
 		PlayClipSound();
 		//audio.Play();
 		MakeInactive();

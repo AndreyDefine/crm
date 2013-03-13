@@ -8,10 +8,14 @@ public class AbstractEnemy : Abstract {
 	
 	protected GuiLayerInitializer GuiLayer;
 	protected Transform playertransform;
+	protected Player playerScript;
+	protected Transform characterTransform;
 	
 	void Start(){
 		GuiLayer=GlobalOptions.GetGuiLayer();	
+		playerScript=GlobalOptions.GetPlayerScript();
 		playertransform=GlobalOptions.GetPlayer().transform;
+		characterTransform=playerScript.Character.transform;
 		initEnemy();
 	}
 	

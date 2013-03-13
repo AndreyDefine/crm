@@ -5,6 +5,7 @@ using System.Collections;
 public class FallingTreeRightEnemy : AbstractEnemy {	
 	
 	private bool effectMade=false;
+	private float rasstChuvstv=255;
 	
 	public override void OnHit(Collider other)
 	{
@@ -24,10 +25,11 @@ public class FallingTreeRightEnemy : AbstractEnemy {
 	{
 		if(!effectMade)
 		{
-			float raznx,raznz;
-			raznx=singleTransform.position.x-playertransform.position.x;
-			raznz=singleTransform.position.z-playertransform.position.z;
-			if(raznx*raznx+raznz*raznz<=225)
+			float raznx,razny,raznz;
+			raznx=singleTransform.position.x-characterTransform.position.x;
+			raznz=singleTransform.position.z-characterTransform.position.z;
+			razny=singleTransform.position.y-characterTransform.position.y;
+			if(raznx*raznx+raznz*raznz<=rasstChuvstv&&Mathf.Abs (razny)<10)
 			{
 				PutToInactiveList();
 				MakeEffect();

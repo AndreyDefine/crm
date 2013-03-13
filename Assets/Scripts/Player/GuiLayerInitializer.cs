@@ -45,9 +45,9 @@ public class GuiLayerInitializer : Abstract {
 	
 	private Player playerScript;
 	private int score,money,scoreScale,vodkaLevel;
-	private bool flagVodka,flagMushroom,flagScoreScale,flagHeadStars;
+	private bool flagVodka,flagMushroom,flagScoreScale,flagHeadStars,flagMagnit;
 	private bool flagPostal,flagGameOver,flagMeters;
-	private float VodkaTime,ShroomTime,ScoreScaleTime,scoreTime,headStarsTime,postalTime,GameOverTime,metersTime;
+	private float VodkaTime,ShroomTime,ScoreScaleTime,scoreTime,headStarsTime,postalTime,GameOverTime,metersTime,magnitTime;
 	private float zindex=8;
 	private ArrayList StarsList;
 	Camera GUIcamera;
@@ -72,6 +72,7 @@ public class GuiLayerInitializer : Abstract {
 		flagPostal=false;
 		flagMeters=false;
 		flagGameOver=false;
+		flagMagnit=false;
 		oldTime=nullTime;
 		scoreTime=Time.time;
 		score=GlobalOptions.GetLevelStartScore();
@@ -105,6 +106,7 @@ public class GuiLayerInitializer : Abstract {
 		flagPostal=false;
 		flagMeters=false;
 		flagGameOver=false;
+		flagMagnit=false;
 		scoreTime=Time.time;
 		AddTimer(0);
 		AddVodka(0);
@@ -128,6 +130,12 @@ public class GuiLayerInitializer : Abstract {
 			if(flagVodka)
 			{
 				MakeVodka();
+			}
+			
+			//уменьшаем magnit
+			if(flagMagnit)
+			{
+				MakeMagnit();
 			}
 			//уменьшаем грибы
 			if(flagMushroom)
@@ -401,6 +409,15 @@ public class GuiLayerInitializer : Abstract {
 		}
 	}
 	
+	private void MakeMagnit()
+	{
+		if(Time.time-magnitTime>20)
+		{
+			flagMagnit=false;
+			playerScript.UnMakeMagnit();
+		}
+	}
+	
 	private void MakeHeadStars()
 	{
 		if(Time.time-headStarsTime>0.6)
@@ -532,6 +549,8 @@ public class GuiLayerInitializer : Abstract {
 			}
 		}
 	}
+	
+	
 	
 	
 	public void AddPostal(){
@@ -682,6 +701,14 @@ public class GuiLayerInitializer : Abstract {
 		flagMushroom=true;
 		ShroomTime=Time.time;
 	}
+	
+	public void AddMagnit()
+	{
+		playerScript.MakeMagnit();
+		flagMagnit=true;
+		magnitTime=Time.time;
+	}
+	
 	
 	public void AddHeadStars()
 	{

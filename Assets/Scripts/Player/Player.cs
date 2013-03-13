@@ -55,9 +55,16 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	private bool flagOnlyFizik=false;
 	
+	private bool magnitFlag=true;
+	
 	public bool GetFlagOnlyFizik()
 	{
 		return flagOnlyFizik;
+	}
+	
+	public bool GetMagnitFlag()
+	{
+		return magnitFlag;
 	}
 	
 	private GuiLayerInitializer guiLayer;
@@ -121,6 +128,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		oldMetersz=0;
 		allMeters=0;
 		posx=0;
+		UnMakeMagnit();
 		UnMakeVodka();
 		UnMakeMushrooms();
 		UnMakeHeadStars();
@@ -159,6 +167,16 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	{
 		VelocityVodka=1;
 		(MainCamera.GetComponent("MotionBlur") as MotionBlur).enabled=false;
+	}
+	
+	public void MakeMagnit()
+	{
+		magnitFlag=true;
+	}
+	
+	public void UnMakeMagnit()
+	{
+		magnitFlag=false;
 	}
 	
 	public void MakeMushrooms()
