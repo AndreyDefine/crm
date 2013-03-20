@@ -55,7 +55,9 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	private bool flagOnlyFizik=false;
 	
-	private bool magnitFlag=true;
+	private bool magnitFlag=false;
+	
+	private GameObject walkingBear;
 	
 	public bool GetFlagOnlyFizik()
 	{
@@ -65,6 +67,11 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	public bool GetMagnitFlag()
 	{
 		return magnitFlag;
+	}
+	
+	public Transform GetWalkingBear()
+	{
+		return walkingBear.transform;
 	}
 	
 	private GuiLayerInitializer guiLayer;
@@ -77,6 +84,8 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		CharacterFirstPos=Character.transform.localPosition;
 		firstWhereToLookLocalPos=WhereToLook.transform.localPosition;
 		raznFromWhereToLookAndCharacter=firstWhereToLookLocalPos-CharacterFirstPos;
+		
+		walkingBear=Character.transform.FindChild("WalkingBear").gameObject;
 		
 		
 		HeadStarsParticleEmitter=GameObject.Find("/ScreenGame/Player/BearToControl/HeadBoomParticle").GetComponent<ParticleEmitter>();
@@ -109,6 +118,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		guiLayer=GlobalOptions.GetGuiLayer();
 		GlobalOptions.gameState=GameStates.GAME;
 		GlobalOptions.playerStates=PlayerStates.WALK;
+		GlobalOptions.playerStatesPathChanging=PlayerStatesPathChanging.FORWARD;
 		
 		//Get world factory script
 		GameObject worldFactory;
@@ -123,18 +133,23 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		PathChanging=false;
 		force=0;
 		PathNumber=0;
+		MoveCharacterControllerLeftRight(0);
 		prevPathNumber=0;
 		xSmexcontrol1=0;
 		oldMetersz=0;
 		allMeters=0;
 		posx=0;
+		UnMakePropeller();
 		UnMakeMagnit();
 		UnMakeVodka();
 		UnMakeMushrooms();
 		UnMakeHeadStars();
 		GlobalOptions.playerVelocity=startVelocity;
 		GlobalOptions.gameState=GameStates.GAME;
+		
+		GlobalOptions.playerStatesPathChanging=PlayerStatesPathChanging.FORWARD;
 		GlobalOptions.playerStates=PlayerStates.WALK;
+
 		BearRespawn();
 		guiLayer.Restart();
 		bearAnimation.Restart();
@@ -143,7 +158,6 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	public void PauseGame()
 	{
-		Debug.Log ("idle");
 		GlobalOptions.gameState=GameStates.PAUSE_MENU;
 		//сделать анимацию IDLE
 		GlobalOptions.playerStates=PlayerStates.IDLE;
@@ -153,7 +167,6 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	{
 		Debug.Log ("Game Resumed");
 		GlobalOptions.gameState=GameStates.GAME;
-		//сделать анимацию Бега
 		GlobalOptions.playerStates=PlayerStates.WALK;
 	}
 	
@@ -177,6 +190,21 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	public void UnMakeMagnit()
 	{
 		magnitFlag=false;
+	}
+	
+	public void MakePropeller()
+	{
+		MakeFlyingCharacterController(true);
+	}
+	
+	public void UnMakePropeller()
+	{
+		MakeFlyingCharacterController(false);
+	}
+	
+	public void UnMakeEmmidiately()
+	{
+		MakeFlyingUnCharacterControllerEmmidiately(false);
 	}
 	
 	public void MakeMushrooms()
@@ -222,8 +250,25 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		
 		bearAnimation.SetWalkSpeed(GetRealVelocityWithNoDeltaTime()/startVelocity);
 		
-		if(GlobalOptions.playerStates==PlayerStates.WALK){
-			bearAnimation.Walk();
+		SwitchAnimation();
+	}
+	
+	private void SwitchAnimation()
+	{
+		if(GlobalOptions.playerStates==PlayerStates.WALK||GlobalOptions.playerStates==PlayerStates.FLY){
+			if(GlobalOptions.playerStatesPathChanging==PlayerStatesPathChanging.FORWARD)
+			{
+				bearAnimation.Walk();
+			}
+			if(GlobalOptions.playerStatesPathChanging==PlayerStatesPathChanging.LEFT)
+			{
+				bearAnimation.Left();
+			}
+			
+			if(GlobalOptions.playerStatesPathChanging==PlayerStatesPathChanging.RIGHT)
+			{
+				bearAnimation.Right();
+			}
 		}
 		if(GlobalOptions.playerStates==PlayerStates.IDLE)
 		{
@@ -260,6 +305,26 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		return Character.transform.position;
 	}
 	
+	public void ChangePath(bool toRight)
+	{
+		//смена дорожки
+		if(!toRight){
+			PathChanging=true;
+			GlobalOptions.playerStatesPathChanging=PlayerStatesPathChanging.LEFT;
+			prevPathNumber=PathNumber;
+			PathNumber--;
+			PathNumber=PathNumber<-pathNumberLeftRight?-pathNumberLeftRight:PathNumber;
+		}
+		
+		if(toRight){
+			PathChanging=true;
+			GlobalOptions.playerStatesPathChanging=PlayerStatesPathChanging.RIGHT;
+			prevPathNumber=PathNumber;
+			PathNumber++;
+			PathNumber=PathNumber>pathNumberLeftRight?pathNumberLeftRight:PathNumber;
+		}
+	}
+	
 	private void MoveLeftRight(float inmoveForce)
 	{
 		//forward
@@ -282,22 +347,6 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		Transform curtransform=Character.transform;
 		
 		posx=curtransform.localPosition.x;
-		//смена дорожки
-		if(GlobalOptions.playerStates==PlayerStates.LEFT){
-			PathChanging=true;
-			GlobalOptions.playerStates=PlayerStates.WALK;
-			prevPathNumber=PathNumber;
-			PathNumber--;
-			PathNumber=PathNumber<-pathNumberLeftRight?-pathNumberLeftRight:PathNumber;
-		}
-		
-		if(GlobalOptions.playerStates==PlayerStates.RIGHT){
-			PathChanging=true;
-			GlobalOptions.playerStates=PlayerStates.WALK;
-			prevPathNumber=PathNumber;
-			PathNumber++;
-			PathNumber=PathNumber>pathNumberLeftRight?pathNumberLeftRight:PathNumber;
-		}
 		
 		float centerx=0;
 		
@@ -307,14 +356,15 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 			float forcex=(-Character.transform.localPosition.x+PathNumber*meshPath)*roadChangeForce;
 			//меняем дорожку
 			if(PathChanging){	
-				if(Mathf.Abs (forcex)>0.01*roadChangeForce)
+				if(Mathf.Abs (forcex)<0.09*roadChangeForce)
 				{
 					MoveCharacterControllerLeftRight(0);
 					PathChanging=false;
+					GlobalOptions.playerStatesPathChanging=PlayerStatesPathChanging.FORWARD;
 				}
-			}
-			else{
-				MoveCharacterControllerLeftRight(forcex);
+				else{
+					MoveCharacterControllerLeftRight(forcex);
+				}
 			}
 		}	
 		
@@ -364,9 +414,16 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	public void PlaceBearToControl(float inposx)
 	{	
+		Vector3 walkbearpos=walkingBear.transform.localPosition;
 		Vector3 charpos=Character.transform.localPosition;
-		//Character.transform.localPosition=new Vector3(inposx,charpos.y,charpos.z);
-		WhereToLook.transform.localPosition=new Vector3(charpos.x*whereToLookParalax,charpos.y+raznFromWhereToLookAndCharacter.y,raznFromWhereToLookAndCharacter.z+charpos.z);
+		 //if(characterMarioC.isJumping())
+		//{
+		//	WhereToLook.transform.localPosition=new Vector3(charpos.x*whereToLookParalax,WhereToLook.transform.localPosition.y,raznFromWhereToLookAndCharacter.z+charpos.z);
+		//}
+		//else
+		//{
+			WhereToLook.transform.localPosition=new Vector3(charpos.x*whereToLookParalax,charpos.y+walkbearpos.y+raznFromWhereToLookAndCharacter.y,raznFromWhereToLookAndCharacter.z+charpos.z);
+		//}
 	}
 	
 	public void PlaceCharacter(Vector3 inpos)
@@ -384,11 +441,11 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	private void BearRespawn(){
 		GlobalOptions.whereToBuild=new Vector3(0,0,1);
-		RotatePlayer(0);
-		GlobalOptions.playerStates=PlayerStates.WALK;		
+		RotatePlayer(0);	
 		singleTransform.position=PlayerFirstPos;
 		
 		Character.transform.localPosition=new Vector3(0,0,0);
+		walkingBear.transform.localPosition=new Vector3(0,0,0);
 		PlaceBearToControl(0);
 
 		CharacterControllerRespawn();
@@ -493,14 +550,22 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		if(GlobalOptions.playerStates==PlayerStates.JUMP)
 		{
 			characterMarioC.Jump();
-			GlobalOptions.playerStates=PlayerStates.WALK;
 		}
 		
 		if(GlobalOptions.playerStates==PlayerStates.DOWN)
 		{
 			characterMarioC.Down();
-			GlobalOptions.playerStates=PlayerStates.WALK;
 		}
+	}
+	
+	public void MakeFlyingCharacterController(bool inflag){
+		characterMarioC.Fly(inflag);
+	}
+	
+	public void MakeFlyingUnCharacterControllerEmmidiately(bool inflag)
+	{
+		characterMarioC.Fly(inflag);
+		characterMarioC.MoveToGroundEmmidiately();
 	}
 	
 	private void MoveCharacterControllerLeftRight(float inx)
@@ -535,6 +600,8 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	public void Stumble()
 	{
+		//bearAnimation.Stumble();
+		Debug.Log ("Stumble Player");
 		MoveCharacterControllerLeftRight(0);
 		PathNumber=prevPathNumber;
 		PathChanging=true;
@@ -542,11 +609,16 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		guiLayer.AddHeadStars();
 	}
 	
+	public void StumbleTrigger()
+	{
+		bearAnimation.Stumble();
+	}
+	
 	public void PlaceCharacterFirstly(Vector3 inpos)
 	{
-		/*Character.transform.position=inpos;
+		Character.transform.position=inpos;
+		Vector3 walkbearpos=walkingBear.transform.localPosition;
 		Vector3 charpos=Character.transform.localPosition;
-		WhereToLook.transform.localPosition=new Vector3(0,charpos.y+raznFromWhereToLookAndCharacter.y,raznFromWhereToLookAndCharacter.z+charpos.z);
-		*/
+		WhereToLook.transform.localPosition=new Vector3(charpos.x*whereToLookParalax,charpos.y+walkbearpos.y+raznFromWhereToLookAndCharacter.y,raznFromWhereToLookAndCharacter.z+charpos.z);
 	}
 }

@@ -17,12 +17,17 @@ public enum PlayerStates
 {
 	DOWN,
 	JUMP,
-	LEFT,
-	RIGHT,
-	RUN,
 	IDLE,
 	DIE,
-	WALK
+	WALK,
+	FLY
+}
+
+public enum PlayerStatesPathChanging
+{
+	LEFT,
+	RIGHT,
+	FORWARD
 }
 
 
@@ -55,6 +60,7 @@ public class GlobalOptions {
 	public static GameStates gameState;
 	
 	public static PlayerStates playerStates;
+	public static PlayerStatesPathChanging playerStatesPathChanging;
 	
 	public static float Vsizex=768;
 	public static float Vsizey=1024;

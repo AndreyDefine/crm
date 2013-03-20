@@ -97,12 +97,12 @@ public class SwypeDetector : SpriteTouch {
 	
 	//right
 	private void SwypeRight(){
-		GlobalOptions.playerStates=PlayerStates.RIGHT;
+		playerScript.ChangePath(true);
 	}
 	
 	//left
 	private void SwypeLeft(){
-		GlobalOptions.playerStates=PlayerStates.LEFT;
+		playerScript.ChangePath(false);
 	}
 	
 	private void MakeDetectionSwype()

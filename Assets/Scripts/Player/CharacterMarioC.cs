@@ -12,6 +12,9 @@ public class CharacterMarioC : Abstract {
 	private bool jumping=false;
 	private bool downing=false;
 	private bool stumble=false;
+	private bool flying=false;
+	private bool movingToFlyGround=false;
+	private float vsletAcceleration=10;
 	//private bool downing=false;
 	
 	private bool freezed=false;
@@ -22,8 +25,16 @@ public class CharacterMarioC : Abstract {
 	
 	private float glideTimer;
 	private bool glideFlag=false;
+	private bool groundingFlag=false;
 	
 	private float heightnormal=1.5f, heightslide=0.5f;
+	private CapsuleCollider walkinbearCollider;
+	
+	private GameObject walkingBear;
+	
+	private float flyingYsmex=8,groundYsmex=0;
+	
+	private float timeToGround;
 	
 	private CharacterController controller;
 	// Update is called once per frame
@@ -34,10 +45,10 @@ public class CharacterMarioC : Abstract {
 		{
 			if(moveforward>=0)
 			{
-				moveforward=-0.1f;
+				moveforward=-0.5f;
 			}else
 			{
-				moveforward=0.1f;
+				moveforward=0.5f;
 			}
 		}
 	}
@@ -46,6 +57,8 @@ public class CharacterMarioC : Abstract {
 	{
 		playerScript=GlobalOptions.GetPlayerScript();
 		controller = GetComponent<CharacterController>();
+		walkingBear=singleTransform.FindChild("WalkingBear").gameObject;
+		walkinbearCollider=walkingBear.collider as CapsuleCollider;
 	}
 	
 	void Update() {
@@ -70,21 +83,19 @@ public class CharacterMarioC : Abstract {
 		
 		Vector3 movement = moveforward*forward + new Vector3 (0, verticalSpeed, 0) + forcex*right;
 		
-		Debug.Log (movement);
-		
 		if(freezed)
 		{
 			movement=Vector3.zero;
 		}
 		
-		movement *= Time.deltaTime;
+		movement *= Time.fixedDeltaTime;
 		// Move the controller
 		CollisionFlags flags = controller.Move(movement);
 		grounded = (flags & CollisionFlags.CollidedBelow) != 0;
 		
 		stumble = (flags & CollisionFlags.CollidedSides) != 0;
 		
-		if(stumble)
+		if(stumble&&!flying&&!groundingFlag)
 		{
 			playerScript.Stumble();
 		}
@@ -92,6 +103,11 @@ public class CharacterMarioC : Abstract {
 		// We are in jump mode but just became grounded
 		if (grounded)
 		{
+			if(jumping)
+			{
+				GlobalOptions.playerStates=PlayerStates.WALK;
+			}
+			
 			if(downing)
 			{
 				Glide();
@@ -104,6 +120,11 @@ public class CharacterMarioC : Abstract {
 		{
 			MakeGlide();
 		}
+		
+		if(movingToFlyGround)
+		{
+			MoveToFlyGround();
+		}
 	}
 	
 	private void Glide()
@@ -112,8 +133,8 @@ public class CharacterMarioC : Abstract {
 		{
 			glideFlag=true;
 			glideTimer=Time.time;
-			controller.height=heightslide;
-			controller.center=new Vector3(controller.center.x,controller.center.y-(heightnormal-heightslide)/2,controller.center.z);
+			walkinbearCollider.height=heightslide;
+			walkinbearCollider.center=new Vector3(walkinbearCollider.center.x,walkinbearCollider.center.y-(heightnormal-heightslide)/2,walkinbearCollider.center.z);
 		}
 	}
 	
@@ -121,9 +142,11 @@ public class CharacterMarioC : Abstract {
 	{
 		if(Time.time-glideTimer>1)
 		{
-			controller.height=heightnormal;
-			controller.center=new Vector3(controller.center.x,controller.center.y+(heightnormal-heightslide)/2,controller.center.z);
+			walkinbearCollider.height=heightnormal;
+			walkinbearCollider.center=new Vector3(walkinbearCollider.center.x,walkinbearCollider.center.y+(heightnormal-heightslide)/2,walkinbearCollider.center.z);
 			glideFlag=false;
+			GlobalOptions.playerStates=PlayerStates.WALK;
+			Debug.Log("GlideEnd");
 		}
 	}
 	
@@ -139,7 +162,7 @@ public class CharacterMarioC : Abstract {
 	
 	public void Jump()
 	{
-		if (grounded&&!jumping&&!glideFlag) {
+		if (grounded&&!jumping&&!glideFlag&&!flying) {
 			jumping = true;
 			verticalSpeed = jumpSpeed;
 		}
@@ -147,10 +170,75 @@ public class CharacterMarioC : Abstract {
 	
 	public void Down()
 	{
-		if (grounded||jumping) {
+		if (grounded||jumping&&!flying) {
 			downing = true;
 			verticalSpeed = -jumpSpeed;
 		}
+		if(jumping)
+		{
+			GlobalOptions.playerStates=PlayerStates.JUMP;
+		}
+		
+		if(flying)
+		{
+			GlobalOptions.playerStates=PlayerStates.FLY;
+		}
+	}
+	
+	public void Fly(bool inflag)
+	{
+		flying = inflag;
+		movingToFlyGround=true;
+		groundingFlag=false;
+	}
+	
+	public void MoveToGroundEmmidiately()
+	{
+		groundingFlag=false;
+		playerScript.Character.layer=11;
+		movingToFlyGround=false;
+		walkingBear.transform.localPosition=new Vector3(0,groundYsmex,0);
+	}
+	
+	private void MoveToFlyGround()
+	{
+		float ypos=walkingBear.transform.localPosition.y;
+		//взлёт
+		if(flying)
+		{
+			playerScript.Character.layer=13;
+			ypos+=vsletAcceleration*Time.deltaTime;
+			if(flyingYsmex<=ypos)
+			{
+				ypos=flyingYsmex;
+				movingToFlyGround=false;
+			}
+		}
+		else
+		{
+			//падение
+			if(!groundingFlag)
+			{
+				ypos-=vsletAcceleration*Time.deltaTime;
+				if(groundYsmex>=ypos)
+				{
+					ypos=groundYsmex;
+					timeToGround=Time.time;
+					groundingFlag=true;
+					playerScript.Character.layer=16;
+				}
+			}
+			else
+			{
+				if(Time.time-timeToGround>4)
+				{
+					groundingFlag=false;
+					movingToFlyGround=false;
+					playerScript.Character.layer=11;
+				}
+			}
+		}
+		walkingBear.transform.localPosition=new Vector3(0,ypos,0);
 	}
 	
 	public void Freeze()
@@ -160,6 +248,8 @@ public class CharacterMarioC : Abstract {
 	
 	public void Respawn()
 	{
+		flying=false;
+		stumble=false;
 		freezed=false;
 	}
 	
@@ -171,7 +261,6 @@ public class CharacterMarioC : Abstract {
 	
 	public void LeftRight(float inx)
 	{
-		//Debug.Log(inx);
 		forcex=inx;
 	}
 }

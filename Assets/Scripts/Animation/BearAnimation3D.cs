@@ -9,7 +9,7 @@ public class BearAnimation3D : Abstract{
 	protected ArrayList clothesList=new ArrayList();
 	GameObject walkingBear;
 	
-	private string curAnimationName="Take 001";
+	private string curAnimationName="walk";
 	
 	void Start ()
 	{
@@ -17,8 +17,7 @@ public class BearAnimation3D : Abstract{
 		Transform curtransform;
 		
 		//add all clothes to bear walking
-		walkingBear=new GameObject();
-		walkingBear.name="WalkingBear";
+		walkingBear=singleTransform.FindChild("WalkingBear").gameObject;
 		curtransform=walkingBear.transform;
 		curtransform.parent=singleTransform;
 		for (int i=0;i<clothes.Length;i++)
@@ -32,6 +31,23 @@ public class BearAnimation3D : Abstract{
 			if(i!=0){
 				newobj.GetComponent<MeshRenderer>().enabled=false;
 			}
+		}
+		
+		for(int i=0;i<clothesList.Count;i++)
+		{
+			(clothesList[i] as GameObject).animation["jump"].layer=1;
+			(clothesList[i] as GameObject).animation["left"].layer=1;
+			(clothesList[i] as GameObject).animation["right"].layer=1;
+			(clothesList[i] as GameObject).animation["down"].layer=0;
+			(clothesList[i] as GameObject).animation["stumble"].layer=1;
+			
+			(clothesList[i] as GameObject).animation["down"].speed=0.3f;
+			(clothesList[i] as GameObject).animation["stumble"].speed=1.3f;
+			(clothesList[i] as GameObject).animation["jump"].speed=0.4f;
+			(clothesList[i] as GameObject).animation["left"].speed=2f;
+			(clothesList[i] as GameObject).animation["right"].speed=2f;
+			(clothesList[i] as GameObject).animation["death"].speed=0.9f;
+			//(clothesList[i] as GameObject).animation["down"].weight=1;
 		}
 	}
 	
@@ -69,33 +85,43 @@ public class BearAnimation3D : Abstract{
 	}
 	
 	public void Walk () {
-		PlayAnimationForName("Take 001");
+		PlayAnimationForName("walk");
+	}
+	
+	public void Right () {
+		PlayAnimationForName("right");
+	}
+	
+	public void Left () {
+		PlayAnimationForName("left");
 	}
 	
 	public void Dead() {
-		for(int i=0;i<clothesList.Count;i++)
-		{
-			(clothesList[i] as GameObject).animation.Stop();
-		}
+		PlayAnimationForName("death");
 	}
 	
 	public void Idle() {
-		//PlayAnimationForName("idle");
+		PlayAnimationForName("idle");
 	}
 	
 	public void Jump() {
-		//animation.CrossFade("jump");
+		PlayAnimationForName("jump");
+	}
+	
+	public void Stumble() {
+		Debug.Log("Stumble");
+		PlayAnimationForName("stumble");
 	}
 	
 	public void Down() {
-		//animation.CrossFade("down");
+		PlayAnimationForName("down");
 	}
 	
 	public void SetWalkSpeed(float inspeed) {
 		
 		for(int i=0;i<clothesList.Count;i++)
 		{
-			(clothesList[i] as GameObject).animation[curAnimationName].speed=inspeed;
+			(clothesList[i] as GameObject).animation["walk"].speed=inspeed*2;
 		}
 	}
 }

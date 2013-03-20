@@ -45,9 +45,9 @@ public class GuiLayerInitializer : Abstract {
 	
 	private Player playerScript;
 	private int score,money,scoreScale,vodkaLevel;
-	private bool flagVodka,flagMushroom,flagScoreScale,flagHeadStars,flagMagnit;
+	private bool flagVodka,flagMushroom,flagScoreScale,flagHeadStars,flagMagnit,flagPropeller;
 	private bool flagPostal,flagGameOver,flagMeters;
-	private float VodkaTime,ShroomTime,ScoreScaleTime,scoreTime,headStarsTime,postalTime,GameOverTime,metersTime,magnitTime;
+	private float VodkaTime,ShroomTime,ScoreScaleTime,scoreTime,headStarsTime,postalTime,GameOverTime,metersTime,magnitTime,propellerTime,addToLifeTime;
 	private float zindex=8;
 	private ArrayList StarsList;
 	Camera GUIcamera;
@@ -73,8 +73,10 @@ public class GuiLayerInitializer : Abstract {
 		flagMeters=false;
 		flagGameOver=false;
 		flagMagnit=false;
+		flagPropeller=false;
 		oldTime=nullTime;
 		scoreTime=Time.time;
+		addToLifeTime=Time.time;
 		score=GlobalOptions.GetLevelStartScore();
 		money=GlobalOptions.GetLevelStartMoney();
 		vodkaLevel=0;
@@ -107,7 +109,9 @@ public class GuiLayerInitializer : Abstract {
 		flagMeters=false;
 		flagGameOver=false;
 		flagMagnit=false;
+		flagPropeller=false;
 		scoreTime=Time.time;
+		addToLifeTime=Time.time;
 		AddTimer(0);
 		AddVodka(0);
 		AddToLife(0);
@@ -126,6 +130,7 @@ public class GuiLayerInitializer : Abstract {
 		if(GlobalOptions.gameState==GameStates.GAME){
 			AddTimer(0.5f);
 			AddScoreForVelocity();
+			AddLifeForVelocity();
 			//уменьшаем водку
 			if(flagVodka)
 			{
@@ -136,6 +141,12 @@ public class GuiLayerInitializer : Abstract {
 			if(flagMagnit)
 			{
 				MakeMagnit();
+			}
+			
+			//уменьшаем propeler
+			if(flagPropeller)
+			{
+				MakePropeller();
 			}
 			//уменьшаем грибы
 			if(flagMushroom)
@@ -411,10 +422,19 @@ public class GuiLayerInitializer : Abstract {
 	
 	private void MakeMagnit()
 	{
-		if(Time.time-magnitTime>20)
+		if(Time.time-magnitTime>15)
 		{
 			flagMagnit=false;
 			playerScript.UnMakeMagnit();
+		}
+	}
+	
+	private void MakePropeller()
+	{
+		if(Time.time-propellerTime>10)
+		{
+			flagPropeller=false;
+			playerScript.UnMakePropeller();
 		}
 	}
 	
@@ -491,6 +511,16 @@ public class GuiLayerInitializer : Abstract {
 			//так редко меняем счёт
 			AddScore(11*scoreScale);
 			scoreTime=Time.time;
+		}
+	}
+	
+	public void AddLifeForVelocity()
+	{
+		if(Time.time-addToLifeTime>=playerScript.GetRealVelocity()*13)
+		{
+			//так редко меняем счёт
+			AddToLife(1);
+			addToLifeTime=Time.time;
 		}
 	}
 	
@@ -603,8 +633,8 @@ public class GuiLayerInitializer : Abstract {
 	
 	private void MakeGameOver()
 	{
-		//stop mushroom
-		if(Time.time-GameOverTime>0.3)
+		//gameover
+		if(Time.time-GameOverTime>3)
 		{
 			flagGameOver=false;
 			ScreenLoader screenLoader;
@@ -707,6 +737,13 @@ public class GuiLayerInitializer : Abstract {
 		playerScript.MakeMagnit();
 		flagMagnit=true;
 		magnitTime=Time.time;
+	}
+	
+	public void AddPropeller()
+	{
+		playerScript.MakePropeller();
+		flagPropeller=true;
+		propellerTime=Time.time;
 	}
 	
 	

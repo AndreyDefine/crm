@@ -317,7 +317,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		
 		//enemy
 		ArrayList markedObjectsEnemy=new ArrayList();	
-		int neededNumberOfEnemy=2;
+		int neededNumberOfEnemy=1;
 		
 		//find all marks
 		Transform[] allChildren = inTerrain.gameObject.GetComponentsInChildren<Transform>();
@@ -475,12 +475,12 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		{	
 			if(interrainTag.GetflagNextTerrainCustom())
 			{
-				Debug.Log ("interrainTag.GetflagNextTerrainCustom()");
+				//Debug.Log ("interrainTag.GetflagNextTerrainCustom()");
 				break;
 			}
 			
 			oldXandYandAngleSmexForz=XandYandAngleSmexForz;
-			XandYandAngleSmexForz=interrainTag.GetXandYandAngleSmexForZ(new Vector3(0,0,2.5f),true);
+			XandYandAngleSmexForz=interrainTag.GetXandYandAngleSmexForZ(new Vector3(0,0,2f),true);
 			angletesttransform=GlobalOptions.GetAngleOfRotation(oldXandYandAngleSmexForz,XandYandAngleSmexForz);
 			marker.rotation=Quaternion.Euler(0,angletesttransform,0);
 			right=marker.TransformDirection(Vector3.right);

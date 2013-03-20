@@ -7,6 +7,7 @@ public class WoodEnemy : AbstractEnemy {
 	
 	public override void OnHit(Collider other)
 	{
+		playerScript.StumbleTrigger();
 		GuiLayer.AddToLife(-3);
 		GuiLayer.AddHeadStars();
 		PlayClipSound();

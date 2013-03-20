@@ -20,9 +20,7 @@ public class Feets : Abstract {
 	
 	private void Update () {
 		if(GlobalOptions.gameState==GameStates.GAME&&GlobalOptions.gameState==GameStates.GAME&&
-			(GlobalOptions.playerStates!=PlayerStates.LEFT&&
-			GlobalOptions.playerStates!=PlayerStates.RIGHT&&
-			GlobalOptions.playerStates!=PlayerStates.JUMP)){
+			(GlobalOptions.playerStates!=PlayerStates.JUMP&&GlobalOptions.playerStates!=PlayerStates.FLY)){
 			
 			if(Time.time-localTime>oneShag/GlobalOptions.playerVelocity){
 				Vector3 pos=singleTransform.position;

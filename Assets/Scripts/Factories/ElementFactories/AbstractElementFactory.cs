@@ -108,7 +108,7 @@ public class AbstractElementFactory: Abstract{
 			PutToFirstState(newTerrain);
 		}else
 		{
-			Debug.Log ("Instantiate");
+			//Debug.Log ("Instantiate");
 			int RandIndex=Random.Range(0,terrain1.Length);
 			newTerrain	= Instantiate (terrain1[RandIndex]) as GameObject;
 			addTagToObject(newTerrain);	

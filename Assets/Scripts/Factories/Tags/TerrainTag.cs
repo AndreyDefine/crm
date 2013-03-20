@@ -383,7 +383,7 @@ public class TerrainTag : AbstractTag{
 		//теперь получим точки безье
 		origin=new Vector2((roadPathTransformArray[i].position.x+roadPathTransformArray[i-1].position.x)/2,(roadPathTransformArray[i].position.z+roadPathTransformArray[i-1].position.z)/2);
 		control=new Vector2(roadPathTransformArray[i].position.x,roadPathTransformArray[i].position.z);
-		Debug.Log (i+"flag"+usecustomDotIndexAndCustomPos);
+		//Debug.Log (i+"flag"+usecustomDotIndexAndCustomPos);
 		if(i>roadPathTransformArray.Count-2)
 		{
 			destination=control;

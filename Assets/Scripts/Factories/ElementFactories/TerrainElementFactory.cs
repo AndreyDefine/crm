@@ -60,7 +60,7 @@ public class TerrainElementFactory: AbstractElementFactory{
 			TerrainTag terrainTag=currentTerrain.GetComponent<TerrainTag>();
 			terrainTag.SetCurDotIndexAndCurPos(1,0);
 			
-			//GlobalOptions.GetPlayerScript().PlaceCharacterFirstly(terrainTag.GetXandYandAngleSmexForZ(new Vector3(0,0,0.001f)));
+			GlobalOptions.GetPlayerScript().PlaceCharacterFirstly(terrainTag.GetXandYandAngleSmexForZ(new Vector3(0,0,0.0001f),false));
 		}
 	
 		return currentTerrain;

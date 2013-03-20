@@ -10,12 +10,14 @@ public class AbstractEnemy : Abstract {
 	protected Transform playertransform;
 	protected Player playerScript;
 	protected Transform characterTransform;
+	protected Transform walkingBearTransform;
 	
 	void Start(){
 		GuiLayer=GlobalOptions.GetGuiLayer();	
 		playerScript=GlobalOptions.GetPlayerScript();
 		playertransform=GlobalOptions.GetPlayer().transform;
 		characterTransform=playerScript.Character.transform;
+		walkingBearTransform=playerScript.GetWalkingBear();
 		initEnemy();
 	}
 	

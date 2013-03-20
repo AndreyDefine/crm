@@ -40,9 +40,9 @@ public class MonetaEnemy : AbstractEnemy {
 		if(!effectMade&&playerScript.GetMagnitFlag())
 		{
 			float raznx,razny,raznz;
-			raznx=singleTransform.position.x-characterTransform.position.x;
-			raznz=singleTransform.position.z-characterTransform.position.z;
-			razny=singleTransform.position.y-characterTransform.position.y;
+			raznx=singleTransform.position.x-walkingBearTransform.position.x;
+			raznz=singleTransform.position.z-walkingBearTransform.position.z;
+			razny=singleTransform.position.y-walkingBearTransform.position.y;
 			if(raznx*raznx+raznz*raznz<=rasstChuvstv&&Mathf.Abs (razny)<10)
 			{
 				MakeEffect();
@@ -55,19 +55,30 @@ public class MonetaEnemy : AbstractEnemy {
 		if(effectMade)
 		{
 			float raznx,raznz,razny;
-			float smex=0.2f;
+			//float smex=0.2f;
 			
-			raznx=-singleTransform.parent.position.x+characterTransform.position.x;
-			razny=-singleTransform.parent.position.y+characterTransform.position.y;
-			raznz=-singleTransform.parent.position.z+characterTransform.position.z;
+			raznx=-singleTransform.parent.position.x+walkingBearTransform.position.x;
+			razny=-singleTransform.parent.position.y+walkingBearTransform.position.y;
+			raznz=-singleTransform.parent.position.z+walkingBearTransform.position.z;
 			
 			/*raznx=Mathf.Abs(raznx)>=smex?Mathf.Sign(raznx)*smex:raznx;
 			razny=Mathf.Abs(razny)>=smex?Mathf.Sign(razny)*smex:razny;
 			raznz=Mathf.Abs(raznz)>=smex?Mathf.Sign(raznz)*smex:raznz;*/
 			
-			raznx=Mathf.Abs(raznz)>1?raznx/25:raznx;
-			razny=Mathf.Abs(raznz)>1?razny/25:razny;
-			raznz=Mathf.Abs(raznz)>1?raznz/25:raznz;
+			if(raznx*raznx+raznz*raznz<=rasstChuvstv/20)
+			{
+				//do nothing
+			}
+			else
+			{
+				raznx=raznx/25;
+				razny=razny/25;
+				raznz=raznz/25;
+			}
+			
+			//raznx=Mathf.Abs(raznz)>1?raznx/25:raznx;
+			//razny=Mathf.Abs(raznz)>1?razny/25:razny;
+			//raznz=Mathf.Abs(raznz)>1?raznz/25:raznz;
 			
 			singleTransform.parent.position+=new Vector3(raznx,razny,raznz);			
 		}
