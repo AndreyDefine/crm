@@ -302,7 +302,7 @@ public class GuiLayerInitializer : Abstract {
 		for(int i=0;i<LifeHeart.Length;i++)
 		{
 			LifeHeart[i]=(GameObject)Instantiate(GuiLifeHeart);
-			pos=new Vector3(0,0,zindex);
+			pos=new Vector3(0,0,zindex-10);
 			pos=GlobalOptions.NormalisePos(pos);
 			pos=GUIcamera.ScreenToWorldPoint(pos);
 			
@@ -366,7 +366,7 @@ public class GuiLayerInitializer : Abstract {
 		Timer=(GameObject)Instantiate(GuiTimer);
 		//Timer.transform.localScale=GlobalOptions.NormaliseScale();
 		
-		pos=new Vector3(8,GlobalOptions.Vsizey-152,zindex);
+		pos=new Vector3(8,GlobalOptions.Vsizey-152,zindex-10);
 		pos=GlobalOptions.NormalisePos(pos);
 		pos=GUIcamera.ScreenToWorldPoint(pos);
 		pos.y-=Timer.renderer.bounds.extents.y;

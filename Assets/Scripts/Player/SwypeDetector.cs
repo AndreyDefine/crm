@@ -110,12 +110,14 @@ public class SwypeDetector : SpriteTouch {
 #if UNITY_EDITOR || UNITY_STANDALONE_OSX || UNITY_STANDALONE_WIN
 		//if(GlobalOptions.playerStates==PlayerStates.WALK)
 		{
-	        if(Input.GetKeyDown("space"))
+	        if(Input.GetKeyDown(KeyCode.W))
 				SwypeUp(); 
+			if(Input.GetKeyDown(KeyCode.S))
+				SwypeDown(); 
 			
-			if(Input.GetKeyDown(KeyCode.X))
+			if(Input.GetKeyDown(KeyCode.D))
 				SwypeRight(); 
-			if(Input.GetKeyDown(KeyCode.Z))
+			if(Input.GetKeyDown(KeyCode.A))
 				SwypeLeft(); 
 		}
 #endif

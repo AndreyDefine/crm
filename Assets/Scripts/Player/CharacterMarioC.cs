@@ -97,6 +97,7 @@ public class CharacterMarioC : Abstract {
 		
 		if(stumble&&!flying&&!groundingFlag)
 		{
+			Debug.Log ("StumbleMario");
 			playerScript.Stumble();
 		}
 		
@@ -248,9 +249,12 @@ public class CharacterMarioC : Abstract {
 	
 	public void Respawn()
 	{
+		Debug.Log ("Respawn");
 		flying=false;
 		stumble=false;
 		freezed=false;
+		groundingFlag=false;
+		movingToFlyGround=false;
 	}
 	
 	public void SetMovement(float inmovement)

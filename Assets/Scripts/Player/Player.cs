@@ -416,14 +416,16 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	{	
 		Vector3 walkbearpos=walkingBear.transform.localPosition;
 		Vector3 charpos=Character.transform.localPosition;
-		 //if(characterMarioC.isJumping())
-		//{
-		//	WhereToLook.transform.localPosition=new Vector3(charpos.x*whereToLookParalax,WhereToLook.transform.localPosition.y,raznFromWhereToLookAndCharacter.z+charpos.z);
-		//}
-		//else
-		//{
-			WhereToLook.transform.localPosition=new Vector3(charpos.x*whereToLookParalax,charpos.y+walkbearpos.y+raznFromWhereToLookAndCharacter.y,raznFromWhereToLookAndCharacter.z+charpos.z);
-		//}
+		if(characterMarioC.isJumping())
+		{
+			WhereToLook.transform.localPosition=new Vector3(charpos.x*whereToLookParalax,WhereToLook.transform.localPosition.y,raznFromWhereToLookAndCharacter.z+charpos.z);
+		}
+		else
+		{
+			float heightDamping=2f;
+			float currentHeight = Mathf.Lerp (WhereToLook.transform.localPosition.y, charpos.y+walkbearpos.y+raznFromWhereToLookAndCharacter.y, heightDamping * Time.deltaTime);
+			WhereToLook.transform.localPosition=new Vector3(charpos.x*whereToLookParalax,currentHeight,raznFromWhereToLookAndCharacter.z+charpos.z);
+		}
 	}
 	
 	public void PlaceCharacter(Vector3 inpos)

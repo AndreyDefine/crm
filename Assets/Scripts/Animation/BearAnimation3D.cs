@@ -121,7 +121,7 @@ public class BearAnimation3D : Abstract{
 		
 		for(int i=0;i<clothesList.Count;i++)
 		{
-			(clothesList[i] as GameObject).animation["walk"].speed=inspeed*2;
+			(clothesList[i] as GameObject).animation["walk"].speed=inspeed*1.5f;
 		}
 	}
 }
