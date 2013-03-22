@@ -48,9 +48,32 @@ public class GuiLayerInitializer : Abstract {
 	private bool flagVodka,flagMushroom,flagScoreScale,flagHeadStars,flagMagnit,flagPropeller;
 	private bool flagPostal,flagGameOver,flagMeters;
 	private float VodkaTime,ShroomTime,ScoreScaleTime,scoreTime,headStarsTime,postalTime,GameOverTime,metersTime,magnitTime,propellerTime,addToLifeTime;
+	
+	float stopTime=0,startstopTime=0;//время остановки
+	
 	private float zindex=8;
 	private ArrayList StarsList;
 	Camera GUIcamera;
+	
+	private void AddAllTimes()
+	{
+		if(startstopTime!=0)
+		{
+			VodkaTime+=stopTime;
+			ShroomTime+=stopTime;
+			ScoreScaleTime+=stopTime;
+			scoreTime+=stopTime;
+			headStarsTime+=stopTime;
+			postalTime+=stopTime;
+			GameOverTime+=stopTime;
+			metersTime+=stopTime;
+			magnitTime+=stopTime;
+			propellerTime+=stopTime;
+			addToLifeTime+=stopTime;
+			stopTime=0;
+			startstopTime=0;
+		}
+	}
 	// Use this for initialization
 	void Start() {
 		StarsList=new ArrayList();
@@ -95,6 +118,8 @@ public class GuiLayerInitializer : Abstract {
 		}
 		StarsList.Clear();
 		curStarPos=250;
+		stopTime=0;
+		startstopTime=0;
 		
 		curStrobile=null;
 		curLife=MaxLife;
@@ -128,6 +153,9 @@ public class GuiLayerInitializer : Abstract {
 	
 	void Update () {
 		if(GlobalOptions.gameState==GameStates.GAME){
+			
+			AddAllTimes();
+			
 			AddTimer(0.5f);
 			AddScoreForVelocity();
 			AddLifeForVelocity();
@@ -176,6 +204,18 @@ public class GuiLayerInitializer : Abstract {
 			if(flagMeters)
 			{
 				MakeMeters();
+			}
+		}
+		else
+		{
+			if(GlobalOptions.gameState==GameStates.PAUSE_MENU)
+			{
+				if(startstopTime==0)
+				{
+					startstopTime=Time.time;
+				}
+
+				stopTime=Time.time-startstopTime;
 			}
 		}
 		

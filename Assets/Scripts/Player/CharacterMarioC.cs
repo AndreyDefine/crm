@@ -23,9 +23,13 @@ public class CharacterMarioC : Abstract {
 	
 	private Player playerScript;
 	
-	private float glideTimer;
+	//timers
+	private float glideTimer,timeToGround;
+	
 	private bool glideFlag=false;
 	private bool groundingFlag=false;
+	
+	float stopTime=0,startstopTime=0;//время остановки
 	
 	private float heightnormal=1.5f, heightslide=0.5f;
 	private CapsuleCollider walkinbearCollider;
@@ -33,8 +37,6 @@ public class CharacterMarioC : Abstract {
 	private GameObject walkingBear;
 	
 	private float flyingYsmex=8,groundYsmex=0;
-	
-	private float timeToGround;
 	
 	private CharacterController controller;
 	// Update is called once per frame
@@ -62,69 +64,88 @@ public class CharacterMarioC : Abstract {
 	}
 	
 	void Update() {
-
-		UpdateSmoothedMovementDirection();
-	
-		if (grounded&&!jumping) {
-			verticalSpeed = 0;
-		}
-		// Apply gravity
-		if(!freezed)
+		
+		if(GlobalOptions.gameState==GameStates.GAME)
 		{
-			verticalSpeed -= gravity * Time.deltaTime;
+			AddAllTimes();
+			UpdateSmoothedMovementDirection();
+		
+			if (grounded&&!jumping) {
+				verticalSpeed = 0;
+			}
+			// Apply gravity
+			if(!freezed)
+			{
+				verticalSpeed -= gravity * Time.deltaTime;
+			}
+			else
+			{
+				moveforward=0;
+			}
+			
+			Vector3 right = singleTransform.TransformDirection(Vector3.right);
+			Vector3 forward = singleTransform.TransformDirection(Vector3.forward);
+			
+			Vector3 movement = moveforward*forward + new Vector3 (0, verticalSpeed, 0) + forcex*right;
+			
+			if(freezed)
+			{
+				movement=Vector3.zero;
+			}
+			
+			movement *= Time.fixedDeltaTime;
+			// Move the controller
+			CollisionFlags flags = controller.Move(movement);
+			grounded = (flags & CollisionFlags.CollidedBelow) != 0;
+			
+			stumble = (flags & CollisionFlags.CollidedSides) != 0;
+			
+			if(stumble&&!flying&&!groundingFlag)
+			{
+				Debug.Log ("StumbleMario");
+				playerScript.Stumble();
+			}
+			
+			// We are in jump mode but just became grounded
+			if (grounded)
+			{
+				if(jumping)
+				{
+					if(GlobalOptions.playerStates!=PlayerStates.DIE)
+					{
+						GlobalOptions.playerStates=PlayerStates.WALK;
+					}
+				}
+				
+				if(downing)
+				{
+					Glide();
+				}
+				jumping = false;
+			}
+			downing = false;
+			
+			if(glideFlag)
+			{
+				MakeGlide();
+			}
+			
+			if(movingToFlyGround)
+			{
+				MoveToFlyGround();
+			}
 		}
 		else
 		{
-			moveforward=0;
-		}
-		
-		Vector3 right = singleTransform.TransformDirection(Vector3.right);
-		Vector3 forward = singleTransform.TransformDirection(Vector3.forward);
-		
-		Vector3 movement = moveforward*forward + new Vector3 (0, verticalSpeed, 0) + forcex*right;
-		
-		if(freezed)
-		{
-			movement=Vector3.zero;
-		}
-		
-		movement *= Time.fixedDeltaTime;
-		// Move the controller
-		CollisionFlags flags = controller.Move(movement);
-		grounded = (flags & CollisionFlags.CollidedBelow) != 0;
-		
-		stumble = (flags & CollisionFlags.CollidedSides) != 0;
-		
-		if(stumble&&!flying&&!groundingFlag)
-		{
-			Debug.Log ("StumbleMario");
-			playerScript.Stumble();
-		}
-		
-		// We are in jump mode but just became grounded
-		if (grounded)
-		{
-			if(jumping)
+			if(GlobalOptions.gameState==GameStates.PAUSE_MENU)
 			{
-				GlobalOptions.playerStates=PlayerStates.WALK;
+				if(startstopTime==0)
+				{
+					startstopTime=Time.time;
+				}
+
+				stopTime=Time.time-startstopTime;
 			}
-			
-			if(downing)
-			{
-				Glide();
-			}
-			jumping = false;
-		}
-		downing = false;
-		
-		if(glideFlag)
-		{
-			MakeGlide();
-		}
-		
-		if(movingToFlyGround)
-		{
-			MoveToFlyGround();
 		}
 	}
 	
@@ -146,8 +167,10 @@ public class CharacterMarioC : Abstract {
 			walkinbearCollider.height=heightnormal;
 			walkinbearCollider.center=new Vector3(walkinbearCollider.center.x,walkinbearCollider.center.y+(heightnormal-heightslide)/2,walkinbearCollider.center.z);
 			glideFlag=false;
-			GlobalOptions.playerStates=PlayerStates.WALK;
-			Debug.Log("GlideEnd");
+			if(GlobalOptions.playerStates!=PlayerStates.DIE)
+			{
+				GlobalOptions.playerStates=PlayerStates.WALK;
+			}
 		}
 	}
 	
@@ -156,9 +179,24 @@ public class CharacterMarioC : Abstract {
 		return grounded;	
 	}
 	
+	public bool isGliding()
+	{
+		return glideFlag;	
+	}
+	
 	public bool isJumping()
 	{
 		return jumping;	
+	}
+	
+	public bool isFlying()
+	{
+		return flying;	
+	}
+	
+	public bool ismovingToFlyGround()
+	{
+		return movingToFlyGround;	
 	}
 	
 	public void Jump()
@@ -223,6 +261,10 @@ public class CharacterMarioC : Abstract {
 				ypos-=vsletAcceleration*Time.deltaTime;
 				if(groundYsmex>=ypos)
 				{
+					if(GlobalOptions.playerStates!=PlayerStates.DIE)
+					{
+						GlobalOptions.playerStates=PlayerStates.WALK;
+					}
 					ypos=groundYsmex;
 					timeToGround=Time.time;
 					groundingFlag=true;
@@ -249,12 +291,24 @@ public class CharacterMarioC : Abstract {
 	
 	public void Respawn()
 	{
-		Debug.Log ("Respawn");
 		flying=false;
 		stumble=false;
 		freezed=false;
 		groundingFlag=false;
 		movingToFlyGround=false;
+		stopTime=0;//время остановки
+		startstopTime=0;
+	}
+	
+	private void AddAllTimes()
+	{
+		if(startstopTime!=0)
+		{
+			glideTimer+=stopTime;
+			timeToGround+=stopTime;
+			startstopTime=0;
+			stopTime=0;
+		}
 	}
 	
 	public void SetMovement(float inmovement)

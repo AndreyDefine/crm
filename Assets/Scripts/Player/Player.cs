@@ -59,6 +59,8 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	private GameObject walkingBear;
 	
+	private PlayerStates pauseGameState;//when pause
+	
 	public bool GetFlagOnlyFizik()
 	{
 		return flagOnlyFizik;
@@ -160,14 +162,14 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	{
 		GlobalOptions.gameState=GameStates.PAUSE_MENU;
 		//сделать анимацию IDLE
+		pauseGameState=GlobalOptions.playerStates;
 		GlobalOptions.playerStates=PlayerStates.IDLE;
 	}
 	
 	public void ResumeGame()
 	{
-		Debug.Log ("Game Resumed");
 		GlobalOptions.gameState=GameStates.GAME;
-		GlobalOptions.playerStates=PlayerStates.WALK;
+		GlobalOptions.playerStates=pauseGameState;
 	}
 	
 	public void MakeVodka()
@@ -194,6 +196,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	public void MakePropeller()
 	{
+		GlobalOptions.playerStates=PlayerStates.FLY;
 		MakeFlyingCharacterController(true);
 	}
 	
@@ -242,11 +245,12 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		{
 			MoveLeftRight(force);
 			MovingButtons();
-			PlaceBearToControl(posx);
 			MakeMovingCharacterController();
 			TestIsFallen();
 			//MakeMusicSpeed();
 		}
+		
+		PlaceBearToControl(posx);
 		
 		bearAnimation.SetWalkSpeed(GetRealVelocityWithNoDeltaTime()/startVelocity);
 		
@@ -413,17 +417,36 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	}
 	
 	public void PlaceBearToControl(float inposx)
-	{	
+	{
+		if(GlobalOptions.gameState==GameStates.PAUSE_MENU)
+		{
+			return;
+		}
 		Vector3 walkbearpos=walkingBear.transform.localPosition;
 		Vector3 charpos=Character.transform.localPosition;
-		if(characterMarioC.isJumping())
+		if(characterMarioC.isJumping()&&GlobalOptions.gameState!=GameStates.GAME_OVER)
 		{
 			WhereToLook.transform.localPosition=new Vector3(charpos.x*whereToLookParalax,WhereToLook.transform.localPosition.y,raznFromWhereToLookAndCharacter.z+charpos.z);
 		}
 		else
 		{
 			float heightDamping=2f;
-			float currentHeight = Mathf.Lerp (WhereToLook.transform.localPosition.y, charpos.y+walkbearpos.y+raznFromWhereToLookAndCharacter.y, heightDamping * Time.deltaTime);
+			if(characterMarioC.isFlying()||characterMarioC.ismovingToFlyGround())
+			{
+				heightDamping=10f;
+			}			
+			
+			float raznost=raznFromWhereToLookAndCharacter.y;
+			if(characterMarioC.isGliding())
+			{
+				raznost-=4;
+			}
+			if(GlobalOptions.playerStates==PlayerStates.DIE)
+			{
+				raznost-=3;
+				heightDamping=2f;
+			}
+			float currentHeight = Mathf.Lerp (WhereToLook.transform.localPosition.y, charpos.y+walkbearpos.y+raznost, heightDamping * Time.deltaTime);
 			WhereToLook.transform.localPosition=new Vector3(charpos.x*whereToLookParalax,currentHeight,raznFromWhereToLookAndCharacter.z+charpos.z);
 		}
 	}

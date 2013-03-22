@@ -26,6 +26,10 @@ public class SwypeDetector : SpriteTouch {
     }
 	
 	public override bool TouchBegan(Vector2 position,int fingerId) {
+		if(GlobalOptions.gameState!=GameStates.GAME)
+		{
+			return false;
+		}
 		bool isTouchHandled=base.TouchBegan(position,fingerId);
 		if(isTouchHandled){	
 			//do nothing
@@ -88,11 +92,17 @@ public class SwypeDetector : SpriteTouch {
 	
 	private void SwypeUp(){
 		//Debug.Log ("up");
-		GlobalOptions.playerStates=PlayerStates.JUMP;
+		if(GlobalOptions.playerStates!=PlayerStates.DOWN&&GlobalOptions.playerStates!=PlayerStates.FLY&&GlobalOptions.playerStates!=PlayerStates.JUMP&&GlobalOptions.playerStates!=PlayerStates.DIE)
+		{
+			GlobalOptions.playerStates=PlayerStates.JUMP;
+		}
 	}
 	
 	private void SwypeDown(){
-		GlobalOptions.playerStates=PlayerStates.DOWN;
+		if(GlobalOptions.playerStates!=PlayerStates.DOWN&&GlobalOptions.playerStates!=PlayerStates.FLY&&GlobalOptions.playerStates!=PlayerStates.DIE)
+		{
+			GlobalOptions.playerStates=PlayerStates.DOWN;
+		}
 	}
 	
 	//right
