@@ -59,8 +59,6 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	private GameObject walkingBear;
 	
-	private PlayerStates pauseGameState;//when pause
-	
 	public bool GetFlagOnlyFizik()
 	{
 		return flagOnlyFizik;
@@ -161,15 +159,13 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	public void PauseGame()
 	{
 		GlobalOptions.gameState=GameStates.PAUSE_MENU;
-		//сделать анимацию IDLE
-		pauseGameState=GlobalOptions.playerStates;
-		GlobalOptions.playerStates=PlayerStates.IDLE;
+		bearAnimation.StopAnimation();
 	}
 	
 	public void ResumeGame()
 	{
 		GlobalOptions.gameState=GameStates.GAME;
-		GlobalOptions.playerStates=pauseGameState;
+		bearAnimation.ResumeAnimation();
 	}
 	
 	public void MakeVodka()
@@ -465,6 +461,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	}
 	
 	private void BearRespawn(){
+		bearAnimation.ResumeAnimation();
 		GlobalOptions.whereToBuild=new Vector3(0,0,1);
 		RotatePlayer(0);	
 		singleTransform.position=PlayerFirstPos;

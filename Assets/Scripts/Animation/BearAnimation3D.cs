@@ -124,4 +124,20 @@ public class BearAnimation3D : Abstract{
 			(clothesList[i] as GameObject).animation["walk"].speed=inspeed*1.5f;
 		}
 	}
+	
+	public void StopAnimation()
+	{
+		for(int i=0;i<clothesList.Count;i++)
+		{
+			(clothesList[i] as GameObject).animation.enabled=false;
+		}
+	}
+	
+	public void ResumeAnimation()
+	{
+		for(int i=0;i<clothesList.Count;i++)
+		{
+			(clothesList[i] as GameObject).animation.enabled=true;
+		}
+	}
 }
