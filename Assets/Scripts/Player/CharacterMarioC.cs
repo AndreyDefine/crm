@@ -47,10 +47,10 @@ public class CharacterMarioC : Abstract {
 		{
 			if(moveforward>=0)
 			{
-				moveforward=-0.5f;
+				moveforward=-0.3f;
 			}else
 			{
-				moveforward=0.5f;
+				moveforward=0.3f;
 			}
 		}
 	}
@@ -93,14 +93,14 @@ public class CharacterMarioC : Abstract {
 				movement=Vector3.zero;
 			}
 			
-			movement *= Time.fixedDeltaTime;
+			movement *= Time.deltaTime;
 			// Move the controller
 			CollisionFlags flags = controller.Move(movement);
 			grounded = (flags & CollisionFlags.CollidedBelow) != 0;
 			
 			stumble = (flags & CollisionFlags.CollidedSides) != 0;
 			
-			if(stumble&&!flying&&!groundingFlag)
+			if(stumble&&!flying&&!groundingFlag&&moveforward>0)
 			{
 				Debug.Log ("StumbleMario");
 				playerScript.Stumble();

@@ -41,11 +41,11 @@ public class BearAnimation3D : Abstract{
 			(clothesList[i] as GameObject).animation["down"].layer=0;
 			(clothesList[i] as GameObject).animation["stumble"].layer=1;
 			
-			(clothesList[i] as GameObject).animation["down"].speed=0.3f;
-			(clothesList[i] as GameObject).animation["stumble"].speed=1.3f;
-			(clothesList[i] as GameObject).animation["jump"].speed=0.4f;
-			(clothesList[i] as GameObject).animation["left"].speed=2f;
-			(clothesList[i] as GameObject).animation["right"].speed=2f;
+			(clothesList[i] as GameObject).animation["down"].speed=0.5f;
+			(clothesList[i] as GameObject).animation["stumble"].speed=1.5f;
+			(clothesList[i] as GameObject).animation["jump"].speed=0.8f;
+			(clothesList[i] as GameObject).animation["left"].speed=1f;
+			(clothesList[i] as GameObject).animation["right"].speed=1f;
 			(clothesList[i] as GameObject).animation["death"].speed=0.9f;
 			//(clothesList[i] as GameObject).animation["down"].weight=1;
 		}
@@ -86,14 +86,17 @@ public class BearAnimation3D : Abstract{
 	
 	public void Walk () {
 		PlayAnimationForName("walk");
+		//Debug.Log ("Walk");
 	}
 	
 	public void Right () {
 		PlayAnimationForName("right");
+		//Debug.Log ("Right");
 	}
 	
 	public void Left () {
 		PlayAnimationForName("left");
+		//Debug.Log ("Left");
 	}
 	
 	public void Dead() {
@@ -109,12 +112,13 @@ public class BearAnimation3D : Abstract{
 	}
 	
 	public void Stumble() {
-		Debug.Log("Stumble");
+		//Debug.Log("Stumble");
 		PlayAnimationForName("stumble");
 	}
 	
 	public void Down() {
 		PlayAnimationForName("down");
+		//Debug.Log ("Down");
 	}
 	
 	public void SetWalkSpeed(float inspeed) {

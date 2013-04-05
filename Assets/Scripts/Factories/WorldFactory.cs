@@ -10,25 +10,28 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	public GameObject debugPathIndicator;
 	
 	public GameObject terrainFactory;
-	public GameObject treeFactory;
 	public GameObject EnemiesFactory;
+	public GameObject UniqueFactory;
+	public GameObject ObstacleFactory;
+	public GameObject ObstacleBigFactory;
 	public GameObject BerriesFactory;
 	public GameObject MoneyFactory;
 	public GameObject []levelTags;
 	
-	private GameObject terrainFactoryObject;
+	private ArrayList treeElementFactories=new ArrayList();
+	
 	private TerrainElementFactory terrainElementFactory;
 	
-	private GameObject treeFactoryObject;
-	private AbstractElementFactory treeElementFactory;
+	private AbstractElementFactory uniqueElementFactory;
 	
-	private GameObject enemyFactoryObject;
 	private AbstractElementFactory enemyElementFactory;
 	
-	private GameObject berryFactoryObject;
+	private AbstractElementFactory obstacleElementFactory;  
+	
+	private AbstractElementFactory obstacleBigElementFactory;
+	
 	private AbstractElementFactory berryElementFactory;
 	
-	private GameObject moneyFactoryObject;
 	private AbstractElementFactory moneyElementFactory;
 	
 	private GuiLayerInitializer guiLayer;
@@ -49,25 +52,35 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	protected bool flagFirstTime=true;
 	
 	public override void init(){
-		//terrain
-		terrainFactoryObject=Instantiate (terrainFactory) as GameObject;
-		terrainElementFactory=terrainFactoryObject.GetComponent("TerrainElementFactory") as TerrainElementFactory;
+		GameObject curFactoryObject;
 		
-		//trees
-		treeFactoryObject=Instantiate (treeFactory) as GameObject;
-		treeElementFactory=treeFactoryObject.GetComponent("AbstractElementFactory") as AbstractElementFactory;
+		//terrain
+		curFactoryObject=Instantiate (terrainFactory) as GameObject;
+		terrainElementFactory=curFactoryObject.GetComponent("TerrainElementFactory") as TerrainElementFactory;
 		
 		//enemies
-		enemyFactoryObject=Instantiate (EnemiesFactory) as GameObject;
-		enemyElementFactory=enemyFactoryObject.GetComponent("AbstractElementFactory") as AbstractElementFactory;
+		curFactoryObject=Instantiate (EnemiesFactory) as GameObject;
+		enemyElementFactory=curFactoryObject.GetComponent("AbstractElementFactory") as AbstractElementFactory;
+		
+		//uniqueObjects
+		curFactoryObject=Instantiate (UniqueFactory) as GameObject;
+		uniqueElementFactory=curFactoryObject.GetComponent("AbstractElementFactory") as AbstractElementFactory;
+		
+		//obstacles
+		curFactoryObject=Instantiate (ObstacleFactory) as GameObject;
+		obstacleElementFactory=curFactoryObject.GetComponent("AbstractElementFactory") as AbstractElementFactory;
+		
+		//obstacles big
+		curFactoryObject=Instantiate (ObstacleBigFactory) as GameObject;
+		obstacleBigElementFactory=curFactoryObject.GetComponent("AbstractElementFactory") as AbstractElementFactory;
 		
 		//berries
-		berryFactoryObject=Instantiate (BerriesFactory) as GameObject;
-		berryElementFactory=berryFactoryObject.GetComponent("AbstractElementFactory") as AbstractElementFactory;
+		curFactoryObject=Instantiate (BerriesFactory) as GameObject;
+		berryElementFactory=curFactoryObject.GetComponent("AbstractElementFactory") as AbstractElementFactory;
 		
 		//money
-		moneyFactoryObject=Instantiate (MoneyFactory) as GameObject;
-		moneyElementFactory=moneyFactoryObject.GetComponent("AbstractElementFactory") as AbstractElementFactory;
+		curFactoryObject=Instantiate (MoneyFactory) as GameObject;
+		moneyElementFactory=curFactoryObject.GetComponent("AbstractElementFactory") as AbstractElementFactory;
 		
 		//ищем gui слой
 		guiLayer=GlobalOptions.GetGuiLayer();
@@ -150,10 +163,16 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		if(curLevelTag.gameType==GameType.Runner)
 		{
 			enemyElementFactory.DestroyPullObjects();
+			uniqueElementFactory.DestroyPullObjects();
+			obstacleElementFactory.DestroyPullObjects();
+			obstacleBigElementFactory.DestroyPullObjects();
 			berryElementFactory.DestroyPullObjects();
 			moneyElementFactory.DestroyPullObjects();
+			terrainElementFactory.DestroyPullObjects();
 			
 			enemyElementFactory.PreloadPullObjects();
+			obstacleElementFactory.PreloadPullObjects();
+			obstacleBigElementFactory.PreloadPullObjects();
 			berryElementFactory.PreloadPullObjects();
 			moneyElementFactory.PreloadPullObjects();
 		}
@@ -168,7 +187,13 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		
 		terrainElementFactory.ReStart();
 		enemyElementFactory.ReStart();
-		treeElementFactory.ReStart();
+		uniqueElementFactory.ReStart();
+		obstacleElementFactory.ReStart();
+		obstacleBigElementFactory.ReStart();
+		for(i=0;i<treeElementFactories.Count;i++)
+		{
+			(treeElementFactories[i] as GameObject).GetComponent<AbstractElementFactory>().ReStart();
+		}
 		berryElementFactory.ReStart();
 		moneyElementFactory.ReStart();
 		
@@ -290,42 +315,50 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 				moneyElementFactory.AddExtraObjectInPull();
 				if(FlagCoRoutine) yield return null;
 			}
-			//trees
-			for(i=0;i<numOfTrees;i++){
-				if(treeElementFactory.flagGenerate){
-					treeElementFactory.AddExtraObjectInPull();
-					if(FlagCoRoutine) yield return null;
-				}
-			}
 		}
 		if(FlagCoRoutine) yield return null;
 	}
 	
 	private IEnumerator addDynamicByMarkers(GameObject inTerrain,TerrainTag interrainTag,bool FlagCoRoutine){
-		int i;	
+		int i,j;	
 		int kolvo;
 		int randIndex;
 		//tree
 		ArrayList markedObjectsTrees=new ArrayList();	
+		//uniqueobjects
+		ArrayList markedObjectsUnique=new ArrayList();	
 		//berry
 		ArrayList markedObjectsBerry=new ArrayList();	
-		int neededNumberOfBerries=2;
+		int neededNumberOfBerries=1;
 		
 		//money
 		ArrayList markedObjectsMoney=new ArrayList();	
-		int neededNumberOfMoney=3-Random.Range(0,2);
+		int neededNumberOfMoney=6-Random.Range(0,6);
 		
 		//enemy
 		ArrayList markedObjectsEnemy=new ArrayList();	
-		int neededNumberOfEnemy=1;
+		int neededNumberOfEnemy=9-Random.Range(0,8);
+		
+		//obstacle
+		ArrayList markedObjectsObstacle=new ArrayList();	
+		int neededNumberOfObstacle=11-Random.Range(0,5);
+		
+		//obstacle
+		ArrayList markedObjectsObstacleBig=new ArrayList();	
+		int neededNumberOfObstacleBig=2-Random.Range(0,2);
 		
 		//find all marks
 		Transform[] allChildren = inTerrain.gameObject.GetComponentsInChildren<Transform>();
 		for(i=0;i<allChildren.Length;i++)
 		{
 			//tree
-			if(allChildren[i].name=="tree"&&treeElementFactory.flagGenerate){
+			if(allChildren[i].name=="tree"){
 				markedObjectsTrees.Add (allChildren[i]);
+			}	
+			
+			//treesback
+			if(allChildren[i].name=="UniqueObjectPool"){
+				markedObjectsUnique.Add (allChildren[i]);
 			}	
 			
 			//berry
@@ -338,6 +371,16 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 				//enemy
 				if(allChildren[i].name=="enemy"&&enemyElementFactory.flagGenerate){
 					markedObjectsEnemy.Add (allChildren[i]);
+				}
+				
+				//obstacle
+				if(allChildren[i].name=="obstacle"&&obstacleElementFactory.flagGenerate){
+					markedObjectsObstacle.Add (allChildren[i]);
+				}
+				
+				//big obstacle
+				if(allChildren[i].name=="bigobstacle"&&obstacleBigElementFactory.flagGenerate){
+					markedObjectsObstacleBig.Add (allChildren[i]);
 				}
 				
 				//money
@@ -373,6 +416,30 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 				}
 			}
 			
+			//obstacle
+			if(markedObjectsObstacle.Count!=0)
+			{
+				kolvo=neededNumberOfObstacle>markedObjectsObstacle.Count?markedObjectsObstacle.Count:neededNumberOfObstacle;
+				for(i=0;i<kolvo;i++){
+					randIndex=Random.Range(0,markedObjectsObstacle.Count);
+					addOneObstacleAtMarker(markedObjectsObstacle[randIndex]as Transform,interrainTag);
+					markedObjectsObstacle.RemoveAt(randIndex);
+					if(FlagCoRoutine) yield return null;
+				}
+			}
+			
+			//big obstacle
+			if(markedObjectsObstacle.Count!=0)
+			{
+				kolvo=neededNumberOfObstacleBig>markedObjectsObstacleBig.Count?markedObjectsObstacleBig.Count:neededNumberOfObstacleBig;
+				for(i=0;i<kolvo;i++){
+					randIndex=Random.Range(0,markedObjectsObstacleBig.Count);
+					addOneObstacleBigAtMarker(markedObjectsObstacleBig[randIndex]as Transform,interrainTag);
+					markedObjectsObstacleBig.RemoveAt(randIndex);
+					if(FlagCoRoutine) yield return null;
+				}
+			}
+			
 			//money
 			//вероятность 0.5
 			//if(Random.Range(0,10)>5)
@@ -396,11 +463,63 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 			if(FlagCoRoutine&&(i%3==0)) yield return null;
 		}
 		
+		//unique
+		Transform curUnique;
+		for(i=0;i<markedObjectsUnique.Count;i++){
+			Transform[] uniqueMarkers = (markedObjectsUnique[i] as Transform).gameObject.GetComponentsInChildren<Transform>();
+			for(j=1;j<uniqueMarkers.Length;j++){
+				curUnique=(uniqueMarkers[j] as Transform);
+				if(curUnique.name!="Left"&&curUnique.name!="Right")
+				{
+					addOneUniqueAtMarker(curUnique,interrainTag);
+					if(FlagCoRoutine&&(j%3==0)) yield return null;
+				}
+			}
+		}
+		
 		if(FlagCoRoutine) yield return null;
 	}
 	
-	private void addOneTreeAtMarker(Transform marker,TerrainTag interrainTag){
+	private void addOneUniqueAtMarker(Transform marker,TerrainTag interrainTag){
 		GameObject newObject;
+		
+		newObject = uniqueElementFactory.GetNewObjectWithName(marker.name);
+		
+		//set position & rotation
+		newObject.transform.position=marker.position;
+		
+		newObject.transform.rotation=marker.rotation;
+	
+		if(interrainTag){
+			interrainTag.PushToAllElements(newObject);
+		}
+	}
+	
+	private void addOneTreeAtMarker(Transform marker,TerrainTag interrainTag){
+		int i;
+		GameObject newObject;
+		AbstractElementFactory treeElementFactory=null;
+		
+		//findTreeFactory
+		for(i=0;i<treeElementFactories.Count;i++)
+		{
+			//нашли
+			if((treeElementFactories[i] as GameObject).name==interrainTag.treeElementFactory.name){
+				treeElementFactory=(treeElementFactories[i] as GameObject).GetComponent<AbstractElementFactory>();
+				break;
+			}
+		}	
+		
+		if(!treeElementFactory)
+		{
+			GameObject newTreeFactory;
+			newTreeFactory	= Instantiate (interrainTag.treeElementFactory) as GameObject;
+			treeElementFactories.Add(newTreeFactory);
+			newTreeFactory.name=interrainTag.treeElementFactory.name;
+			treeElementFactory=newTreeFactory.GetComponent<AbstractElementFactory>();
+		}
+		
+		
 		newObject	= treeElementFactory.GetNewObject();
 			
 		//set position & rotation
@@ -416,6 +535,50 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	private void addOneEnemyAtMarker(Transform marker,TerrainTag interrainTag){
 		GameObject newObject;
 		newObject	= enemyElementFactory.GetNewObject();
+			
+		//set position & rotation
+		newObject.transform.position=marker.position;
+		
+		MarkerTag curMarkerTag=newObject.GetComponent<MarkerTag>();
+		if(curMarkerTag)
+		{
+			curMarkerTag.ApplyRotation(marker.rotation,interrainTag.transform.rotation);
+		}
+		else
+		{
+			newObject.transform.rotation=marker.rotation;
+		}
+	
+		if(interrainTag){
+			interrainTag.PushToAllElements(newObject);
+		}
+	}
+	
+	private void addOneObstacleAtMarker(Transform marker,TerrainTag interrainTag){
+		GameObject newObject;
+		newObject	= obstacleElementFactory.GetNewObject();
+			
+		//set position & rotation
+		newObject.transform.position=marker.position;
+		
+		MarkerTag curMarkerTag=newObject.GetComponent<MarkerTag>();
+		if(curMarkerTag)
+		{
+			curMarkerTag.ApplyRotation(marker.rotation,interrainTag.transform.rotation);
+		}
+		else
+		{
+			newObject.transform.rotation=marker.rotation;
+		}
+	
+		if(interrainTag){
+			interrainTag.PushToAllElements(newObject);
+		}
+	}
+	
+	private void addOneObstacleBigAtMarker(Transform marker,TerrainTag interrainTag){
+		GameObject newObject;
+		newObject	= obstacleBigElementFactory.GetNewObject();
 			
 		//set position & rotation
 		newObject.transform.position=marker.position;
@@ -507,9 +670,6 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		GameObject newTerrain=null;
 		TerrainTag terrainTag=null;
 		Vector3 newpos=new Vector3(0,0,0);
-		Vector3 treepos;
-		float shag=terrainLength/numOfTrees;
-		float xsmeh=0,zsmeh;
 		
 		Vector3 oldWhereToBuild=GlobalOptions.whereToBuild;
 		
@@ -567,65 +727,8 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 			if(FlagCoRoutine) yield return null;
 		}
 		
-		
-		if(!terrainTag.HandMade)
-		{
-			//trees left
-			if(treeElementFactory.flagGenerate){
-				for(int i=0;i<numOfTrees;i++){
-					treepos=newpos;
-					treepos+=treeElementFactory.GetInitialPos();
-					zsmeh=-terrainTag.sizeOfPlane/2+shag*i;
-					if(terrainTag){
-						xsmeh=terrainTag.GetXandYandAngleSmexForZ(new Vector3(0,0,zsmeh),false).x;
-					}
-					
-					treepos.z+=zsmeh;
-					treepos.x+=xsmeh;
-					AddOneTreeAtPos(treepos,terrainTag,treeElementFactory,false);
-					if(FlagCoRoutine) yield return null;
-				}
-			}
-			
-			
-			//berries
-			if(!terrainTag.HandMade)
-			{
-				if(berryElementFactory.flagGenerate){
-					addBerry(newpos,terrainTag);
-					if(FlagCoRoutine) yield return null;	
-				}
-			}
-			
-			//enemies
-			if(!terrainTag.HandMade)
-			{
-				if(enemyElementFactory.flagGenerate){
-					addEnemy(newpos,terrainTag);
-					if(FlagCoRoutine) yield return null;	
-				}
-			}
-		}
 	}
 	
-	private void AddOneTreeAtPos(Vector3 inpos,TerrainTag interrainTag,AbstractElementFactory inAbstractElementFactory,bool flagRotate){
-		GameObject newTree;
-		newTree	= inAbstractElementFactory.GetNewObject();
-		
-		//some random
-		inpos.x+=(Random.Range(0,1f)-0.5f)*1f;
-		inpos.z+=(Random.Range(0,1f)-0.5f)*0.5f;
-		newTree.transform.Translate(inpos);
-		
-		if(interrainTag){
-			interrainTag.PushToAllElements(newTree);
-		}		
-		//rotation
-		if(flagRotate){
-			Vector3 randrotation =new Vector3((float)(Random.Range(0,1f)-0.5)*10,(float)(Random.Range(0,1f)-0.5)*10,(float)(Random.Range(0,1f)-0.5)*10);
-			newTree.transform.Rotate(randrotation);
-		}
-	}	
 	
 	public GameObject AddTerrain()
 	{
@@ -640,50 +743,6 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 			newTerrain=terrainElementFactory.GetNewObject();
 		}
 		return newTerrain;
-	}
-	
-	public void addEnemy(Vector3 inpos,TerrainTag interrainTag)
-	{
-		GameObject newObject;
-		inpos+=enemyElementFactory.GetInitialPos();
-		Vector3 randompos;
-		float xsmeh=0;
-		randompos=new Vector3((float)(Random.Range(0,1f)-0.5)*2f,0,(float)(Random.Range(0,1f)-0.5)*10);
-		inpos+=randompos;
-		
-		if(interrainTag){
-			xsmeh=interrainTag.GetXandYandAngleSmexForZ(new Vector3(0,0,randompos.z),false).x;
-		}
-		inpos.x+=xsmeh;
-		
-		newObject=enemyElementFactory.GetNewObject();
-		
-		newObject.transform.Translate(inpos);
-		if(interrainTag){
-			interrainTag.PushToAllElements(newObject);
-		}
-	}
-	
-	public void addBerry(Vector3 inpos,TerrainTag interrainTag)
-	{
-		GameObject newObject;
-		inpos+=berryElementFactory.GetInitialPos();
-		Vector3 randompos;
-		float xsmeh=0;
-		randompos=new Vector3((float)(Random.Range(0,1f)-0.5)*2f,0,(float)(Random.Range(0,1f)-0.5)*10);
-		inpos+=randompos;
-		
-		if(interrainTag){
-			xsmeh=interrainTag.GetXandYandAngleSmexForZ(new Vector3(0,0,randompos.z),false).x;
-		}
-		inpos.x+=xsmeh;
-		
-		newObject=berryElementFactory.GetNewObject();
-		
-		newObject.transform.Translate(inpos);
-		if(interrainTag){
-			interrainTag.PushToAllElements(newObject);
-		}
 	}
 	
 	public override void DeleteOneFirstTerrain()

@@ -556,7 +556,7 @@ public class GuiLayerInitializer : Abstract {
 	
 	public void AddLifeForVelocity()
 	{
-		if(Time.time-addToLifeTime>=playerScript.GetRealVelocity()*13)
+		if(Time.time-addToLifeTime>=playerScript.GetRealVelocity()*23)
 		{
 			//так редко меняем счёт
 			AddToLife(1);

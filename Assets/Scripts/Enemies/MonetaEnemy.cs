@@ -7,6 +7,7 @@ public class MonetaEnemy : AbstractEnemy {
 	private bool effectMade=false;
 	public int numberOfMoney=1;
 	private float rasstChuvstv=155;
+	private Transform parentTransform;
 	
 	public override void OnHit(Collider other)
 	{
@@ -28,11 +29,17 @@ public class MonetaEnemy : AbstractEnemy {
 		singleTransform.Rotate(new Vector3(0,Time.deltaTime*200,0));
 	}
 	
+	public override void initEnemy()
+	{
+		parentTransform=singleTransform.parent;
+	}
+	
 	public override void ReStart()
 	{
+		//Debug.Log ("MonetaRestart");
 		UnMakeEffect();
 		gameObject.SetActiveRecursively(true);	
-		singleTransform.rotation=Quaternion.Euler(0, 0, 0);;
+		singleTransform.rotation=Quaternion.Euler(0, 0, 0);
 	}
 	
 	public void TestPlayer()
@@ -40,9 +47,9 @@ public class MonetaEnemy : AbstractEnemy {
 		if(!effectMade&&playerScript.GetMagnitFlag())
 		{
 			float raznx,razny,raznz;
-			raznx=singleTransform.position.x-walkingBearTransform.position.x;
-			raznz=singleTransform.position.z-walkingBearTransform.position.z;
-			razny=singleTransform.position.y-walkingBearTransform.position.y;
+			raznx=parentTransform.position.x-walkingBearTransform.position.x;
+			raznz=parentTransform.position.z-walkingBearTransform.position.z;
+			razny=parentTransform.position.y-walkingBearTransform.position.y;
 			if(raznx*raznx+raznz*raznz<=rasstChuvstv&&Mathf.Abs (razny)<10)
 			{
 				MakeEffect();
@@ -57,13 +64,9 @@ public class MonetaEnemy : AbstractEnemy {
 			float raznx,raznz,razny;
 			//float smex=0.2f;
 			
-			raznx=-singleTransform.parent.position.x+walkingBearTransform.position.x;
-			razny=-singleTransform.parent.position.y+walkingBearTransform.position.y;
-			raznz=-singleTransform.parent.position.z+walkingBearTransform.position.z;
-			
-			/*raznx=Mathf.Abs(raznx)>=smex?Mathf.Sign(raznx)*smex:raznx;
-			razny=Mathf.Abs(razny)>=smex?Mathf.Sign(razny)*smex:razny;
-			raznz=Mathf.Abs(raznz)>=smex?Mathf.Sign(raznz)*smex:raznz;*/
+			raznx=-parentTransform.position.x+walkingBearTransform.position.x;
+			razny=-parentTransform.position.y+walkingBearTransform.position.y;
+			raznz=-parentTransform.position.z+walkingBearTransform.position.z;
 			
 			if(raznx*raznx+raznz*raznz<=rasstChuvstv/20)
 			{
@@ -76,26 +79,25 @@ public class MonetaEnemy : AbstractEnemy {
 				raznz=raznz/25;
 			}
 			
-			//raznx=Mathf.Abs(raznz)>1?raznx/25:raznx;
-			//razny=Mathf.Abs(raznz)>1?razny/25:razny;
-			//raznz=Mathf.Abs(raznz)>1?raznz/25:raznz;
-			
-			singleTransform.parent.position+=new Vector3(raznx,razny,raznz);			
+			parentTransform.position+=new Vector3(raznx,razny,raznz);			
 		}
 	}
 	
 	private void MakeEffect()
 	{
 		effectMade=true;
-		singleTransform.parent.rigidbody.useGravity=false;
-		singleTransform.parent.collider.isTrigger=true;
+		parentTransform.rigidbody.useGravity=false;
+		parentTransform.collider.isTrigger=true;
 	}
 	
 	
 	private void UnMakeEffect()
 	{
 		effectMade=false;
-		singleTransform.parent.rigidbody.useGravity=true;
-		singleTransform.parent.collider.isTrigger=false;
+		if(parentTransform)
+		{
+			parentTransform.rigidbody.useGravity=true;
+			parentTransform.collider.isTrigger=false;
+		}
 	}
 }

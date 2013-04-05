@@ -5,11 +5,11 @@ using  System.Globalization;
 public class AbstractTag : Abstract{	
 	protected AbstractElementFactory abstractElementFactory;
 	
-	private AbstractEnemy enemyScript;
+	private AbstractEnemy[] enemyScripts;
 	
 	public void addFactory(AbstractElementFactory inabstractElementFactory){
 		abstractElementFactory=inabstractElementFactory;
-		enemyScript=GetComponentInChildren<AbstractEnemy>();
+		enemyScripts = GetComponentsInChildren<AbstractEnemy>();
 	}
 	
 	public virtual void DeleteFromUsed(){
@@ -18,14 +18,17 @@ public class AbstractTag : Abstract{
 	
 	public virtual void ReStart()
 	{
-		if(enemyScript)
+		if(enemyScripts.Length>0)
 		{
-			enemyScript.ReStart();
+			for(int i=0;i<enemyScripts.Length;i++)
+			{
+				enemyScripts[i].ReStart();
+			}
 		}
 		else 
 		{
-			Debug.Log (singleTransform.GetChild(0).gameObject.name);
-			Debug.Log ("AbstractEnemy Not Found");
+			//Debug.Log (singleTransform.GetChild(0).gameObject.name);
+			//Debug.Log ("AbstractEnemy Not Found");
 		}
 		
 	}

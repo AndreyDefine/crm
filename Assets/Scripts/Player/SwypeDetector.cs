@@ -23,6 +23,12 @@ public class SwypeDetector : SpriteTouch {
 		
 		//Epsilonyx=6*GlobalOptions.scaleFactorx;
 		Epsilonyy=40*GlobalOptions.scaleFactory;
+		
+		if(GlobalOptions.scaleFactorx<0.5)
+		{
+			Epsilonxx=40*GlobalOptions.scaleFactorx*2;
+			Epsilonyy=40*GlobalOptions.scaleFactory*2;
+		}
     }
 	
 	public override bool TouchBegan(Vector2 position,int fingerId) {
@@ -122,6 +128,8 @@ public class SwypeDetector : SpriteTouch {
 		{
 	        if(Input.GetKeyDown(KeyCode.W))
 				SwypeUp(); 
+			if(Input.GetKeyDown("space"))
+				SwypeUp();
 			if(Input.GetKeyDown(KeyCode.S))
 				SwypeDown(); 
 			

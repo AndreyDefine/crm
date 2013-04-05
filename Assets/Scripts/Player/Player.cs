@@ -170,7 +170,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	public void MakeVodka()
 	{
-		VelocityVodka=1.5f;
+		VelocityVodka=1.2f;
 		(MainCamera.GetComponent("MotionBlur") as MotionBlur).enabled=true;
 	}
 	
@@ -274,11 +274,11 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		{
 			bearAnimation.Idle();
 		}
-		if(GlobalOptions.playerStates==PlayerStates.JUMP)
+		if(GlobalOptions.playerStates==PlayerStates.JUMP&&!characterMarioC.isGliding())
 		{
 			bearAnimation.Jump();
 		}
-		if(GlobalOptions.playerStates==PlayerStates.DOWN)
+		if(GlobalOptions.playerStates==PlayerStates.DOWN&&!characterMarioC.isJumping())
 		{
 			bearAnimation.Down();
 		}
@@ -433,9 +433,9 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 			}			
 			
 			float raznost=raznFromWhereToLookAndCharacter.y;
-			if(characterMarioC.isGliding())
+			if(characterMarioC.isGliding()&&GlobalOptions.playerStates!=PlayerStates.DIE)
 			{
-				raznost-=4;
+				raznost-=3.5f;
 			}
 			if(GlobalOptions.playerStates==PlayerStates.DIE)
 			{

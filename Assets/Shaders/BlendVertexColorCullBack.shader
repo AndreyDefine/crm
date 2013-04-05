@@ -10,12 +10,12 @@ Shader "Shaders/BlendVertexColorCullBack"
 
 	SubShader 
 	{
-		Tags {"Queue"="Transparent+1" "IgnoreProjector"="True" "RenderType"="Transparent"}
+		Tags {"Queue"="Transparent" "IgnoreProjector"="True"  "RenderType"="Transparent"}
 		LOD 100
 		
 		ZWrite Off
-		Blend SrcAlpha OneMinusSrcAlpha 
-		Cull Back
+		Blend SrcAlpha OneMinusSrcAlpha
+		Cull Off
 
 		BindChannels 
 		{
@@ -23,11 +23,23 @@ Shader "Shaders/BlendVertexColorCullBack"
 			Bind "TexCoord", texcoord
 			Bind "Color", color
 		}
+		
+		Pass {
+            Cull Front
+            SetTexture [_MainTex]  { combine texture * primary } 
+        }
+        // Render the parts of the object facing us.
+        // If the object is convex, these will be closer than the
+        // back-faces.
+        Pass {
+            Cull Back
+            SetTexture [_MainTex]  { combine texture * primary } 
+        }
 
-		Pass 
-		{
-			Lighting Off
-			SetTexture [_MainTex] { combine texture * primary } 
-		}
+		//Pass 
+		//{
+		//	//Lighting Off
+		//	SetTexture [_MainTex] { combine texture * primary } 
+		//}
 	}
 }

@@ -11,6 +11,7 @@ public enum TerrainTagNextGoingTo
 }
 
 public class TerrainTag : AbstractTag{
+	public GameObject treeElementFactory;
 	public TerrainTagNextGoingTo nextGoingTo=TerrainTagNextGoingTo.FORWARD;
 	public float sizeOfTexture;
 	public float sizeOfPlane;
