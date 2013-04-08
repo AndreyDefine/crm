@@ -13,7 +13,6 @@ public class MonetaEnemy : AbstractEnemy {
 	{
 		GuiLayer.AddMoney(numberOfMoney);
 		PlayClipSound();
-		//audio.Play();
 		MakeInactive();
 		effectMade=false;
 	}
@@ -68,15 +67,15 @@ public class MonetaEnemy : AbstractEnemy {
 			razny=-parentTransform.position.y+walkingBearTransform.position.y;
 			raznz=-parentTransform.position.z+walkingBearTransform.position.z;
 			
-			if(raznx*raznx+raznz*raznz<=rasstChuvstv/20)
+			if(raznx*raznx+raznz*raznz<=rasstChuvstv/30)
 			{
 				//do nothing
 			}
 			else
 			{
-				raznx=raznx/25;
-				razny=razny/25;
-				raznz=raznz/25;
+				raznx=raznx/10;
+				razny=razny/10;
+				raznz=raznz/10;
 			}
 			
 			parentTransform.position+=new Vector3(raznx,razny,raznz);			

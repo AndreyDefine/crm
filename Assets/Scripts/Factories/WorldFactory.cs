@@ -87,7 +87,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		
 		terrainLength=terrainElementFactory.terrainLength;
 		
-		numberOfTerrains=(int)(drawnPerspective/terrainLength);
+		numberOfTerrains=2;//(int)(drawnPerspective/terrainLength);
 		
 		//Get current level
 		LoadCurrentLevel();
@@ -391,7 +391,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		}
 		
 		//berry
-		if(currentRoadPos>2||!firstTimeInit)
+		if(currentRoadPos>1||!firstTimeInit)
 		{
 			if(markedObjectsBerry.Count!=0)
 			{
