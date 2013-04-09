@@ -47,10 +47,10 @@ public class CharacterMarioC : Abstract {
 		{
 			if(moveforward>=0)
 			{
-				moveforward=-0.3f;
+				moveforward=-0.1f;
 			}else
 			{
-				moveforward=0.3f;
+				moveforward=0.1f;
 			}
 		}
 	}

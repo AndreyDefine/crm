@@ -10,11 +10,9 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	public GameObject debugPathIndicator;
 	
 	public GameObject terrainFactory;
-	public GameObject EnemiesFactory;
 	public GameObject UniqueFactory;
 	public GameObject ObstacleFactory;
-	public GameObject ObstacleBigFactory;
-	public GameObject BerriesFactory;
+	public GameObject ObstacleSetFactory;
 	public GameObject MoneyFactory;
 	public GameObject []levelTags;
 	
@@ -24,13 +22,8 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	
 	private AbstractElementFactory uniqueElementFactory;
 	
-	private AbstractElementFactory enemyElementFactory;
-	
 	private AbstractElementFactory obstacleElementFactory;  
-	
-	private AbstractElementFactory obstacleBigElementFactory;
-	
-	private AbstractElementFactory berryElementFactory;
+	private AbstractElementFactory obstacleSetElementFactory;  	
 	
 	private AbstractElementFactory moneyElementFactory;
 	
@@ -58,10 +51,6 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		curFactoryObject=Instantiate (terrainFactory) as GameObject;
 		terrainElementFactory=curFactoryObject.GetComponent("TerrainElementFactory") as TerrainElementFactory;
 		
-		//enemies
-		curFactoryObject=Instantiate (EnemiesFactory) as GameObject;
-		enemyElementFactory=curFactoryObject.GetComponent("AbstractElementFactory") as AbstractElementFactory;
-		
 		//uniqueObjects
 		curFactoryObject=Instantiate (UniqueFactory) as GameObject;
 		uniqueElementFactory=curFactoryObject.GetComponent("AbstractElementFactory") as AbstractElementFactory;
@@ -70,13 +59,9 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		curFactoryObject=Instantiate (ObstacleFactory) as GameObject;
 		obstacleElementFactory=curFactoryObject.GetComponent("AbstractElementFactory") as AbstractElementFactory;
 		
-		//obstacles big
-		curFactoryObject=Instantiate (ObstacleBigFactory) as GameObject;
-		obstacleBigElementFactory=curFactoryObject.GetComponent("AbstractElementFactory") as AbstractElementFactory;
-		
-		//berries
-		curFactoryObject=Instantiate (BerriesFactory) as GameObject;
-		berryElementFactory=curFactoryObject.GetComponent("AbstractElementFactory") as AbstractElementFactory;
+		//Obstacle Set
+		curFactoryObject=Instantiate (ObstacleSetFactory) as GameObject;
+		obstacleSetElementFactory=curFactoryObject.GetComponent("AbstractElementFactory") as AbstractElementFactory;
 		
 		//money
 		curFactoryObject=Instantiate (MoneyFactory) as GameObject;
@@ -162,19 +147,19 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		//если раннер
 		if(curLevelTag.gameType==GameType.Runner)
 		{
-			enemyElementFactory.DestroyPullObjects();
 			uniqueElementFactory.DestroyPullObjects();
 			obstacleElementFactory.DestroyPullObjects();
-			obstacleBigElementFactory.DestroyPullObjects();
-			berryElementFactory.DestroyPullObjects();
+			obstacleSetElementFactory.DestroyPullObjects();
 			moneyElementFactory.DestroyPullObjects();
 			terrainElementFactory.DestroyPullObjects();
 			
-			enemyElementFactory.PreloadPullObjects();
-			obstacleElementFactory.PreloadPullObjects();
-			obstacleBigElementFactory.PreloadPullObjects();
-			berryElementFactory.PreloadPullObjects();
-			moneyElementFactory.PreloadPullObjects();
+			for(int i=0;i<treeElementFactories.Count;i++)
+			{
+				(treeElementFactories[i] as GameObject).GetComponent<AbstractElementFactory>().DestroyPullObjects();
+			}
+			
+			//really need this!!!
+			obstacleSetElementFactory.PreloadPullObjects();
 		}
 	}
 	
@@ -186,15 +171,13 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		int i;
 		
 		terrainElementFactory.ReStart();
-		enemyElementFactory.ReStart();
 		uniqueElementFactory.ReStart();
 		obstacleElementFactory.ReStart();
-		obstacleBigElementFactory.ReStart();
+		obstacleSetElementFactory.ReStart();
 		for(i=0;i<treeElementFactories.Count;i++)
 		{
 			(treeElementFactories[i] as GameObject).GetComponent<AbstractElementFactory>().ReStart();
 		}
-		berryElementFactory.ReStart();
 		moneyElementFactory.ReStart();
 		
 		for(i=0;i<=numberOfTerrains;i++)
@@ -302,20 +285,6 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 			if(FlagCoRoutine) yield return null;
 		}
 		
-		if(FlagAddExtraObjectsInPull){
-			if(terrainElementFactory.flagGenerate){
-				terrainElementFactory.AddExtraObjectInPull();
-				if(FlagCoRoutine) yield return null;
-			}
-			if(berryElementFactory.flagGenerate){
-				berryElementFactory.AddExtraObjectInPull();
-				if(FlagCoRoutine) yield return null;
-			}
-			if(moneyElementFactory.flagGenerate){
-				moneyElementFactory.AddExtraObjectInPull();
-				if(FlagCoRoutine) yield return null;
-			}
-		}
 		if(FlagCoRoutine) yield return null;
 	}
 	
@@ -327,25 +296,14 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		ArrayList markedObjectsTrees=new ArrayList();	
 		//uniqueobjects
 		ArrayList markedObjectsUnique=new ArrayList();	
-		//berry
-		ArrayList markedObjectsBerry=new ArrayList();	
-		int neededNumberOfBerries=1;
 		
 		//money
 		ArrayList markedObjectsMoney=new ArrayList();	
 		int neededNumberOfMoney=6-Random.Range(0,6);
 		
-		//enemy
-		ArrayList markedObjectsEnemy=new ArrayList();	
-		int neededNumberOfEnemy=9-Random.Range(0,8);
-		
-		//obstacle
-		ArrayList markedObjectsObstacle=new ArrayList();	
-		int neededNumberOfObstacle=11-Random.Range(0,5);
-		
-		//obstacle
-		ArrayList markedObjectsObstacleBig=new ArrayList();	
-		int neededNumberOfObstacleBig=2-Random.Range(0,2);
+		//ObstacleSet
+		ArrayList markedObjectsObstacleSet=new ArrayList();	
+		int neededNumberOfObstacleSet=10;
 		
 		//find all marks
 		Transform[] allChildren = inTerrain.gameObject.GetComponentsInChildren<Transform>();
@@ -362,26 +320,12 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 			}	
 			
 			//berry
-			if(currentRoadPos>2||!firstTimeInit)
+			if(currentRoadPos>1||!firstTimeInit)
 			{
-				if(allChildren[i].name=="berry"&&berryElementFactory.flagGenerate){
-					markedObjectsBerry.Add (allChildren[i]);
+				//Obstacle Set
+				if(allChildren[i].name=="ObstacleSet"){
+					markedObjectsObstacleSet.Add (allChildren[i]);
 				}	
-				
-				//enemy
-				if(allChildren[i].name=="enemy"&&enemyElementFactory.flagGenerate){
-					markedObjectsEnemy.Add (allChildren[i]);
-				}
-				
-				//obstacle
-				if(allChildren[i].name=="obstacle"&&obstacleElementFactory.flagGenerate){
-					markedObjectsObstacle.Add (allChildren[i]);
-				}
-				
-				//big obstacle
-				if(allChildren[i].name=="bigobstacle"&&obstacleBigElementFactory.flagGenerate){
-					markedObjectsObstacleBig.Add (allChildren[i]);
-				}
 				
 				//money
 				if(allChildren[i].name=="money"&&moneyElementFactory.flagGenerate){
@@ -390,52 +334,40 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 			}
 		}
 		
-		//berry
+		//obstacles
 		if(currentRoadPos>1||!firstTimeInit)
 		{
-			if(markedObjectsBerry.Count!=0)
-			{
-				kolvo=neededNumberOfBerries>markedObjectsBerry.Count?markedObjectsBerry.Count:neededNumberOfBerries;
-				for(i=0;i<kolvo;i++){
-					randIndex=Random.Range(0,markedObjectsBerry.Count);
-					addOneBerryAtMarker(markedObjectsBerry[randIndex]as Transform,interrainTag);
-					markedObjectsBerry.RemoveAt(randIndex);
-					if(FlagCoRoutine) yield return null;
-				}
-			}
 			
-			//enemy
-			if(markedObjectsEnemy.Count!=0)
-			{
-				kolvo=neededNumberOfEnemy>markedObjectsEnemy.Count?markedObjectsEnemy.Count:neededNumberOfEnemy;
+			//ObstacleSet
+			GameObject curSet;
+			Transform OneObstacle,marker;
+			int randomIndexOfSet;
+			for(i=0;i<markedObjectsObstacleSet.Count;i++){
+				kolvo=neededNumberOfObstacleSet>markedObjectsObstacleSet.Count?markedObjectsObstacleSet.Count:neededNumberOfObstacleSet;
 				for(i=0;i<kolvo;i++){
-					randIndex=Random.Range(0,markedObjectsEnemy.Count);
-					addOneEnemyAtMarker(markedObjectsEnemy[randIndex]as Transform,interrainTag);
-					markedObjectsEnemy.RemoveAt(randIndex);
-					if(FlagCoRoutine) yield return null;
-				}
-			}
-			
-			//obstacle
-			if(markedObjectsObstacle.Count!=0)
-			{
-				kolvo=neededNumberOfObstacle>markedObjectsObstacle.Count?markedObjectsObstacle.Count:neededNumberOfObstacle;
-				for(i=0;i<kolvo;i++){
-					randIndex=Random.Range(0,markedObjectsObstacle.Count);
-					addOneObstacleAtMarker(markedObjectsObstacle[randIndex]as Transform,interrainTag);
-					markedObjectsObstacle.RemoveAt(randIndex);
-					if(FlagCoRoutine) yield return null;
-				}
-			}
-			
-			//big obstacle
-			if(markedObjectsObstacle.Count!=0)
-			{
-				kolvo=neededNumberOfObstacleBig>markedObjectsObstacleBig.Count?markedObjectsObstacleBig.Count:neededNumberOfObstacleBig;
-				for(i=0;i<kolvo;i++){
-					randIndex=Random.Range(0,markedObjectsObstacleBig.Count);
-					addOneObstacleBigAtMarker(markedObjectsObstacleBig[randIndex]as Transform,interrainTag);
-					markedObjectsObstacleBig.RemoveAt(randIndex);
+					//случайный индекс маркера
+					randIndex=Random.Range(0,markedObjectsObstacleSet.Count);
+					//получим марке
+					marker=markedObjectsObstacleSet[randIndex]as Transform;
+					//теперь выбираем сет
+					randomIndexOfSet=Random.Range(0,interrainTag.ObstacleSetArray.Length);
+					// получаем препятствие
+					curSet=obstacleSetElementFactory.GetNewObjectWithName((interrainTag.ObstacleSetArray[randomIndexOfSet] as GameObject).name);
+					//поместим сет препятствий куда надо
+					curSet.transform.position=marker.position;
+					curSet.transform.rotation=marker.rotation;
+					//получим список препятствий
+					Transform[] setMarkers = curSet.GetComponentsInChildren<Transform>();
+					
+					for(j=1;j<setMarkers.Length;j++){
+						OneObstacle=(setMarkers[j] as Transform);
+						addOneObstacleFromSetAtMarker(OneObstacle,interrainTag);
+						if(FlagCoRoutine) yield return null;
+					}
+					//почистим фабрику
+					obstacleSetElementFactory.DeleteCurrent(curSet);				
+					
+					markedObjectsObstacleSet.RemoveAt(randIndex);
 					if(FlagCoRoutine) yield return null;
 				}
 			}
@@ -443,7 +375,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 			//money
 			//вероятность 0.5
 			//if(Random.Range(0,10)>5)
-			{
+			/*{
 				if(markedObjectsMoney.Count!=0)
 				{
 					kolvo=neededNumberOfMoney>markedObjectsMoney.Count?markedObjectsMoney.Count:neededNumberOfMoney;
@@ -454,7 +386,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 						if(FlagCoRoutine) yield return null;
 					}
 				}
-			}
+			}*/
 		}
 		
 		//trees
@@ -478,6 +410,22 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		}
 		
 		if(FlagCoRoutine) yield return null;
+	}
+	
+	private void addOneObstacleFromSetAtMarker(Transform marker,TerrainTag interrainTag){
+		GameObject newObject;
+	
+		newObject = obstacleElementFactory.GetNewObjectWithName(marker.name);
+		
+		Debug.Log (marker.name);
+		//set position & rotation
+		newObject.transform.position=marker.position;
+		
+		newObject.transform.rotation=marker.rotation;
+	
+		if(interrainTag){
+			interrainTag.PushToAllElements(newObject);
+		}
 	}
 	
 	private void addOneUniqueAtMarker(Transform marker,TerrainTag interrainTag){
@@ -532,77 +480,6 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		}
 	}
 	
-	private void addOneEnemyAtMarker(Transform marker,TerrainTag interrainTag){
-		GameObject newObject;
-		newObject	= enemyElementFactory.GetNewObject();
-			
-		//set position & rotation
-		newObject.transform.position=marker.position;
-		
-		MarkerTag curMarkerTag=newObject.GetComponent<MarkerTag>();
-		if(curMarkerTag)
-		{
-			curMarkerTag.ApplyRotation(marker.rotation,interrainTag.transform.rotation);
-		}
-		else
-		{
-			newObject.transform.rotation=marker.rotation;
-		}
-	
-		if(interrainTag){
-			interrainTag.PushToAllElements(newObject);
-		}
-	}
-	
-	private void addOneObstacleAtMarker(Transform marker,TerrainTag interrainTag){
-		GameObject newObject;
-		newObject	= obstacleElementFactory.GetNewObject();
-			
-		//set position & rotation
-		newObject.transform.position=marker.position;
-		
-		MarkerTag curMarkerTag=newObject.GetComponent<MarkerTag>();
-		if(curMarkerTag)
-		{
-			curMarkerTag.ApplyRotation(marker.rotation,interrainTag.transform.rotation);
-		}
-		else
-		{
-			newObject.transform.rotation=marker.rotation;
-		}
-	
-		if(interrainTag){
-			interrainTag.PushToAllElements(newObject);
-		}
-	}
-	
-	private void addOneObstacleBigAtMarker(Transform marker,TerrainTag interrainTag){
-		GameObject newObject;
-		newObject	= obstacleBigElementFactory.GetNewObject();
-			
-		//set position & rotation
-		newObject.transform.position=marker.position;
-		
-		newObject.transform.rotation=marker.rotation;
-	
-		if(interrainTag){
-			interrainTag.PushToAllElements(newObject);
-		}
-	}
-	
-	private void addOneBerryAtMarker(Transform marker,TerrainTag interrainTag){
-		GameObject newObject;
-		newObject	= berryElementFactory.GetNewObject();
-			
-		//set position & rotation
-		newObject.transform.position=marker.position;
-		
-		newObject.transform.rotation=marker.rotation;
-	
-		if(interrainTag){
-			interrainTag.PushToAllElements(newObject);
-		}
-	}
 	
 	private void addOneMoneyAtMarker(Transform marker,TerrainTag interrainTag){
 		GameObject newObject;
@@ -720,12 +597,9 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 			if(FlagCoRoutine) yield return null;
 		}
 		//а надо ли что нибудь ещё добавлять?
-		if(terrainTag.Dynamic)
-		{
-			//динамические объекты
-			StartCoroutine(addDynamicByMarkers(newTerrain,terrainTag,FlagCoRoutine));	
-			if(FlagCoRoutine) yield return null;
-		}
+		//динамические объекты
+		StartCoroutine(addDynamicByMarkers(newTerrain,terrainTag,FlagCoRoutine));	
+		if(FlagCoRoutine) yield return null;
 		
 	}
 	

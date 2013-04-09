@@ -11,13 +11,11 @@ public enum TerrainTagNextGoingTo
 }
 
 public class TerrainTag : AbstractTag{
+	public GameObject []ObstacleSetArray;
 	public GameObject treeElementFactory;
 	public TerrainTagNextGoingTo nextGoingTo=TerrainTagNextGoingTo.FORWARD;
 	public float sizeOfTexture;
 	public float sizeOfPlane;
-	
-	public bool HandMade=false;
-	public bool Dynamic=false;
 	
 	public bool DynamicSize=true;
 	
