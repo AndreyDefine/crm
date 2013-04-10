@@ -111,6 +111,7 @@ public class AbstractElementFactory: Abstract{
 			//Debug.Log ("Instantiate");
 			int RandIndex=Random.Range(0,terrain1.Length);
 			newTerrain	= Instantiate (terrain1[RandIndex]) as GameObject;
+			newTerrain.name=(terrain1[RandIndex] as GameObject).name;
 			addTagToObject(newTerrain);	
 			PutToFirstState(newTerrain);
 		}
@@ -140,6 +141,7 @@ public class AbstractElementFactory: Abstract{
 		GameObject newTerrain=null;
 		for (int i=0; i<terrain1.Length;i++){
 			newTerrain	= Instantiate (terrain1[i]) as GameObject;
+			newTerrain.name=(terrain1[i] as GameObject).name;
 			addTagToObject(newTerrain);	
 			newTerrain.transform.position=new Vector3(-200,-200,-200);
 			terrainsListToDel.Add (newTerrain);
