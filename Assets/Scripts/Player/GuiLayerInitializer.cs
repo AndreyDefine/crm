@@ -546,7 +546,7 @@ public class GuiLayerInitializer : Abstract {
 	
 	public void AddScoreForVelocity()
 	{
-		if(Time.time-scoreTime>=playerScript.GetRealVelocity()/10)
+		if(Time.time-scoreTime>=playerScript.GetRealVelocityWithNoDeltaTime()/1000)
 		{
 			//так редко меняем счёт
 			AddScore(11*scoreScale);
@@ -556,7 +556,7 @@ public class GuiLayerInitializer : Abstract {
 	
 	public void AddLifeForVelocity()
 	{
-		if(Time.time-addToLifeTime>=playerScript.GetRealVelocity()*23)
+		if(Time.time-addToLifeTime>=playerScript.GetRealVelocityWithNoDeltaTime())
 		{
 			//так редко меняем счёт
 			AddToLife(1);

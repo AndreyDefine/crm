@@ -342,7 +342,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 			GameObject curSet;
 			Transform OneObstacle,marker;
 			int randomIndexOfSet;
-			for(i=0;i<markedObjectsObstacleSet.Count;i++){
+			for(i=0;i<markedObjectsObstacleSet.Count&&interrainTag.ObstacleSetArray.Length!=0;i++){
 				kolvo=neededNumberOfObstacleSet>markedObjectsObstacleSet.Count?markedObjectsObstacleSet.Count:neededNumberOfObstacleSet;
 				for(i=0;i<kolvo;i++){
 					//случайный индекс маркера
