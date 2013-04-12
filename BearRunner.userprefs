@@ -1,0 +1,13 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Enemies/DynamicEnemies/FallingTreeEnemy.cs">
+    <Files>
+      <File FileName="Assets/Scripts/Enemies/DynamicEnemies/FallingTreeEnemy.cs" Line="31" Column="44" />
+      <File FileName="Assets/Scripts/Enemies/DynamicEnemies/FallingTreeRightEnemy.cs" Line="51" Column="44" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>

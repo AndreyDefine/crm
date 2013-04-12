@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+	<Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+	<Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+	<ProductVersion>10.0.20506</ProductVersion>
+	<SchemaVersion>2.0</SchemaVersion>
+	<ProjectGuid>{681A2968-4438-8AA3-F05B-F9AC468365AC}</ProjectGuid>
+	<OutputType>Library</OutputType>
+	<AppDesignerFolder>Properties</AppDesignerFolder>
+	<RootNamespace></RootNamespace>
+	<AssemblyName>Assembly-CSharp</AssemblyName>
+	<TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+	<FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+	<DebugSymbols>true</DebugSymbols>
+	<DebugType>full</DebugType>
+	<Optimize>false</Optimize>
+	<OutputPath>Temp\bin\Debug\</OutputPath>
+	<DefineConstants>DEBUG;TRACE;UNITY_3_5_6;UNITY_3_5;UNITY_EDITOR;ENABLE_PROFILER;UNITY_IOS;UNITY_IPHONE;ENABLE_GENERICS;ENABLE_TERRAIN;ENABLE_WEBCAM;ENABLE_MICROPHONE;ENABLE_NETWORK;ENABLE_CLOTH;ENABLE_WWW</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+	<NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+	<DebugType>pdbonly</DebugType>
+	<Optimize>true</Optimize>
+	<OutputPath>Temp\bin\Release\</OutputPath>
+	<DefineConstants>TRACE</DefineConstants>
+	<ErrorReport>prompt</ErrorReport>
+	<WarningLevel>4</WarningLevel>
+	<NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+	<Reference Include="System" />
+    <Reference Include="System.XML" />
+	<Reference Include="System.Core" />
+	<Reference Include="UnityEngine">
+	  <HintPath>/Applications/Unity/Unity.app/Contents/Frameworks/Managed/UnityEngine.dll</HintPath>
+	</Reference>
+	<Reference Include="UnityEditor">
+	  <HintPath>/Applications/Unity/Unity.app/Contents/Frameworks/Managed/UnityEditor.dll</HintPath>
+	</Reference>
+  </ItemGroup>
+  <ItemGroup>
+     <Compile Include="Assets\Packages\TK2DROOT\tk2d\Code\Camera\tk2dCamera.cs" />
+     <Compile Include="Assets\Packages\TK2DROOT\tk2d\Code\Camera\tk2dCameraAnchor.cs" />
+     <Compile Include="Assets\Packages\TK2DROOT\tk2d\Code\Fonts\tk2dFont.cs" />
+     <Compile Include="Assets\Packages\TK2DROOT\tk2d\Code\Fonts\tk2dFontData.cs" />
+     <Compile Include="Assets\Packages\TK2DROOT\tk2d\Code\Fonts\tk2dTextMesh.cs" />
+     <Compile Include="Assets\Packages\TK2DROOT\tk2d\Code\Gui\tk2dButton.cs" />
+     <Compile Include="Assets\Packages\TK2DROOT\tk2d\Code\Sprites\tk2dAnimatedSprite.cs" />
+     <Compile Include="Assets\Packages\TK2DROOT\tk2d\Code\Sprites\tk2dBaseSprite.cs" />
+     <Compile Include="Assets\Packages\TK2DROOT\tk2d\Code\Sprites\tk2dPixelPerfectHelper.cs" />
+     <Compile Include="Assets\Packages\TK2DROOT\tk2d\Code\Sprites\tk2dSlicedSprite.cs" />
+     <Compile Include="Assets\Packages\TK2DROOT\tk2d\Code\Sprites\tk2dSprite.cs" />
+     <Compile Include="Assets\Packages\TK2DROOT\tk2d\Code\Sprites\tk2dSpriteAnimation.cs" />
+     <Compile Include="Assets\Packages\TK2DROOT\tk2d\Code\Sprites\tk2dSpriteCollection.cs" />
+     <Compile Include="Assets\Packages\TK2DROOT\tk2d\Code\Sprites\tk2dSpriteCollectionData.cs" />
+     <Compile Include="Assets\Packages\TK2DROOT\tk2d\Code\Sprites\tk2dSpriteCollectionInterfaces.cs" />
+     <Compile Include="Assets\Packages\TK2DROOT\tk2d\Code\Sprites\tk2dStaticSpriteBatcher.cs" />
+     <Compile Include="Assets\Packages\TK2DROOT\tk2d\Code\TileMap\tk2dTileMap.cs" />
+     <Compile Include="Assets\Packages\TK2DROOT\tk2d\Code\TileMap\tk2dTileMapBuilderUtil.cs" />
+     <Compile Include="Assets\Packages\TK2DROOT\tk2d\Code\TileMap\tk2dTileMapChunks.cs" />
+     <Compile Include="Assets\Packages\TK2DROOT\tk2d\Code\TileMap\tk2dTileMapColliderBuilder.cs" />
+     <Compile Include="Assets\Packages\TK2DROOT\tk2d\Code\TileMap\tk2dTileMapData.cs" />
+     <Compile Include="Assets\Packages\TK2DROOT\tk2d\Code\TileMap\tk2dTileMapMeshBuilder.cs" />
+     <Compile Include="Assets\Scripts\AccelerometerDispatcher\AccelerometerDispatcher.cs" />
+     <Compile Include="Assets\Scripts\AccelerometerDispatcher\AccelerometerTargetedDelegate.cs" />
+     <Compile Include="Assets\Scripts\ActivePersons\Splash.cs" />
+     <Compile Include="Assets\Scripts\Animation\BearAnimation.cs" />
+     <Compile Include="Assets\Scripts\Animation\BearAnimation3D.cs" />
+     <Compile Include="Assets\Scripts\Audio\Music.cs" />
+     <Compile Include="Assets\Scripts\Buttons\ChangeControlButton.cs" />
+     <Compile Include="Assets\Scripts\Buttons\GuiButton.cs" />
+     <Compile Include="Assets\Scripts\Buttons\KrestButton.cs" />
+     <Compile Include="Assets\Scripts\Buttons\QuestionButton.cs" />
+     <Compile Include="Assets\Scripts\Buttons\ReloadButton.cs" />
+     <Compile Include="Assets\Scripts\Buttons\Scenes\LoadLevelButton.cs" />
+     <Compile Include="Assets\Scripts\Buttons\Scenes\LoadPlayingLevelButton.cs" />
+     <Compile Include="Assets\Scripts\Buttons\Scenes\LoadPlayingLevelButtonLastPlayed.cs" />
+     <Compile Include="Assets\Scripts\Buttons\Screens\GuiButtonLoadLevel.cs" />
+     <Compile Include="Assets\Scripts\Buttons\Screens\GuiButtonNextLevel.cs" />
+     <Compile Include="Assets\Scripts\Buttons\Screens\GuiButtonShowScreen.cs" />
+     <Compile Include="Assets\Scripts\Buttons\Screens\GuiButtonShowScreenAndPauseGame.cs" />
+     <Compile Include="Assets\Scripts\Buttons\Screens\GuiButtonShowScreenAndRestartGame.cs" />
+     <Compile Include="Assets\Scripts\Buttons\Screens\GuiButtonShowScreenAndResumeGame.cs" />
+     <Compile Include="Assets\Scripts\Buttons\Screens\GuiButtonShowScreenBack.cs" />
+     <Compile Include="Assets\Scripts\Buttons\Screens\GuiButtonShowScreenLoading.cs" />
+     <Compile Include="Assets\Scripts\Buttons\Screens\GuiButtonTapToPlay.cs" />
+     <Compile Include="Assets\Scripts\Crossing\Crossing.cs" />
+     <Compile Include="Assets\Scripts\Enemies\AbstractEnemy.cs" />
+     <Compile Include="Assets\Scripts\Enemies\BerryEnemy.cs" />
+     <Compile Include="Assets\Scripts\Enemies\BlinEnemy.cs" />
+     <Compile Include="Assets\Scripts\Enemies\DynamicEnemies\MovingEnemy.cs" />
+     <Compile Include="Assets\Scripts\Enemies\ElkEnemy.cs" />
+     <Compile Include="Assets\Scripts\Enemies\GrannyEnemy.cs" />
+     <Compile Include="Assets\Scripts\Enemies\IkraEnemy.cs" />
+     <Compile Include="Assets\Scripts\Enemies\KapkanEnemy.cs" />
+     <Compile Include="Assets\Scripts\Enemies\MagnitEnemy.cs" />
+     <Compile Include="Assets\Scripts\Enemies\Markers\MoneyMarker.cs" />
+     <Compile Include="Assets\Scripts\Enemies\MatreshkaEnemy.cs" />
+     <Compile Include="Assets\Scripts\Enemies\MonetaEnemy.cs" />
+     <Compile Include="Assets\Scripts\Enemies\MushroomEnemy.cs" />
+     <Compile Include="Assets\Scripts\Enemies\PostalEnemy.cs" />
+     <Compile Include="Assets\Scripts\Enemies\PropellerEnemy.cs" />
+     <Compile Include="Assets\Scripts\Enemies\StrobileEnemy.cs" />
+     <Compile Include="Assets\Scripts\Enemies\VodkaEnemy.cs" />
+     <Compile Include="Assets\Scripts\Enemies\WoodEnemy.cs" />
+     <Compile Include="Assets\Scripts\Factories\AbstractFactory.cs" />
+     <Compile Include="Assets\Scripts\Factories\ElementFactories\AbstractElementFactory.cs" />
+     <Compile Include="Assets\Scripts\Factories\ElementFactories\AbstractElementFactoryBerries.cs" />
+     <Compile Include="Assets\Scripts\Factories\ElementFactories\TerrainElementFactory.cs" />
+     <Compile Include="Assets\Scripts\Factories\Tags\AbstractTag.cs" />
+     <Compile Include="Assets\Scripts\Factories\Tags\MarkerTag.cs" />
+     <Compile Include="Assets\Scripts\Factories\Tags\MarkerTagNoRotation.cs" />
+     <Compile Include="Assets\Scripts\Factories\Tags\MarkerTagRandomRotation.cs" />
+     <Compile Include="Assets\Scripts\Factories\Tags\TerrainTag.cs" />
+     <Compile Include="Assets\Scripts\Factories\WorldFactory.cs" />
+     <Compile Include="Assets\Scripts\GuiScripts\AbstractGuiLayer.cs" />
+     <Compile Include="Assets\Scripts\GuiScripts\FpsDisplayer.cs" />
+     <Compile Include="Assets\Scripts\Interfaces\ScreenControllerToShow.cs" />
+     <Compile Include="Assets\Scripts\Kniga_Klukv\KnigaItem.cs" />
+     <Compile Include="Assets\Scripts\Kniga_Klukv\KnigaKlukvControllerScript.cs" />
+     <Compile Include="Assets\Scripts\Kniga_Klukv\ZoomMap.cs" />
+     <Compile Include="Assets\Scripts\Kniga_Klukv\ZoomMapKnigaKlukv.cs" />
+     <Compile Include="Assets\Scripts\LevelTag\LevelTag.cs" />
+     <Compile Include="Assets\Scripts\MainHierarchy\Abstract.cs" />
+     <Compile Include="Assets\Scripts\MainHierarchy\Cameras.cs" />
+     <Compile Include="Assets\Scripts\MainHierarchy\GlobalOptions.cs" />
+     <Compile Include="Assets\Scripts\MainHierarchy\OnTrigger.cs" />
+     <Compile Include="Assets\Scripts\MainHierarchy\SpriteTouch.cs" />
+     <Compile Include="Assets\Scripts\MenuLevel2\GuiLayerInitMenuLevel2.cs" />
+     <Compile Include="Assets\Scripts\MenuLevel2\MaskTag.cs" />
+     <Compile Include="Assets\Scripts\MenuLevel2\MenuLevel2ControllerScript.cs" />
+     <Compile Include="Assets\Scripts\Player\CharacterMarioC.cs" />
+     <Compile Include="Assets\Scripts\Player\Feets.cs" />
+     <Compile Include="Assets\Scripts\Player\GuiLayerInitializer.cs" />
+     <Compile Include="Assets\Scripts\Player\Player.cs" />
+     <Compile Include="Assets\Scripts\Player\Rotation.cs" />
+     <Compile Include="Assets\Scripts\Player\SwypeDetector.cs" />
+     <Compile Include="Assets\Scripts\Preloader\Preloader.cs" />
+     <Compile Include="Assets\Scripts\Preloader\QualitySwitcher.cs" />
+     <Compile Include="Assets\Scripts\ScreenControllers\ScreenGameOverControllerScript.cs" />
+     <Compile Include="Assets\Scripts\ScreenControllers\ScreenPauseControllerScript.cs" />
+     <Compile Include="Assets\Scripts\ScreenControllers\ScreenYouWonControllerScript.cs" />
+     <Compile Include="Assets\Scripts\Screens\AbstractScreen.cs" />
+     <Compile Include="Assets\Scripts\Screens\ScreenLoadGameObjects.cs" />
+     <Compile Include="Assets\Scripts\Screens\ScreenLoader.cs" />
+     <Compile Include="Assets\Scripts\TouchDispatcher\TouchDispatcher.cs" />
+     <Compile Include="Assets\Scripts\TouchDispatcher\TouchTargetedDelegate.cs" />
+     <None Include="Assets\Standard Assets\Projectors\Guidelines.txt" />
+     <None Include="Assets\Standard Assets\Glass Refraction (Pro Only)\Sources\Shaders\Glass-Stained-BumpDistort.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_BloomAndFlares\BlendOneOne.shader" />
+     <None Include="Assets\Standard Assets (Mobile)\Shaders\Particle Shaders\Mobile Multiply Culled.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\NoiseEffectShaderRGB.shader" />
+     <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-Basic.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_DepthOfField\SeparableWeightedBlurDof34.shader" />
+     <None Include="Assets\Standard Assets (Mobile)\Shaders\Miscellaneous Shaders\Mobile Background.shader" />
+     <None Include="Assets\Standard Assets\Projectors\Sources\Shaders\Projector Multiply.shader" />
+     <None Include="Assets\Standard Assets (Mobile)\Shaders\Vertex Colored Shaders\Mobile Transparent Vertex Color.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\ShowAlphaChannel.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\GlowConeTap.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\SunShaftsComposite.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\ColorCorrectionCurves.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_Antialiasing\NFAA.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_BloomAndFlares\VignetteShader.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_DepthOfField\DepthOfFieldScatter.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\MotionBlur.shader" />
+     <None Include="Assets\Standard Assets (Mobile)\Shaders\Miscellaneous Shaders\Mobile Detail.shader" />
+     <None Include="Assets\Standard Assets\Particles\Sources\Shaders\Particle Alpha Blend (Queue +100).shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\GlowCompose.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\Contrast Stretch\MinMaxReduction.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_Antialiasing\SSAA.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\RadialBlur.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\ContrastComposite.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_Antialiasing\FXAAPreset3.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\FisheyeShader.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\Contrast Stretch\Apply.shader" />
+     <None Include="Assets\Standard Assets\Water (Pro Only)\Water4\Sources\Shaders\FX-SimpleWater4.shader" />
+     <None Include="Assets\Packages\TK2DROOT\tk2d\Shaders\SolidVertexColor.shader" />
+     <None Include="Assets\Standard Assets\Skyboxes\_skybox info.txt" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\frag_ao.cginc" />
+     <None Include="Assets\Platformer\readme.txt" />
+     <None Include="Assets\Packages\TK2DROOT\tk2d\Shaders\Blend2TexVertexColor.shader" />
+     <None Include="Assets\Shaders\Display_Normals.shader" />
+     <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-BasicOutline.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_DepthOfField\DepthOfField34.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_DepthOfField\TiltShift.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\SSAOShader.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\ConvertDepth.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\ColorCorrectionCurvesSimple.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\NoiseEffectShaderYUV.shader" />
+     <None Include="Assets\Standard Assets\Projectors\Sources\Shaders\Projector Light.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\GlowEffectDownsample.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\CreaseApply.shader" />
+     <None Include="Assets\Standard Assets (Mobile)\Shaders\Lightmap Shaders (Legacy)\Mobile Lightmap Reflective.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\ChromaticAberrationShader.shader" />
+     <None Include="Assets\Standard Assets (Mobile)\Shaders\Particle Shaders\Mobile Particles Additive Culled.shader" />
+     <None Include="Assets\Shaders\BlendVertexColorCullBack.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\GlobalFog.shader" />
+     <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-LightedOutline.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\Contrast Stretch\Luminance.shader" />
+     <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-Lighted.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\ColorCorrectionSelective.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_DepthOfField\Bokeh34.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_BloomAndFlares\SeparableBlurPlus.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_BloomAndFlares\MultiPassHollywoodFlares.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\BlurEffectConeTaps.shader" />
+     <None Include="Assets\Standard Assets\Water (Pro Only)\Sources\Shaders\FX-Water.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_Antialiasing\DLAA.shader" />
+     <None Include="Assets\Shaders\BlendVertexColorCullBack_1.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_DepthOfField\SeparableBlur.shader" />
+     <None Include="Assets\Standard Assets (Mobile)\Shaders\Vertex Colored Shaders\Mobile Vertex Colored.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\ColorCorrectionEffect.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\GrayscaleEffect.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\SepiaToneEffect.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\TwirlEffect.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\VortexEffect.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\Contrast Stretch\Adaptation.shader" />
+     <None Include="Assets\Packages\TK2DROOT\tk2d\Shaders\LitSolidVertexColor.shader" />
+     <None Include="Assets\Standard Assets (Mobile)\Shaders\Lightmap Shaders (Legacy)\Mobile Lightmap Only.shader" />
+     <None Include="Assets\Standard Assets (Mobile)\Shaders\Lightmap Shaders (Legacy)\Mobile Lightmap AlphaTest.shader" />
+     <None Include="Assets\Packages\TK2DROOT\tk2d\Shaders\BlendVertexColor.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\NoiseAndGrain.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\VignettingShader.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\Tonemapper.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_BloomAndFlares\BrightPassFilter.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_Antialiasing\FXAA2.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_BloomAndFlares\LensFlareCreate.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\EdgeDetectNormals.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\PrepareSunShaftsBlur.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_BloomAndFlares\Blend.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\BlendModesOverlay.shader" />
+     <None Include="Assets\Standard Assets\Water (Pro Only)\Water4\Sources\Shaders\WaterInclude.cginc" />
+     <None Include="Assets\Standard Assets\Water (Pro Only)\Water4\Sources\Shaders\FX-Water4.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\SimpleClear.shader" />
+     <None Include="Assets\Packages\TK2DROOT\tk2d\Shaders\LitBlendVertexColor.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_Antialiasing\FXAA3Console.shader" />
+     <None Include="Assets\Packages\TK2DROOT\tk2d\Shaders\LitPremulVertexColor.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\EdgeDetectX.shader" />
+     <None Include="Assets\Standard Assets\Image Effects (Pro Only)\_Sources\Shaders\_Antialiasing\FXAAPreset2.shader" />
+     <None Include="Assets\Packages\TK2DROOT\tk2d\Shaders\PremulVertexColor.shader" />
+ <Reference Include="Library\ScriptAssemblies\Assembly-UnityScript-firstpass">
+ <HintPath>Library\ScriptAssemblies\Assembly-UnityScript-firstpass.dll</HintPath>
+ </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-firstpass-vs.csproj">
+      <Project>{9719A186-F16F-A4CC-EB22-5A42741D56F2}</Project>      <Name>Assembly-CSharp-firstpass-vs</Name>    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+	   Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  
+</Project>
