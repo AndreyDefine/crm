@@ -314,7 +314,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 				markedObjectsTrees.Add (allChildren[i]);
 			}	
 			
-			//treesback
+			//uniqueObjects
 			if(allChildren[i].name=="UniqueObjectPool"){
 				markedObjectsUnique.Add (allChildren[i]);
 			}	
@@ -412,7 +412,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		if(FlagCoRoutine) yield return null;
 	}
 	
-	private void addOneObstacleFromSetAtMarker(Transform marker,TerrainTag interrainTag){
+	private GameObject addOneObstacleFromSetAtMarker(Transform marker,TerrainTag interrainTag){
 		GameObject newObject;
 	
 		newObject = obstacleElementFactory.GetNewObjectWithName(marker.name);
@@ -426,6 +426,22 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		if(interrainTag){
 			interrainTag.PushToAllElements(newObject);
 		}
+		
+		//if compiled object
+		if(marker.name.Contains("Compiled"))
+		{
+			int j;
+			GameObject newObjectInContainer;
+			//ищем контейнер
+			Transform Container=newObject.transform.FindChild("ContainerOfObjects");
+			Transform[] allChildren = Container.gameObject.GetComponentsInChildren<Transform>();
+			//обрабатываем все трансформы
+			for(j=1;j<allChildren.Length;j++){
+				newObjectInContainer=addOneObstacleFromSetAtMarker(allChildren[j],interrainTag);
+				newObjectInContainer.transform.parent=newObject.transform;
+			}
+		}
+		return newObject;
 	}
 	
 	private void addOneUniqueAtMarker(Transform marker,TerrainTag interrainTag){

@@ -96,6 +96,7 @@ public class AbstractElementFactory: Abstract{
 		newTerrain.transform.position=new Vector3(-200,-200,-200);
 		newTerrain.transform.rotation=Quaternion.identity;
 		newTerrain.GetComponent<AbstractTag>().ReStart();
+		newTerrain.transform.parent=null;
 	}
 	
 	public virtual GameObject GetNewObject(){
