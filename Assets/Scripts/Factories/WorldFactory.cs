@@ -298,8 +298,8 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		ArrayList markedObjectsUnique=new ArrayList();	
 		
 		//money
-		ArrayList markedObjectsMoney=new ArrayList();	
-		int neededNumberOfMoney=6-Random.Range(0,6);
+		// markedObjectsMoney=new ArrayList();	
+		//int neededNumberOfMoney=6-Random.Range(0,6);
 		
 		//ObstacleSet
 		ArrayList markedObjectsObstacleSet=new ArrayList();	
@@ -327,10 +327,10 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 					markedObjectsObstacleSet.Add (allChildren[i]);
 				}	
 				
-				//money
+				/*//money
 				if(allChildren[i].name=="money"&&moneyElementFactory.flagGenerate){
 					markedObjectsMoney.Add (allChildren[i]);
-				}	
+				}	*/
 			}
 		}
 		
