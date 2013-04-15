@@ -69,6 +69,7 @@ public class AbstractElementFactory: Abstract{
 	public void DeleteCurrent(GameObject inObject){
 		terrainsList.Remove(inObject);			
 		terrainsListToDel.Add(inObject);
+		inObject.transform.parent=null;
 	}
 	
 	public void AddExtraObjectInPull()
@@ -96,7 +97,6 @@ public class AbstractElementFactory: Abstract{
 		newTerrain.transform.position=new Vector3(-200,-200,-200);
 		newTerrain.transform.rotation=Quaternion.identity;
 		newTerrain.GetComponent<AbstractTag>().ReStart();
-		newTerrain.transform.parent=null;
 	}
 	
 	public virtual GameObject GetNewObject(){

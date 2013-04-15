@@ -3,7 +3,6 @@ using System.Collections;
 
 public class LevelTag : Abstract {
 	
-	public GameType gameType;
 	public string PreloadTerrains="";
 	public string RoadTerrains="";
 	

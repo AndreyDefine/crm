@@ -328,7 +328,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	private void MoveLeftRight(float inmoveForce)
 	{
 		//forward
-		if(maxVelocity>GlobalOptions.playerVelocity&&GlobalOptions.gameType==GameType.Runner){
+		if(maxVelocity>GlobalOptions.playerVelocity){
 			GlobalOptions.playerVelocity+=acceleration*Time.deltaTime;
 		}
 		Vector3 smex=new Vector3(0,0,GetRealVelocity());

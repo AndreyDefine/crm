@@ -30,16 +30,7 @@ public enum PlayerStatesPathChanging
 	FORWARD
 }
 
-
-public enum GameType
-{
-	Runner,
-	Arcade
-}
-
-public class GlobalOptions {	
-	public static GameType gameType;
-	
+public class GlobalOptions {		
 	public static bool qualitySeted = false;
 	
 	public static int PlayingLevelNumber = 0;

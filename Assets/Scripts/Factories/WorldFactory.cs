@@ -27,8 +27,6 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	
 	private AbstractElementFactory moneyElementFactory;
 	
-	private GuiLayerInitializer guiLayer;
-	
 	private bool firstTimeInit=true;
 	
 	protected string []preloadTerrainsNames;
@@ -66,9 +64,6 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		//money
 		curFactoryObject=Instantiate (MoneyFactory) as GameObject;
 		moneyElementFactory=curFactoryObject.GetComponent("AbstractElementFactory") as AbstractElementFactory;
-		
-		//ищем gui слой
-		guiLayer=GlobalOptions.GetGuiLayer();
 		
 		terrainLength=terrainElementFactory.terrainLength;
 		
@@ -133,8 +128,6 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		curLevelTag=curLevelTagGameObject.GetComponent("LevelTag")as LevelTag;
 		curLevelTag.Parse();
 		
-		GlobalOptions.gameType=curLevelTag.gameType;
-		
 		preloadTerrainsNames=curLevelTag.GetPreloadTerrainsNames();
 		roadTerrainsNames=curLevelTag.GetRoadTerrainNames();
 		
@@ -145,22 +138,19 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	{
 		Debug.Log ("ObjectsAddedToPull");
 		//если раннер
-		if(curLevelTag.gameType==GameType.Runner)
+		uniqueElementFactory.DestroyPullObjects();
+		obstacleElementFactory.DestroyPullObjects();
+		obstacleSetElementFactory.DestroyPullObjects();
+		moneyElementFactory.DestroyPullObjects();
+		terrainElementFactory.DestroyPullObjects();
+		
+		for(int i=0;i<treeElementFactories.Count;i++)
 		{
-			uniqueElementFactory.DestroyPullObjects();
-			obstacleElementFactory.DestroyPullObjects();
-			obstacleSetElementFactory.DestroyPullObjects();
-			moneyElementFactory.DestroyPullObjects();
-			terrainElementFactory.DestroyPullObjects();
-			
-			for(int i=0;i<treeElementFactories.Count;i++)
-			{
-				(treeElementFactories[i] as GameObject).GetComponent<AbstractElementFactory>().DestroyPullObjects();
-			}
-			
-			//really need this!!!
-			obstacleSetElementFactory.PreloadPullObjects();
+			(treeElementFactories[i] as GameObject).GetComponent<AbstractElementFactory>().DestroyPullObjects();
 		}
+		
+		//really need this!!!
+		obstacleSetElementFactory.PreloadPullObjects();
 	}
 	
 	public override void ReStart(){
@@ -195,16 +185,8 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	void Update () {
 		if(currentRoadPos>=roadTerrainsNames.Length)
 		{
-			if(curLevelTag.gameType==GameType.Runner)
-			{
-				firstTimeInit=false;
-				currentRoadPos=0;
-			}
-			else
-			{
-				//show you won
-				guiLayer.ShowYouWon();
-			}
+			firstTimeInit=false;
+			currentRoadPos=0;
 		}
 	}
 	
@@ -434,11 +416,15 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 			GameObject newObjectInContainer;
 			//ищем контейнер
 			Transform Container=newObject.transform.FindChild("ContainerOfObjects");
-			Transform[] allChildren = Container.gameObject.GetComponentsInChildren<Transform>();
-			//обрабатываем все трансформы
-			for(j=1;j<allChildren.Length;j++){
-				newObjectInContainer=addOneObstacleFromSetAtMarker(allChildren[j],interrainTag);
-				newObjectInContainer.transform.parent=newObject.transform;
+			if(Container)
+			{
+				Transform[] allChildren = Container.gameObject.GetComponentsInChildren<Transform>();
+				//обрабатываем все трансформы
+				for(j=1;j<allChildren.Length;j++){
+					//reqursively
+					newObjectInContainer=addOneObstacleFromSetAtMarker(allChildren[j],interrainTag);
+					newObjectInContainer.transform.parent=Container;
+				}
 			}
 		}
 		return newObject;
