@@ -19,7 +19,7 @@ public class MovingEnemy : AbstractEnemy {
 	
 	public override void initEnemy()
 	{
-		singleTransform.rotation=Quaternion.Euler(0,0,0);
+		//singleTransform.rotation=Quaternion.Euler(0,0,0);
 	}
 	
 	public void TestPlayer()
