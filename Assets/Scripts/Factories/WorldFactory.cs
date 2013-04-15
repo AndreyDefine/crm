@@ -14,6 +14,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	public GameObject ObstacleFactory;
 	public GameObject ObstacleSetFactory;
 	public GameObject MoneyFactory;
+	public GameObject BoostFactory;
 	public GameObject []levelTags;
 	
 	private ArrayList treeElementFactories=new ArrayList();
@@ -21,6 +22,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	private TerrainElementFactory terrainElementFactory;
 	
 	private AbstractElementFactory uniqueElementFactory;
+	private AbstractElementFactory boostElementFactory;
 	
 	private AbstractElementFactory obstacleElementFactory;  
 	private AbstractElementFactory obstacleSetElementFactory;  	
@@ -53,6 +55,10 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		curFactoryObject=Instantiate (UniqueFactory) as GameObject;
 		uniqueElementFactory=curFactoryObject.GetComponent("AbstractElementFactory") as AbstractElementFactory;
 		
+		//boostObjects
+		curFactoryObject=Instantiate (BoostFactory) as GameObject;
+		boostElementFactory=curFactoryObject.GetComponent("AbstractElementFactory") as AbstractElementFactory;
+		
 		//obstacles
 		curFactoryObject=Instantiate (ObstacleFactory) as GameObject;
 		obstacleElementFactory=curFactoryObject.GetComponent("AbstractElementFactory") as AbstractElementFactory;
@@ -65,9 +71,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		curFactoryObject=Instantiate (MoneyFactory) as GameObject;
 		moneyElementFactory=curFactoryObject.GetComponent("AbstractElementFactory") as AbstractElementFactory;
 		
-		terrainLength=terrainElementFactory.terrainLength;
-		
-		numberOfTerrains=2;//(int)(drawnPerspective/terrainLength);
+		numberOfTerrains=2;
 		
 		//Get current level
 		LoadCurrentLevel();
@@ -139,6 +143,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		Debug.Log ("ObjectsAddedToPull");
 		//если раннер
 		uniqueElementFactory.DestroyPullObjects();
+		boostElementFactory.DestroyPullObjects();
 		obstacleElementFactory.DestroyPullObjects();
 		obstacleSetElementFactory.DestroyPullObjects();
 		moneyElementFactory.DestroyPullObjects();
@@ -162,6 +167,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		
 		terrainElementFactory.ReStart();
 		uniqueElementFactory.ReStart();
+		boostElementFactory.ReStart();
 		obstacleElementFactory.ReStart();
 		obstacleSetElementFactory.ReStart();
 		for(i=0;i<treeElementFactories.Count;i++)
@@ -274,14 +280,11 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		int i,j;	
 		int kolvo;
 		int randIndex;
+		string curname;
 		//tree
 		ArrayList markedObjectsTrees=new ArrayList();	
 		//uniqueobjects
 		ArrayList markedObjectsUnique=new ArrayList();	
-		
-		//money
-		// markedObjectsMoney=new ArrayList();	
-		//int neededNumberOfMoney=6-Random.Range(0,6);
 		
 		//ObstacleSet
 		ArrayList markedObjectsObstacleSet=new ArrayList();	
@@ -308,11 +311,6 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 				if(allChildren[i].name=="ObstacleSet"){
 					markedObjectsObstacleSet.Add (allChildren[i]);
 				}	
-				
-				/*//money
-				if(allChildren[i].name=="money"&&moneyElementFactory.flagGenerate){
-					markedObjectsMoney.Add (allChildren[i]);
-				}	*/
 			}
 		}
 		
@@ -343,7 +341,20 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 					
 					for(j=1;j<setMarkers.Length;j++){
 						OneObstacle=(setMarkers[j] as Transform);
-						addOneObstacleFromSetAtMarker(OneObstacle,interrainTag);
+						curname=OneObstacle.name;
+						if(curname=="money")
+						{
+							addOneMoneyAtMarker(OneObstacle,interrainTag);
+						}
+						else
+						if(curname=="boost")
+						{
+							addOneBoostAtMarker(OneObstacle,interrainTag);
+						}
+						else
+						{
+							addOneObstacleFromSetAtMarker(OneObstacle,interrainTag);
+						}
 						if(FlagCoRoutine) yield return null;
 					}
 					//почистим фабрику
@@ -383,10 +394,11 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 			Transform[] uniqueMarkers = (markedObjectsUnique[i] as Transform).gameObject.GetComponentsInChildren<Transform>();
 			for(j=1;j<uniqueMarkers.Length;j++){
 				curUnique=(uniqueMarkers[j] as Transform);
-				if(curUnique.name!="Left"&&curUnique.name!="Right")
+				curname=curUnique.name;
+				if(curname!="Left"&&curname!="Right")
 				{
 					addOneUniqueAtMarker(curUnique,interrainTag);
-					if(FlagCoRoutine&&(j%3==0)) yield return null;
+					if(FlagCoRoutine) yield return null;
 				}
 			}
 		}
@@ -434,6 +446,21 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		GameObject newObject;
 		
 		newObject = uniqueElementFactory.GetNewObjectWithName(marker.name);
+		
+		//set position & rotation
+		newObject.transform.position=marker.position;
+		
+		newObject.transform.rotation=marker.rotation;
+	
+		if(interrainTag){
+			interrainTag.PushToAllElements(newObject);
+		}
+	}
+	
+	private void addOneBoostAtMarker(Transform marker,TerrainTag interrainTag){
+		GameObject newObject;
+		
+		newObject = boostElementFactory.GetNewObject();
 		
 		//set position & rotation
 		newObject.transform.position=marker.position;

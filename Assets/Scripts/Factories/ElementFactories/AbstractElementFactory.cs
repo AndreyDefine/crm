@@ -5,7 +5,6 @@ public class AbstractElementFactory: Abstract{
 	public bool flagGenerate;
 	public Vector3 initialPos;
 	public GameObject[] terrain1;
-	public float terrainLength,terrainWidth;
 	public int NumberOfTerrainsToDel;
 	
 	private GameObject terrainToDel1,terrainToDel2;
