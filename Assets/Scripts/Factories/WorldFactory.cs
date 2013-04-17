@@ -361,31 +361,9 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 					obstacleSetElementFactory.DeleteCurrent(curSet);				
 					
 					markedObjectsObstacleSet.RemoveAt(randIndex);
-					if(FlagCoRoutine) yield return null;
+					if(FlagCoRoutine&&i%20==0) yield return null;
 				}
 			}
-			
-			//money
-			//вероятность 0.5
-			//if(Random.Range(0,10)>5)
-			/*{
-				if(markedObjectsMoney.Count!=0)
-				{
-					kolvo=neededNumberOfMoney>markedObjectsMoney.Count?markedObjectsMoney.Count:neededNumberOfMoney;
-					for(i=0;i<kolvo;i++){
-						randIndex=Random.Range(0,markedObjectsMoney.Count);
-						addSomeMoneyAtMarker(markedObjectsMoney[randIndex]as Transform,interrainTag);
-						markedObjectsMoney.RemoveAt(randIndex);
-						if(FlagCoRoutine) yield return null;
-					}
-				}
-			}*/
-		}
-		
-		//trees
-		for(i=0;i<markedObjectsTrees.Count;i++){
-			addOneTreeAtMarker(markedObjectsTrees[i] as Transform,interrainTag);
-			if(FlagCoRoutine&&(i%3==0)) yield return null;
 		}
 		
 		//unique
@@ -398,9 +376,15 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 				if(!curname.Contains("Left")&&!curname.Contains("Right"))
 				{
 					addOneUniqueAtMarker(curUnique,interrainTag);
-					if(FlagCoRoutine&&i%2==0) yield return null;
+					if(FlagCoRoutine&&i%3==0) yield return null;
 				}
 			}
+		}
+		
+		//trees
+		for(i=0;i<markedObjectsTrees.Count;i++){
+			addOneTreeAtMarker(markedObjectsTrees[i] as Transform,interrainTag);
+			if(FlagCoRoutine&&(i%3==0)) yield return null;
 		}
 		
 		if(FlagCoRoutine) yield return null;
