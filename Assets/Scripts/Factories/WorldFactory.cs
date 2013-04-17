@@ -395,10 +395,10 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 			for(j=1;j<uniqueMarkers.Length;j++){
 				curUnique=(uniqueMarkers[j] as Transform);
 				curname=curUnique.name;
-				if(curname!="Left"&&curname!="Right")
+				if(!curname.Contains("Left")&&!curname.Contains("Right"))
 				{
 					addOneUniqueAtMarker(curUnique,interrainTag);
-					if(FlagCoRoutine) yield return null;
+					if(FlagCoRoutine&&i%2==0) yield return null;
 				}
 			}
 		}
@@ -447,10 +447,24 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		
 		newObject = uniqueElementFactory.GetNewObjectWithName(marker.name);
 		
+		if(!newObject)
+		{
+			Debug.Log ("Object Not Found - "+marker.name);
+			return;
+		}
+		
 		//set position & rotation
 		newObject.transform.position=marker.position;
 		
-		newObject.transform.rotation=marker.rotation;
+		MarkerTag marderTag=newObject.GetComponent<MarkerTag>();
+		if(marderTag)
+		{
+			marderTag.ApplyRotation(marker.rotation,interrainTag.singleTransform.rotation);
+		}
+		else
+		{
+			newObject.transform.rotation=marker.rotation;
+		}
 	
 		if(interrainTag){
 			interrainTag.PushToAllElements(newObject);
@@ -502,7 +516,15 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		//set position & rotation
 		newObject.transform.position=marker.position;
 		
-		newObject.transform.rotation=marker.rotation;
+		MarkerTag marderTag=newObject.GetComponent<MarkerTag>();
+		if(marderTag)
+		{
+			marderTag.ApplyRotation(marker.rotation,interrainTag.singleTransform.rotation);
+		}
+		else
+		{
+			newObject.transform.rotation=marker.rotation;
+		}
 	
 		if(interrainTag){
 			interrainTag.PushToAllElements(newObject);
