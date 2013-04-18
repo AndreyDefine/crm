@@ -393,7 +393,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		
 		//meters;
 		oldMetersz+=smex.z;
-		if(oldMetersz>200)
+		if(oldMetersz>200*2)
 		{
 			oldMetersz=0;
 			allMeters+=200;

@@ -16,6 +16,7 @@ public class GuiLayerInitializer : Abstract {
 	public GameObject GuiScoreScale;
 	public GameObject GuiPostal;
 	public GameObject GuiMeters;
+	public GameObject GuiMission;
 	
 	public int MaxLife;
 	
@@ -31,7 +32,10 @@ public class GuiLayerInitializer : Abstract {
 	private GameObject ScoreScale;
 	private GameObject Postal;
 	private GameObject Meters;
+	private GameObject Mission;
 
+	private MissionStack missionStack;
+	
 	private GameObject Question;
 	private GameObject Star;
 	
@@ -46,8 +50,8 @@ public class GuiLayerInitializer : Abstract {
 	private Player playerScript;
 	private int score,money,scoreScale,vodkaLevel;
 	private bool flagVodka,flagMushroom,flagScoreScale,flagHeadStars,flagMagnit,flagPropeller;
-	private bool flagPostal,flagGameOver,flagMeters;
-	private float VodkaTime,ShroomTime,ScoreScaleTime,scoreTime,headStarsTime,postalTime,GameOverTime,metersTime,magnitTime,propellerTime,addToLifeTime;
+	private bool flagPostal,flagGameOver,flagMeters,flagMission;
+	private float VodkaTime,ShroomTime,ScoreScaleTime,scoreTime,headStarsTime,postalTime,GameOverTime,metersTime,missionTime,magnitTime,propellerTime,addToLifeTime;
 	
 	float stopTime=0,startstopTime=0;//время остановки
 	
@@ -87,6 +91,7 @@ public class GuiLayerInitializer : Abstract {
 		GlobalOptions.scaleFactory=Screen.height/GlobalOptions.Vsizey;
 		GlobalOptions.scaleFactorx=Screen.width/GlobalOptions.Vsizex;
 		
+		missionStack=MissionStack.sharedMissionStack();
 		nullTime=0;
 		flagVodka=false;
 		flagMushroom=false;
@@ -94,6 +99,7 @@ public class GuiLayerInitializer : Abstract {
 		flagHeadStars=false;
 		flagPostal=false;
 		flagMeters=false;
+		flagMission=false;
 		flagGameOver=false;
 		flagMagnit=false;
 		flagPropeller=false;
@@ -132,6 +138,7 @@ public class GuiLayerInitializer : Abstract {
 		flagHeadStars=false;
 		flagPostal=false;
 		flagMeters=false;
+		flagMission=false;
 		flagGameOver=false;
 		flagMagnit=false;
 		flagPropeller=false;
@@ -144,6 +151,7 @@ public class GuiLayerInitializer : Abstract {
 		HideQuestion();
 		HidePostal();
 		HideMeters();
+		HideMission();
 		
 		score=GlobalOptions.GetLevelStartScore();
 		money=GlobalOptions.GetLevelStartMoney();
@@ -204,6 +212,12 @@ public class GuiLayerInitializer : Abstract {
 			if(flagMeters)
 			{
 				MakeMeters();
+			}
+			
+			//показать окно, что мы выполнили миссию
+			if(flagMission)
+			{
+				MakeMission();
 			}
 		}
 		else
@@ -443,6 +457,21 @@ public class GuiLayerInitializer : Abstract {
 		Meters.transform.position=pos;
 		Meters.transform.parent=transform;
 		Meters.SetActiveRecursively(false);
+		
+		//Mission
+		Mission = (GameObject)Instantiate(GuiMission);
+		
+		pos=new Vector3(GlobalOptions.Vsizex/2,GlobalOptions.Vsizey-760,zindex+3);
+		pos=GlobalOptions.NormalisePos(pos);
+		pos=GUIcamera.ScreenToWorldPoint(pos);
+	
+		pos.y-=Mission.renderer.bounds.extents.y;
+		
+		Mission.transform.position=pos;
+		Mission.transform.parent=transform;
+		Mission.SetActiveRecursively(false);
+		
+		
 	}
 	
 	private void MakeVodka()
@@ -524,6 +553,16 @@ public class GuiLayerInitializer : Abstract {
 		{
 			flagMeters=false;
 			HideMeters();
+		}
+	}
+	
+	private void MakeMission()
+	{
+		//stop mushroom
+		if(Time.time-missionTime>3)
+		{
+			flagMission=false;
+			HideMission();
 		}
 	}
 	
@@ -645,6 +684,12 @@ public class GuiLayerInitializer : Abstract {
 		flagMeters=true;
 	}
 	
+	public void AddMission(){
+		ShowMission();
+		missionTime=Time.time;
+		flagMission=true;
+	}
+	
 	private void ShowMeters(float inMeters)
 	{
 		Transform MetersScore=Meters.transform.FindChild("Score");
@@ -657,9 +702,33 @@ public class GuiLayerInitializer : Abstract {
 		Meters.SetActiveRecursively(true);
 	}
 	
+	private void ShowMission()
+	{
+		Transform MissionName=Mission.transform.FindChild("Score");
+		
+		tk2dTextMesh textMesh;
+		textMesh = MissionName.gameObject.GetComponent<tk2dTextMesh>();
+		MissionTag missionTag=missionStack.Pop();
+		if(missionTag)
+		{
+			textMesh.text = missionTag.mainName;
+		}else
+		{
+			textMesh.text = "nothing";
+		}
+		textMesh.Commit();
+		
+		Mission.SetActiveRecursively(true);
+	}
+	
 	private void HideMeters()
 	{
 		Meters.SetActiveRecursively(false);
+	}
+	
+	private void HideMission()
+	{
+		Mission.SetActiveRecursively(false);
 	}
 	
 	public void ShowGameOver()
