@@ -24,6 +24,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	private AbstractElementFactory uniqueElementFactory;
 	private AbstractElementFactory boostElementFactory;
 	
+	
 	private AbstractElementFactory obstacleElementFactory;  
 	private AbstractElementFactory obstacleSetElementFactory;  	
 	
@@ -283,6 +284,9 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		string curname;
 		//tree
 		ArrayList markedObjectsTrees=new ArrayList();	
+		//uniqueobjects Terrains
+		ArrayList markedObjectsUniqueTerrains=new ArrayList();
+		
 		//uniqueobjects
 		ArrayList markedObjectsUnique=new ArrayList();	
 		
@@ -304,6 +308,11 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 				markedObjectsUnique.Add (allChildren[i]);
 			}	
 			
+			//uniqueObjects Terrains
+			if(allChildren[i].name=="UniqueObjectPoolTerrains"){
+				markedObjectsUniqueTerrains.Add (allChildren[i]);
+			}	
+			
 			//berry
 			if(currentRoadPos>1||!firstTimeInit)
 			{
@@ -312,12 +321,28 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 					markedObjectsObstacleSet.Add (allChildren[i]);
 				}	
 			}
+			
+			if(FlagCoRoutine&&i%30==0) yield return null;
+		}
+		
+		//unique terrains
+		Transform curUniqueTerrain;
+		for(i=0;i<markedObjectsUniqueTerrains.Count;i++){
+			Transform[] uniqueMarkers = (markedObjectsUniqueTerrains[i] as Transform).gameObject.GetComponentsInChildren<Transform>();
+			for(j=1;j<uniqueMarkers.Length;j++){
+				curUniqueTerrain=(uniqueMarkers[j] as Transform);
+				curname=curUniqueTerrain.name;
+				if(!curname.Contains("Left")&&!curname.Contains("Right"))
+				{
+					addOneUniqueAtMarker(curUniqueTerrain,interrainTag);
+					if(FlagCoRoutine) yield return null;
+				}
+			}
 		}
 		
 		//obstacles
 		if(currentRoadPos>1||!firstTimeInit)
 		{
-			
 			//ObstacleSet
 			GameObject curSet;
 			Transform OneObstacle,marker;
@@ -361,7 +386,6 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 					obstacleSetElementFactory.DeleteCurrent(curSet);				
 					
 					markedObjectsObstacleSet.RemoveAt(randIndex);
-					if(FlagCoRoutine&&i%20==0) yield return null;
 				}
 			}
 		}
@@ -376,7 +400,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 				if(!curname.Contains("Left")&&!curname.Contains("Right"))
 				{
 					addOneUniqueAtMarker(curUnique,interrainTag);
-					if(FlagCoRoutine&&i%3==0) yield return null;
+					if(FlagCoRoutine&&i%2==0) yield return null;
 				}
 			}
 		}
@@ -384,7 +408,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		//trees
 		for(i=0;i<markedObjectsTrees.Count;i++){
 			addOneTreeAtMarker(markedObjectsTrees[i] as Transform,interrainTag);
-			if(FlagCoRoutine&&(i%3==0)) yield return null;
+			if(FlagCoRoutine&&i%2==0) yield return null;
 		}
 		
 		if(FlagCoRoutine) yield return null;
