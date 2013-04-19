@@ -48,7 +48,7 @@ public class SpriteTouch : Abstract,TouchTargetedDelegate {
 	
 	protected void GetSharedTouchDispatcher(){
 		//find with no parents
-		sharedTouchDispatcher = GlobalOptions.GetSharedTouchDispatcher();
+		sharedTouchDispatcher = TouchDispatcher.GetSharedTouchDispatcher();
 	}
 	
 	protected virtual void init(){

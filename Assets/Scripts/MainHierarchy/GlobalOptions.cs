@@ -61,8 +61,6 @@ public class GlobalOptions {
 	public static float scaleFactorx;
 	public static float scaleFactory;
 	
-	private static AccelerometerDispatcher accelerometerDispatcher=null;
-	private static TouchDispatcher touchDispatcher=null;
 	private static GameObject player=null;
 	private static Player playerScript;
 	
@@ -174,22 +172,6 @@ public class GlobalOptions {
 			result.x=-invector.x;
 		}
 		return result;
-	}
-	
-	public static AccelerometerDispatcher GetSharedAccelerateDispatcher(){
-		if(!accelerometerDispatcher)
-		{
-			accelerometerDispatcher=GameObject.Find("/sharedAccelerometerDispatcher").GetComponent<AccelerometerDispatcher>();
-		}
-		return accelerometerDispatcher;
-	}
-	
-	public static TouchDispatcher GetSharedTouchDispatcher(){
-		if(!touchDispatcher)
-		{
-			touchDispatcher=GameObject.Find("/sharedTouchDispatcher").GetComponent<TouchDispatcher>();
-		}
-		return touchDispatcher;
 	}
 	
 	public static GameObject GetPlayer(){
