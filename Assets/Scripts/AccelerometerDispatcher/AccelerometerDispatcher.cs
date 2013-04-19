@@ -13,16 +13,21 @@ public class AccelerateInfo
 	}
 }
 
-
+//singleton
 public class AccelerometerDispatcher : MonoBehaviour {
 	
-	private ArrayList targetedHandlers;
-	private ArrayList targetedHandlersAccelerateInfo;
+	private static AccelerometerDispatcher instance = null;
+	private ArrayList targetedHandlers=new ArrayList();
+	private ArrayList targetedHandlersAccelerateInfo=new ArrayList();
 	
-	 void Start () {
-		targetedHandlers = new ArrayList();
-		targetedHandlersAccelerateInfo=new ArrayList();
-	}  
+	public static AccelerometerDispatcher GetSharedAccelerateDispatcher()
+	{
+		if(instance==null)
+		{
+			instance=(new GameObject()).AddComponent<AccelerometerDispatcher>();
+		}
+		return instance;	
+	}
 	
 	public void addTargetedDelegate(AccelerometerTargetedDelegate intarget,int inaccelPriority,bool inswallowsAcceles)
 	{	

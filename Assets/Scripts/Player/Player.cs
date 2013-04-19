@@ -292,7 +292,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	}
 	
 	protected void GetSharedAccelerateDispatcher(){
-		sharedAccelerometerDispatcher = GlobalOptions.GetSharedAccelerateDispatcher();
+		sharedAccelerometerDispatcher = AccelerometerDispatcher.GetSharedAccelerateDispatcher();
 	}
 	
 	protected virtual void initaccel(){

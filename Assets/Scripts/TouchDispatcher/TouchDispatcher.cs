@@ -16,14 +16,26 @@ public class TouchInfo
 	}
 }
 
+//singleton
 public class TouchDispatcher : MonoBehaviour
 {  
+	
+	private static TouchDispatcher instance = null;
 	private ArrayList targetedHandlers=new ArrayList();
 	private ArrayList targetedHandlersTouchInfo=new ArrayList();
 	
 	private ArrayList targetedHandlersToDel=new ArrayList();
   
 	bool mouseReleased;
+	
+	public static TouchDispatcher GetSharedTouchDispatcher()
+	{
+		if(instance==null)
+		{
+			instance=(new GameObject()).AddComponent<TouchDispatcher>();
+		}
+		return instance;	
+	}
 	
     void Start () {
 		mouseReleased=true;
