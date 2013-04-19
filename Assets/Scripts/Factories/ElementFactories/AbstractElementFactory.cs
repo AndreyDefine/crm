@@ -181,7 +181,10 @@ public class AbstractElementFactory: Abstract{
 				}
 			}	
 		}
-		terrainsList.Add(newTerrain);
+		if(newTerrain)
+		{
+			terrainsList.Add(newTerrain);
+		}
 		return newTerrain;
 	}
 	

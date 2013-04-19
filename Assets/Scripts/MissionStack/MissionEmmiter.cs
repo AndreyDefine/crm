@@ -20,7 +20,7 @@ public class MissionEmmiter : MonoBehaviour {
 	
 	private void AddOneMissionObject()
 	{
-		if(Time.time-curTime>20)
+		if(Time.time-curTime>40)
 		{
 			curTime=Time.time;
 			int randomIndex=Random.Range(0,MissionTags.Length);

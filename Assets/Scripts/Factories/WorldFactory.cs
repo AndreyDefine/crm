@@ -200,7 +200,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	private void ParseTerrainNames()
 	{
 		//посчитаем необходимые кусочки
-		if(drawMode){
+		/*if(drawMode){
 			int i,j;
 			bool flagFounded;
 			ArrayList preloadTerrainList=new ArrayList(); 
@@ -241,8 +241,8 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 				preloadTerrainsNames[i]=preloadTerrainList[i] as string;
 			}
 		}
-		else
-			{//получили массив террейнов
+		else*/
+		{//получили массив террейнов
 			char []separator={',','\n',' '};
 			string []names=PreloadTerrains.Split(separator);
 			preloadTerrainsNames=names;
@@ -366,6 +366,10 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 					
 					for(j=1;j<setMarkers.Length;j++){
 						OneObstacle=(setMarkers[j] as Transform);
+						if(!OneObstacle)
+						{
+							continue;
+						}
 						curname=OneObstacle.name;
 						if(curname=="money")
 						{
@@ -378,7 +382,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 						}
 						else
 						{
-							addOneObstacleFromSetAtMarker(OneObstacle,interrainTag);
+							addOneObstacleFromSetAtMarker(OneObstacle,interrainTag,0);
 						}
 						if(FlagCoRoutine) yield return null;
 					}
@@ -414,12 +418,17 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		if(FlagCoRoutine) yield return null;
 	}
 	
-	private GameObject addOneObstacleFromSetAtMarker(Transform marker,TerrainTag interrainTag){
-		GameObject newObject;
+	private GameObject addOneObstacleFromSetAtMarker(Transform marker,TerrainTag interrainTag, int recursion){
+		GameObject newObject,vspObject;
 	
 		newObject = obstacleElementFactory.GetNewObjectWithName(marker.name);
 		
-		Debug.Log (marker.name);
+		if(!newObject)
+		{
+			Debug.Log (marker.name+" NOT FOUND!!!");
+			return null;
+		}
+		
 		//set position & rotation
 		newObject.transform.position=marker.position;
 		
@@ -442,10 +451,24 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 				//обрабатываем все трансформы
 				for(j=1;j<allChildren.Length;j++){
 					//reqursively
-					newObjectInContainer=addOneObstacleFromSetAtMarker(allChildren[j],interrainTag);
-					newObjectInContainer.transform.parent=Container;
+					newObjectInContainer=addOneObstacleFromSetAtMarker(allChildren[j],interrainTag,recursion+1);
+					if(newObjectInContainer)
+					{
+						newObjectInContainer.transform.parent=Container;
+					}
 				}
 			}
+		}
+		
+		if(MakeObstacleSet&&recursion==0)
+		{
+			vspObject=new GameObject();
+			vspObject.name=marker.name;
+			vspObject.transform.position=marker.position;
+			vspObject.transform.rotation=marker.rotation;
+			vspObject.transform.parent=marker.parent;
+			DestroyImmediate(marker.gameObject);
+			Debug.Log ("Deleted All UnUsed");
 		}
 		return newObject;
 	}

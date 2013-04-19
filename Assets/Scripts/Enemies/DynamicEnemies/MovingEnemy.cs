@@ -49,6 +49,9 @@ public class MovingEnemy : AbstractEnemy {
 	{
 		effectMade=false;
 		Animation animationScript=GetComponentInChildren<Animation>();
-		animationScript.Play("Restart");
+		if(animationScript)
+		{
+			animationScript.Play("Restart");
+		}
 	}
 }
