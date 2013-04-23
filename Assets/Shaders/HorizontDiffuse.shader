@@ -17,7 +17,7 @@ Shader "Shaders/HorizontDiffuze" {
 	  	 
 	  	pos-=camerapos+30;
 	  	 
-	  	if(pos>0)
+	  	 if(pos>0)
 	  	 {
 	  	 	pos/=80;
 	     	v.vertex.y -= pos*pos * 10;

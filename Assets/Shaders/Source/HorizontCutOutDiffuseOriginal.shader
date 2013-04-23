@@ -1,4 +1,4 @@
-Shader "Shaders/HorizontCutOutDiffuseOriginal" {
+Shader "Shaders/Source/HorizontCutOutDiffuseOriginal" {
 //Modified version with culling off:
 Properties {
     _Color ("Main Color", Color) = (1,1,1,1)
