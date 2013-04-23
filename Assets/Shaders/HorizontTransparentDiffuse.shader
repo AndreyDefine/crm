@@ -25,7 +25,7 @@ void vert (inout appdata_full v) {
  if(pos>0)
 	  	 {
 	  	 	pos/=80;
-	     	v.vertex.y -= pos*pos * 10;
+	     	//v.vertex.y -= pos*pos * 10;
 	     	//v.vertex.x -=pos*pos * 10;
 	     }
 } 

@@ -47,7 +47,7 @@ Shader "Shaders/BlendVertexColorCullBack"
 				 if(pos>0)
 			  	 {
 			  	 	pos/=80;
-			     	o.pos.y -= pos*pos * 10;
+			     	//o.pos.y -= pos*pos * 10;
 			     	//v.vertex.x -=pos*pos * 10;
 			     }
 				 o.pos = mul (UNITY_MATRIX_P, o.pos);
