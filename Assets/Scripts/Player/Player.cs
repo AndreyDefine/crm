@@ -405,7 +405,8 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	{
 		if(flagOnlyFizik)
 		{
-			MakeRotationCharacterController(inangle);
+			//no rotation
+			//MakeRotationCharacterController(inangle);
 		}else
 		{
 			singleTransform.rotation=Quaternion.Euler(singleTransform.rotation.x, inangle, singleTransform.rotation.z);
@@ -512,6 +513,11 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 			}
 		}
 		return true;
+	}
+	
+	public float GetVelocityCurMnoshitel()
+	{
+		return GetRealVelocityWithNoDeltaTime()/startVelocity;
 	}
 	
 	public float GetRealVelocity()

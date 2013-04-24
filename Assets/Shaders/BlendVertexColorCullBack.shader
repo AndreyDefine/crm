@@ -39,15 +39,18 @@ Shader "Shaders/BlendVertexColorCullBack"
 			{
 				v2f o;
 				o.pos = mul (UNITY_MATRIX_MV, v.vertex);
-				 float pos = length(mul (UNITY_MATRIX_MV, v.vertex).xyz);
-			 	 float camerapos = length(mul (UNITY_MATRIX_MV, float4(0,0,0,0)).xyz);
+				 //float curpos = length(mul (UNITY_MATRIX_P, v.vertex).xyz); 
+		         float pos = length(mul (UNITY_MATRIX_MV, v.vertex).xyz);
 			 
-			 	 pos-=camerapos+30;
+			     //curpos=sin(curpos/150);	 
+		         pos-=30;
 			 
 				 if(pos>0)
 			  	 {
-			  	 	pos/=80;
-			     	//o.pos.y -= pos*pos * 10;
+					pos/=100;
+					pos*=pos;
+					//o.pos.y -= pos * 9;
+					//o.pos.x -= pos * 10*curpos;
 			     }
 				 o.pos = mul (UNITY_MATRIX_P, o.pos);
 				 o.uv = TRANSFORM_TEX (v.texcoord, _MainTex);

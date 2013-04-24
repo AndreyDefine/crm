@@ -405,7 +405,7 @@ public class GuiLayerInitializer : Abstract {
 		Question.transform.parent=transform;
 		
 		//Change Control
-		ChangeControl = (GameObject)Instantiate(GuiChangeControl);
+		/*ChangeControl = (GameObject)Instantiate(GuiChangeControl);
 		
 		pos=new Vector3(8,190,zindex);
 		pos=GlobalOptions.NormalisePos(pos);
@@ -414,7 +414,7 @@ public class GuiLayerInitializer : Abstract {
 		pos.y-=ChangeControl.renderer.bounds.extents.y;
 		
 		ChangeControl.transform.position=pos;
-		ChangeControl.transform.parent=transform;
+		ChangeControl.transform.parent=transform;*/
 		
 		//timer left coner up
 		Timer=(GameObject)Instantiate(GuiTimer);

@@ -19,20 +19,21 @@ struct Input {
 };
  
       void vert (inout appdata_full v) {
+		//float curpos = length(mul (UNITY_MATRIX_P, v.vertex).xyz); 
+		float pos = length(mul (UNITY_MATRIX_MV, v.vertex).xyz);
 		
-	  	 float pos = length(mul (UNITY_MATRIX_MV, v.vertex).xyz);
-	  	 float camerapos = length(mul (UNITY_MATRIX_MV, float4(0,0,0,0)).xyz);
-	  	 
-	  	pos-=camerapos+30;
-	  	 
-	  	 if(pos>0)
-	  	 {
-	  	 	pos/=80;
-	     	//v.vertex.y -= pos*pos * 10;
-	     	//v.vertex.x -=pos*pos * 10;
-	     }
+		//curpos=sin(curpos/150);	 
+		pos-=30;
+		
+		if(pos>0)
+		{
+			pos/=100;
+			pos*=pos;
+			//v.vertex.y -= pos * 9;
+			//v.vertex.x -= pos * 10*curpos;
+		}
           
-      } 
+      }
 
 void surf (Input IN, inout SurfaceOutput o) {
     fixed4 c = tex2D(_MainTex, IN.uv_MainTex);

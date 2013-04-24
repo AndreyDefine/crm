@@ -8,6 +8,8 @@ public class MovingEnemy : AbstractEnemy {
 	
 	private bool effectMade=false;
 	
+	private Animation animationScript;
+	
 	public override void OnHit(Collider other)
 	{
 		//Do nothing on hit
@@ -19,7 +21,7 @@ public class MovingEnemy : AbstractEnemy {
 	
 	public override void initEnemy()
 	{
-		//singleTransform.rotation=Quaternion.Euler(0,0,0);
+		animationScript=GetComponentInChildren<Animation>();
 	}
 	
 	public void TestPlayer()
@@ -36,12 +38,22 @@ public class MovingEnemy : AbstractEnemy {
 				MakeEffect();
 			}
 		}
+		else
+		{
+			if(GlobalOptions.gameState==GameStates.PAUSE_MENU)
+			{
+				animationScript["MoveAnimation"].speed=0;
+			}
+			else
+			{
+				animationScript["MoveAnimation"].speed=playerScript.GetVelocityCurMnoshitel();
+			}
+		}
 	}
 	
 	private void MakeEffect()
 	{
 		effectMade=true;
-		Animation animationScript=GetComponentInChildren<Animation>();
 		animationScript.Play("MoveAnimation");
 	}
 	

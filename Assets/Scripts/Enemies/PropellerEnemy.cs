@@ -19,6 +19,10 @@ public class PropellerEnemy : AbstractEnemy {
 	
 	public void Rotate()
 	{
+		if(GlobalOptions.gameState==GameStates.PAUSE_MENU)
+		{
+			return;
+		}
 		singleTransform.Rotate(new Vector3(0,Time.deltaTime*200,0));
 	}
 	

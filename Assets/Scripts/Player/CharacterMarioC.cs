@@ -47,10 +47,10 @@ public class CharacterMarioC : Abstract {
 		{
 			if(moveforward>=0)
 			{
-				moveforward=-0.001f;
+				moveforward=-0.00001f;
 			}else
 			{
-				moveforward=0.001f;
+				moveforward=0.00001f;
 			}
 		}
 	}
@@ -65,8 +65,9 @@ public class CharacterMarioC : Abstract {
 	
 	void Update() {
 		
-		if(GlobalOptions.gameState==GameStates.GAME)
+		if(GlobalOptions.gameState==GameStates.GAME||GlobalOptions.gameState==GameStates.GAME_OVER)
 		{
+			Debug.Log ("Player");
 			AddAllTimes();
 			UpdateSmoothedMovementDirection();
 		
@@ -74,13 +75,14 @@ public class CharacterMarioC : Abstract {
 				verticalSpeed = 0;
 			}
 			// Apply gravity
-			if(!freezed)
-			{
-				verticalSpeed -= gravity * Time.deltaTime;
-			}
-			else
+			//if(!freezed)
+			//{
+			verticalSpeed -= gravity * Time.deltaTime;
+			//}
+			if(freezed)
 			{
 				moveforward=0;
+				forcex=0;
 			}
 			
 			Vector3 right = singleTransform.TransformDirection(Vector3.right);
@@ -88,10 +90,6 @@ public class CharacterMarioC : Abstract {
 			
 			Vector3 movement = moveforward*forward + new Vector3 (0, verticalSpeed, 0) + forcex*right;
 			
-			if(freezed)
-			{
-				movement=Vector3.zero;
-			}
 			
 			movement *= Time.deltaTime;
 			// Move the controller
