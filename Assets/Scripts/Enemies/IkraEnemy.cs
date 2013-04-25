@@ -19,7 +19,11 @@ public class IkraEnemy : AbstractEnemy {
 	
 	public void Rotate()
 	{
-		singleTransform.Rotate(new Vector3(0,0,Time.deltaTime*100));
+		if(GlobalOptions.gameState==GameStates.PAUSE_MENU)
+		{
+			return;
+		}
+		singleTransform.Rotate(new Vector3(0,Time.deltaTime*200,0));
 	}
 	
 	public override void ReStart()

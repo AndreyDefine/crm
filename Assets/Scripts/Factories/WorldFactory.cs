@@ -382,14 +382,12 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 						}
 						else
 						{
-							addOneObstacleFromSetAtMarker(OneObstacle,interrainTag,0);
+							addOneObstacleFromSetAtMarker(OneObstacle,curSet.transform,interrainTag,0);
 						}
 						if(FlagCoRoutine) yield return null;
 					}
-					//почистим фабрику
-					obstacleSetElementFactory.DeleteCurrent(curSet);				
-					
-					markedObjectsObstacleSet.RemoveAt(randIndex);
+					//добавим в сет
+					interrainTag.PushToAllElements(curSet);
 				}
 			}
 		}
@@ -418,7 +416,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		if(FlagCoRoutine) yield return null;
 	}
 	
-	private GameObject addOneObstacleFromSetAtMarker(Transform marker,TerrainTag interrainTag, int recursion){
+	private GameObject addOneObstacleFromSetAtMarker(Transform marker,Transform inparent,TerrainTag interrainTag, int recursion){
 		GameObject newObject,vspObject;
 	
 		newObject = obstacleElementFactory.GetNewObjectWithName(marker.name);
@@ -453,7 +451,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 				//обрабатываем все трансформы
 				for(j=1;j<allChildren.Length;j++){
 					//reqursively
-					newObjectInContainer=addOneObstacleFromSetAtMarker(allChildren[j],interrainTag,recursion+1);
+					newObjectInContainer=addOneObstacleFromSetAtMarker(allChildren[j],inparent,interrainTag,recursion+1);
 					if(newObjectInContainer)
 					{
 						newObjectInContainer.transform.parent=Container;
@@ -469,7 +467,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 			{
 				vspObject.name="money";
 			}
-			else if(marker.name=="VodkaContainer"||marker.name=="MagnitContainer"||marker.name=="PostalContainer")
+			else if(marker.name=="VodkaContainer"||marker.name=="MagnitContainer"||marker.name=="PostalContainer"||marker.name=="KopilkaContainer")
 			{
 				vspObject.name="boost";
 			}
@@ -483,6 +481,12 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 			DestroyImmediate(marker.gameObject);
 			Debug.Log ("Deleted All UnUsed");
 		}
+		
+		if(recursion==0&&!MakeObstacleSet)
+		{
+			newObject.transform.parent=inparent;
+		}
+		
 		return newObject;
 	}
 	

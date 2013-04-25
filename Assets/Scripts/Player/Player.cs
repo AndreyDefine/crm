@@ -440,7 +440,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 			}
 			if(GlobalOptions.playerStates==PlayerStates.DIE)
 			{
-				raznost-=3;
+				raznost-=2;
 				heightDamping=2f;
 			}
 			float currentHeight = Mathf.Lerp (WhereToLook.transform.localPosition.y, charpos.y+walkbearpos.y+raznost, heightDamping * Time.deltaTime);

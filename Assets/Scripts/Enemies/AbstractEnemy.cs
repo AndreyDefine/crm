@@ -58,7 +58,7 @@ public class AbstractEnemy : Abstract {
 	
 	public virtual void MakeInactive()
 	{
-		gameObject.active=false;
+		gameObject.SetActiveRecursively(false);
 		
 		PutToInactiveList();
 	}

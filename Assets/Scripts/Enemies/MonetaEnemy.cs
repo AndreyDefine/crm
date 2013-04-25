@@ -89,18 +89,11 @@ public class MonetaEnemy : AbstractEnemy {
 	private void MakeEffect()
 	{
 		effectMade=true;
-		//parentTransform.rigidbody.useGravity=false;
-		//parentTransform.collider.isTrigger=true;
 	}
 	
 	
 	private void UnMakeEffect()
 	{
 		effectMade=false;
-		if(parentTransform)
-		{
-			//parentTransform.rigidbody.useGravity=true;
-			//parentTransform.collider.isTrigger=false;
-		}
 	}
 }
