@@ -436,7 +436,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 			float raznost=raznFromWhereToLookAndCharacter.y;
 			if(characterMarioC.isGliding()&&GlobalOptions.playerStates!=PlayerStates.DIE)
 			{
-				raznost-=3.5f;
+				raznost-=3f;
 			}
 			if(GlobalOptions.playerStates==PlayerStates.DIE)
 			{

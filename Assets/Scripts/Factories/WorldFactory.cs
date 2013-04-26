@@ -373,12 +373,12 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 						curname=OneObstacle.name;
 						if(curname=="money")
 						{
-							addOneMoneyAtMarker(OneObstacle,interrainTag);
+							addOneMoneyAtMarker(OneObstacle,curSet.transform,interrainTag);
 						}
 						else
 						if(curname=="boost")
 						{
-							addOneBoostAtMarker(OneObstacle,interrainTag);
+							addOneBoostAtMarker(OneObstacle,curSet.transform,interrainTag);
 						}
 						else
 						{
@@ -519,7 +519,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		}
 	}
 	
-	private void addOneBoostAtMarker(Transform marker,TerrainTag interrainTag){
+	private void addOneBoostAtMarker(Transform marker,Transform inparent,TerrainTag interrainTag){
 		GameObject newObject;
 		
 		newObject = boostElementFactory.GetNewObject();
@@ -531,6 +531,11 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	
 		if(interrainTag){
 			interrainTag.PushToAllElements(newObject);
+		}
+		
+		if(!MakeObstacleSet)
+		{
+			newObject.transform.parent=inparent;
 		}
 	}
 	
@@ -580,7 +585,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	}
 	
 	
-	private void addOneMoneyAtMarker(Transform marker,TerrainTag interrainTag){
+	private void addOneMoneyAtMarker(Transform marker,Transform inparent,TerrainTag interrainTag){
 		GameObject newObject;
 		newObject	= moneyElementFactory.GetNewObject();
 			
@@ -589,6 +594,11 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		
 		if(interrainTag){
 			interrainTag.PushToAllElements(newObject);
+		}
+		
+		if(!MakeObstacleSet)
+		{
+			newObject.transform.parent=inparent;
 		}
 	}
 	
