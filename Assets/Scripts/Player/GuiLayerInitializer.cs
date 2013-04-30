@@ -26,8 +26,10 @@ public class GuiLayerInitializer : Abstract {
 	
 	public GameObject FinalGUIScorePlashka;
 	private GameObject FinalScorePlashka;
-
 	
+	public GameObject FinalGUIMissionPlashka;
+	private ArrayList FinalMissionPlashkaArray=new ArrayList();
+
 	
 	public int MaxLife;
 	
@@ -298,6 +300,23 @@ public class GuiLayerInitializer : Abstract {
 		return nullTime;
 	}
 	
+	public void AddOneMissionObject()
+	{
+		Vector3 pos;
+		GameObject newObject = (GameObject)Instantiate(FinalGUIMissionPlashka);
+		
+		pos=new Vector3(GlobalOptions.Vsizex-5,GlobalOptions.Vsizey-206-FinalMissionPlashkaArray.Count*3,zindex);
+		pos=GlobalOptions.NormalisePosRight(pos);
+		pos=GUIcamera.ScreenToWorldPoint(pos);
+		
+		pos.x-=newObject.renderer.bounds.extents.x;
+		pos.y-=(newObject.renderer.bounds.extents.y*2)*FinalMissionPlashkaArray.Count;
+		
+		newObject.transform.position=pos;
+		newObject.transform.parent=transform;
+		FinalMissionPlashkaArray.Add(newObject);
+	}
+	
 	private void InitSprites()
 	{
 		Vector3 pos;	
@@ -343,6 +362,8 @@ public class GuiLayerInitializer : Abstract {
 		FinalScorePlashka.transform.position=pos;
 		FinalScorePlashka.transform.parent=transform;
 		
+		//mission plashka
+		AddOneMissionObject();
 		//////////////////////////////////////////////////////////
 		
 		
