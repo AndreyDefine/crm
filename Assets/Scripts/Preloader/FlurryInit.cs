@@ -9,6 +9,6 @@ public class FlurryInit : MonoBehaviour {
 	//initFlurry
 	private void init()
 	{
-		FlurryPlugin.FlurryStartSession("CHKK77RVN3PJ5RZKTQTJ");
+		FlurryPlugin.FlurryStartSession();
 	}
 }

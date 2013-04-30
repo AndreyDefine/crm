@@ -3,7 +3,7 @@
 #import "Flurry.h"
 
 static FlurryClient* delegateObject = nil;
-static const char* GlobalApiKey;
+static const char* GlobalApiKey = "CHKK77RVN3PJ5RZKTQTJ";
 
 // Converts C style string to NSString///////////////////////////////////////////
 NSString* CreateNSString (const char* string)
@@ -148,9 +148,8 @@ char* MakeStringCopy (const char* string)
 // should be surrounded with extern "C" block to conform C function naming rules
 extern "C" {
     
-    void _FlurryStartSession(const char* ApiKey)
+    void _FlurryStartSession()
     {
-        GlobalApiKey=ApiKey;
         [FlurryClient load];
     }
     

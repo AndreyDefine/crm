@@ -7,19 +7,19 @@ public class FlurryPlugin {
 	/* Interface to native implementation */
 	
 	[DllImport ("__Internal")]
-	private static extern void _FlurryStartSession (string ApiKey);
+	private static extern void _FlurryStartSession ();
 	[DllImport ("__Internal")]
 	private static extern void _FlurryLogEvent(string EventName);
 	
 	/* Public interface for use inside C# / JS code */
 	
 	// Starts lookup for some bonjour registered service inside specified domain
-	public static void FlurryStartSession(string ApiKey)
+	public static void FlurryStartSession()
 	{
 		// Call plugin only when running on real device
 		if (Application.platform != RuntimePlatform.OSXEditor)
 		{
-			_FlurryStartSession(ApiKey);
+			_FlurryStartSession();
 		}
 		else
 		{

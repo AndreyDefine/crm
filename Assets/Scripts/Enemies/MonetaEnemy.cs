@@ -34,7 +34,7 @@ public class MonetaEnemy : AbstractEnemy {
 	
 	public override void initEnemy()
 	{
-		parentTransform=singleTransform.parent;
+		parentTransform=singleTransform.parent.parent;
 	}
 	
 	public override void ReStart()
