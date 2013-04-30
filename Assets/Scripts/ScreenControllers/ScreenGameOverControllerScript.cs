@@ -15,11 +15,11 @@ public class ScreenGameOverControllerScript : Abstract,ScreenControllerToShow {
 			
 			ButtonReplay = (GameObject)Instantiate(GuiButtonReplay);
 		
-			pos=new Vector3(GlobalOptions.Vsizex-5,GlobalOptions.Vsizey-14,1);
+			pos=new Vector3(5,GlobalOptions.Vsizey-5,1);
 			pos=GlobalOptions.NormalisePos(pos);
 			pos=Cameras.GetGUICamera().ScreenToWorldPoint(pos);
 		
-			pos.x-=ButtonReplay.renderer.bounds.extents.x;
+			pos.x+=ButtonReplay.renderer.bounds.extents.x;
 			pos.y-=ButtonReplay.renderer.bounds.extents.y;
 		
 			ButtonReplay.transform.position=pos;
