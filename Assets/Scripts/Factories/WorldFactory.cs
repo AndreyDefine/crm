@@ -345,7 +345,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		//obstacles
 		if(currentRoadPos>1||!firstTimeInit)
 		{
-			for(jset=0;jset<interrainTag.ObstacleSetArray.Length&&MakeObstacleSet;jset++)
+			for(jset=0;jset<interrainTag.ObstacleSetArray.Length&&(MakeObstacleSet||jset==0);jset++)
 			{
 				//ObstacleSet
 				GameObject curSet;
