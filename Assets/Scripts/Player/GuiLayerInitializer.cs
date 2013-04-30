@@ -808,7 +808,7 @@ public class GuiLayerInitializer : Abstract {
 	private void PosScore(){
 		Vector3 pos;
 		pos=new Vector3(GlobalOptions.Vsizex-20,GlobalOptions.Vsizey-60,zindex-1);
-		pos=GlobalOptions.NormalisePos(pos);
+		pos=GlobalOptions.NormalisePosRight(pos);
 		pos=GUIcamera.ScreenToWorldPoint(pos);
 		
 		Score.transform.position=pos;
@@ -817,7 +817,7 @@ public class GuiLayerInitializer : Abstract {
 	private void PosMoney(){
 		Vector3 pos;
 		pos=new Vector3(GlobalOptions.Vsizex-20,GlobalOptions.Vsizey-135,zindex-1);
-		pos=GlobalOptions.NormalisePos(pos);
+		pos=GlobalOptions.NormalisePosRight(pos);
 		pos=GUIcamera.ScreenToWorldPoint(pos);
 		
 		Money.transform.position=pos;
