@@ -15,9 +15,7 @@ Temp
 *.pidb
 *.sln
 build
-
 /Library/
-/ProjectSettings/
 /Assembly-CSharp-Editor-firstpass-vs.csproj
 /Assembly-CSharp-Editor-firstpass.csproj
 /Assembly-CSharp-Editor-vs.csproj
