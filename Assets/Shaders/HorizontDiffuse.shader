@@ -22,7 +22,7 @@ if(pos>0)
 {
 	pos/=100;
 	pos*=pos;
-	v.vertex.y -= pos * 10;
+	//v.vertex.y -= pos * 10;
 	//v.vertex.x += pos * 10*curpos;
 }
   

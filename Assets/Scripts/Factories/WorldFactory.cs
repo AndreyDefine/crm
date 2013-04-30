@@ -341,54 +341,64 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 			}
 		}
 		
+		int jset;
 		//obstacles
 		if(currentRoadPos>1||!firstTimeInit)
 		{
-			//ObstacleSet
-			GameObject curSet;
-			Transform OneObstacle,marker;
-			int randomIndexOfSet;
-			for(i=0;i<markedObjectsObstacleSet.Count&&interrainTag.ObstacleSetArray.Length!=0;i++){
-				kolvo=neededNumberOfObstacleSet>markedObjectsObstacleSet.Count?markedObjectsObstacleSet.Count:neededNumberOfObstacleSet;
-				for(i=0;i<kolvo;i++){
-					//случайный индекс маркера
-					randIndex=Random.Range(0,markedObjectsObstacleSet.Count);
-					//получим марке
-					marker=markedObjectsObstacleSet[randIndex]as Transform;
-					//теперь выбираем сет
-					randomIndexOfSet=Random.Range(0,interrainTag.ObstacleSetArray.Length);
-					// получаем препятствие
-					curSet=obstacleSetElementFactory.GetNewObjectWithName((interrainTag.ObstacleSetArray[randomIndexOfSet] as GameObject).name);
-					//поместим сет препятствий куда надо
-					curSet.transform.position=marker.position;
-					curSet.transform.rotation=marker.rotation;
-					//получим список препятствий
-					Transform[] setMarkers = curSet.GetComponentsInChildren<Transform>();
-					
-					for(j=1;j<setMarkers.Length;j++){
-						OneObstacle=(setMarkers[j] as Transform);
-						if(!OneObstacle)
+			for(jset=0;jset<interrainTag.ObstacleSetArray.Length&&MakeObstacleSet;jset++)
+			{
+				//ObstacleSet
+				GameObject curSet;
+				Transform OneObstacle,marker;
+				int randomIndexOfSet;
+				for(i=0;i<markedObjectsObstacleSet.Count&&interrainTag.ObstacleSetArray.Length!=0;i++){
+					kolvo=neededNumberOfObstacleSet>markedObjectsObstacleSet.Count?markedObjectsObstacleSet.Count:neededNumberOfObstacleSet;
+					for(i=0;i<kolvo;i++){
+						//случайный индекс маркера
+						randIndex=Random.Range(0,markedObjectsObstacleSet.Count);
+						//получим марке
+						marker=markedObjectsObstacleSet[randIndex]as Transform;
+						//теперь выбираем сет
+						if(MakeObstacleSet)
 						{
-							continue;
-						}
-						curname=OneObstacle.name;
-						if(curname=="money")
+							randomIndexOfSet=jset;
+						}else
 						{
-							addOneMoneyAtMarker(OneObstacle,curSet.transform,interrainTag);
+							randomIndexOfSet=Random.Range(0,interrainTag.ObstacleSetArray.Length);
 						}
-						else
-						if(curname=="boost")
-						{
-							addOneBoostAtMarker(OneObstacle,curSet.transform,interrainTag);
+						// получаем препятствие
+						curSet=obstacleSetElementFactory.GetNewObjectWithName((interrainTag.ObstacleSetArray[randomIndexOfSet] as GameObject).name);
+						//поместим сет препятствий куда надо
+						curSet.transform.position=marker.position;
+						curSet.transform.rotation=marker.rotation;
+						//получим список препятствий
+						Transform[] setMarkers = curSet.GetComponentsInChildren<Transform>();
+						
+						for(j=1;j<setMarkers.Length;j++){
+							OneObstacle=(setMarkers[j] as Transform);
+							if(!OneObstacle)
+							{
+								continue;
+							}
+							curname=OneObstacle.name;
+							if(curname=="money")
+							{
+								addOneMoneyAtMarker(OneObstacle,curSet.transform,interrainTag);
+							}
+							else
+							if(curname=="boost")
+							{
+								addOneBoostAtMarker(OneObstacle,curSet.transform,interrainTag);
+							}
+							else
+							{
+								addOneObstacleFromSetAtMarker(OneObstacle,curSet.transform,interrainTag,0);
+							}
+							if(FlagCoRoutine) yield return null;
 						}
-						else
-						{
-							addOneObstacleFromSetAtMarker(OneObstacle,curSet.transform,interrainTag,0);
-						}
-						if(FlagCoRoutine) yield return null;
+						//добавим в сет
+						interrainTag.PushToAllElements(curSet);
 					}
-					//добавим в сет
-					interrainTag.PushToAllElements(curSet);
 				}
 			}
 		}
