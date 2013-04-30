@@ -38,7 +38,7 @@ public class TerrainElementFactory: AbstractElementFactory{
 	}
 	
 	public override void PutToFirstState(GameObject newTerrain){
-		newTerrain.transform.position=new Vector3(-200,-200,-200);
+		newTerrain.transform.position=new Vector3(-400,-400,-400);
 		newTerrain.transform.rotation=Quaternion.identity;
 		//MakeInactiveObjectsActive
 		TerrainTag terrainTag=newTerrain.GetComponent("TerrainTag") as TerrainTag;

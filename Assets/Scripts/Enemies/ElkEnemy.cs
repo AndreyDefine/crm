@@ -10,5 +10,12 @@ public class ElkEnemy : AbstractEnemy {
 		GuiLayer.AddToLife(-50);
 		GuiLayer.AddHeadStars();
 		PlayClipSound();
+		if(playerScript.isVodka())
+			MakeInactiveParent();
+	}
+	
+	public override void ReStart()
+	{
+		transform.parent.gameObject.SetActiveRecursively(true);
 	}
 }

@@ -157,6 +157,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		
 		//really need this!!!
 		obstacleSetElementFactory.PreloadPullObjects();
+		boostElementFactory.PreloadPullObjects();
 	}
 	
 	public override void ReStart(){

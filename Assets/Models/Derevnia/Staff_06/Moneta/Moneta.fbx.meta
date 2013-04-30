@@ -3,6 +3,7 @@ guid: ac368a04c48914aedb7286a840e50562
 ModelImporter:
   fileIDToRecycleName:
     4300000: Moneta
+    4300002: hhh:polySurface1
   serializedVersion: 10
   materials:
     importMaterials: 1

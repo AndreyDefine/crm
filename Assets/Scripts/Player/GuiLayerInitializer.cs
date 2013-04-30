@@ -9,7 +9,6 @@ public class GuiLayerInitializer : Abstract {
 	
 	public GameObject GuiBearFace;
 	public GameObject []GuiBottle;
-	public GameObject GuiRightHUD;
 	public GameObject GuiLifeHeart;
 	public GameObject GuiScore;
 	public GameObject GuiMoney;
@@ -17,6 +16,18 @@ public class GuiLayerInitializer : Abstract {
 	public GameObject GuiPostal;
 	public GameObject GuiMeters;
 	public GameObject GuiMission;
+	
+	//final
+	public GameObject FinalGUIButtonPause;
+	private GameObject FinalButtonPause;
+	
+	public GameObject FinalGUIMoneyPlashka;
+	private GameObject FinalMoneyPlashka;
+	
+	public GameObject FinalGUIScorePlashka;
+	private GameObject FinalScorePlashka;
+
+	
 	
 	public int MaxLife;
 	
@@ -291,13 +302,56 @@ public class GuiLayerInitializer : Abstract {
 	{
 		Vector3 pos;	
 		
+		//FinalGUI
+		//Pause Button
+		FinalButtonPause = (GameObject)Instantiate(FinalGUIButtonPause);
+		
+		pos=new Vector3(5,GlobalOptions.Vsizey-5,zindex);
+		pos=GlobalOptions.NormalisePos(pos);
+		pos=GUIcamera.ScreenToWorldPoint(pos);
+		
+		pos.x+=FinalButtonPause.renderer.bounds.extents.x;
+		pos.y-=FinalButtonPause.renderer.bounds.extents.y;
+		
+		FinalButtonPause.transform.position=pos;
+		FinalButtonPause.transform.parent=transform;
+		
+		
+		//Money Plashka
+		FinalMoneyPlashka = (GameObject)Instantiate(FinalGUIMoneyPlashka);
+		
+		pos=new Vector3(GlobalOptions.Vsizex+30,GlobalOptions.Vsizey-80,zindex);
+		pos=GlobalOptions.NormalisePosRight(pos);
+		pos=GUIcamera.ScreenToWorldPoint(pos);
+		
+		pos.x-=FinalMoneyPlashka.renderer.bounds.extents.x;
+		pos.y-=FinalMoneyPlashka.renderer.bounds.extents.y;
+		
+		FinalMoneyPlashka.transform.position=pos;
+		FinalMoneyPlashka.transform.parent=transform;
+		
+		//Score Plashka
+		FinalScorePlashka = (GameObject)Instantiate(FinalGUIScorePlashka);
+		
+		pos=new Vector3(GlobalOptions.Vsizex,GlobalOptions.Vsizey-5,zindex);
+		pos=GlobalOptions.NormalisePosRight(pos);
+		pos=GUIcamera.ScreenToWorldPoint(pos);
+		
+		pos.x-=FinalScorePlashka.renderer.bounds.extents.x;
+		pos.y-=FinalScorePlashka.renderer.bounds.extents.y;
+		
+		FinalScorePlashka.transform.position=pos;
+		FinalScorePlashka.transform.parent=transform;
+		
+		//////////////////////////////////////////////////////////
+		
 		
 		// new HUD////////////////////////////////////////////////
 		//Bottle
 		float bottleRight;
 		Bottle[0] = (GameObject)Instantiate(GuiBottle[0]);
 		
-		pos=new Vector3(8,GlobalOptions.Vsizey-10,zindex);
+		pos=new Vector3(8,GlobalOptions.Vsizey-10,zindex+50);
 		pos=GlobalOptions.NormalisePos(pos);
 		pos=GUIcamera.ScreenToWorldPoint(pos);
 		
@@ -324,7 +378,7 @@ public class GuiLayerInitializer : Abstract {
 		float bearFaceBottom;
 		BearFace = (GameObject)Instantiate(GuiBearFace);
 		
-		pos=new Vector3(0,GlobalOptions.Vsizey-3,zindex);
+		pos=new Vector3(0,GlobalOptions.Vsizey-3,zindex+50);
 		pos=GlobalOptions.NormalisePos(pos);
 		pos=GUIcamera.ScreenToWorldPoint(pos);
 		
@@ -337,19 +391,6 @@ public class GuiLayerInitializer : Abstract {
 		
 		BearFace.transform.position=pos;
 		BearFace.transform.parent=transform;
-		
-		//RightHUD
-		RightHUD = (GameObject)Instantiate(GuiRightHUD);
-		
-		pos=new Vector3(GlobalOptions.Vsizex-4,GlobalOptions.Vsizey-10,zindex);
-		pos=GlobalOptions.NormalisePosRight(pos);
-		pos=GUIcamera.ScreenToWorldPoint(pos);
-		
-		pos.x-=RightHUD.renderer.bounds.extents.x;
-		pos.y-=RightHUD.renderer.bounds.extents.y;
-		
-		RightHUD.transform.position=pos;
-		RightHUD.transform.parent=transform;
 		
 		//lifeindicator LifeHeart
 		//MakeStars
@@ -405,16 +446,16 @@ public class GuiLayerInitializer : Abstract {
 		Question.transform.parent=transform;
 		
 		//Change Control
-		/*ChangeControl = (GameObject)Instantiate(GuiChangeControl);
+		ChangeControl = (GameObject)Instantiate(GuiChangeControl);
 		
-		pos=new Vector3(8,190,zindex);
+		pos=new Vector3(8,190,zindex+50);
 		pos=GlobalOptions.NormalisePos(pos);
 		pos=GUIcamera.ScreenToWorldPoint(pos);
 		pos.x+=ChangeControl.renderer.bounds.extents.x;
 		pos.y-=ChangeControl.renderer.bounds.extents.y;
 		
 		ChangeControl.transform.position=pos;
-		ChangeControl.transform.parent=transform;*/
+		ChangeControl.transform.parent=transform;
 		
 		//timer left coner up
 		Timer=(GameObject)Instantiate(GuiTimer);
@@ -608,7 +649,7 @@ public class GuiLayerInitializer : Abstract {
 		score+=inscore;
 		tk2dTextMesh textMesh;
 		textMesh = Score.GetComponent<tk2dTextMesh>();
-		textMesh.text = string.Format ("{0:000000000}", score);
+		textMesh.text = string.Format ("{0:00000000}", score);
 		textMesh.Commit();
 		//PosScore();
 	}
@@ -618,7 +659,7 @@ public class GuiLayerInitializer : Abstract {
 		money+=inscore;
 		tk2dTextMesh textMesh;
 		textMesh = Money.GetComponent<tk2dTextMesh>();
-		textMesh.text = string.Format ("{0:00000000}", money);
+		textMesh.text = string.Format ("{0:00000}", money);
 		textMesh.Commit();
 		//PosMoney();
 	}
@@ -766,7 +807,7 @@ public class GuiLayerInitializer : Abstract {
 	
 	private void PosScore(){
 		Vector3 pos;
-		pos=new Vector3(649,GlobalOptions.Vsizey-49,zindex-1);
+		pos=new Vector3(GlobalOptions.Vsizex-15,GlobalOptions.Vsizey-60,zindex-1);
 		pos=GlobalOptions.NormalisePosRight(pos);
 		pos=GUIcamera.ScreenToWorldPoint(pos);
 		
@@ -775,7 +816,7 @@ public class GuiLayerInitializer : Abstract {
 	
 	private void PosMoney(){
 		Vector3 pos;
-		pos=new Vector3(610,GlobalOptions.Vsizey-93,zindex-1);
+		pos=new Vector3(GlobalOptions.Vsizex-15,GlobalOptions.Vsizey-135,zindex-1);
 		pos=GlobalOptions.NormalisePosRight(pos);
 		pos=GUIcamera.ScreenToWorldPoint(pos);
 		
@@ -784,7 +825,7 @@ public class GuiLayerInitializer : Abstract {
 	
 	private void PosScoreScale(){
 		Vector3 pos;
-		pos=new Vector3(406,GlobalOptions.Vsizey-32,zindex-1);
+		pos=new Vector3(406,GlobalOptions.Vsizey-32,zindex+50);
 		pos=GlobalOptions.NormalisePosRight(pos);
 		pos=GUIcamera.ScreenToWorldPoint(pos);
 		

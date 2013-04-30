@@ -63,6 +63,13 @@ public class AbstractEnemy : Abstract {
 		PutToInactiveList();
 	}
 	
+	public virtual void MakeInactiveParent()
+	{
+		transform.parent.gameObject.SetActiveRecursively(false);
+		
+		PutToInactiveList();
+	}
+	
 	public virtual void MakeAction()
 	{
 		//do nothing;	

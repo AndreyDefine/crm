@@ -71,7 +71,7 @@ public class MonetaEnemy : AbstractEnemy {
 			razny=-parentTransform.position.y+walkingBearTransform.position.y;
 			raznz=-parentTransform.position.z+walkingBearTransform.position.z;
 			
-			if(raznx*raznx+raznz*raznz<=rasstChuvstv/30)
+			if(raznx*raznx+raznz*raznz<=rasstChuvstv/10)
 			{
 				//do nothing
 			}

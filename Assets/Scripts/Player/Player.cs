@@ -168,6 +168,16 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		bearAnimation.ResumeAnimation();
 	}
 	
+	public bool isVodka()
+	{
+		if(VelocityVodka>1)
+		{
+			return true;
+		}
+		
+		return false;
+	}
+	
 	public void MakeVodka()
 	{
 		VelocityVodka=1.2f;

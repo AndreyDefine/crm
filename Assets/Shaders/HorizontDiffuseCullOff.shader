@@ -13,17 +13,17 @@ Shader "Shaders/HorizontDiffuzeCullOff" {
       };
 
 void vert (inout appdata_full v) {
-float curpos = mul (_Object2World, v.vertex).z;//length(mul (_Object2World, v.vertex).xyz); 
 float pos = length(mul (UNITY_MATRIX_MV, v.vertex).xyz);
 
-curpos=sin(curpos/50);	 
 pos-=30;
 
+float curpos = length(mul (UNITY_MATRIX_MVP, v.vertex).xyz);
+curpos=sin(curpos/50); 
 if(pos>0)
 {
 	pos/=100;
 	pos*=pos;
-	v.vertex.y -= pos * 9;
+	v.vertex.y -= pos * 10;
 	//v.vertex.x += pos * 10*curpos;
 }
   

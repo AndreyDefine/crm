@@ -39,7 +39,7 @@ public class AbstractElementFactory: Abstract{
 	
 	public virtual void ReStart(){
 		int i;
-		Vector3 newPos=new Vector3(-200,-200,-200);
+		Vector3 newPos=new Vector3(-400,-400,-400);
 		for(i=0;i<terrainsListToDel.Count;i++){
 			(terrainsListToDel[i]as GameObject).transform.position=newPos;
 		}
