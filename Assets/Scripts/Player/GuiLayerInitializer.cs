@@ -10,24 +10,24 @@ public class GuiLayerInitializer : Abstract {
 	public GameObject GuiBearFace;
 	public GameObject []GuiBottle;
 	public GameObject GuiLifeHeart;
-	public GameObject GuiScore;
-	public GameObject GuiMoney;
 	public GameObject GuiScoreScale;
 	public GameObject GuiPostal;
 	public GameObject GuiMeters;
 	public GameObject GuiMission;
 	
 	//final
-	public GameObject FinalGUIButtonPause;
-	private GameObject FinalButtonPause;
+	public Abstract pause;
 	
-	public GameObject FinalGUIMoneyPlashka;
-	private GameObject FinalMoneyPlashka;
+	public Money money;
 	
-	public GameObject FinalGUIScorePlashka;
-	private GameObject FinalScorePlashka;
+	public Points points;
 	
-	public GameObject FinalGUIMissionPlashka;
+	public UpNotifierController upNotifierController;
+	
+	public DownNotifierController downNotifierController;
+	
+	public CurrentMissionsNotifierController currentMissionsNotifierController;
+	
 	private ArrayList FinalMissionPlashkaArray=new ArrayList();
 
 	
@@ -40,15 +40,9 @@ public class GuiLayerInitializer : Abstract {
 	private GameObject []Bottle;
 	private GameObject RightHUD;
 	private GameObject []LifeHeart;
-	private GameObject Score;
-	private GameObject Money;
 	private GameObject ScoreScale;
 	private GameObject Postal;
-	private GameObject Meters;
-	private GameObject Mission;
 
-	private MissionStack missionStack;
-	
 	private GameObject Question;
 	private GameObject Star;
 	
@@ -61,7 +55,7 @@ public class GuiLayerInitializer : Abstract {
 	private float curStarPos=250;
 	
 	private Player playerScript;
-	private int score,money,scoreScale,vodkaLevel;
+	private int scoreScale,vodkaLevel;
 	private bool flagVodka,flagMushroom,flagScoreScale,flagHeadStars,flagMagnit,flagPropeller;
 	private bool flagPostal,flagGameOver,flagMeters,flagMission;
 	private float VodkaTime,ShroomTime,ScoreScaleTime,scoreTime,headStarsTime,postalTime,GameOverTime,metersTime,missionTime,magnitTime,propellerTime,addToLifeTime;
@@ -104,7 +98,6 @@ public class GuiLayerInitializer : Abstract {
 		GlobalOptions.scaleFactory=Screen.height/GlobalOptions.Vsizey;
 		GlobalOptions.scaleFactorx=Screen.width/GlobalOptions.Vsizex;
 		
-		missionStack=MissionStack.sharedMissionStack();
 		nullTime=0;
 		flagVodka=false;
 		flagMushroom=false;
@@ -119,8 +112,6 @@ public class GuiLayerInitializer : Abstract {
 		oldTime=nullTime;
 		scoreTime=Time.time;
 		addToLifeTime=Time.time;
-		score=GlobalOptions.GetLevelStartScore();
-		money=GlobalOptions.GetLevelStartMoney();
 		vodkaLevel=0;
 		scoreScale=GlobalOptions.GetScoreScale();
 		curLife=MaxLife;
@@ -163,13 +154,9 @@ public class GuiLayerInitializer : Abstract {
 		AddScoreScale(-10);
 		HideQuestion();
 		HidePostal();
-		HideMeters();
-		HideMission();
 		
-		score=GlobalOptions.GetLevelStartScore();
-		money=GlobalOptions.GetLevelStartMoney();
-		AddScore (0);
-		AddMoney (0);
+		SetMoney(GlobalOptions.GetLevelStartMoney());
+		SetPoints (GlobalOptions.GetLevelStartPoints());
 	}
 	
 	void Update () {
@@ -280,14 +267,14 @@ public class GuiLayerInitializer : Abstract {
 		}
 	}
 	
-	public int GetScore()
+	public int GetPoints()
 	{
-		return score;
+		return points.GetPoints();
 	}
 	
 	public int GetMoney()
 	{
-		return money;
+		return money.GetMoney();
 	}
 	
 	public int GetHP()
@@ -300,70 +287,26 @@ public class GuiLayerInitializer : Abstract {
 		return nullTime;
 	}
 	
-	public void AddOneMissionObject()
-	{
-		Vector3 pos;
-		GameObject newObject = (GameObject)Instantiate(FinalGUIMissionPlashka);
-		
-		pos=new Vector3(GlobalOptions.Vsizex-5,GlobalOptions.Vsizey-206-FinalMissionPlashkaArray.Count*3,zindex);
-		pos=GlobalOptions.NormalisePosRight(pos);
-		pos=GUIcamera.ScreenToWorldPoint(pos);
-		
-		pos.x-=newObject.renderer.bounds.extents.x;
-		pos.y-=(newObject.renderer.bounds.extents.y*2)*FinalMissionPlashkaArray.Count;
-		
-		newObject.transform.position=pos;
-		newObject.transform.parent=transform;
-		FinalMissionPlashkaArray.Add(newObject);
+	public void AddMission(Mission mission){
+		upNotifierController.AddMissionNotifier(mission);
+	}
+	
+	public void AddMissionFinished(Mission mission){
+		upNotifierController.AddMissionFinishedNotifier(mission);
+	}
+	
+	public void AddCurrentMission(MissionNotifier missionNotifier){
+		currentMissionsNotifierController.AddCurrentMissionNotifier(missionNotifier);
 	}
 	
 	private void InitSprites()
 	{
 		Vector3 pos;	
 		
-		//FinalGUI
-		//Pause Button
-		FinalButtonPause = (GameObject)Instantiate(FinalGUIButtonPause);
-		
-		pos=new Vector3(5,GlobalOptions.Vsizey-5,zindex);
-		pos=GlobalOptions.NormalisePos(pos);
-		pos=GUIcamera.ScreenToWorldPoint(pos);
-		
-		pos.x+=FinalButtonPause.renderer.bounds.extents.x;
-		pos.y-=FinalButtonPause.renderer.bounds.extents.y;
-		
-		FinalButtonPause.transform.position=pos;
-		FinalButtonPause.transform.parent=transform;
-		
-		
-		//Money Plashka
-		FinalMoneyPlashka = (GameObject)Instantiate(FinalGUIMoneyPlashka);
-		
-		pos=new Vector3(GlobalOptions.Vsizex+30,GlobalOptions.Vsizey-80,zindex);
-		pos=GlobalOptions.NormalisePosRight(pos);
-		pos=GUIcamera.ScreenToWorldPoint(pos);
-		
-		pos.x-=FinalMoneyPlashka.renderer.bounds.extents.x;
-		pos.y-=FinalMoneyPlashka.renderer.bounds.extents.y;
-		
-		FinalMoneyPlashka.transform.position=pos;
-		FinalMoneyPlashka.transform.parent=transform;
-		
-		//Score Plashka
-		FinalScorePlashka = (GameObject)Instantiate(FinalGUIScorePlashka);
-		
-		pos=new Vector3(GlobalOptions.Vsizex,GlobalOptions.Vsizey-5,zindex);
-		pos=GlobalOptions.NormalisePosRight(pos);
-		pos=GUIcamera.ScreenToWorldPoint(pos);
-		
-		pos.x-=FinalScorePlashka.renderer.bounds.extents.x;
-		pos.y-=FinalScorePlashka.renderer.bounds.extents.y;
-		
-		FinalScorePlashka.transform.position=pos;
-		FinalScorePlashka.transform.parent=transform;
+		//FinalGUI	
 		
 		//mission plashka
-		AddOneMissionObject();
+		//AddOneMissionObject();
 		//////////////////////////////////////////////////////////
 		
 		
@@ -432,19 +375,11 @@ public class GuiLayerInitializer : Abstract {
 		
 		SetLife(MaxLife);
 		
-		//Score
-		Score=(GameObject)Instantiate(GuiScore);
-		PosScore();
-		Score.transform.parent=transform;
 		//simply set score 
-		AddScore(0);
+		SetPoints(0);
 		
-		//Money
-		Money=(GameObject)Instantiate(GuiMoney);
-		PosMoney();
-		Money.transform.parent=transform;
 		//simply set money 
-		AddMoney(0);
+		SetMoney(0);
 		
 		//ScoreScale
 		ScoreScale=(GameObject)Instantiate(GuiScoreScale);
@@ -505,35 +440,6 @@ public class GuiLayerInitializer : Abstract {
 		Postal.transform.position=pos;
 		Postal.transform.parent=transform;
 		Postal.active=false;
-		
-		
-		//Meters
-		Meters = (GameObject)Instantiate(GuiMeters);
-		
-		pos=new Vector3(GlobalOptions.Vsizex/2,GlobalOptions.Vsizey-760,zindex);
-		pos=GlobalOptions.NormalisePos(pos);
-		pos=GUIcamera.ScreenToWorldPoint(pos);
-	
-		pos.y-=Meters.renderer.bounds.extents.y;
-		
-		Meters.transform.position=pos;
-		Meters.transform.parent=transform;
-		Meters.SetActiveRecursively(false);
-		
-		//Mission
-		Mission = (GameObject)Instantiate(GuiMission);
-		
-		pos=new Vector3(GlobalOptions.Vsizex/2,GlobalOptions.Vsizey-760,zindex+3);
-		pos=GlobalOptions.NormalisePos(pos);
-		pos=GUIcamera.ScreenToWorldPoint(pos);
-	
-		pos.y-=Mission.renderer.bounds.extents.y;
-		
-		Mission.transform.position=pos;
-		Mission.transform.parent=transform;
-		Mission.SetActiveRecursively(false);
-		
-		
 	}
 	
 	private void MakeVodka()
@@ -614,7 +520,6 @@ public class GuiLayerInitializer : Abstract {
 		if(Time.time-metersTime>2)
 		{
 			flagMeters=false;
-			HideMeters();
 		}
 	}
 	
@@ -624,7 +529,6 @@ public class GuiLayerInitializer : Abstract {
 		if(Time.time-missionTime>3)
 		{
 			flagMission=false;
-			HideMission();
 		}
 	}
 	
@@ -650,7 +554,7 @@ public class GuiLayerInitializer : Abstract {
 		if(Time.time-scoreTime>=playerScript.GetRealVelocityWithNoDeltaTime()/1000)
 		{
 			//так редко меняем счёт
-			AddScore(11*scoreScale);
+			AddPoints(11*scoreScale);
 			scoreTime=Time.time;
 		}
 	}
@@ -665,24 +569,25 @@ public class GuiLayerInitializer : Abstract {
 		}
 	}
 	
-	public void AddScore(int inscore)
+	public void AddPoints(int addPoints)
 	{
-		score+=inscore;
-		tk2dTextMesh textMesh;
-		textMesh = Score.GetComponent<tk2dTextMesh>();
-		textMesh.text = string.Format ("{0:00000000}", score);
-		textMesh.Commit();
-		//PosScore();
+		this.points.AddPoints(addPoints);
 	}
 	
-	public void AddMoney(int inscore)
+	public void AddMoney(int addMoney)
 	{
-		money+=inscore;
-		tk2dTextMesh textMesh;
-		textMesh = Money.GetComponent<tk2dTextMesh>();
-		textMesh.text = string.Format ("{0:00000}", money);
-		textMesh.Commit();
-		//PosMoney();
+		GlobalOptions.GetMissionEmmitter().NotifyCoinsCollected(addMoney);
+		this.money.AddMoney(addMoney);
+	}
+	
+	public void SetPoints(int points)
+	{
+		this.points.SetPoints(points);
+	}
+	
+	public void SetMoney(int money)
+	{
+		this.money.SetMoney(money);
 	}
 	
 	public void AddScoreScale(int inscore)
@@ -721,9 +626,6 @@ public class GuiLayerInitializer : Abstract {
 		}
 	}
 	
-	
-	
-	
 	public void AddPostal(){
 		ShowPostal();
 		postalTime=Time.time;
@@ -746,51 +648,9 @@ public class GuiLayerInitializer : Abstract {
 		flagMeters=true;
 	}
 	
-	public void AddMission(){
-		ShowMission();
-		missionTime=Time.time;
-		flagMission=true;
-	}
-	
 	private void ShowMeters(float inMeters)
 	{
-		Transform MetersScore=Meters.transform.FindChild("Score");
-		
-		tk2dTextMesh textMesh;
-		textMesh = MetersScore.gameObject.GetComponent<tk2dTextMesh>();
-		textMesh.text = string.Format ("{0}", inMeters);
-		textMesh.Commit();
-		
-		Meters.SetActiveRecursively(true);
-	}
-	
-	private void ShowMission()
-	{
-		Transform MissionName=Mission.transform.FindChild("Score");
-		
-		tk2dTextMesh textMesh;
-		textMesh = MissionName.gameObject.GetComponent<tk2dTextMesh>();
-		MissionTag missionTag=missionStack.Pop();
-		if(missionTag)
-		{
-			textMesh.text = missionTag.mainName;
-		}else
-		{
-			textMesh.text = "nothing";
-		}
-		textMesh.Commit();
-		
-		Mission.SetActiveRecursively(true);
-	}
-	
-	private void HideMeters()
-	{
-		Meters.SetActiveRecursively(false);
-	}
-	
-	private void HideMission()
-	{
-		Mission.SetActiveRecursively(false);
+		downNotifierController.AddMetersNotifier(string.Format ("{0}", inMeters));
 	}
 	
 	public void ShowGameOver()
@@ -826,23 +686,23 @@ public class GuiLayerInitializer : Abstract {
 		}
 	}
 	
-	private void PosScore(){
+	/*private void PosScore(){
 		Vector3 pos;
 		pos=new Vector3(GlobalOptions.Vsizex-20,GlobalOptions.Vsizey-60,zindex-1);
 		pos=GlobalOptions.NormalisePosRight(pos);
 		pos=GUIcamera.ScreenToWorldPoint(pos);
 		
 		Score.transform.position=pos;
-	}
+	}*/
 	
-	private void PosMoney(){
+	/*private void PosMoney(){
 		Vector3 pos;
 		pos=new Vector3(GlobalOptions.Vsizex-20,GlobalOptions.Vsizey-135,zindex-1);
 		pos=GlobalOptions.NormalisePosRight(pos);
 		pos=GUIcamera.ScreenToWorldPoint(pos);
 		
 		Money.transform.position=pos;
-	}
+	}*/
 	
 	private void PosScoreScale(){
 		Vector3 pos;

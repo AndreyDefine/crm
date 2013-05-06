@@ -26,17 +26,17 @@ public class ScreenGameOverControllerScript : Abstract,ScreenControllerToShow {
 			ButtonReplay.transform.parent=gameObject.transform;
 		}
 		
-		UpdateScore();
+		UpdatePoints();
 		UpdateMoney();
 			
 	}
 	
-	private void UpdateScore()
+	private void UpdatePoints()
 	{
-		int score=GlobalOptions.GetGuiLayer().GetScore();
+		int points=GlobalOptions.GetGuiLayer().GetPoints();
 		tk2dTextMesh textMesh;
 		textMesh = GuiScore.GetComponent<tk2dTextMesh>();
-		textMesh.text = string.Format ("{0:000000000}", score);
+		textMesh.text = string.Format ("{0:000000000}", points);
 		textMesh.Commit();
 	}
 	

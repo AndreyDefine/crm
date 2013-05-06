@@ -67,7 +67,6 @@ public class CharacterMarioC : Abstract {
 		
 		if(GlobalOptions.gameState==GameStates.GAME||GlobalOptions.gameState==GameStates.GAME_OVER)
 		{
-			Debug.Log ("Player");
 			AddAllTimes();
 			UpdateSmoothedMovementDirection();
 		

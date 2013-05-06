@@ -18,6 +18,19 @@ public class Abstract : MonoBehaviour {
             _singleTransform = value;
         }
     }
+	
+	private Renderer _singleRenderer = null;
+    public Renderer singleRenderer {
+        get {
+            if (_singleRenderer == null) {
+                _singleRenderer = renderer;
+            }
+            return _singleRenderer;
+        }
+        protected set {
+            _singleRenderer = value;
+        }
+    }
 }
 
 

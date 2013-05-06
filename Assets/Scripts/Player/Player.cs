@@ -47,7 +47,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	private float xSmexcontrol1;
 	
-	private float oldMetersz,allMeters;
+	private float oldMetersz,allMeters,oneMeterz;
 	
 	private CharacterMarioC characterMarioC;
 	
@@ -103,6 +103,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		VelocityMushroom=1;
 		xSmexcontrol1=0;
 		oldMetersz=0;
+		oneMeterz=0;
 		allMeters=0;
 		
 		posx=0;
@@ -137,6 +138,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		prevPathNumber=0;
 		xSmexcontrol1=0;
 		oldMetersz=0;
+		oneMeterz=0;
 		allMeters=0;
 		posx=0;
 		UnMakePropeller();
@@ -401,6 +403,12 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		
 		PlaceCharacter(new Vector3(centerXandYandAngle.x,PlayerFirstPos.y,centerXandYandAngle.z));
 		
+		oneMeterz+=smex.z/2;
+		
+		if(oneMeterz>1){//TODO: check this
+			oneMeterz-=1f;
+			GlobalOptions.GetMissionEmmitter().NotifyMetersRunned(1);
+		}
 		//meters;
 		oldMetersz+=smex.z;
 		if(oldMetersz>200*2)

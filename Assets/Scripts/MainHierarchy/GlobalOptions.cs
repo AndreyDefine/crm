@@ -64,7 +64,9 @@ public class GlobalOptions {
 	private static GameObject player=null;
 	private static Player playerScript;
 	
-	private static GuiLayerInitializer GuiLayer;
+	private static GuiLayerInitializer guiLayerInitializer;
+	private static MissionEmmitter missionEmmitter;
+	
 	public static Music MainThemeMusicScript;
 	public static float startMusicPitch;
 	
@@ -199,11 +201,19 @@ public class GlobalOptions {
 	}
 	
 	public static GuiLayerInitializer GetGuiLayer(){
-		if(!GuiLayer)
+		if(!guiLayerInitializer)
 		{
-			GuiLayer=GameObject.Find("/ScreenGame/GUILayer").GetComponent<GuiLayerInitializer>();
+			guiLayerInitializer=GameObject.Find("/ScreenGame/GUILayer").GetComponent<GuiLayerInitializer>();
 		}
-		return GuiLayer;
+		return guiLayerInitializer;
+	}
+	
+	public static MissionEmmitter GetMissionEmmitter(){
+		if(!missionEmmitter)
+		{
+			missionEmmitter=GameObject.Find("/MissionEmmitter").GetComponent<MissionEmmitter>();
+		}
+		return missionEmmitter;
 	}
 	
 	public static int GetCurLevelOpened()
@@ -251,8 +261,8 @@ public class GlobalOptions {
 	}
 	
 	
-	//Level Start Score
-	public static int GetLevelStartScore()
+	//Level Start Points
+	public static int GetLevelStartPoints()
 	{
 		return 0;
 	}

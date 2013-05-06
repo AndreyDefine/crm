@@ -18,16 +18,21 @@ public class SwypeDetector : SpriteTouch {
 		touchPriority=3;
 		swallowTouches=false;
         init();
-		Epsilonxx=40*GlobalOptions.scaleFactorx;
-		//Epsilonxy=6*GlobalOptions.scaleFactory;
 		
-		//Epsilonyx=6*GlobalOptions.scaleFactorx;
-		Epsilonyy=40*GlobalOptions.scaleFactory;
-		
-		if(GlobalOptions.scaleFactorx<0.5)
-		{
-			Epsilonxx=40*GlobalOptions.scaleFactorx*2;
-			Epsilonyy=40*GlobalOptions.scaleFactory*2;
+		//1 дюйм = 2.54 см
+		//хотим чтобы свайп был от 0.5 см
+		if (Screen.dpi != 0f) {
+			Epsilonxx = Epsilonyy = Screen.dpi*0.2f;
+        }
+		else{
+			Epsilonxx=30*GlobalOptions.scaleFactorx;
+			Epsilonyy=30*GlobalOptions.scaleFactory;
+			
+			if(GlobalOptions.scaleFactorx<0.5)
+			{
+				Epsilonxx=30*GlobalOptions.scaleFactorx*2;
+				Epsilonyy=30*GlobalOptions.scaleFactory*2;
+			}
 		}
     }
 	
