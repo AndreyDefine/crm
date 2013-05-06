@@ -7,7 +7,7 @@ public class BaseOneNumberMission : Mission {
 	
 	public override string GetProgressRepresentation ()
 	{
-		return string.Format("{0}/{1}",currentNumber,needNumber);
+		return string.Format("{0}",needNumber-currentNumber);
 	}
 	
 	public void AddNumber(int addNumber){
