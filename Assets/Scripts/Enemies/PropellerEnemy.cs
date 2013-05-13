@@ -7,7 +7,7 @@ public class PropellerEnemy : AbstractEnemy {
 	
 	public override void OnHit(Collider other)
 	{
-		GuiLayer.AddPropeller();
+		//GuiLayer.AddPropeller();
 		PlayClipSound();
 		//audio.Play();
 		MakeInactive();

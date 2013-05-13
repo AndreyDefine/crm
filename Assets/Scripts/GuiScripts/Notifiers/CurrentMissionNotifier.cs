@@ -12,8 +12,10 @@ public class CurrentMissionNotifier : BaseNotifier, IMissionListener
 	public void MissionProgressChanged (Mission mission)
 	{
 		SetText(mission.GetProgressRepresentation());
-		if(missionIconPlace.GetComponent<Animation> () == null||!missionIconPlace.animation.isPlaying){
+		if(missionIconPlace.GetComponent<Animation> () == null){
 			AnimationFactory.Attention(missionIconPlace,0.5f,1.2f,"Attention");
+		}else if(!missionIconPlace.animation.isPlaying){
+			missionIconPlace.animation.Play("Attention");
 		}
 	}
 	
@@ -23,7 +25,6 @@ public class CurrentMissionNotifier : BaseNotifier, IMissionListener
 	
 	public void MissionFinished (Mission mission)
 	{
-		GlobalOptions.GetGuiLayer().AddMissionFinished(mission);
 		FlyOut();
 	}
 	

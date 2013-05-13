@@ -9,26 +9,13 @@ public class UpNotifierController : BaseNotifierController {
 	//mission notifier
 	public MissionNotifier missionNotifierPrefab;
 	
-	public MissionFinishedNotifier missionFinishedNotifierPrefab;
-	
 	private MissionNotifier GetMissionNotifier(){
 		MissionNotifier notifier = Instantiate(missionNotifierPrefab) as MissionNotifier;	
 		return notifier;
 	}
 	
-	private MissionFinishedNotifier GetMissionFinishedNotifier(){
-		MissionFinishedNotifier notifier = Instantiate(missionFinishedNotifierPrefab) as MissionFinishedNotifier;	
-		return notifier;
-	}
-	
 	public void AddMissionNotifier(Mission mission){
 		MissionNotifier notifier = GetMissionNotifier();
-		notifier.SetMission(mission);
-		AddNotifier(notifier);
-	}
-	
-	public void AddMissionFinishedNotifier(Mission mission){
-		MissionFinishedNotifier notifier = GetMissionFinishedNotifier();
 		notifier.SetMission(mission);
 		AddNotifier(notifier);
 	}

@@ -7,7 +7,7 @@ public class MushroomEnemy : AbstractEnemy {
 	
 	public override void OnHit(Collider other)
 	{
-		GuiLayer.AddMushroom();
+		//GuiLayer.AddMushroom();
 		PlayClipSound();
 		//audio.Play();
 		MakeInactive();

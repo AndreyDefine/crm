@@ -7,7 +7,7 @@ public class MissionEmmitters : Abstract, IMissionEmmitter
 	
 	void Awake ()
 	{
-		//PlayerPrefs.DeleteAll();Debug.LogWarning("PlayerPrefs.DeleteAll()");//TODO: delete this
+		PlayerPrefs.DeleteAll();Debug.LogWarning("PlayerPrefs.DeleteAll()");//TODO: delete this
 	}
 	
 	
@@ -20,7 +20,6 @@ public class MissionEmmitters : Abstract, IMissionEmmitter
 	public ArrayList GetCurrentMissions(){
 		ArrayList currentMissions = new ArrayList();
 		for(int i=0;i<missionEmmitters.Length;i++){
-			Debug.LogWarning(missionEmmitters[i].GetCurrentMissions().Count);
 			currentMissions.AddRange(missionEmmitters[i].GetCurrentMissions());
 		}
 		return currentMissions;
