@@ -140,7 +140,7 @@ public class GuiLayerInitializer : Abstract {
 		addToLifeTime=Time.time;
 		AddTimer(0);
 		StopVodka();
-		AddToLife(0);
+		AddToLife(0,null);
 		GlobalOptions.SetScoreScale(1);
 		HideQuestion();
 		HidePostal();
