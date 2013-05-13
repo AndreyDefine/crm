@@ -15,6 +15,7 @@ public class CharacterMarioC : Abstract {
 	private bool flying=false;
 	private bool movingToFlyGround=false;
 	private float vsletAcceleration=10;
+	private Transform curStumbleTransform=null;
 	//private bool downing=false;
 	
 	private bool freezed=false;
@@ -40,6 +41,7 @@ public class CharacterMarioC : Abstract {
 	
 	private CharacterController controller;
 	// Update is called once per frame
+	
 	
 	private void UpdateSmoothedMovementDirection ()
 	{
@@ -99,8 +101,7 @@ public class CharacterMarioC : Abstract {
 			
 			if(stumble&&!flying&&!groundingFlag&&moveforward>0)
 			{
-				Debug.Log ("StumbleMario");
-				playerScript.Stumble();
+				playerScript.Stumble(curStumbleTransform);
 			}
 			
 			// We are in jump mode but just became grounded
@@ -317,5 +318,22 @@ public class CharacterMarioC : Abstract {
 	public void LeftRight(float inx)
 	{
 		forcex=inx;
+	}
+	
+	//Collision For Stumble
+	void OnControllerColliderHit (ControllerColliderHit hit)
+	{            
+        // We dont want to push objects below us
+        //if (hit.moveDirection.y < -0.3) 
+        //    return;
+        
+        // Calculate push direction from move direction, 
+        // we only push objects to the sides never up and down
+        Vector3 pushDir  = new Vector3 (hit.moveDirection.x, 0, hit.moveDirection.z);
+		
+		if(pushDir.x!=0||pushDir.z!=0)
+		{
+			curStumbleTransform=hit.collider.transform;
+		}
 	}
 }

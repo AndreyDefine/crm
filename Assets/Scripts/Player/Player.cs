@@ -644,14 +644,12 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		}
 	}
 	
-	public void Stumble()
+	public void Stumble(Transform inTransform)
 	{
-		//bearAnimation.Stumble();
-		Debug.Log ("Stumble Player");
 		MoveCharacterControllerLeftRight(0);
 		PathNumber=prevPathNumber;
 		PathChanging=true;
-		guiLayer.AddToLife(-3,null);
+		guiLayer.AddToLife(-3,inTransform);
 		guiLayer.AddHeadStars();
 	}
 	

@@ -141,7 +141,6 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	
 	public void AddAllObjectsIntoPulls()
 	{
-		Debug.Log ("ObjectsAddedToPull");
 		//если раннер
 		uniqueElementFactory.DestroyPullObjects();
 		boostElementFactory.DestroyPullObjects();

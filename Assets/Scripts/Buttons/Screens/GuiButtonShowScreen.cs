@@ -21,6 +21,10 @@ public class GuiButtonShowScreen : SpriteTouch {
 	}
 	
 	virtual protected void MakeOnTouch(){
+		if(screenToShow=="ScreenShop"||screenToShow=="ScreenSettings"||screenToShow=="ScreenMap"||screenToShow=="ScreenKniga")
+		{
+			FlurryPlugin.FlurryLogEvent(screenToShow);
+		}
 		screenLoader.LoadScreenByName(screenToShow);
 	}
 	

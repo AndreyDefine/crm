@@ -168,7 +168,7 @@ public class AbstractElementFactory: Abstract{
 		//ничего не нашли
 		if(!newTerrain)
 		{
-			Debug.Log ("Instantiate");
+			//Debug.Log ("Instantiate");
 			for(i=0;i<terrain1.Length;i++)
 			{
 				//нашли
