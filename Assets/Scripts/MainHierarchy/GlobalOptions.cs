@@ -65,7 +65,7 @@ public class GlobalOptions {
 	private static Player playerScript;
 	
 	private static GuiLayerInitializer guiLayerInitializer;
-	private static MissionEmmitter missionEmmitter;
+	private static MissionEmmitters missionEmmitters;
 	
 	public static Music MainThemeMusicScript;
 	public static float startMusicPitch;
@@ -208,12 +208,12 @@ public class GlobalOptions {
 		return guiLayerInitializer;
 	}
 	
-	public static MissionEmmitter GetMissionEmmitter(){
-		if(!missionEmmitter)
+	public static MissionEmmitters GetMissionEmmitters(){
+		if(!missionEmmitters)
 		{
-			missionEmmitter=GameObject.Find("/MissionEmmitter").GetComponent<MissionEmmitter>();
+			missionEmmitters=GameObject.Find("/MissionEmmitters").GetComponent<MissionEmmitters>();
 		}
-		return missionEmmitter;
+		return missionEmmitters;
 	}
 	
 	public static int GetCurLevelOpened()

@@ -407,7 +407,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		
 		if(oneMeterz>1){//TODO: check this
 			oneMeterz-=1f;
-			GlobalOptions.GetMissionEmmitter().NotifyMetersRunned(1);
+			GlobalOptions.GetMissionEmmitters().NotifyMetersRunned(1);
 		}
 		//meters;
 		oldMetersz+=smex.z;

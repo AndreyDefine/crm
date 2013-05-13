@@ -4,10 +4,9 @@ using System.Collections;
 public class CurrentMissionsSerializer
 {
 	
-	public static string CURRENT_MISSIONS_TAG = "current_missions";
 	public static string CURRENT_MISSION_DATA_TAG = "current_mission_data_";
 	
-	public static void SaveCurrentMissions (ArrayList currentMissions)
+	public static void SaveCurrentMissions (ArrayList currentMissions, string tag)
 	{
 		string currentMissionsData = "";//TODO use stringBuilder?
 		for (int i=0; i<currentMissions.Count; i++) {
@@ -19,7 +18,7 @@ public class CurrentMissionsSerializer
 			//Сохраняем данные по одной миссии
 			SaveMissionData(mission);
 		}
-		PlayerPrefs.SetString (CURRENT_MISSIONS_TAG, currentMissionsData);
+		PlayerPrefs.SetString (tag, currentMissionsData);
 	}
 	
 	public static void SaveMissionData(Mission mission){
@@ -34,10 +33,10 @@ public class CurrentMissionsSerializer
 		return PlayerPrefs.GetString(CURRENT_MISSION_DATA_TAG+missionId,"");
 	}
 	
-	public static Hashtable GetCurrentMissionsKeyData ()
+	public static Hashtable GetCurrentMissionsKeyData (string tag)
 	{
 		Hashtable currentMissionsKeyData = new Hashtable ();
-		string currentMissionsData = PlayerPrefs.GetString (CURRENT_MISSIONS_TAG, "");
+		string currentMissionsData = PlayerPrefs.GetString (tag, "");
 		if (!currentMissionsData.Equals ("")) {
 			char[] splitData = new char[] { '|' };
 			string[] currentMissions = currentMissionsData.Split (splitData);

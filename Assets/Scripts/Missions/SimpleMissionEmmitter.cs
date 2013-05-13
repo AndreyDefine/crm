@@ -1,24 +1,25 @@
 using UnityEngine;
 using System.Collections;
 
-public class MissionEmmitter : Abstract, IMissionListener
+public class SimpleMissionEmmitter : Abstract, IMissionEmmitter, IMissionListener
 {
-	private static string MISSION_FINISHED_TAG="mission_finished_";
-	private static int MISSIONS_MAX_COUNT = 4;
-	private static int MISSION_RESPAUN_TIME = 8;
+	public string misionFinishedTag;
+	public int missionRespaunTime;
+	public int missionMaxCount;
 	public Mission[] missions;
 	private ArrayList availableMissionsPrefabs = new ArrayList();
 	Hashtable prefabKeyHashTable = new Hashtable();
 	private ArrayList currentMissions = new ArrayList();
+	
 	float curTime;
-
+	
 	void Start ()
 	{
-		PlayerPrefs.DeleteAll();//TODO: delete this
+		//PlayerPrefs.DeleteAll();//TODO: delete this
 		curTime = Time.time;
 		
 		//Ищем только миссии, которые еще не выполнялись и текущие тоже ищем
-		Hashtable currentMissionsKeyData = CurrentMissionsSerializer.GetCurrentMissionsKeyData();
+		Hashtable currentMissionsKeyData = CurrentMissionsSerializer.GetCurrentMissionsKeyData(misionFinishedTag+"data_");
 		for(int i=0;i<missions.Length;i++){
 			Mission missionPrefab = missions[i];
 			string id = missionPrefab.name;
@@ -37,11 +38,11 @@ public class MissionEmmitter : Abstract, IMissionListener
 	}
 	
 	public bool IsMissionFinished(string id){
-		return PlayerPrefs.GetInt(MISSION_FINISHED_TAG+id,0)!=0;
+		return PlayerPrefs.GetInt(misionFinishedTag+id,0)!=0;
 	}
 	
 	public void SetMissionFinished(string id){
-		PlayerPrefs.SetInt(MISSION_FINISHED_TAG+id,1);
+		PlayerPrefs.SetInt(misionFinishedTag+id,1);
 	}
 		
 	// Update is called once per frame
@@ -52,8 +53,8 @@ public class MissionEmmitter : Abstract, IMissionListener
 			return;
 		}
 		
-		if (Time.time - curTime > MISSION_RESPAUN_TIME) {
-			if(currentMissions.Count<MISSIONS_MAX_COUNT&&availableMissionsPrefabs.Count!=0){
+		if (Time.time - curTime > missionRespaunTime) {
+			if(currentMissions.Count<missionMaxCount&&availableMissionsPrefabs.Count!=0){
 				AddOneMissionObject ();
 			}
 			curTime = Time.time;
@@ -67,7 +68,7 @@ public class MissionEmmitter : Abstract, IMissionListener
 		Mission missionPrefab = (Mission)availableMissionsPrefabs[randomIndex];
 		Mission mission = InstantiateMission(missionPrefab);
 		currentMissions.Add(mission);
-		CurrentMissionsSerializer.SaveCurrentMissions(currentMissions);
+		CurrentMissionsSerializer.SaveCurrentMissions(currentMissions, misionFinishedTag+"data_");
 		GlobalOptions.GetGuiLayer().AddMission(mission);
 		availableMissionsPrefabs.Remove(missionPrefab);
 	}
@@ -79,13 +80,17 @@ public class MissionEmmitter : Abstract, IMissionListener
 		mission.SetId(id);
 		return mission;
 	}
-	
+
 	public void NotifyCoinsCollected(int coins){
 		ArrayList missions = GetActiveCurrentMissions();
 		for(int i=0;i<missions.Count;i++){
 			Mission mission = (Mission)missions[i];
 			mission.NotifyCoinsCollected(coins);
 		}
+	}
+	
+	public ArrayList GetCurrentMissions(){
+		return currentMissions;
 	}
 	
 	public void NotifyMetersRunned(int meter){
@@ -106,15 +111,11 @@ public class MissionEmmitter : Abstract, IMissionListener
 		return activeMissions;	
 	}
 	
-	public ArrayList GetCurrentMissions(){
-		return currentMissions;
-	}
-	
 	public void MissionFinished (Mission mission)
 	{
 		SetMissionFinished(mission.GetId());
 		currentMissions.Remove(mission);
-		CurrentMissionsSerializer.SaveCurrentMissions(currentMissions);
+		CurrentMissionsSerializer.SaveCurrentMissions(currentMissions, misionFinishedTag+"data_");
 		CurrentMissionsSerializer.RemoveMissionData(mission);
 	}
 	

@@ -492,7 +492,7 @@ public class GuiLayerInitializer : Abstract {
 	
 	public void AddMoney(int addMoney)
 	{
-		GlobalOptions.GetMissionEmmitter().NotifyCoinsCollected(addMoney);
+		GlobalOptions.GetMissionEmmitters().NotifyCoinsCollected(addMoney);
 		this.money.AddMoney(addMoney);
 	}
 	
