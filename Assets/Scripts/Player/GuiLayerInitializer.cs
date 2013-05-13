@@ -43,7 +43,6 @@ public class GuiLayerInitializer : Abstract {
 	
 	private float Vsizex,Vsizey;
 	private float nullTime;
-	private float oldTime;
 	private int curLife;
 	
 	private GameObject curStrobile;
@@ -107,7 +106,6 @@ public class GuiLayerInitializer : Abstract {
 		curStrobile=null;
 		curLife=MaxLife;
 		nullTime=0;
-		oldTime=nullTime;
 		flagHeadStars=false;
 		flagGameOver=false;
 		scoreTime=Time.time;
