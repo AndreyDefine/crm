@@ -14,7 +14,7 @@ public class MissionEmmitter : Abstract, IMissionListener
 
 	void Start ()
 	{
-		//PlayerPrefs.DeleteAll();//TODO: delete this
+		PlayerPrefs.DeleteAll();//TODO: delete this
 		curTime = Time.time;
 		
 		//Ищем только миссии, которые еще не выполнялись и текущие тоже ищем

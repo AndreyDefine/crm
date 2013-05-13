@@ -3,13 +3,20 @@ using System.Collections;
 
 public class Money : Abstract {
 
-	public tk2dTextMesh tk2dTextMeshMoney;
+	public CrmFont crmFont;
 	private int money;
+	
+	void Awake(){
+		Vector3 pos=new Vector3(GlobalOptions.Vsizex-15,GlobalOptions.Vsizey-80,singleTransform.position.z);
+		pos=GlobalOptions.NormalisePos(pos);
+		pos=Cameras.GetGUICamera().ScreenToWorldPoint(pos);
+			
+		singleTransform.position=pos;	
+	}
 	
 	public void AddMoney(int addMoney){
 		this.money+=addMoney;
-		tk2dTextMeshMoney.text = string.Format ("{0:00000}", this.money);
-		tk2dTextMeshMoney.Commit();
+		crmFont.text = string.Format ("{0}", this.money);
 	}
 	
 	public void SetMoney(int money){

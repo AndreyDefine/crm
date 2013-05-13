@@ -5,7 +5,7 @@ using System.Collections;
 public class CurrentMissionNotifier : BaseNotifier, IMissionListener
 {
 	public Abstract missionIconPlace;
-	public tk2dTextMesh tk2dTextMeshProgress;
+	public CrmFont crmFont;
 	private MissionFlyingIco missionFlyingIco = null;
 	private Mission mission;
 	
@@ -18,8 +18,7 @@ public class CurrentMissionNotifier : BaseNotifier, IMissionListener
 	}
 	
 	private void SetText(string text){
-		tk2dTextMeshProgress.text = text;
-		tk2dTextMeshProgress.Commit();
+		crmFont.text = text;
 	}
 	
 	public void MissionFinished (Mission mission)

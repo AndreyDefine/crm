@@ -3,7 +3,7 @@ using System.Collections;
 
 public class UpNotifierController : BaseNotifierController {
 	int MAX_NOTIFIERS_TO_SHOW = 2;
-	float NOTIFIER_HEIGHT = 0.52f;
+	float NOTIFIER_HEIGHT = 0.396f;
 	float Z_INDEX_PER_POSITION = 0.15f;
 	
 	//mission notifier

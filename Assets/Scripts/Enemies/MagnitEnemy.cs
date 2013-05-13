@@ -2,12 +2,11 @@ using UnityEngine;
 using System.Collections;
 
 
-public class MagnitEnemy : AbstractEnemy {	
+public class MagnitEnemy : EnemyWithBoost {	
 	// Use this for initialization
-	
 	public override void OnHit(Collider other)
 	{
-		GuiLayer.AddMagnit();
+		GuiLayer.AddMagnit(boostPrefab);
 		PlayClipSound();
 		//audio.Play();
 		MakeInactive();

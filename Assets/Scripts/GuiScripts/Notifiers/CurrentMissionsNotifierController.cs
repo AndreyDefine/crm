@@ -51,23 +51,23 @@ public class CurrentMissionsNotifierController : BaseNotifierController {
 	
 	protected override Vector3 GetOutNotifierPlace(int position){
 		Vector3 outPosition;
-		outPosition = new Vector3 (GlobalOptions.Vsizex+5, GlobalOptions.Vsizey-205, -position*Z_INDEX_PER_POSITION);
+		outPosition = new Vector3 (GlobalOptions.Vsizex+5, GlobalOptions.Vsizey-105, -position*Z_INDEX_PER_POSITION);
 		outPosition = GlobalOptions.NormalisePos (outPosition);
 		outPosition = Cameras.GetGUICamera ().ScreenToWorldPoint (outPosition);
 		
 		outPosition.x += NOTIFIER_HEIGHT/2;
-		outPosition.y -= NOTIFIER_HEIGHT/2+NOTIFIER_HEIGHT*position+0.02f*position;
+		outPosition.y -= NOTIFIER_HEIGHT/2+NOTIFIER_HEIGHT*position+0.025f*position;
 		return outPosition;
 	}
 	
 	protected override Vector3 GetInNotifierPlace(int position){
 		Vector3 inPostion;
 		
-		inPostion = new Vector3 (GlobalOptions.Vsizex-15, GlobalOptions.Vsizey-205, -position*Z_INDEX_PER_POSITION);
+		inPostion = new Vector3 (GlobalOptions.Vsizex-15, GlobalOptions.Vsizey-105, -position*Z_INDEX_PER_POSITION);
 		inPostion = GlobalOptions.NormalisePos (inPostion);
 		inPostion = Cameras.GetGUICamera ().ScreenToWorldPoint (inPostion);
 			
-		inPostion.y -= NOTIFIER_HEIGHT/2+NOTIFIER_HEIGHT*position+0.02f*position;
+		inPostion.y -= NOTIFIER_HEIGHT/2+NOTIFIER_HEIGHT*position+0.025f*position;
 		inPostion.x -= NOTIFIER_HEIGHT/2;
 		
 		return inPostion;

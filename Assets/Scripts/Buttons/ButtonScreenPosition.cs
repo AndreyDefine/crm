@@ -13,6 +13,8 @@ public class ButtonScreenPosition : Abstract {
 	public float paddingLeft;
 	// Use this for initialization
 	void Awake () {
+		//Debug.Log(gameObject.name+" "+singleRenderer.bounds.extents.y);
+		//Debug.Break();
 		if(top&&bottom||right&&left){
 			Debug.LogError("check "+gameObject.name);
 		}

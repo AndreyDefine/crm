@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 
-public class MatreshkaEnemy : AbstractEnemy {	
+public class MatreshkaEnemy : EnemyWithBoost {	
 	// Use this for initialization
 	
 	public override void OnHit(Collider other)

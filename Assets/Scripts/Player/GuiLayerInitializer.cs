@@ -11,13 +11,8 @@ public class GuiLayerInitializer : Abstract {
 	public GameObject []GuiBottle;
 	public GameObject GuiLifeHeart;
 	public GameObject GuiScoreScale;
-	public GameObject GuiPostal;
-	public GameObject GuiMeters;
-	public GameObject GuiMission;
 	
 	//final
-	public Abstract pause;
-	
 	public Money money;
 	
 	public Points points;
@@ -28,6 +23,8 @@ public class GuiLayerInitializer : Abstract {
 	
 	public CurrentMissionsNotifierController currentMissionsNotifierController;
 	
+	public BoostNotifierController boostNotifierController;
+	
 	private ArrayList FinalMissionPlashkaArray=new ArrayList();
 
 	
@@ -37,11 +34,9 @@ public class GuiLayerInitializer : Abstract {
 	private GameObject ChangeControl;
 	
 	private GameObject BearFace;
-	private GameObject []Bottle;
 	private GameObject RightHUD;
 	private GameObject []LifeHeart;
 	private GameObject ScoreScale;
-	private GameObject Postal;
 
 	private GameObject Question;
 	private GameObject Star;
@@ -55,10 +50,10 @@ public class GuiLayerInitializer : Abstract {
 	private float curStarPos=250;
 	
 	private Player playerScript;
-	private int scoreScale,vodkaLevel;
+	private int scoreScale;
 	private bool flagVodka,flagMushroom,flagScoreScale,flagHeadStars,flagMagnit,flagPropeller;
 	private bool flagPostal,flagGameOver,flagMeters,flagMission;
-	private float VodkaTime,ShroomTime,ScoreScaleTime,scoreTime,headStarsTime,postalTime,GameOverTime,metersTime,missionTime,magnitTime,propellerTime,addToLifeTime;
+	private float ShroomTime,ScoreScaleTime,scoreTime,headStarsTime,postalTime,GameOverTime,metersTime,missionTime,propellerTime,addToLifeTime;
 	
 	float stopTime=0,startstopTime=0;//время остановки
 	
@@ -70,7 +65,6 @@ public class GuiLayerInitializer : Abstract {
 	{
 		if(startstopTime!=0)
 		{
-			VodkaTime+=stopTime;
 			ShroomTime+=stopTime;
 			ScoreScaleTime+=stopTime;
 			scoreTime+=stopTime;
@@ -78,7 +72,6 @@ public class GuiLayerInitializer : Abstract {
 			postalTime+=stopTime;
 			GameOverTime+=stopTime;
 			metersTime+=stopTime;
-			magnitTime+=stopTime;
 			propellerTime+=stopTime;
 			addToLifeTime+=stopTime;
 			stopTime=0;
@@ -88,7 +81,6 @@ public class GuiLayerInitializer : Abstract {
 	// Use this for initialization
 	void Start() {
 		StarsList=new ArrayList();
-		Bottle=new GameObject[4];
 		LifeHeart=new GameObject[5];
 		curStrobile=null;
 		GUIcamera = Cameras.GetGUICamera(); 
@@ -112,7 +104,6 @@ public class GuiLayerInitializer : Abstract {
 		oldTime=nullTime;
 		scoreTime=Time.time;
 		addToLifeTime=Time.time;
-		vodkaLevel=0;
 		scoreScale=GlobalOptions.GetScoreScale();
 		curLife=MaxLife;
 		
@@ -135,7 +126,6 @@ public class GuiLayerInitializer : Abstract {
 		curLife=MaxLife;
 		nullTime=0;
 		oldTime=nullTime;
-		vodkaLevel=0;
 		flagVodka=false;
 		flagMushroom=false;
 		flagScoreScale=false;
@@ -149,7 +139,7 @@ public class GuiLayerInitializer : Abstract {
 		scoreTime=Time.time;
 		addToLifeTime=Time.time;
 		AddTimer(0);
-		AddVodka(0);
+		StopVodka();
 		AddToLife(0);
 		AddScoreScale(-10);
 		HideQuestion();
@@ -167,17 +157,6 @@ public class GuiLayerInitializer : Abstract {
 			AddTimer(0.5f);
 			AddScoreForVelocity();
 			AddLifeForVelocity();
-			//уменьшаем водку
-			if(flagVodka)
-			{
-				MakeVodka();
-			}
-			
-			//уменьшаем magnit
-			if(flagMagnit)
-			{
-				MakeMagnit();
-			}
 			
 			//уменьшаем propeler
 			if(flagPropeller)
@@ -311,34 +290,9 @@ public class GuiLayerInitializer : Abstract {
 		
 		
 		// new HUD////////////////////////////////////////////////
-		//Bottle
-		float bottleRight;
-		Bottle[0] = (GameObject)Instantiate(GuiBottle[0]);
-		
-		pos=new Vector3(8,GlobalOptions.Vsizey-10,zindex+50);
-		pos=GlobalOptions.NormalisePos(pos);
-		pos=GUIcamera.ScreenToWorldPoint(pos);
-		
-		bottleRight=pos.x+Bottle[0].renderer.bounds.size.x;
-		
-		pos.x+=Bottle[0].renderer.bounds.extents.x;
-		pos.y-=Bottle[0].renderer.bounds.extents.y;
-		
-		Bottle[0].transform.position=pos;
-		
-		Bottle[0].transform.parent=transform;
-		
-		//other bottles
-		for (int i=1;i<GuiBottle.Length;i++)
-		{
-			Bottle[i] = (GameObject)Instantiate(GuiBottle[i]);
-			Bottle[i].transform.position=pos;
-			Bottle[i].active=false;
-			Bottle[i].transform.parent=transform;
-		}
 		
 		//BearFace
-		float bearFaceRight;
+		/*float bearFaceRight;
 		float bearFaceBottom;
 		BearFace = (GameObject)Instantiate(GuiBearFace);
 		
@@ -354,11 +308,11 @@ public class GuiLayerInitializer : Abstract {
 		bearFaceRight=pos.x+BearFace.renderer.bounds.extents.x;
 		
 		BearFace.transform.position=pos;
-		BearFace.transform.parent=transform;
+		BearFace.transform.parent=transform;*/
 		
 		//lifeindicator LifeHeart
 		//MakeStars
-		for(int i=0;i<LifeHeart.Length;i++)
+		/*for(int i=0;i<LifeHeart.Length;i++)
 		{
 			LifeHeart[i]=(GameObject)Instantiate(GuiLifeHeart);
 			pos=new Vector3(0,0,zindex-10);
@@ -371,7 +325,7 @@ public class GuiLayerInitializer : Abstract {
 			
 			LifeHeart[i].transform.position=pos;
 			LifeHeart[i].transform.parent=transform;
-		}
+		}*/
 		
 		SetLife(MaxLife);
 		
@@ -414,7 +368,7 @@ public class GuiLayerInitializer : Abstract {
 		ChangeControl.transform.parent=transform;
 		
 		//timer left coner up
-		Timer=(GameObject)Instantiate(GuiTimer);
+		/*Timer=(GameObject)Instantiate(GuiTimer);
 		//Timer.transform.localScale=GlobalOptions.NormaliseScale();
 		
 		pos=new Vector3(8,GlobalOptions.Vsizey-152,zindex-10);
@@ -425,45 +379,7 @@ public class GuiLayerInitializer : Abstract {
 		pos.x=bearFaceRight;
 		
 		Timer.transform.position=pos;
-		Timer.transform.parent=transform;
-		
-		//Postal
-		Postal = (GameObject)Instantiate(GuiPostal);
-		
-		pos=new Vector3(GlobalOptions.Vsizex/2,GlobalOptions.Vsizey-760,zindex);
-		pos=GlobalOptions.NormalisePos(pos);
-		pos=GUIcamera.ScreenToWorldPoint(pos);
-		
-		//pos.x-=Postal.renderer.bounds.extents.x;
-		pos.y-=Postal.renderer.bounds.extents.y;
-		
-		Postal.transform.position=pos;
-		Postal.transform.parent=transform;
-		Postal.active=false;
-	}
-	
-	private void MakeVodka()
-	{
-		if(Time.time-VodkaTime>3)
-		{
-			VodkaTime=Time.time;
-			AddVodka(-1);
-		}
-		//stop vodka
-		if(vodkaLevel==0)
-		{
-			flagVodka=false;
-			playerScript.UnMakeVodka();
-		}
-	}
-	
-	private void MakeMagnit()
-	{
-		if(Time.time-magnitTime>15)
-		{
-			flagMagnit=false;
-			playerScript.UnMakeMagnit();
-		}
+		Timer.transform.parent=transform;*/
 	}
 	
 	private void MakePropeller()
@@ -535,7 +451,7 @@ public class GuiLayerInitializer : Abstract {
 	
 	public void AddTimer(float inshag)
 	{
-		nullTime+=Time.deltaTime;
+		/*nullTime+=Time.deltaTime;
 		if(nullTime-oldTime>=inshag)
 		{
 			tk2dTextMesh textMesh;
@@ -546,7 +462,7 @@ public class GuiLayerInitializer : Abstract {
 			textMesh.text = string.Format ("{0:00}:{1:00}", min,sec);
 			textMesh.Commit();
 			oldTime=nullTime;
-		}
+		}*/
 	}
 	
 	public void AddScoreForVelocity()
@@ -608,22 +524,28 @@ public class GuiLayerInitializer : Abstract {
 		GlobalOptions.SetScoreScale(scoreScale);
 	}
 	
-	public void AddVodka(int inscore)
+	public void AddVodka(Boost boostPrefab)
 	{
-		if(vodkaLevel+inscore>=0&&vodkaLevel+inscore<Bottle.Length)
-		{
-			for (int i=0;i<Bottle.Length;i++){
-				Bottle[i].active=false;
-			}
-			vodkaLevel+=inscore;
-			Bottle[vodkaLevel].active=true;
-			if(vodkaLevel==Bottle.Length-1&&!flagVodka)
-			{
-				playerScript.MakeVodka();
-				flagVodka=true;
-				VodkaTime=Time.time;
-			}
-		}
+		boostNotifierController.AddBoostNotifier(boostPrefab);
+		playerScript.MakeVodka();
+		flagVodka=true;
+	}
+	
+	public void StopVodka(){
+		flagVodka=false;
+		playerScript.UnMakeVodka();	
+	}
+	
+	public void AddMagnit(Boost boostPrefab)
+	{
+		boostNotifierController.AddBoostNotifier(boostPrefab);
+		playerScript.MakeMagnit();
+		flagMagnit=true;
+	}
+	
+	public void StopMagnit(){
+		flagMagnit=false;
+		playerScript.UnMakeMagnit();	
 	}
 	
 	public void AddPostal(){
@@ -634,12 +556,12 @@ public class GuiLayerInitializer : Abstract {
 	
 	private void ShowPostal()
 	{
-		Postal.active=true;
+		//Postal.active=true;
 	}
 	
 	private void HidePostal()
 	{
-		Postal.active=false;
+		//Postal.active=false;
 	}
 	
 	public void AddMeters(float inMeters){
@@ -742,7 +664,7 @@ public class GuiLayerInitializer : Abstract {
 	}
 	
 	private void SetLife(int inlife){
-		int numberOfOnHearts=(int)((LifeHeart.Length+1)*((float)inlife/MaxLife));
+		/*int numberOfOnHearts=(int)((LifeHeart.Length+1)*((float)inlife/MaxLife));
 		for(int i=0;i<LifeHeart.Length;i++)
 		{
 			if(i>numberOfOnHearts-1)
@@ -753,7 +675,7 @@ public class GuiLayerInitializer : Abstract {
 			{
 				LifeHeart[i].active=true;
 			}
-		}
+		}*/
 	}
 	
 	public void AddMushroom()
@@ -763,12 +685,6 @@ public class GuiLayerInitializer : Abstract {
 		ShroomTime=Time.time;
 	}
 	
-	public void AddMagnit()
-	{
-		playerScript.MakeMagnit();
-		flagMagnit=true;
-		magnitTime=Time.time;
-	}
 	
 	public void AddPropeller()
 	{

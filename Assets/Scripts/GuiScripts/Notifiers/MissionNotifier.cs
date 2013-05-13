@@ -5,7 +5,7 @@ using System.Collections;
 public class MissionNotifier : BaseNotifier
 {
 	public Abstract missionIconPlace;
-	public tk2dTextMesh tk2dTextMeshTitle;
+	public CrmFont crmFont;
 	private Mission mission;
 	private MissionIco missionIco;
 	
@@ -28,8 +28,7 @@ public class MissionNotifier : BaseNotifier
 	}
 	
 	private void SetMissionText (string text){
-		tk2dTextMeshTitle.text = text;
-		tk2dTextMeshTitle.Commit();
+		crmFont.text = text;
 	}
 	
 	void Update(){

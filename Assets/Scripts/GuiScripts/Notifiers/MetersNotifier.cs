@@ -4,13 +4,12 @@ using System.Collections;
 
 public class MetersNotifier : BaseNotifier
 {
-	public tk2dTextMesh tk2dTextMeshTitle;
+	public CrmFont crmFont;
 	
 	private float flyOutTime;
 	
 	public void SetText (string text){
-		tk2dTextMeshTitle.text = text;
-		tk2dTextMeshTitle.Commit();
+		crmFont.text = text;
 	}
 	
 	void Update(){

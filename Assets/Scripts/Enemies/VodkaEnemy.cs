@@ -2,12 +2,12 @@ using UnityEngine;
 using System.Collections;
 
 
-public class VodkaEnemy : AbstractEnemy {	
+public class VodkaEnemy : EnemyWithBoost {	
 	// Use this for initialization
 	
 	public override void OnHit(Collider other)
 	{
-		GuiLayer.AddVodka(3);
+		GuiLayer.AddVodka(boostPrefab);
 		PlayClipSound();
 		//audio.Play();
 		MakeInactive();
