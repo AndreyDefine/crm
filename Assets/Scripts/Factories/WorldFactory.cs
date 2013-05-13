@@ -432,7 +432,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	
 		newObject = obstacleElementFactory.GetNewObjectWithName(marker.name);
 		
-		Debug.Log (marker.name);
+		//Debug.Log (marker.name);
 		
 		if(!newObject)
 		{

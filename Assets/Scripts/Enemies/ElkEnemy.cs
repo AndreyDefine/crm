@@ -7,7 +7,7 @@ public class ElkEnemy : AbstractEnemy {
 	
 	public override void OnHit(Collider other)
 	{
-		GuiLayer.AddToLife(-50);
+		GuiLayer.AddToLife(-50, singleTransform);
 		GuiLayer.AddHeadStars();
 		PlayClipSound();
 		if(playerScript.isVodka())

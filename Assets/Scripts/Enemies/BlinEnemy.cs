@@ -8,7 +8,7 @@ public class BlinEnemy : AbstractEnemy {
 	public override void OnHit(Collider other)
 	{
 		//+1 к жизни
-		GuiLayer.AddToLife(5);
+		GuiLayer.AddToLife(5,null);
 		PlayClipSound();
 		MakeInactive();
 	}

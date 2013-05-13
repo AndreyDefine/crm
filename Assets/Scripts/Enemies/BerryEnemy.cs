@@ -7,7 +7,7 @@ public class BerryEnemy : AbstractEnemy {
 	
 	public override void OnHit(Collider other)
 	{
-		GuiLayer.AddToLife(1);
+		GuiLayer.AddToLife(1,singleTransform);
 		PlayClipSound();
 		MakeInactive();
 	}

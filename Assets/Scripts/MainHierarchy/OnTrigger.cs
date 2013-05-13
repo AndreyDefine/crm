@@ -19,5 +19,15 @@ public class OnTrigger : Abstract {
             obj.OnExit(collider);
 		}
 	}
+	
+	void OnCollisionEnter(Collision collision) {
+        // Debug-draw all contact points and normals
+		ContactPoint []contact=collision.contacts;
+		int i;
+        for (i=0;i<contact.Length;i++) {
+			Debug.Log ("Contact");
+            Debug.DrawRay(contact[i].point, contact[i].normal, Color.white);
+        }
+    }
 
 }
