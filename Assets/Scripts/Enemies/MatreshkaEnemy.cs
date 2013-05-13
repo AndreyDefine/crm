@@ -7,7 +7,7 @@ public class MatreshkaEnemy : EnemyWithBoost {
 	
 	public override void OnHit(Collider other)
 	{
-		GuiLayer.AddScoreScale(1);
+		GuiLayer.AddX2(boostPrefab);
 		PlayClipSound();
 		//audio.Play();
 		MakeInactive();

@@ -141,7 +141,7 @@ public class GuiLayerInitializer : Abstract {
 		AddTimer(0);
 		StopVodka();
 		AddToLife(0);
-		AddScoreScale(-10);
+		GlobalOptions.SetScoreScale(1);
 		HideQuestion();
 		HidePostal();
 		
@@ -167,12 +167,6 @@ public class GuiLayerInitializer : Abstract {
 			if(flagMushroom)
 			{
 				MakeMushroom();
-			}
-			
-			//уменьшаем матрёшку
-			if(flagScoreScale)
-			{
-				MakeScoreScale();
 			}
 			
 			//уменьшаем звёздочки надо головой
@@ -339,8 +333,6 @@ public class GuiLayerInitializer : Abstract {
 		ScoreScale=(GameObject)Instantiate(GuiScoreScale);
 		PosScoreScale();
 		ScoreScale.transform.parent=transform;
-		//simply set money 
-		AddScoreScale(0);
 		
 		//Question
 		Question = (GameObject)Instantiate(GuiQuestion);
@@ -410,7 +402,7 @@ public class GuiLayerInitializer : Abstract {
 		}
 	}
 	
-	private void MakeScoreScale()
+	/*private void MakeScoreScale()
 	{
 		//stop mushroom
 		if(Time.time-ScoreScaleTime>10)
@@ -418,7 +410,7 @@ public class GuiLayerInitializer : Abstract {
 			flagScoreScale=false;
 			AddScoreScale(-1);
 		}
-	}
+	}*/
 	
 	private void MakePostal()
 	{
@@ -506,22 +498,15 @@ public class GuiLayerInitializer : Abstract {
 		this.money.SetMoney(money);
 	}
 	
-	public void AddScoreScale(int inscore)
+	public void AddX2(Boost boostPrefab)
 	{
-		if(inscore>0)
-		{
-			flagScoreScale=true;
-			ScoreScaleTime=Time.time;
-		}
-		scoreScale+=inscore;
-		scoreScale=scoreScale>2?2:scoreScale;
-		scoreScale=scoreScale<1?1:scoreScale;
-		tk2dTextMesh textMesh;
-		textMesh = ScoreScale.GetComponent<tk2dTextMesh>();
-		textMesh.text = string.Format ("X{0:0}", scoreScale);
-		textMesh.Commit();
+		boostNotifierController.AddBoostNotifier(boostPrefab);
 		//PosScoreScale();
-		GlobalOptions.SetScoreScale(scoreScale);
+		GlobalOptions.SetScoreScale(2);
+	}
+	
+	public void StopX2(){
+		GlobalOptions.SetScoreScale(1);
 	}
 	
 	public void AddVodka(Boost boostPrefab)

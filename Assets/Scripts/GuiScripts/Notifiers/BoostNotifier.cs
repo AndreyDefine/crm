@@ -43,6 +43,9 @@ public class BoostNotifier : BaseNotifier,IBoostListener
 		if(boost.GetType()==typeof(MagnitBoost)){
 			GlobalOptions.GetGuiLayer().StopMagnit();
 		}
+		if(boost.GetType()==typeof(X2Boost)){
+			GlobalOptions.GetGuiLayer().StopX2();
+		}
 		Destroy(boost.gameObject);
 	}
 	

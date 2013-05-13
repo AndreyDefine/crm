@@ -8,7 +8,6 @@ public class PostalEnemy : AbstractEnemy {
 	public override void OnHit(Collider other)
 	{
 		GuiLayer.AddMoney(50);
-		GuiLayer.AddScoreScale(1);
 		GuiLayer.AddPostal();
 		PlayClipSound();
 		MakeInactive();
