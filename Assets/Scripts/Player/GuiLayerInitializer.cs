@@ -472,7 +472,7 @@ public class GuiLayerInitializer : Abstract {
 		if(Time.time-addToLifeTime>=playerScript.GetRealVelocityWithNoDeltaTime())
 		{
 			//так редко меняем счёт
-			AddToLife(1);
+			AddToLife(1,null);
 			addToLifeTime=Time.time;
 		}
 	}
@@ -630,7 +630,7 @@ public class GuiLayerInitializer : Abstract {
 		curLife=curLife<0?0:curLife;
 	}
 	
-	public void AddToLife(int inlife){
+	public void AddToLife(int inlife,Transform inTransform){
 		
 		int oldlife=curLife;
 		//препятствие и водка
@@ -641,6 +641,22 @@ public class GuiLayerInitializer : Abstract {
 		if(curLife<=0&&oldlife>0)
 		{
 			ShowGameOver();
+			string DeadEvent;
+			if(inTransform)
+			{
+				DeadEvent="Dead ";
+				while(inTransform)
+				{
+					DeadEvent+="\\"+inTransform.name;
+					inTransform=inTransform.parent;
+				}
+			}
+			else
+			{
+				DeadEvent="Dead";
+			}
+			Debug.Log(DeadEvent);
+			FlurryPlugin.FlurryLogEvent(DeadEvent);
 		}
 		curLife=curLife<0?0:curLife;
 		curLife=curLife>MaxLife?MaxLife:curLife;

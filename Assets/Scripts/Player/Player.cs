@@ -651,7 +651,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		MoveCharacterControllerLeftRight(0);
 		PathNumber=prevPathNumber;
 		PathChanging=true;
-		guiLayer.AddToLife(-3);
+		guiLayer.AddToLife(-3,null);
 		guiLayer.AddHeadStars();
 	}
 	
