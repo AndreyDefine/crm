@@ -29,7 +29,7 @@ if(pos>0)
 {
 	pos/=100;
 	pos*=pos;
-	//v.vertex.y -= pos * 5;
+	v.vertex.y -= pos * 5;
 	//v.vertex.x += pos * 10*curpos;
 }
   
