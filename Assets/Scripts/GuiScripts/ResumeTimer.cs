@@ -9,12 +9,12 @@ public class ResumeTimer : Abstract {
 	private int curTime;
 	
 	void Start(){
-		Vector3 pos=new Vector3(GlobalOptions.Vsizex/2,GlobalOptions.Vsizey-paddingTop,singleTransform.position.z);
+		Vector3 pos=new Vector3(GlobalOptions.Vsizex/2,GlobalOptions.Vsizey-paddingTop,1f);
 		pos=GlobalOptions.NormalisePos(pos);
 		pos=Cameras.GetGUICamera().ScreenToWorldPoint(pos);
 			
 		//pos.x = 0f;
-		pos.z = singleTransform.position.z;
+		pos.z = 3f;
 		singleTransform.position=pos;
 	}
 	
