@@ -25,6 +25,8 @@ public class CurrentMissionNotifier : BaseNotifier, IMissionListener
 	
 	public void MissionFinished (Mission mission)
 	{
+		tk2dSprite sprite = GetComponent<tk2dSprite>();
+		sprite.color = new Color(0f,1f,0f,sprite.color.a);
 		FlyOut();
 	}
 	

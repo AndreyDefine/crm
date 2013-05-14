@@ -3,7 +3,6 @@ using System.Collections;
 
 public class GuiLayerInitializer : Abstract {
 	public GameObject GuiTimer;
-	public GameObject GuiQuestion;
 	public GameObject GuiStar;
 	public GameObject GuiChangeControl;
 	

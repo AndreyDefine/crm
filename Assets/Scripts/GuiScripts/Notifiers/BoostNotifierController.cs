@@ -17,7 +17,7 @@ public class BoostNotifierController : BaseNotifierController {
 	public void AddBoostNotifier(Boost boostPrefab){
 		for(int i=0;i<notifiersInProgress.Count;i++){
 			Boost notifierBoost = ((BoostNotifier)notifiersInProgress[i]).GetBoost();
-			if(notifierBoost.GetType()==boostPrefab.GetType()){
+			if(notifierBoost.GetType()==boostPrefab.GetType()&&notifierBoost.GetState()!=BoostStates.FINISHED){
 				notifierBoost.SetActive();
 				return;
 			}

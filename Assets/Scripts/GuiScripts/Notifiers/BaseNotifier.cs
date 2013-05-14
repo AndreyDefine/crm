@@ -9,6 +9,10 @@ public abstract class BaseNotifier : Abstract
 	protected float FLY_ANIMATION_TIME = 0.8f;
 	protected NotifierStates state = NotifierStates.HIDE;
 	private BaseNotifierController notifierController;
+	public bool oneDfly = false;
+	
+	bool needOtherPosition = false;
+	Vector3 targetPosition;
 	
 	public NotifierStates GetState(){
 		return state;
@@ -28,6 +32,10 @@ public abstract class BaseNotifier : Abstract
 	
 	protected void FlyInEnd(){
 		state = NotifierStates.SHOWN;	
+		if(needOtherPosition){
+			AnimationFactory.FlyOutXYZ(this, targetPosition ,FLY_ANIMATION_TIME,"flyIn");		
+			needOtherPosition = false;
+		}
 	}
 	
 	protected void FlyOutEnd(){
@@ -50,9 +58,15 @@ public abstract class BaseNotifier : Abstract
 			return;
 		}
 		if(state==NotifierStates.FLYING_IN){
-			AnimationFactory.FlyOutXYZ(this, position ,FLY_ANIMATION_TIME,"flyIn", "FlyInStopped");	
+			if(oneDfly){
+				AnimationFactory.FlyInXYZ(this, position ,FLY_ANIMATION_TIME,"flyIn", "FlyInStopped");
+			}else{
+				targetPosition = position;
+				needOtherPosition = true;
+			}
 		}else{
-			AnimationFactory.FlyOutXYZ(this, position ,FLY_ANIMATION_TIME,"flyPlace");		
+			AnimationFactory.FlyOutXYZ(this, position ,FLY_ANIMATION_TIME,"flyPlace");	
+			needOtherPosition = false;
 		}
 	}
 	

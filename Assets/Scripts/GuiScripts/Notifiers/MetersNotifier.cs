@@ -9,7 +9,7 @@ public class MetersNotifier : BaseNotifier
 	private float flyOutTime;
 	
 	public void SetText (string text){
-		crmFont.text = text;
+		crmFont.text = text+" m";
 	}
 	
 	void Update(){
