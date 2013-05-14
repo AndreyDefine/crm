@@ -90,10 +90,6 @@ public class ZoomMap : SpriteTouch {
 			
 			curScale=scale+newscale;
 			
-			//position
-			Vector3 newPos=new Vector3(singleTransform.localPosition.x+moveBy.x*(curScale-singleTransform.localScale.x),singleTransform.localPosition.y+moveBy.y*(curScale-singleTransform.localScale.y),singleTransform.localPosition.z);
-			//singleTransform.localPosition=newPos;
-			Debug.Log (moveBy);
 			
 			//scale
 			curScale=curScale>maxScale?maxScale:curScale;
@@ -101,10 +97,19 @@ public class ZoomMap : SpriteTouch {
 		
 			singleTransform.localScale=new Vector3(curScale,curScale,1);
 			
+			//position
+			Vector3 newPos=new Vector3(singleTransform.localPosition.x-moveBy.x*(curScale-singleTransform.localScale.x),singleTransform.localPosition.y-moveBy.y*(curScale-singleTransform.localScale.y),singleTransform.localPosition.z);
+			singleTransform.localPosition=newPos;
+			Debug.Log (moveBy);
+			
 		}
 	}
 	
 	public override void TouchEnded(Vector2 position,int fingerId) {
+		if(numberOfFingers==1)
+		{
+			return;
+		}
 		base.TouchEnded(position,fingerId);
 		if(fingerId==fingers[0]&&numberOfFingers==2)
 		{
