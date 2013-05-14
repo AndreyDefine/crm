@@ -45,6 +45,11 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	
 	protected bool flagFirstTime=true;
 	
+	public string GetCurrentObstacleSet()
+	{
+		return terrainElementFactory.GetCurrentTerrainForZ().GetComponent<TerrainTag>().obstacleSetName;
+	}
+	
 	public override void init(){
 		GameObject curFactoryObject;
 		
@@ -370,6 +375,9 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 						//поместим сет препятствий куда надо
 						curSet.transform.position=marker.position;
 						curSet.transform.rotation=marker.rotation;
+						
+						//name
+						interrainTag.obstacleSetName=curSet.name;
 						//получим список препятствий
 						Transform[] setMarkers = curSet.GetComponentsInChildren<Transform>();
 						

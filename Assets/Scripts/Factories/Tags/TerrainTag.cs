@@ -17,6 +17,8 @@ public class TerrainTag : AbstractTag{
 	public float sizeOfTexture;
 	public float sizeOfPlane;
 	
+	public string obstacleSetName;
+	
 	public bool DynamicSize=true;
 	
 	protected Vector3 endOfTerrain;
