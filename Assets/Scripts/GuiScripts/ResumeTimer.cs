@@ -4,11 +4,18 @@ using System.Collections;
 public class ResumeTimer : Abstract {
 	
 	public CrmFont crmFont;
+	public int paddingTop;
 	private int startTime = 3;
 	private int curTime;
 	
 	void Start(){
-		StartTimer();
+		Vector3 pos=new Vector3(GlobalOptions.Vsizex/2,GlobalOptions.Vsizey-paddingTop,singleTransform.position.z);
+		pos=GlobalOptions.NormalisePos(pos);
+		pos=Cameras.GetGUICamera().ScreenToWorldPoint(pos);
+			
+		//pos.x = 0f;
+		pos.z = singleTransform.position.z;
+		singleTransform.position=pos;
 	}
 	
 	public void StartTimer(){
@@ -24,8 +31,8 @@ public class ResumeTimer : Abstract {
 			animation.Rewind();
 			animation.Play("Bounce");
 		}else{
-			gameObject.SetActiveRecursively(false);
 			Destroy(gameObject);
+			GlobalOptions.GetGuiLayer().Resume();
 		}
 	}
 

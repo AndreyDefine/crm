@@ -38,6 +38,7 @@ public class ScreenLoader : MonoBehaviour {
 	
 	public void ResumeGameScreen()
 	{
+		GlobalOptions.GetGuiLayer().ResumeTimer();
 		if(ActiveScreen)
 		{
 			PrevActive=ActiveScreen;

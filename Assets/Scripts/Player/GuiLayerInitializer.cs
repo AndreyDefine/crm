@@ -158,6 +158,15 @@ public class GuiLayerInitializer : Abstract {
 		}
 	}
 	
+	public void ResumeTimer(){
+		ResumeTimer resumeTimer = Instantiate(resumeTimerPrefab) as ResumeTimer;
+		resumeTimer.StartTimer();
+	}
+	
+	public void Resume(){
+		GlobalOptions.GetPlayerScript().ResumeGame();		
+	}
+	
 	public void AddCap()
 	{
 		playerScript.ShowCap();

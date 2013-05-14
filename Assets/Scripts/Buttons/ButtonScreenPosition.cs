@@ -84,7 +84,6 @@ public class ButtonScreenPosition : Abstract {
 		}
 		
 		if(top){
-			Debug.Break();
 			Vector3 pos=new Vector3(singleTransform.position.x,GlobalOptions.Vsizey-paddingTop,singleTransform.position.z);
 			pos=GlobalOptions.NormalisePos(pos);
 			pos=Cameras.GetGUICamera().ScreenToWorldPoint(pos);
