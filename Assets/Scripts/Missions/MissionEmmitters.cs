@@ -7,7 +7,7 @@ public class MissionEmmitters : Abstract, IMissionEmmitter
 	
 	void Awake ()
 	{
-		//PlayerPrefs.DeleteAll();Debug.LogWarning("PlayerPrefs.DeleteAll()");//TODO: delete this
+		PlayerPrefs.DeleteAll();Debug.LogWarning("PlayerPrefs.DeleteAll()");//TODO: delete this
 	}
 	
 	

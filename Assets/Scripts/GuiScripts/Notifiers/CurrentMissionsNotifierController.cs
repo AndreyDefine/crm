@@ -80,11 +80,11 @@ public class CurrentMissionsNotifierController : BaseNotifierController {
 	
 	public override void NotifierWantsToFlyOut(BaseNotifier notifier){
 		int position = notifiersInProgress.IndexOf(notifier);
-		notifiersInProgress.Remove(notifier);
 		notifier.FlyOut(GetOutNotifierPlace(position));
 	}
 	
 	public override void NotifierFlyOutEnd(BaseNotifier notifier){
+		notifiersInProgress.Remove(notifier);
 		base.NotifierFlyOutEnd(notifier);
 		ChangePlaces();
 	}

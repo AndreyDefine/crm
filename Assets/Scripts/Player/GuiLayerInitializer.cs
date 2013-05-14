@@ -13,6 +13,8 @@ public class GuiLayerInitializer : Abstract {
 	public GameObject GuiScoreScale;
 	
 	//final
+	public ResumeTimer resumeTimerPrefab;
+	
 	public Money money;
 	
 	public Points points;
@@ -119,6 +121,7 @@ public class GuiLayerInitializer : Abstract {
 	}
 	
 	void Update () {
+		
 		if(GlobalOptions.gameState==GameStates.GAME){
 			
 			AddAllTimes();

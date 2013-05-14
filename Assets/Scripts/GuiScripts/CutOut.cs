@@ -16,10 +16,6 @@ public class CutOut : Abstract {
 		
 		uvHeight = mesh.uv[2].x - mesh.uv[0].x;
 		uvWidth = mesh.uv[1].y - mesh.uv[0].y;
-		
-		Debug.Log(meshWidth);
-		Debug.Log(uvWidth);
-			
 	}
 	
 	public void CutOutRight(float progress){
