@@ -3,20 +3,55 @@ using System.Collections;
 
 public class CutOut : Abstract {
 
-	Mesh mesh;
-	float meshHeight;
-	float meshWidth;
-	float uvHeight;
-	float uvWidth;
+	private Mesh _mesh = null;
+    private Mesh mesh {
+        get {
+            if (_mesh == null) {
+                _mesh = (GetComponent(typeof(MeshFilter)) as MeshFilter).mesh;
+            }
+            return _mesh;
+        }
+    }
 	
-	void Start(){
-		mesh = (GetComponent(typeof(MeshFilter)) as MeshFilter).mesh;
-		meshHeight = mesh.vertices[2].y-mesh.vertices[0].y;
-		meshWidth = mesh.vertices[1].x-mesh.vertices[0].x;
-		
-		uvHeight = mesh.uv[2].x - mesh.uv[0].x;
-		uvWidth = mesh.uv[1].y - mesh.uv[0].y;
-	}
+	private float _meshHeight = 0;
+    private float meshHeight {
+        get {
+            if (_meshHeight == 0) {
+                _meshHeight = mesh.vertices[2].y-mesh.vertices[0].y;
+            }
+            return _meshHeight;
+        }
+    }
+	
+	private float _meshWidth = 0;
+    private float meshWidth {
+        get {
+            if (_meshWidth == 0) {
+                _meshWidth = mesh.vertices[1].x-mesh.vertices[0].x;
+            }
+            return _meshWidth;
+        }
+    }
+	
+	private float _uvHeight = 0;
+    private float uvHeight {
+        get {
+            if (_uvHeight == 0) {
+                _uvHeight = mesh.uv[2].x - mesh.uv[0].x;
+            }
+            return _uvHeight;
+        }
+    }
+	
+	private float _uvWidth = 0;
+    private float uvWidth {
+        get {
+            if (_uvWidth == 0) {
+                _uvWidth = mesh.uv[1].y - mesh.uv[0].y;
+            }
+            return _uvWidth;
+        }
+    }
 	
 	public void CutOutRight(float progress){
 		
