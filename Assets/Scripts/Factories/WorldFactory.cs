@@ -160,7 +160,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		}
 		
 		//really need this!!!
-		obstacleSetElementFactory.PreloadPullObjects();
+		//obstacleSetElementFactory.PreloadPullObjects();
 		boostElementFactory.PreloadPullObjects();
 	}
 	
