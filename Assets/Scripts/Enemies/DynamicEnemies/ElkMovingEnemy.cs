@@ -52,7 +52,7 @@ public class ElkMovingEnemy : AbstractEnemy {
 			{
 				animationScript["MoveAnimation"].speed=playerScript.GetVelocityCurMnoshitel();
 				if(animationScriptBaran)
-					animationScriptBaran["Take_001"].speed=playerScript.GetVelocityCurMnoshitel()*2.5;
+					animationScriptBaran["Take_001"].speed=playerScript.GetVelocityCurMnoshitel()*2.5f;
 			}
 		}
 	}
