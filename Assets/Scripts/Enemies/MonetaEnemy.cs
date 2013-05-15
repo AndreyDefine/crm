@@ -9,6 +9,8 @@ public class MonetaEnemy : AbstractEnemy {
 	private float rasstChuvstv=155;
 	private Transform parentTransform;
 	
+	private Transform oldParent;
+	
 	public override void OnHit(Collider other)
 	{
 		GuiLayer.AddMoney(numberOfMoney);
@@ -20,6 +22,11 @@ public class MonetaEnemy : AbstractEnemy {
 	void Update () {
 		Rotate();
 		TestPlayer();
+		
+	}
+	
+	void LateUpdate()
+	{
 		MakeMagnit();
 	}
 	
@@ -53,7 +60,7 @@ public class MonetaEnemy : AbstractEnemy {
 			raznx=parentTransform.position.x-walkingBearTransform.position.x;
 			raznz=parentTransform.position.z-walkingBearTransform.position.z;
 			razny=parentTransform.position.y-walkingBearTransform.position.y;
-			if(raznx*raznx+raznz*raznz<=rasstChuvstv&&Mathf.Abs (razny)<10)
+			if(raznx*raznx+raznz*raznz<=rasstChuvstv&&Mathf.Abs (razny)<20)
 			{
 				MakeEffect();
 			}
@@ -64,36 +71,52 @@ public class MonetaEnemy : AbstractEnemy {
 	{
 		if(effectMade)
 		{
+			bool flagMoving=false;
 			float raznx,raznz,razny;
-			//float smex=0.2f;
-			
+			float smex=0.2f;
 			raznx=-parentTransform.position.x+walkingBearTransform.position.x;
 			razny=-parentTransform.position.y+walkingBearTransform.position.y;
 			raznz=-parentTransform.position.z+walkingBearTransform.position.z;
-			
-			if(raznx*raznx+raznz*raznz<=rasstChuvstv/10)
+	
+			if(Mathf.Abs(raznx)>smex)
 			{
-				//do nothing
+				raznx/=15;
+				flagMoving=true;
 			}
-			else
+			if(Mathf.Abs(razny)>smex)
 			{
-				raznx=raznx/10;
-				razny=razny/10;
-				raznz=raznz/10;
+				razny/=15;
+				flagMoving=true;
+			}
+				
+			if(Mathf.Abs(raznz)>smex)
+			{
+				raznz/=15;
+				flagMoving=true;
 			}
 			
-			parentTransform.position+=new Vector3(raznx,razny,raznz);			
+			parentTransform.position+=new Vector3(raznx,razny,raznz);	
+			if(!flagMoving)
+			{
+				parentTransform.parent=oldParent;
+			}
 		}
 	}
 	
 	private void MakeEffect()
 	{
 		effectMade=true;
+		oldParent=parentTransform.parent;
+		parentTransform.parent=walkingBearTransform;
 	}
 	
 	
 	private void UnMakeEffect()
 	{
 		effectMade=false;
+		if(parentTransform)
+		{
+			parentTransform.parent=oldParent;
+		}
 	}
 }
