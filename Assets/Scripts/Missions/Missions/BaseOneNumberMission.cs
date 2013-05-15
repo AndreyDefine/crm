@@ -10,6 +10,16 @@ public class BaseOneNumberMission : Mission {
 		return string.Format("{0}",needNumber-currentNumber);
 	}
 	
+	public override string GetLongProgressRepresentation ()
+	{
+		return string.Format("{0}/{1}",currentNumber,needNumber);
+	}
+	
+	public override float GetProgress ()
+	{
+		return ((float)currentNumber)/needNumber;
+	}
+	
 	public void AddNumber(int addNumber){
 		currentNumber+=addNumber;
 		if(currentNumber>needNumber){

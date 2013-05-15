@@ -2,7 +2,8 @@ using UnityEngine;
 using System.Collections;
 
 public class CutOut : Abstract {
-
+	
+	public bool rotated = false;
 	private Mesh _mesh = null;
     private Mesh mesh {
         get {
@@ -37,7 +38,11 @@ public class CutOut : Abstract {
     private float uvHeight {
         get {
             if (_uvHeight == 0) {
-                _uvHeight = mesh.uv[2].x - mesh.uv[0].x;
+                if(rotated){
+                	_uvHeight = mesh.uv[2].x - mesh.uv[0].x;
+				}else{
+					_uvHeight = mesh.uv[2].y - mesh.uv[0].y;
+				}
             }
             return _uvHeight;
         }
@@ -47,7 +52,11 @@ public class CutOut : Abstract {
     private float uvWidth {
         get {
             if (_uvWidth == 0) {
-                _uvWidth = mesh.uv[1].y - mesh.uv[0].y;
+				if(rotated){
+                	_uvWidth = mesh.uv[1].y - mesh.uv[0].y;
+				}else{
+					_uvWidth = mesh.uv[1].x - mesh.uv[0].x;
+				}
             }
             return _uvWidth;
         }
@@ -75,20 +84,29 @@ public class CutOut : Abstract {
 		
 		
 		mesh.vertices = vertices;
-		
+			
 		Vector2[] uv = new Vector2[4];
 		
 		uv[0].x = mesh.uv[0].x;
 		uv[0].y = mesh.uv[0].y;
-		
-		uv[1].x = mesh.uv[1].x;
-		uv[1].y = mesh.uv[0].y+progress*uvWidth;
+		if(rotated){
+			uv[1].x = mesh.uv[1].x;
+			uv[1].y = mesh.uv[0].y+progress*uvWidth;
+		}else{
+			uv[1].x = mesh.uv[0].x+progress*uvWidth;
+			uv[1].y = mesh.uv[1].y;
+		}
 		
 		uv[2].x = mesh.uv[2].x;
 		uv[2].y = mesh.uv[2].y;
 		
-		uv[3].x = mesh.uv[3].x;
-		uv[3].y = mesh.uv[0].y+progress*uvWidth;
+		if(rotated){
+			uv[3].x = mesh.uv[3].x;
+			uv[3].y = mesh.uv[0].y+progress*uvWidth;	
+		}else{
+			uv[3].x = mesh.uv[0].x+progress*uvWidth;
+			uv[3].y = mesh.uv[3].y;
+		}
 
 		mesh.uv = uv;
 	}
@@ -118,17 +136,28 @@ public class CutOut : Abstract {
 		
 		Vector2[] uv = new Vector2[4];
 		
-		uv[0].x = mesh.uv[0].x;
-		uv[0].y = mesh.uv[1].y-progress*uvWidth;
+		if(rotated){
+			uv[0].x = mesh.uv[0].x;
+			uv[0].y = mesh.uv[1].y-progress*uvWidth;
+		}else{
+			uv[0].x = mesh.uv[1].x-progress*uvWidth;
+			uv[0].y = mesh.uv[0].y;
+		}
 		
 		uv[1].x = mesh.uv[1].x;
 		uv[1].y = mesh.uv[1].y;
 		
-		uv[2].x = mesh.uv[2].x;
-		uv[2].y = mesh.uv[1].y-progress*uvWidth;
+		if(rotated){
+			uv[2].x = mesh.uv[2].x;
+			uv[2].y = mesh.uv[1].y-progress*uvWidth;
+		}else{
+			uv[2].x = mesh.uv[1].x-progress*uvWidth;
+			uv[2].y = mesh.uv[2].y;
+		}
+		
 		
 		uv[3].x = mesh.uv[3].x;
-		uv[3].y = mesh.uv[1].y;
+		uv[3].y = mesh.uv[3].y;
 
 		mesh.uv = uv;
 	}
@@ -157,11 +186,19 @@ public class CutOut : Abstract {
 		
 		Vector2[] uv = new Vector2[4];
 		
-		uv[0].x = mesh.uv[2].x-progress*uvHeight;;
-		uv[0].y = mesh.uv[0].y;
+		if(rotated){
+			uv[0].x = mesh.uv[2].x-progress*uvHeight;
+			uv[0].y = mesh.uv[0].y;
 		
-		uv[1].x = mesh.uv[2].x-progress*uvHeight;;
-		uv[1].y = mesh.uv[1].y;
+			uv[1].x = mesh.uv[2].x-progress*uvHeight;
+			uv[1].y = mesh.uv[1].y;
+		}else{
+			uv[0].x = mesh.uv[0].x;
+			uv[0].y = mesh.uv[2].y-progress*uvHeight;
+		
+			uv[1].x = mesh.uv[1].x;
+			uv[1].y = mesh.uv[2].y-progress*uvHeight;
+		}
 		
 		uv[2].x = mesh.uv[2].x;
 		uv[2].y = mesh.uv[2].y;
@@ -190,10 +227,11 @@ public class CutOut : Abstract {
 		vertices[1].y = mesh.vertices[1].y;
 		vertices[1].z = mesh.vertices[1].z;
 		
+		
 		vertices[2].x = mesh.vertices[2].x;
 		vertices[2].y = mesh.vertices[0].y+progress*meshHeight;
 		vertices[2].z = mesh.vertices[2].z;
-		
+	
 		vertices[3].x = mesh.vertices[3].x;
 		vertices[3].y = mesh.vertices[0].y+progress*meshHeight;
 		vertices[3].z = mesh.vertices[3].z;
@@ -208,11 +246,20 @@ public class CutOut : Abstract {
 		uv[1].x = mesh.uv[1].x;
 		uv[1].y = mesh.uv[1].y;
 		
-		uv[2].x = mesh.uv[0].x+progress*uvHeight;
-		uv[2].y = mesh.uv[2].y;
-		
-		uv[3].x = mesh.uv[0].x+progress*uvHeight;
-		uv[3].y = mesh.uv[3].y;
+		if(rotated)
+		{
+			uv[2].x = mesh.uv[0].x+progress*uvHeight;
+			uv[2].y = mesh.uv[2].y;
+			
+			uv[3].x = mesh.uv[0].x+progress*uvHeight;
+			uv[3].y = mesh.uv[3].y;
+		}else{
+			uv[2].x = mesh.uv[2].x;
+			uv[2].y = mesh.uv[0].y+progress*uvHeight;
+			
+			uv[3].x = mesh.uv[3].x;
+			uv[3].y = mesh.uv[0].y+progress*uvHeight;
+		}
 
 		mesh.uv = uv;
 	}
@@ -226,5 +273,11 @@ public class CutOut : Abstract {
 	{
 		for (int i = 0; i < 4; ++i)
 			dest[i] = c;
+	}
+	
+	public void SetProgressColor(float p){
+		float green=p>0.5f?1f:p*2f;
+		float red=p<0.5f?1f:(1f-p)*2f;
+		SetColor(new Color(red,green,0f,GetComponent<tk2dSprite>().color.a));
 	}
 }

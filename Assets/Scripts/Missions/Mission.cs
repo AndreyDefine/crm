@@ -48,7 +48,20 @@ public class Mission : Abstract {
 	}
 	
 	public virtual string GetProgressRepresentation(){
-		return "0/0";
+		return "0";
+	}
+	
+	public virtual string GetLongProgressRepresentation(){
+		return "0/1";
+	}
+	/// <summary>
+	/// Gets the progress.
+	/// </summary>
+	/// <returns>
+	/// 0-1
+	/// </returns>
+	public virtual float GetProgress(){
+		return 0;
 	}
 	
 	public virtual void NotifyCoinsCollected(int coins){

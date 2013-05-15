@@ -3,6 +3,7 @@ using System.Collections;
 
 public class GuiButtonShowScreen : SpriteTouch {
 	public string screenToShow="";
+	public Vector3 initScale;
 	
 	protected ScreenLoader screenLoader;
 	
@@ -14,10 +15,21 @@ public class GuiButtonShowScreen : SpriteTouch {
 	public override bool TouchBegan(Vector2 position,int fingerId) {
 		bool isTouchHandled=base.TouchBegan(position,fingerId);
 		if(isTouchHandled){	
-			MakeOnTouch();
+			initScale = singleTransform.localScale;
+			singleTransform.localScale = initScale*1.05f;
 		}
 
 		return isTouchHandled;
+	}
+	
+	public override void TouchEnded (Vector2 position, int fingerId)
+	{
+		singleTransform.localScale = initScale;
+		base.TouchEnded (position, fingerId);
+		bool isTouchHandled=MakeDetection(position);
+		if(isTouchHandled){	
+			MakeOnTouch();
+		}
 	}
 	
 	virtual protected void MakeOnTouch(){

@@ -12,6 +12,8 @@ public class GuiLayerInitializer : Abstract {
 	public GameObject GuiScoreScale;
 	
 	//final
+	public GameObject pause;
+	
 	public ResumeTimer resumeTimerPrefab;
 	
 	public Money money;
@@ -160,6 +162,7 @@ public class GuiLayerInitializer : Abstract {
 	}
 	
 	public void Resume(){
+		pause.active = true;
 		GlobalOptions.GetPlayerScript().ResumeGame();		
 	}
 	

@@ -57,7 +57,7 @@ public class BoostNotifier : BaseNotifier,IBoostListener
 	public void SetProgress(float p){
 		progress.CutOutTop(p);
 		//хаки череваты последтсвиями, для таких вот CutOut цвет менять так
-		progress.SetColor(new Color(1f-p,p,0f,1f));
+		progress.SetProgressColor(p);
 	}	
 	
 }

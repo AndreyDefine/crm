@@ -62,44 +62,48 @@ public class ButtonScreenPosition : Abstract {
 		}
 		
 		if(left){
-			Vector3 pos=new Vector3(paddingLeft,singleTransform.position.y,singleTransform.position.z);
+			Vector3 pos=new Vector3(paddingLeft,0f,singleTransform.position.z);
 			pos=GlobalOptions.NormalisePos(pos);
 			pos=Cameras.GetGUICamera().ScreenToWorldPoint(pos);
 			
 			pos.x+=singleRenderer.bounds.extents.x;
+			pos.y = singleTransform.position.y;
 			
 			singleTransform.position=pos;	
 			return;	
 		}
 		
 		if(right){
-			Vector3 pos=new Vector3(GlobalOptions.Vsizex-paddingRight,singleTransform.position.y,singleTransform.position.z);
+			Vector3 pos=new Vector3(GlobalOptions.Vsizex-paddingRight,0f,singleTransform.position.z);
 			pos=GlobalOptions.NormalisePos(pos);
 			pos=Cameras.GetGUICamera().ScreenToWorldPoint(pos);
 			
 			pos.x-=singleRenderer.bounds.extents.x;
+			pos.y = singleTransform.position.y;
 			
 			singleTransform.position=pos;	
 			return;	
 		}
 		
 		if(top){
-			Vector3 pos=new Vector3(singleTransform.position.x,GlobalOptions.Vsizey-paddingTop,singleTransform.position.z);
+			Vector3 pos=new Vector3(0f,GlobalOptions.Vsizey-paddingTop,singleTransform.position.z);
 			pos=GlobalOptions.NormalisePos(pos);
 			pos=Cameras.GetGUICamera().ScreenToWorldPoint(pos);
 			
-			pos.y+=singleRenderer.bounds.extents.y;
+			pos.x = singleTransform.position.x;
+			pos.y-=singleRenderer.bounds.extents.y;
 			
 			singleTransform.position=pos;	
 			return;	
 		}
 		
 		if(bottom){
-			Vector3 pos=new Vector3(singleTransform.position.x,paddingBottom,singleTransform.position.z);
+			Vector3 pos=new Vector3(0f,paddingBottom,singleTransform.position.z);
 			pos=GlobalOptions.NormalisePos(pos);
 			pos=Cameras.GetGUICamera().ScreenToWorldPoint(pos);
 			
-			pos.y-=singleRenderer.bounds.extents.y;
+			pos.x = singleTransform.position.x;
+			pos.y+=singleRenderer.bounds.extents.y;
 			
 			singleTransform.position=pos;	
 			return;	
