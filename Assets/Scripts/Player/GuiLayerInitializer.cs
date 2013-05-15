@@ -36,10 +36,8 @@ public class GuiLayerInitializer : Abstract {
 	
 	private GameObject BearFace;
 	private GameObject RightHUD;
-	private GameObject []LifeHeart;
 	private GameObject ScoreScale;
 
-	private GameObject Question;
 	private GameObject Star;
 	
 	private float Vsizex,Vsizey;
@@ -77,7 +75,6 @@ public class GuiLayerInitializer : Abstract {
 	// Use this for initialization
 	void Start() {
 		StarsList=new ArrayList();
-		LifeHeart=new GameObject[5];
 		curStrobile=null;
 		GUIcamera = Cameras.GetGUICamera(); 
 		
@@ -163,31 +160,6 @@ public class GuiLayerInitializer : Abstract {
 		GlobalOptions.GetPlayerScript().ResumeGame();		
 	}
 	
-	public void AddCap()
-	{
-		playerScript.ShowCap();
-	}
-	
-	public void ShowQuestion(GameObject inobj)
-	{
-		curStrobile=inobj;
-		Question.active=true;
-	}
-	
-	public void HideQuestion()
-	{
-		Question.active=false;
-	}
-	
-	public void RemoveStrobile()
-	{
-		if(curStrobile){
-			(curStrobile.GetComponent("StrobileEnemy") as StrobileEnemy).MakeInactive();
-			Question.active=false;
-			curStrobile=null;
-		}
-	}
-	
 	public int GetPoints()
 	{
 		return points.GetPoints();
@@ -218,7 +190,7 @@ public class GuiLayerInitializer : Abstract {
 	
 	private void InitSprites()
 	{
-		Vector3 pos;	
+		//Vector3 pos;	
 		
 		SetLife(MaxLife);
 		
