@@ -69,7 +69,7 @@ ModelImporter:
       loop: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: .194999993
+    globalScale: .224999994
     meshCompression: 3
     addColliders: 1
     swapUVChannels: 1
