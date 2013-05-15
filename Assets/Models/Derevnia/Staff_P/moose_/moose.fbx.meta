@@ -5,6 +5,7 @@ ModelImporter:
     4300000: moose
     7400000: Take 001 //// for_unity
     7400002: Take 001 //// moose
+    7400004: Take_001 //// moose
   serializedVersion: 10
   materials:
     importMaterials: 1
@@ -19,10 +20,15 @@ ModelImporter:
     animationPositionError: .5
     animationScaleError: .5
     animationWrapMode: 0
-    clipAnimations: []
+    clipAnimations:
+    - name: Take_001
+      firstFrame: 1
+      lastFrame: 25
+      wrapMode: 2
+      loop: 0
   meshes:
     lODScreenPercentages: []
-    globalScale: .189999998
+    globalScale: .200000003
     meshCompression: 3
     addColliders: 1
     swapUVChannels: 0

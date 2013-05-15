@@ -2,15 +2,14 @@ using UnityEngine;
 using System.Collections;
 
 
-public class KorovaEnemy : AbstractEnemy {	
+public class ElkMovingEnemy : AbstractEnemy {	
 	
 	public float rasstChuvstv=255;
 	
 	private bool effectMade=false;
 	
 	private Animation animationScript;
-	
-	float animationSpeed;
+	private Animation animationScriptBaran;
 	
 	public override void OnHit(Collider other)
 	{
@@ -23,11 +22,8 @@ public class KorovaEnemy : AbstractEnemy {
 	
 	public override void initEnemy()
 	{
-		rasstChuvstv+=Random.Range(-1000,1000);
-		
-		animationSpeed=Random.Range(0.5f,1.0f);
-		//Debug.Log (animationSpeed);
 		animationScript=GetComponentInChildren<Animation>();
+		animationScriptBaran=null;		
 	}
 	
 	public void TestPlayer()
@@ -48,28 +44,49 @@ public class KorovaEnemy : AbstractEnemy {
 		{
 			if(GlobalOptions.gameState==GameStates.PAUSE_MENU)
 			{
-				animationScript["Korova_SetUp_Anim_2"].speed=0;
+				animationScript["MoveAnimation"].speed=0;
+				if(animationScriptBaran)
+					animationScriptBaran["Take_001"].speed=0;
 			}
 			else
 			{
-				animationScript["Korova_SetUp_Anim_2"].speed=playerScript.GetVelocityCurMnoshitel()*animationSpeed;
+				animationScript["MoveAnimation"].speed=playerScript.GetVelocityCurMnoshitel();
+				if(animationScriptBaran)
+					animationScriptBaran["Take_001"].speed=playerScript.GetVelocityCurMnoshitel()*2.5;
 			}
 		}
 	}
 	
 	private void MakeEffect()
 	{
+		if(!animationScriptBaran)
+		{
+			int i;
+			Transform[] allChildren = singleTransform.gameObject.GetComponentsInChildren<Transform>();
+			for(i=1;i<allChildren.Length;i++)
+			{
+				if(allChildren[i].name=="Baran")
+				{
+					animationScriptBaran=allChildren[i].GetComponentInChildren<Animation>();
+				}
+			}
+		}
 		effectMade=true;
-		animationScript.Play("Korova_SetUp_Anim_2");
+		animationScript.Play("MoveAnimation");
+		if(animationScriptBaran)
+			animationScriptBaran.Play("Take_001");
 	}
 	
 	public override void ReStart()
 	{
 		effectMade=false;
-		Animation animationScript=GetComponentInChildren<Animation>();
+		if(animationScriptBaran)
+		{
+			animationScriptBaran["Take_001"].speed=0;
+		}
 		if(animationScript)
 		{
-			//animationScript.Play("Restart");
+			animationScript.Play("Restart");
 		}
 	}
 }
