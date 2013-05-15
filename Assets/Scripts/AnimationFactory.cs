@@ -9,11 +9,12 @@ public static class AnimationFactory {
 	    static void DeleteClipIfExists(GameObject obj, string clipName) {
         if (obj.animation [clipName] != null) {
             Component comp = obj.GetComponent<Animation> ();
-			//Debug.Log(comp.name);
-			//Debug.Log(comp.transform.parent.name);
-            GameObject.DestroyImmediate (comp);
-			//Debug.LogError("Trying to add animation that exists");
-            obj.AddComponent (typeof(Animation));
+			Debug.Log(comp.name);
+			Debug.Log(clipName);
+            //GameObject.DestroyImmediate (comp);
+			Debug.LogError("Trying to add animation that exists");
+            Debug.Break();
+			//obj.AddComponent (typeof(Animation));
         }
     }
 	

@@ -90,6 +90,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	// Screen Controller To Show Methods
 	public void ShowOnScreen()
 	{
+		GlobalOptions.GetMissionEmmitters().LevelBegin();
 		if(!flagFirstTime){
 			Debug.Log ("LoadCurrentLevel");
 			LoadCurrentLevel();

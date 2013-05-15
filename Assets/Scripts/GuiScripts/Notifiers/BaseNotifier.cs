@@ -10,6 +10,7 @@ public abstract class BaseNotifier : Abstract
 	protected NotifierStates state = NotifierStates.HIDE;
 	private BaseNotifierController notifierController;
 	public bool oneDfly = false;
+	private int animationCounter = 0;
 	
 	bool needOtherPosition = false;
 	Vector3 targetPosition;
@@ -33,7 +34,7 @@ public abstract class BaseNotifier : Abstract
 	protected void FlyInEnd(){
 		state = NotifierStates.SHOWN;	
 		if(needOtherPosition){
-			AnimationFactory.FlyOutXYZ(this, targetPosition ,FLY_ANIMATION_TIME,"flyIn");		
+			AnimationFactory.FlyOutXYZ(this, targetPosition ,FLY_ANIMATION_TIME,"flyOut"+(++animationCounter).ToString());		
 			needOtherPosition = false;
 		}
 	}
@@ -45,12 +46,12 @@ public abstract class BaseNotifier : Abstract
 	
 	public virtual void FlyIn(Vector3 inPostion){
 		FlyInBegin();
-		AnimationFactory.FlyInXYZ(this, inPostion ,FLY_ANIMATION_TIME,"flyIn", "FlyInStopped");
+		AnimationFactory.FlyInXYZ(this, inPostion ,FLY_ANIMATION_TIME,"flyIn"+(++animationCounter).ToString(), "FlyInStopped");
 	}
 	
 	public virtual void FlyOut(Vector3 outPosition){
 		FlyOutBegin();
-		AnimationFactory.FlyOutXYZ(this, outPosition ,FLY_ANIMATION_TIME,"flyOut","FlyOutStopped");	
+		AnimationFactory.FlyOutXYZ(this, outPosition ,FLY_ANIMATION_TIME,"flyOut"+(++animationCounter).ToString(),"FlyOutStopped");	
 	}
 	
 	public virtual void FlyPlace(Vector3 position){
@@ -59,13 +60,13 @@ public abstract class BaseNotifier : Abstract
 		}
 		if(state==NotifierStates.FLYING_IN){
 			if(oneDfly){
-				AnimationFactory.FlyInXYZ(this, position ,FLY_ANIMATION_TIME,"flyIn", "FlyInStopped");
+				AnimationFactory.FlyInXYZ(this, position ,FLY_ANIMATION_TIME,"flyIn"+(++animationCounter).ToString(), "FlyInStopped");
 			}else{
 				targetPosition = position;
 				needOtherPosition = true;
 			}
 		}else{
-			AnimationFactory.FlyOutXYZ(this, position ,FLY_ANIMATION_TIME,"flyPlace");	
+			AnimationFactory.FlyOutXYZ(this, position ,FLY_ANIMATION_TIME,"flyPlace"+(++animationCounter).ToString());	
 			needOtherPosition = false;
 		}
 	}

@@ -54,17 +54,6 @@ public class CurrentMissionNotifier : BaseNotifier, IMissionListener
 		}
 	}
 	
-	public override void FlyPlace(Vector3 position){
-		base.FlyPlace(position);
-		if(state==NotifierStates.FLYING_OUT){
-			return;
-		}
-		if(missionFlyingIco!=null){
-			missionFlyingIco.FlyXYZ(position+new Vector3(0f,0f,-1f));
-		}
-		
-	}
-	
 	public override void FlyInStopped(){
 		FlyInEnd();
 	}
@@ -75,7 +64,8 @@ public class CurrentMissionNotifier : BaseNotifier, IMissionListener
 	
 	public void MissionFlyingIcoFlyStopped(){
 		MissionIco missionIco = missionFlyingIco.GetMissionIco();
-		SetMissionIco(missionIco);
+		missionIco.singleTransform.parent = missionIconPlace.singleTransform;
+		AnimationFactory.FlyXYZ(missionIco, new Vector3(0f,0f,-0.01f),0.8f,"flyXYZFin");
 		Destroy(missionFlyingIco.gameObject);
 		missionFlyingIco = null;
 	}

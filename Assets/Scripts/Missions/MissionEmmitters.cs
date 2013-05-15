@@ -7,9 +7,15 @@ public class MissionEmmitters : Abstract, IMissionEmmitter
 	
 	void Awake ()
 	{
-		//PlayerPrefs.DeleteAll();Debug.LogWarning("PlayerPrefs.DeleteAll()");//TODO: delete this
+		PlayerPrefs.DeleteAll();Debug.LogWarning("PlayerPrefs.DeleteAll()");//TODO: delete this
 	}
 	
+	public void LevelBegin ()
+	{
+		for(int i=0;i<missionEmmitters.Length;i++){
+			missionEmmitters[i].LevelBegin();
+		}
+	}	
 	
 	public void NotifyCoinsCollected(int coins){
 		for(int i=0;i<missionEmmitters.Length;i++){
@@ -23,6 +29,15 @@ public class MissionEmmitters : Abstract, IMissionEmmitter
 			currentMissions.AddRange(missionEmmitters[i].GetCurrentMissions());
 		}
 		return currentMissions;
+	}
+	
+	public ArrayList GetThisLifeFinishedMissions ()
+	{
+		ArrayList thisLifeFinishedMissions = new ArrayList();
+		for(int i=0;i<missionEmmitters.Length;i++){
+			thisLifeFinishedMissions.AddRange(missionEmmitters[i].GetThisLifeFinishedMissions());
+		}
+		return thisLifeFinishedMissions;
 	}
 	
 	public void NotifyMetersRunned(int meter){
