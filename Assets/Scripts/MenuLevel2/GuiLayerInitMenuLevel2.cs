@@ -14,15 +14,7 @@ public class GuiLayerInitMenuLevel2 : Abstract {
 	void Start () {
 		GUIcamera = Cameras.GetGUICamera();
 		
-		GlobalOptions.scaleFactory=Screen.height/GlobalOptions.Vsizey;
-		GlobalOptions.scaleFactorx=Screen.width/GlobalOptions.Vsizex;
-		
 		InitSprites();
-	}
-	
-	// Update is called once per frame
-	void Update () {
-	
 	}
 	
 	private void InitSprites()

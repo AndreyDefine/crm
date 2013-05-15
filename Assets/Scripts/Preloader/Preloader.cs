@@ -24,8 +24,6 @@ public class Preloader : Abstract {
 		curTime=0;
 		GUIcamera = Cameras.GetGUICamera(); 
 
-		GlobalOptions.scaleFactory=Screen.height/GlobalOptions.Vsizey;
-		GlobalOptions.scaleFactorx=Screen.width/GlobalOptions.Vsizex;
 		InitSprites();
 		if(GlobalOptions.UnityPro){
 			isLoading=true;

@@ -55,8 +55,6 @@ public class SpriteTouch : Abstract,TouchTargetedDelegate {
 		GUIcamera=Cameras.GetGUICamera();
 		perPixel = Cameras.GuiCameraPixelPerUnit ();
 		
-		GlobalOptions.scaleFactory=Screen.height/GlobalOptions.Vsizey;
-		GlobalOptions.scaleFactorx=Screen.width/GlobalOptions.Vsizex;
 		//TouchDispatcher.sharedTouchDispatcher.addTargetedDelegate(this);
 		MakeScaling();
 		//у объекта есть отображение

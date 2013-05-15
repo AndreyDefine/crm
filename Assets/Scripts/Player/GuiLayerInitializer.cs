@@ -83,9 +83,6 @@ public class GuiLayerInitializer : Abstract {
 		
 		playerScript=GlobalOptions.GetPlayer().GetComponent("Player")as Player;
 
-		GlobalOptions.scaleFactory=Screen.height/GlobalOptions.Vsizey;
-		GlobalOptions.scaleFactorx=Screen.width/GlobalOptions.Vsizex;
-		
 		scoreScale=GlobalOptions.GetScoreScale();
 		
 		InitSprites();

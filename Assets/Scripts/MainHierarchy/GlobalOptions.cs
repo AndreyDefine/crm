@@ -58,8 +58,25 @@ public class GlobalOptions {
 	
 	public static bool UsingAcceleration=true;
 	
-	public static float scaleFactorx;
-	public static float scaleFactory;
+	private static float _scaleFactorx = 0;
+    public static float scaleFactorx {
+        get {
+            if (_scaleFactorx == 0) {
+                _scaleFactorx = Screen.width/GlobalOptions.Vsizex;
+            }
+            return _scaleFactorx;
+        }
+    }
+	
+	private static float _scaleFactory = 0;
+    public static float scaleFactory {
+        get {
+            if (_scaleFactory == 0) {
+                _scaleFactory = Screen.height/GlobalOptions.Vsizey;
+            }
+            return _scaleFactory;
+        }
+    }
 	
 	private static GameObject player=null;
 	private static Player playerScript;

@@ -5,10 +5,15 @@ using System.Collections;
 public class CurrentMissionNotifier : BaseNotifier, IMissionListener
 {
 	public Abstract missionIconPlace;
+	public GameObject complete;
 	public CrmFont crmFont;
 	private MissionFlyingIco missionFlyingIco = null;
 	private Mission mission;
 	
+	void Start(){
+		complete.active = false;	
+	}
+		
 	public void MissionProgressChanged (Mission mission)
 	{
 		SetText(mission.GetProgressRepresentation());
@@ -25,8 +30,8 @@ public class CurrentMissionNotifier : BaseNotifier, IMissionListener
 	
 	public void MissionFinished (Mission mission)
 	{
-		tk2dSprite sprite = GetComponent<tk2dSprite>();
-		sprite.color = new Color(0f,1f,0f,sprite.color.a);
+		complete.active = true;
+		crmFont.gameObject.SetActiveRecursively(false);
 		FlyOut();
 	}
 	
