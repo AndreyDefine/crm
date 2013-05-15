@@ -45,4 +45,5 @@ public class BaseOneNumberMission : Mission {
 			currentNumber = int.Parse(data);
 		}
 	}
+	
 }

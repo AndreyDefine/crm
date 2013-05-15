@@ -7,7 +7,7 @@ public class MissionEmmitters : Abstract, IMissionEmmitter
 	
 	void Awake ()
 	{
-		PlayerPrefs.DeleteAll();Debug.LogWarning("PlayerPrefs.DeleteAll()");//TODO: delete this
+		//PlayerPrefs.DeleteAll();Debug.LogWarning("PlayerPrefs.DeleteAll()");//TODO: delete this
 	}
 	
 	public void LevelBegin ()
@@ -44,5 +44,14 @@ public class MissionEmmitters : Abstract, IMissionEmmitter
 		for(int i=0;i<missionEmmitters.Length;i++){
 			missionEmmitters[i].NotifyMetersRunned(meter);
 		}
+	}
+	
+	public int GetCountFinishedMissions ()
+	{
+		int finishedMissionsNumber = 0;
+		for(int i=0;i<missionEmmitters.Length;i++){
+			finishedMissionsNumber+=missionEmmitters[i].GetCountFinishedMissions();
+		}
+		return finishedMissionsNumber;
 	}
 }

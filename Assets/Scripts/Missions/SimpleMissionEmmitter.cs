@@ -12,6 +12,7 @@ public class SimpleMissionEmmitter : Abstract, IMissionEmmitter, IMissionListene
 	private ArrayList currentMissions = new ArrayList ();
 	private ArrayList thisLifeFinishedMissions = new ArrayList ();
 	private bool canEmmitMission = true;
+	private int finishedMissionsNumber = 0;
 	float curTime;
 	
 	void Start ()
@@ -35,8 +36,11 @@ public class SimpleMissionEmmitter : Abstract, IMissionEmmitter, IMissionListene
 				} else {
 					availableMissionsPrefabs.Add (missionPrefab);
 				}
+			}else{
+				finishedMissionsNumber++;
 			}
 		}
+		Debug.LogWarning(finishedMissionsNumber);
 	}
 	
 	public bool IsMissionFinished (string id)
@@ -139,6 +143,7 @@ public class SimpleMissionEmmitter : Abstract, IMissionEmmitter, IMissionListene
 	
 	public void MissionFinished (Mission mission)
 	{
+		finishedMissionsNumber++;
 		SetMissionFinished (mission.GetId ());
 		currentMissions.Remove (mission);
 		thisLifeFinishedMissions.Add(mission);
@@ -151,5 +156,10 @@ public class SimpleMissionEmmitter : Abstract, IMissionEmmitter, IMissionListene
 		if (!mission.oneLife) {
 			CurrentMissionsSerializer.SaveMissionData (mission);
 		}
+	}
+	
+	public int GetCountFinishedMissions ()
+	{
+		return finishedMissionsNumber;
 	}
 }

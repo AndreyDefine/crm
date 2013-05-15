@@ -7,4 +7,5 @@ public interface IMissionEmmitter{
 	void NotifyMetersRunned(int meter);
 	ArrayList GetCurrentMissions();
 	ArrayList GetThisLifeFinishedMissions();
+	int GetCountFinishedMissions();
 }
