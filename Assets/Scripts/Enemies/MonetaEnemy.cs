@@ -73,25 +73,26 @@ public class MonetaEnemy : AbstractEnemy {
 		{
 			bool flagMoving=false;
 			float raznx,raznz,razny;
-			float smex=0.2f;
+			float smex=0.35f;
 			raznx=-parentTransform.position.x+walkingBearTransform.position.x;
 			razny=-parentTransform.position.y+walkingBearTransform.position.y;
 			raznz=-parentTransform.position.z+walkingBearTransform.position.z;
 	
+			float delitel=20;
 			if(Mathf.Abs(raznx)>smex)
 			{
-				raznx/=15;
+				raznx/=delitel;
 				flagMoving=true;
 			}
 			if(Mathf.Abs(razny)>smex)
 			{
-				razny/=15;
+				razny/=delitel;
 				flagMoving=true;
 			}
 				
 			if(Mathf.Abs(raznz)>smex)
 			{
-				raznz/=15;
+				raznz/=delitel;
 				flagMoving=true;
 			}
 			
@@ -107,7 +108,7 @@ public class MonetaEnemy : AbstractEnemy {
 	{
 		effectMade=true;
 		oldParent=parentTransform.parent;
-		parentTransform.parent=walkingBearTransform;
+		parentTransform.parent=playertransform;
 	}
 	
 	

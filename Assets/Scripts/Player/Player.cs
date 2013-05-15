@@ -240,12 +240,6 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		HeadStarsParticleEmitter.emit=false;
 	}
 	
-	public void ShowCap()
-	{
-		bearAnimation.ShowCap();
-		guiLayer.RemoveStrobile();
-	}
-	
 
 	// Update is called once per frame
 	void Update () {		
