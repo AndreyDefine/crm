@@ -9,8 +9,6 @@ public class RunningEnemy : AbstractEnemy {
 		if(animationScriptRun)
 		{
 			animationScriptRun.Stop();
-			
-			Debug.Log ("RunningEnemy");
 		}
 	}
 }
