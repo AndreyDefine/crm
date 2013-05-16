@@ -3,9 +3,6 @@ using System.Collections;
 
 public class PersonInfo {
 	public static int GetPersonLevel(){
-		Debug.Log(GlobalOptions.GetMissionEmmitters().GetCountFinishedMissions());
-		Debug.Log(GlobalOptions.GetMissionEmmitters().GetCountFinishedMissions()/3);
-		
 		return GlobalOptions.GetMissionEmmitters().GetCountFinishedMissions()/3+1;
 	}
 	

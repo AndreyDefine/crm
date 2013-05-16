@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class SimpleMissionEmmitter : Abstract, IMissionEmmitter, IMissionListener
+public class SimpleMissionEmmitter : BaseMissionEmmitter, IMissionListener
 {
 	public string misionFinishedTag;
 	public int missionRespaunTime;
@@ -40,7 +40,6 @@ public class SimpleMissionEmmitter : Abstract, IMissionEmmitter, IMissionListene
 				finishedMissionsNumber++;
 			}
 		}
-		Debug.LogWarning(finishedMissionsNumber);
 	}
 	
 	public bool IsMissionFinished (string id)
@@ -53,7 +52,7 @@ public class SimpleMissionEmmitter : Abstract, IMissionEmmitter, IMissionListene
 		PlayerPrefs.SetInt (misionFinishedTag + id, 1);
 	}
 	
-	public void LevelBegin ()
+	public override void LevelBegin ()
 	{
 		for(int i=0;i<thisLifeFinishedMissions.Count;i++){
 			Destroy(((Mission)thisLifeFinishedMissions[i]).gameObject);
@@ -102,7 +101,7 @@ public class SimpleMissionEmmitter : Abstract, IMissionEmmitter, IMissionListene
 		return mission;
 	}
 
-	public void NotifyCoinsCollected (int coins)
+	public override void NotifyCoinsCollected (int coins)
 	{
 		ArrayList missions = GetActiveCurrentMissions ();
 		for (int i=0; i<missions.Count; i++) {
@@ -111,17 +110,17 @@ public class SimpleMissionEmmitter : Abstract, IMissionEmmitter, IMissionListene
 		}
 	}
 	
-	public ArrayList GetCurrentMissions ()
+	public override ArrayList GetCurrentMissions ()
 	{
 		return currentMissions;
 	}
 	
-	public ArrayList GetThisLifeFinishedMissions ()
+	public override ArrayList GetThisLifeFinishedMissions ()
 	{
 		return thisLifeFinishedMissions;
 	}
 	
-	public void NotifyMetersRunned (int meter)
+	public override void NotifyMetersRunned (int meter)
 	{
 		ArrayList missions = GetActiveCurrentMissions ();
 		for (int i=0; i<missions.Count; i++) {
@@ -158,7 +157,7 @@ public class SimpleMissionEmmitter : Abstract, IMissionEmmitter, IMissionListene
 		}
 	}
 	
-	public int GetCountFinishedMissions ()
+	public override int GetCountFinishedMissions ()
 	{
 		return finishedMissionsNumber;
 	}

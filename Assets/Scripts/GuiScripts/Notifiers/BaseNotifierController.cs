@@ -5,6 +5,17 @@ public abstract class BaseNotifierController : Abstract {
 	ArrayList notifiersQueue = new ArrayList();
 	protected ArrayList notifiersInProgress = new ArrayList();
 	
+	public virtual void Restart(){
+		for(int i=0;i<notifiersQueue.Count;i++){
+			((BaseNotifier)notifiersQueue[i]).DestroyNotifier();	
+		}
+		notifiersQueue.Clear();
+		for(int i=0;i<notifiersInProgress.Count;i++){
+			((BaseNotifier)notifiersInProgress[i]).DestroyNotifier();
+		}
+		notifiersInProgress.Clear();
+	}
+	
 	protected void AddNotifier(BaseNotifier notifier){
 		notifier.singleTransform.parent = singleTransform;
 		notifier.singleTransform.localPosition = GetOutNotifierPlace(0);

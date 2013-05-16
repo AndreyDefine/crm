@@ -3,14 +3,14 @@ using System.Collections;
 
 public class GuiMission : Abstract {
 	
-	public CrmFont name;
+	public CrmFont missionName;
 	public CrmFont progressText;
 	public GuiProgress progress;
 	public GameObject complete;
 	public GameObject missionIcoPlace;
 	
 	public void SetMission(Mission mission){
-		name.text = mission.missionName;
+		missionName.text = mission.missionName;
 		progressText.text = mission.GetLongProgressRepresentation();
 		progress.SetProgress(mission.GetProgress());
 		if(mission.GetState()==MissionStates.FINISHED){

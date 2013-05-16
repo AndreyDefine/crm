@@ -34,6 +34,10 @@ public class Mission : Abstract {
 		missionListeners.Add(missionListener);	
 	}
 	
+	public void RemoveMissionListener(IMissionListener missionListener){
+		missionListeners.Remove(missionListener);	
+	}
+	
 	protected void MissionFinished(){
 		this.state = MissionStates.FINISHED;
 		for(int i=0;i<missionListeners.Count;i++){

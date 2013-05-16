@@ -12,6 +12,12 @@ public class BoostNotifier : BaseNotifier,IBoostListener
 		return boost;
 	}
 	
+	public override void DestroyNotifier ()
+	{
+		base.DestroyNotifier ();
+		boost.RemoveBoostListener(this);
+	}
+	
 	public void SetBoost(Boost boost){
 		this.boost = boost;
 		BoostIco boostIco = Instantiate(boost.iconPrefab) as BoostIco;

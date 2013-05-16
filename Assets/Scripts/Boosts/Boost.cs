@@ -16,6 +16,10 @@ public class Boost : Abstract {
 		boostListeners.Add(boostListener);
 	}
 	
+	public void RemoveBoostListener(IBoostListener boostListener){
+		boostListeners.Remove(boostListener);
+	}
+	
 	protected void BoostFinished(){
 		this.state = BoostStates.FINISHED;
 		for(int i=0;i<boostListeners.Count;i++){

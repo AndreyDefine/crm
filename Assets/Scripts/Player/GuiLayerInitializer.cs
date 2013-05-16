@@ -90,11 +90,6 @@ public class GuiLayerInitializer : Abstract {
 	
 	public void Restart()
 	{
-		for(int i=0;i<StarsList.Count;i++)
-		{
-			Debug.Log ("Destroy");
-			Destroy(StarsList[i] as GameObject);
-		}
 		StarsList.Clear();
 		curStarPos=250;
 		stopTime=0;
@@ -113,6 +108,12 @@ public class GuiLayerInitializer : Abstract {
 		
 		SetMoney(GlobalOptions.GetLevelStartMoney());
 		SetPoints (GlobalOptions.GetLevelStartPoints());
+		pause.active = true;
+		
+		currentMissionsNotifierController.Restart();
+		upNotifierController.Restart();
+		boostNotifierController.Restart();
+		downNotifierController.Restart();
 	}
 	
 	void Update () {
@@ -336,6 +337,7 @@ public class GuiLayerInitializer : Abstract {
 		playerScript.GameOver();
 		flagGameOver=true;
 		GameOverTime=Time.time;
+		pause.active = false;
 	}
 	
 	private void MakeGameOver()

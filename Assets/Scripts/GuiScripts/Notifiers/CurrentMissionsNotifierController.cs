@@ -6,8 +6,10 @@ public class CurrentMissionsNotifierController : BaseNotifierController {
 	float NOTIFIER_HEIGHT = 0.35f;
 	float Z_INDEX_PER_POSITION = 0.15f;
 	
-	void Start(){
-		SetCurrentMissions();	
+	public override void Restart ()
+	{
+		base.Restart ();
+		SetCurrentMissions();
 	}
 	
 	private void SetCurrentMissions(){

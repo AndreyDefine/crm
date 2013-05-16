@@ -3,7 +3,7 @@ using System.Collections;
 
 public class MissionEmmitters : Abstract, IMissionEmmitter
 {
-	public SimpleMissionEmmitter[] missionEmmitters;//TODO переделать потом по-другому
+	public BaseMissionEmmitter[] missionEmmitters;//TODO переделать потом по-другому
 	
 	void Awake ()
 	{

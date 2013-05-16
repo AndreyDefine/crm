@@ -14,6 +14,12 @@ public class CurrentMissionNotifier : BaseNotifier, IMissionListener
 		complete.active = false;	
 	}
 		
+	public override void DestroyNotifier ()
+	{
+		base.DestroyNotifier();
+		mission.RemoveMissionListener(this);
+	}
+	
 	public void MissionProgressChanged (Mission mission)
 	{
 		SetText(mission.GetProgressRepresentation());

@@ -67,7 +67,7 @@ public class ButtonScreenPosition : Abstract {
 			pos=Cameras.GetGUICamera().ScreenToWorldPoint(pos);
 			
 			pos.x+=singleRenderer.bounds.extents.x;
-			pos.y = singleTransform.position.y;
+			pos.y = 0f;
 			
 			singleTransform.position=pos;	
 			return;	
@@ -79,7 +79,7 @@ public class ButtonScreenPosition : Abstract {
 			pos=Cameras.GetGUICamera().ScreenToWorldPoint(pos);
 			
 			pos.x-=singleRenderer.bounds.extents.x;
-			pos.y = singleTransform.position.y;
+			pos.y = 0f;
 			
 			singleTransform.position=pos;	
 			return;	
@@ -90,7 +90,7 @@ public class ButtonScreenPosition : Abstract {
 			pos=GlobalOptions.NormalisePos(pos);
 			pos=Cameras.GetGUICamera().ScreenToWorldPoint(pos);
 			
-			pos.x = singleTransform.position.x;
+			pos.x = 0f;
 			pos.y-=singleRenderer.bounds.extents.y;
 			
 			singleTransform.position=pos;	
@@ -102,7 +102,7 @@ public class ButtonScreenPosition : Abstract {
 			pos=GlobalOptions.NormalisePos(pos);
 			pos=Cameras.GetGUICamera().ScreenToWorldPoint(pos);
 			
-			pos.x = singleTransform.position.x;
+			pos.x = 0f;
 			pos.y+=singleRenderer.bounds.extents.y;
 			
 			singleTransform.position=pos;	
