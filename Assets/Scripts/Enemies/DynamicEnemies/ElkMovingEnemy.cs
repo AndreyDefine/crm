@@ -83,6 +83,7 @@ public class ElkMovingEnemy : AbstractEnemy {
 		if(animationScriptBaran)
 		{
 			animationScriptBaran["Take_001"].speed=0;
+			animationScriptBaran=null;
 		}
 		if(animationScript)
 		{

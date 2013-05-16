@@ -15,15 +15,15 @@ Shader "Shaders/HorizontDiffuzeCullOff" {
 void vert (inout appdata_full v) {
 float pos = length(mul (UNITY_MATRIX_MV, v.vertex).xyz);
 
-pos-=30;
+//pos-=30;
 
 float curpos = length(mul (UNITY_MATRIX_MVP, v.vertex).xyz);
-curpos=sin(curpos/50); 
+curpos=sin(curpos/100); 
 if(pos>0)
 {
-	pos/=100;
+	pos/=30;
 	pos*=pos;
-	//v.vertex.y -= pos * 15;
+	//v.vertex.y -= pos * 1;
 	//v.vertex.x += pos * 10*curpos;
 }
   
