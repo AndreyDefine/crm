@@ -3,7 +3,6 @@ using System.Collections;
 
 public class ScreenLoader : MonoBehaviour {
 	
-	public AbstractScreen[] Screens;
 	public string firstScreen="";
 	
 	
@@ -56,56 +55,49 @@ public class ScreenLoader : MonoBehaviour {
 			return;
 		}
 		AbstractScreen curScreenScript;
-		GameObject newScreen,newLoadedScreen=null;
-		for (int i=0;i<Screens.Length;i++)
+		GameObject newLoadedScreen=null;
+		
+		if(ActiveScreen)
 		{
-			if(Screens[i].gameObject.name==instr)
+			PrevActive=ActiveScreen;
+			ActiveScreen.HideScreen();
+		}
+		
+		//ищем в загруженных скринах
+		for (int j=0; j<arrayScreens.Count;j++)
+		{
+			//нашли
+			if((arrayScreens[j] as GameObject).transform.name==instr)
 			{
-				if(ActiveScreen)
-				{
-					PrevActive=ActiveScreen;
-					ActiveScreen.HideScreen();
-				}
-				newScreen=Screens[i].gameObject;
-				
-				//ищем в загруженных скринах
-				for (int j=0; j<arrayScreens.Count;j++)
-				{
-					//нашли
-					if((arrayScreens[j] as GameObject).transform.name==newScreen.transform.name)
-					{
-						newLoadedScreen=(arrayScreens[j] as GameObject);
-						break;
-					}
-				}
-				
-				if(!newLoadedScreen)
-				{
-					newLoadedScreen= Instantiate (newScreen) as GameObject;
-					newLoadedScreen.transform.name=newScreen.transform.name;
-					arrayScreens.Add(newLoadedScreen);
-				}			
-				curScreenScript=(newLoadedScreen.GetComponent("AbstractScreen") as AbstractScreen);
-				//3d сцена
-				if(curScreenScript.Game3DScreen)
-				{
-					Debug.Log ("3dScreen "+instr);
-					ActiveScreen=null;
-					if(Active3DScreen)
-					{
-						Active3DScreen.HideObjects();
-					}
-					Active3DScreen=curScreenScript;
-					Active3DScreen.ShowScreen();
-				}
-				else 
-				{
-					Debug.Log ("2dScreen "+instr);
-					ActiveScreen=curScreenScript;
-					ActiveScreen.ShowScreen();
-				}
+				newLoadedScreen=(arrayScreens[j] as GameObject);
 				break;
 			}
+		}
+		
+		if(!newLoadedScreen)
+		{
+			newLoadedScreen= Instantiate(Resources.Load("Screens/"+instr)) as GameObject;
+			newLoadedScreen.transform.name=instr;
+			arrayScreens.Add(newLoadedScreen);
+		}			
+		curScreenScript=(newLoadedScreen.GetComponent("AbstractScreen") as AbstractScreen);
+		//3d сцена
+		if(curScreenScript.Game3DScreen)
+		{
+			Debug.Log ("3dScreen "+instr);
+			ActiveScreen=null;
+			if(Active3DScreen)
+			{
+				Active3DScreen.HideObjects();
+			}
+			Active3DScreen=curScreenScript;
+			Active3DScreen.ShowScreen();
+		}
+		else 
+		{
+			Debug.Log ("2dScreen "+instr);
+			ActiveScreen=curScreenScript;
+			ActiveScreen.ShowScreen();
 		}
 	}
 }
