@@ -464,7 +464,6 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	{
 		if(flagOnlyFizik)
 		{
-			Debug.Log ("forward "+flagOnlyFizik);
 			MakeMovingCharacterControllerForward(inpos);
 		}
 		else

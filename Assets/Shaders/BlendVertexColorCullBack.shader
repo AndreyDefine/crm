@@ -31,7 +31,7 @@ if(pos>0)
 {
 	pos/=30;
 	pos*=pos;
-	v.vertex.y -= pos * 1;
+	//v.vertex.y -= pos * 1;
 	//v.vertex.x += pos * 10*curpos;
 }
   

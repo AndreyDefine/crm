@@ -3,8 +3,11 @@ using System.Collections;
 
 public class ScreenLoader : MonoBehaviour {
 	
-	public GameObject[] Screens;
+	public AbstractScreen[] Screens;
 	public string firstScreen="";
+	
+	
+	private ArrayList arrayScreens=new ArrayList();
 	
 	private AbstractScreen ActiveScreen;
 	private AbstractScreen Active3DScreen;
@@ -53,20 +56,36 @@ public class ScreenLoader : MonoBehaviour {
 			return;
 		}
 		AbstractScreen curScreenScript;
-		GameObject newScreen;
-		Debug.Log (instr);
+		GameObject newScreen,newLoadedScreen=null;
 		for (int i=0;i<Screens.Length;i++)
 		{
-			if((Screens[i] as GameObject).name==instr)
+			if(Screens[i].gameObject.name==instr)
 			{
 				if(ActiveScreen)
 				{
 					PrevActive=ActiveScreen;
 					ActiveScreen.HideScreen();
-					Debug.Log ("Hide "+ActiveScreen.gameObject.name);
 				}
-				newScreen=(Screens[i] as GameObject);
-				curScreenScript=(newScreen.GetComponent("AbstractScreen") as AbstractScreen);
+				newScreen=Screens[i].gameObject;
+				
+				//ищем в загруженных скринах
+				for (int j=0; j<arrayScreens.Count;j++)
+				{
+					//нашли
+					if((arrayScreens[j] as GameObject).transform.name==newScreen.transform.name)
+					{
+						newLoadedScreen=(arrayScreens[j] as GameObject);
+						break;
+					}
+				}
+				
+				if(!newLoadedScreen)
+				{
+					newLoadedScreen= Instantiate (newScreen) as GameObject;
+					newLoadedScreen.transform.name=newScreen.transform.name;
+					arrayScreens.Add(newLoadedScreen);
+				}			
+				curScreenScript=(newLoadedScreen.GetComponent("AbstractScreen") as AbstractScreen);
 				//3d сцена
 				if(curScreenScript.Game3DScreen)
 				{
