@@ -23,6 +23,12 @@ public class ScreenLoader : MonoBehaviour {
 		if(Active3DScreen&&ActiveScreen)
 		{
 			ActiveScreen.HideScreen();
+			
+			//ищем активный 
+			arrayScreens.Remove(ActiveScreen.gameObject);
+			Destroy(ActiveScreen.gameObject);
+			ActiveScreen=null;
+			
 			PrevActive.ShowScreen();
 			ActiveScreen=PrevActive;
 			return;
@@ -30,8 +36,14 @@ public class ScreenLoader : MonoBehaviour {
 		
 		
 		if(ActiveScreen&&PrevActive)
-		{
+		{		
 			ActiveScreen.HideScreen();
+			
+			//ищем активный 
+			arrayScreens.Remove(ActiveScreen.gameObject);
+			Destroy(ActiveScreen.gameObject);
+			ActiveScreen=null;
+			
 			PrevActive.ShowScreen();
 			ActiveScreen=PrevActive;
 			return;

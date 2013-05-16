@@ -440,7 +440,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	
 		newObject = obstacleElementFactory.GetNewObjectWithName(marker.name);
 		
-		//Debug.Log (marker.name);
+		Debug.Log ("marker.name="+marker.name);
 		
 		if(!newObject)
 		{
@@ -478,7 +478,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 				}
 			}
 		}
-		
+				
 		if(MakeObstacleSet&&recursion==0)
 		{
 			vspObject=new GameObject();
@@ -486,6 +486,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 			{
 				vspObject.name="money";
 			}
+			
 			else if(marker.name=="VodkaContainer"||marker.name=="MagnitContainer"||marker.name=="PostalContainer"||marker.name=="KopilkaContainer")
 			{
 				vspObject.name="boost";

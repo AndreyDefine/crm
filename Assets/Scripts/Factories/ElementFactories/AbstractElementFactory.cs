@@ -2,6 +2,9 @@ using UnityEngine;
 using System.Collections;
 
 public class AbstractElementFactory: Abstract{
+	
+	public bool flagGetFromResources=false;
+	public string pathInResources="";
 	public bool flagGenerate;
 	public Vector3 initialPos;
 	public GameObject[] terrain1;
@@ -108,10 +111,18 @@ public class AbstractElementFactory: Abstract{
 			PutToFirstState(newTerrain);
 		}else
 		{
-			//Debug.Log ("Instantiate");
-			int RandIndex=Random.Range(0,terrain1.Length);
-			newTerrain	= Instantiate (terrain1[RandIndex]) as GameObject;
-			newTerrain.name=(terrain1[RandIndex] as GameObject).name;
+			if(flagGetFromResources)
+			{
+				int RandIndex=Random.Range(0,terrainsListToDel.Count);
+				newTerrain	= Instantiate(Resources.Load(pathInResources+"/"+(terrainsListToDel[RandIndex]as GameObject).name)) as GameObject;
+				newTerrain.name=(terrainsListToDel[RandIndex]as GameObject).name;
+			}
+			else
+			{
+				int RandIndex=Random.Range(0,terrain1.Length);
+				newTerrain	= Instantiate (terrain1[RandIndex]) as GameObject;
+				newTerrain.name=(terrain1[RandIndex] as GameObject).name;
+			}
 			addTagToObject(newTerrain);	
 			PutToFirstState(newTerrain);
 		}
@@ -138,13 +149,16 @@ public class AbstractElementFactory: Abstract{
 	//add all objects into pull
 	public virtual void PreloadPullObjects()
 	{
-		GameObject newTerrain=null;
-		for (int i=0; i<terrain1.Length;i++){
-			newTerrain	= Instantiate (terrain1[i]) as GameObject;
-			newTerrain.name=(terrain1[i] as GameObject).name;
-			addTagToObject(newTerrain);	
-			newTerrain.transform.position=new Vector3(-200,-200,-200);
-			terrainsListToDel.Add (newTerrain);
+		if(!flagGetFromResources)
+		{
+			GameObject newTerrain=null;
+			for (int i=0; i<terrain1.Length;i++){
+				newTerrain	= Instantiate (terrain1[i]) as GameObject;
+				newTerrain.name=(terrain1[i] as GameObject).name;
+				addTagToObject(newTerrain);	
+				newTerrain.transform.position=new Vector3(-200,-200,-200);
+				terrainsListToDel.Add (newTerrain);
+			}
 		}
 	}
 	
@@ -168,18 +182,35 @@ public class AbstractElementFactory: Abstract{
 		//ничего не нашли
 		if(!newTerrain)
 		{
-			//Debug.Log ("Instantiate");
-			for(i=0;i<terrain1.Length;i++)
+			if(flagGetFromResources)
 			{
-				//нашли
-				if((terrain1[i] as GameObject).name==instr){
-					newTerrain	= Instantiate (terrain1[i]) as GameObject;
-					addTagToObject(newTerrain);	
-					PutToFirstState(newTerrain);
-					newTerrain.name=instr;
-					break;
+				if(Resources.Load(pathInResources+"/"+instr)==null)
+				{
+					//Debug.Log (instr);
 				}
-			}	
+				else
+				{
+					newTerrain	= Instantiate(Resources.Load(pathInResources+"/"+instr)) as GameObject;
+				}
+			}
+			else
+			{
+				for(i=0;i<terrain1.Length;i++)
+				{
+					//нашли
+					if((terrain1[i] as GameObject).name==instr){
+						newTerrain	= Instantiate (terrain1[i]) as GameObject;
+						break;
+					}
+				}	
+			}
+			
+			if(newTerrain)
+			{
+				addTagToObject(newTerrain);	
+				PutToFirstState(newTerrain);
+				newTerrain.name=instr;
+			}
 		}
 		if(newTerrain)
 		{

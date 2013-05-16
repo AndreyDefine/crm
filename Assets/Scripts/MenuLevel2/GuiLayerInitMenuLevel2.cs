@@ -31,7 +31,5 @@ public class GuiLayerInitMenuLevel2 : Abstract {
 		BackButton.transform.position=pos;
 		
 		BackButton.transform.parent=singleTransform;
-		
-		Debug.Log ("InitSprites");
 	}
 }
