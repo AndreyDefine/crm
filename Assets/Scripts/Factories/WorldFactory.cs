@@ -307,8 +307,10 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 				Transform OneObstacle,marker;
 				int randomIndexOfSet;
 				for(i=0;i<markedObjectsObstacleSet.Count&&interrainTag.ObstacleSetArray.Length!=0;i++){
+					if(curversionForCoRoutine!=versionForCoRoutine) yield break;
 					kolvo=neededNumberOfObstacleSet>markedObjectsObstacleSet.Count?markedObjectsObstacleSet.Count:neededNumberOfObstacleSet;
 					for(i=0;i<kolvo;i++){
+						if(curversionForCoRoutine!=versionForCoRoutine) yield break;
 						//случайный индекс маркера
 						randIndex=Random.Range(0,markedObjectsObstacleSet.Count);
 						//получим марке
