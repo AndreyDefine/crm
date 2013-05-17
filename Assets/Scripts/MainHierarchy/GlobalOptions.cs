@@ -212,7 +212,7 @@ public class GlobalOptions {
 	public static GameObject GetWorldFactory(){
 		if(!worldFactory)
 		{
-			worldFactory=GameObject.Find("/ScreenGame/WorldFactory");
+			worldFactory=GameObject.Find("/WorldFactory");
 		}
 		return worldFactory;
 	}

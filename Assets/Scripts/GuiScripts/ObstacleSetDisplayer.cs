@@ -15,7 +15,7 @@ public class ObstacleSetDisplayer : MonoBehaviour {
 // 5.5 frames.
  
     public  float updateInterval = 0.5F;
-	private WorldFactory WorldFactoryScript;
+	private WorldFactory worldFactoryScript;
 	float timeleft;
  
     void Start() {
@@ -25,16 +25,28 @@ public class ObstacleSetDisplayer : MonoBehaviour {
             return;
         }
         timeleft = updateInterval;
-		
-		WorldFactoryScript=GlobalOptions.GetWorldFactory().GetComponent<WorldFactory>();
     }
  
     void Update() {
+		if(!worldFactoryScript)
+		{
+			//Get world factory script
+			GameObject worldFactory=null;
+			worldFactory=GlobalOptions.GetWorldFactory();
+			if(worldFactory)
+			{
+				worldFactoryScript=worldFactory.GetComponent<WorldFactory>();
+			}
+		}
+		
+		if(!worldFactoryScript)
+			return;
+		
         timeleft -= Time.deltaTime;
     
         // Interval ended - update GUI text and start new interval
         if (timeleft <= 0.0) {
-            string format = WorldFactoryScript.GetCurrentObstacleSet();
+            string format = worldFactoryScript.GetCurrentObstacleSet();
             guiText.text = format;
 			guiText.material.color = Color.blue;
         }

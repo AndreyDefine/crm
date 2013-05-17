@@ -25,9 +25,9 @@ public class LevelTag : Abstract {
 			ParseRoadTerrainNames();
 		}
 		
-		if(preloadTerrainsNames==null){
+		/*if(preloadTerrainsNames==null){
 			ParseTerrainNames();
-		}
+		}*/
 	}
 	
 	public string[] GetRoadTerrainNames()

@@ -45,6 +45,8 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	
 	protected bool flagFirstTime=true;
 	
+	private int versionForCoRoutine=0;
+	
 	public string GetCurrentObstacleSet()
 	{
 		return terrainElementFactory.GetCurrentTerrainForZ().GetComponent<TerrainTag>().obstacleSetName;
@@ -172,6 +174,9 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		firstTimeInit=true;
 		int i;
 		
+		versionForCoRoutine++;
+		Debug.Log ("versionForCoRoutine++;");
+		
 		terrainElementFactory.ReStart();
 		uniqueElementFactory.ReStart();
 		boostElementFactory.ReStart();
@@ -205,54 +210,11 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	
 	private void ParseTerrainNames()
 	{
-		//посчитаем необходимые кусочки
-		/*if(drawMode){
-			int i,j;
-			bool flagFounded;
-			ArrayList preloadTerrainList=new ArrayList(); 
-			ArrayList terrainList=new ArrayList(); 
-			ArrayList removeTerrainList=new ArrayList(); 
-			//заполним видимые сначала
-			for(i=0;i<numberOfTerrains+1;i++)
-			{
-				preloadTerrainList.Add(roadTerrainsNames[i]);
-				terrainList.Add(roadTerrainsNames[i]);
-			}
-			
-			for(i=numberOfTerrains;i<roadTerrainsNames.Length;i++)
-			{
-				flagFounded=false;
-				for(j=0;j<removeTerrainList.Count;j++){
-					if(removeTerrainList[j] as string == roadTerrainsNames[i])
-					{
-						//нашли
-						terrainList.Add(removeTerrainList[j]);
-						removeTerrainList.Remove(removeTerrainList[j]);
-						flagFounded=true;
-						break;
-					}
-				}
-				//ничего не нашли
-				if(!flagFounded)
-				{
-					preloadTerrainList.Add(roadTerrainsNames[i]);
-					terrainList.Add(roadTerrainsNames[i]);
-				}
-				removeTerrainList.Add(terrainList[0]);
-				terrainList.Remove(terrainList[0]);
-			}
-			
-			preloadTerrainsNames=new string[preloadTerrainList.Count];
-			for(i=0;i<preloadTerrainList.Count;i++){
-				preloadTerrainsNames[i]=preloadTerrainList[i] as string;
-			}
-		}
-		else*/
-		{//получили массив террейнов
-			char []separator={',','\n',' '};
-			string []names=PreloadTerrains.Split(separator);
-			preloadTerrainsNames=names;
-		}
+		
+		//получили массив террейнов
+		char []separator={',','\n',' '};
+		string []names=PreloadTerrains.Split(separator);
+		preloadTerrainsNames=names;
 	}
 	
 	private void ParseRoadTerrainNames()
@@ -267,27 +229,13 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		StartCoroutine(AddObjects(FlagCoRoutine));		
 	}
 	
-	public override void AddObjectsInPulls(bool FlagCoRoutine){
-		StartCoroutine(AddExtraObjectsInPullsCoRutine(FlagCoRoutine));	
-	}
-	
-	private IEnumerator AddExtraObjectsInPullsCoRutine(bool FlagCoRoutine){
-		
-		int i;
-		for(i=0;i<preloadTerrainsNames.Length;i++)
-		{
-			terrainElementFactory.AddExtraObjectInPullWithName(preloadTerrainsNames[i]);
-			if(FlagCoRoutine) yield return null;
-		}
-		
-		if(FlagCoRoutine) yield return null;
-	}
-	
 	private IEnumerator addDynamicByMarkers(GameObject inTerrain,TerrainTag interrainTag,bool FlagCoRoutine){
 		int i,j;	
 		int kolvo;
 		int randIndex;
 		string curname;
+		
+		int curversionForCoRoutine=versionForCoRoutine;
 		//tree
 		ArrayList markedObjectsTrees=new ArrayList();	
 		//uniqueobjects Terrains
@@ -304,6 +252,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		Transform[] allChildren = inTerrain.gameObject.GetComponentsInChildren<Transform>();
 		for(i=0;i<allChildren.Length;i++)
 		{
+			if(curversionForCoRoutine!=versionForCoRoutine) yield break;
 			//tree
 			if(allChildren[i].name=="tree"){
 				markedObjectsTrees.Add (allChildren[i]);
@@ -336,6 +285,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		for(i=0;i<markedObjectsUniqueTerrains.Count;i++){
 			Transform[] uniqueMarkers = (markedObjectsUniqueTerrains[i] as Transform).gameObject.GetComponentsInChildren<Transform>();
 			for(j=1;j<uniqueMarkers.Length;j++){
+				if(curversionForCoRoutine!=versionForCoRoutine) yield break; 
 				curUniqueTerrain=(uniqueMarkers[j] as Transform);
 				curname=curUniqueTerrain.name;
 				if(!curname.Contains("Left")&&!curname.Contains("Right"))
@@ -383,6 +333,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 						Transform[] setMarkers = curSet.GetComponentsInChildren<Transform>();
 						
 						for(j=1;j<setMarkers.Length;j++){
+							if(curversionForCoRoutine!=versionForCoRoutine) yield break;
 							OneObstacle=(setMarkers[j] as Transform);
 							if(!OneObstacle)
 							{
@@ -416,6 +367,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		for(i=0;i<markedObjectsUnique.Count;i++){
 			Transform[] uniqueMarkers = (markedObjectsUnique[i] as Transform).gameObject.GetComponentsInChildren<Transform>();
 			for(j=1;j<uniqueMarkers.Length;j++){
+				if(curversionForCoRoutine!=versionForCoRoutine)yield break;
 				curUnique=(uniqueMarkers[j] as Transform);
 				curname=curUnique.name;
 				if(!curname.Contains("Left")&&!curname.Contains("Right"))
@@ -428,10 +380,12 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		
 		//trees
 		for(i=0;i<markedObjectsTrees.Count;i++){
+			if(curversionForCoRoutine!=versionForCoRoutine) yield break;
 			addOneTreeAtMarker(markedObjectsTrees[i] as Transform,interrainTag);
 			if(FlagCoRoutine&&i%2==0) yield return null;
 		}
 		
+		if(curversionForCoRoutine!=versionForCoRoutine) yield break;
 		if(FlagCoRoutine) yield return null;
 	}
 	

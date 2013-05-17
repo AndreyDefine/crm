@@ -120,13 +120,6 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		GlobalOptions.gameState=GameStates.GAME;
 		GlobalOptions.playerStates=PlayerStates.WALK;
 		GlobalOptions.playerStatesPathChanging=PlayerStatesPathChanging.FORWARD;
-		
-		//Get world factory script
-		GameObject worldFactory;
-		//find with no parents
-		worldFactory=GlobalOptions.GetWorldFactory();
-		
-		worldFactoryScript=worldFactory.GetComponent<WorldFactory>();
 	}
 	
 	public void Restart()
@@ -242,7 +235,21 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 
 	// Update is called once per frame
-	void Update () {		
+	void Update () {
+		if(!worldFactoryScript)
+		{
+			//Get world factory script
+			GameObject worldFactory=null;
+			worldFactory=GlobalOptions.GetWorldFactory();
+			if(worldFactory)
+			{
+				worldFactoryScript=worldFactory.GetComponent<WorldFactory>();
+			}
+		}
+		
+		if(!worldFactoryScript)
+			return;
+		
 		if(GlobalOptions.gameState==GameStates.GAME)
 		{
 			MoveLeftRight(force);

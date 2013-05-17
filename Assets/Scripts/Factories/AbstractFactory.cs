@@ -3,7 +3,7 @@ using System.Collections;
 
 public class AbstractFactory : Abstract {
 	public Vector3 initialPos;
-	public bool MakeObstacleSet=true;
+	public bool MakeObstacleSet=false;
 
 	protected Vector3 oldObjectPos;
 	
