@@ -46,6 +46,14 @@ public class SpriteTouch : Abstract,TouchTargetedDelegate {
 		init();
     }
 	
+	private void OnDestroy()
+	{
+		if(sharedTouchDispatcher&&!notTouchObject)
+		{
+			sharedTouchDispatcher.removeDelegate(this);
+		}
+	}
+	
 	protected void GetSharedTouchDispatcher(){
 		//find with no parents
 		sharedTouchDispatcher = TouchDispatcher.GetSharedTouchDispatcher();

@@ -81,18 +81,18 @@ public class MonetaEnemy : AbstractEnemy {
 			float delitel=20;
 			if(Mathf.Abs(raznx)>smex)
 			{
-				raznx/=delitel;
+				raznx/=Mathf.Abs(raznx)>smex*3?delitel:delitel/2;
 				flagMoving=true;
 			}
 			if(Mathf.Abs(razny)>smex)
 			{
-				razny/=delitel;
+				razny/=Mathf.Abs(razny)>smex*3?delitel:delitel/2;
 				flagMoving=true;
 			}
 				
 			if(Mathf.Abs(raznz)>smex)
 			{
-				raznz/=delitel;
+				raznz/=Mathf.Abs(raznz)>smex*3?delitel:delitel/2;
 				flagMoving=true;
 			}
 			
