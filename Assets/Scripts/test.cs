@@ -6,6 +6,6 @@ public class test : CutOut {
 
     // Use this for initialization
     void Update() {
-		CutOutBottom(0.5f);
+		//AnimationFactory.FlyInXYZ
     }
 }

@@ -6,13 +6,15 @@ public class GuiMission : Abstract {
 	public CrmFont missionName;
 	public CrmFont progressText;
 	public GuiProgress progress;
+	public GuiProgress progressBlick;
 	public GameObject complete;
 	public GameObject missionIcoPlace;
 	
 	public void SetMission(Mission mission){
 		missionName.text = mission.missionName;
 		progressText.text = mission.GetLongProgressRepresentation();
-		progress.SetProgress(mission.GetProgress());
+		progress.SetProgressWithColor(mission.GetProgress());
+		progressBlick.SetProgress(mission.GetProgress());
 		if(mission.GetState()==MissionStates.FINISHED){
 			complete.active = true;
 		}else{
