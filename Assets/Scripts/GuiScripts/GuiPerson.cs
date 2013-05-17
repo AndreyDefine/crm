@@ -7,7 +7,7 @@ public class GuiPerson : Abstract {
 	public CrmFont level;
 	
 	public void InitPerson(){
-		level.text = PersonInfo.GetPersonLevel().ToString();
+		level.text = "x"+PersonInfo.GetPersonLevel().ToString();
 		progress.SetProgress(PersonInfo.GetCurrentLevelProgress());
 	}
 }

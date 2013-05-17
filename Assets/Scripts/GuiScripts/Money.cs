@@ -7,7 +7,7 @@ public class Money : Abstract {
 	private int money;
 	
 	void Awake(){
-		Vector3 pos=new Vector3(GlobalOptions.Vsizex-15,GlobalOptions.Vsizey-80,singleTransform.position.z);
+		Vector3 pos=new Vector3(GlobalOptions.Vsizex-15,GlobalOptions.Vsizey-92,singleTransform.position.z);
 		pos=GlobalOptions.NormalisePos(pos);
 		pos=Cameras.GetGUICamera().ScreenToWorldPoint(pos);
 			
