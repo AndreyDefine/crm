@@ -75,24 +75,27 @@ public class MonetaEnemy : AbstractEnemy {
 			float raznx,raznz,razny;
 			float smex=0.35f;
 			raznx=-parentTransform.position.x+walkingBearTransform.position.x;
-			razny=-parentTransform.position.y+walkingBearTransform.position.y+1;
+			razny=-parentTransform.position.y+walkingBearTransform.position.y;
 			raznz=-parentTransform.position.z+walkingBearTransform.position.z;
 	
 			float delitel=20;
 			if(Mathf.Abs(raznx)>smex)
 			{
-				raznx/=Mathf.Abs(raznx)>smex*3?delitel:delitel/1.5f;
+				//raznx/=Mathf.Abs(raznx)>smex*3?delitel:delitel/1.5f;
+				raznx/=delitel;
 				flagMoving=true;
 			}
 			if(Mathf.Abs(razny)>smex)
 			{
-				razny/=Mathf.Abs(razny)>smex*3?delitel:delitel/1.5f;
+				//razny/=Mathf.Abs(razny)>smex*3?delitel:delitel/1.5f;
+				razny/=delitel;
 				flagMoving=true;
 			}
 				
 			if(Mathf.Abs(raznz)>smex)
 			{
-				raznz/=Mathf.Abs(raznz)>smex*3?delitel:delitel/1.5f;
+				//raznz/=Mathf.Abs(raznz)>smex*3?delitel:delitel/1.5f;
+				raznz/=delitel;
 				flagMoving=true;
 			}
 			

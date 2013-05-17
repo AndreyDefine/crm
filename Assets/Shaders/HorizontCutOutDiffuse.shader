@@ -19,17 +19,17 @@ struct Input {
 };
  
 void vert (inout appdata_full v) {
-float pos = length(mul (UNITY_MATRIX_MV, v.vertex).xyz);
+float pos = length(mul (UNITY_MATRIX_MVP, v.vertex).xyz);
 
 float curpos = length(mul (UNITY_MATRIX_MVP, v.vertex).xyz);
 curpos=sin(curpos/100); 
-//pos-=30;
+pos-=20;
 
 if(pos>0)
 {
-	pos/=30;
+	pos/=50;
 	pos*=pos;
-	//v.vertex.y -= pos * 1;
+	//v.vertex.y -= pos * 3;
 	//v.vertex.x += pos * 10*curpos;
 }
   
