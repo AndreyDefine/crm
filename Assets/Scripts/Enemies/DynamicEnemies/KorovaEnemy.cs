@@ -49,6 +49,7 @@ public class KorovaEnemy : AbstractEnemy {
 			if(GlobalOptions.gameState==GameStates.PAUSE_MENU)
 			{
 				animationScript["Korova_SetUp_Anim_2"].speed=0;
+				Debug.Log ("GamePaused Korova");
 			}
 			else
 			{
