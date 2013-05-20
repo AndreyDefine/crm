@@ -1,5 +1,4 @@
-
-Shader "AngryBots/FX/Additive" {
+Shader "Shaders/FX/Additive" {
 	Properties {
 		_MainTex ("Base", 2D) = "white" {}
 		_TintColor ("TintColor", Color) = (1.0, 1.0, 1.0, 1.0)
@@ -35,8 +34,9 @@ Shader "AngryBots/FX/Additive" {
 	ENDCG
 	
 	SubShader {
-		Tags { "RenderType" = "Transparent" "Reflection" = "RenderReflectionTransparentAdd" "Queue" = "Transparent"}
+		Tags { "RenderType" = "Transparent" "Reflection" = "RenderReflectionTransparentAdd"}
 		Cull Off
+		//ZTest Always
 		Lighting Off
 		ZWrite Off
 		Fog { Mode Off }
@@ -57,3 +57,4 @@ Shader "AngryBots/FX/Additive" {
 	} 
 	FallBack Off
 }
+

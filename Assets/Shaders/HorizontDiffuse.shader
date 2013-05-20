@@ -4,7 +4,7 @@ Shader "Shaders/HorizontDiffuze" {
     }
     
     SubShader {
-      Tags { "RenderType" = "Transparent" }
+      Tags { "RenderType" = "Transparent"}
       CGPROGRAM
       #pragma surface surf Lambert vertex:vert
       struct Input {
