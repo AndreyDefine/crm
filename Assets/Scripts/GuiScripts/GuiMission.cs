@@ -11,14 +11,15 @@ public class GuiMission : Abstract {
 	public GameObject missionIcoPlace;
 	
 	public void SetMission(Mission mission){
-		missionName.text = mission.missionName;
 		progressText.text = mission.GetLongProgressRepresentation();
 		progress.SetProgressWithColor(mission.GetProgress());
 		progressBlick.SetProgress(mission.GetProgress());
 		if(mission.GetState()==MissionStates.FINISHED){
 			complete.active = true;
+			missionName.text = mission.missionFinishedText;
 		}else{
-			complete.active = false;		
+			complete.active = false;	
+			missionName.text = mission.missionName;
 		}
 		MissionIco missionIco = Instantiate(mission.iconPrefab) as MissionIco;
 		missionIco.singleTransform.parent = missionIcoPlace.transform;

@@ -20,6 +20,13 @@ public class BaseOneNumberMission : Mission {
 		return ((float)currentNumber)/needNumber;
 	}
 	
+	public override void Restart ()
+	{
+		if(oneLife){
+			currentNumber = 0;
+		}
+	}
+	
 	public void AddNumber(int addNumber){
 		currentNumber+=addNumber;
 		if(currentNumber>needNumber){

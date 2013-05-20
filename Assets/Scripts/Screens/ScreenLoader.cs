@@ -11,9 +11,16 @@ public class ScreenLoader : MonoBehaviour {
 	private AbstractScreen ActiveScreen;
 	private AbstractScreen Active3DScreen;
 	private AbstractScreen PrevActive;
+	
+	public bool clearPlayerPrefs;
 
 	// Use this for initialization
 	void Start () {
+		if(clearPlayerPrefs){
+			PlayerPrefs.DeleteAll();
+			Debug.LogWarning("PlayerPrefs.DeleteAll();");
+		}
+		
 		//load first sceene
 		LoadScreenByName(firstScreen);
 	}

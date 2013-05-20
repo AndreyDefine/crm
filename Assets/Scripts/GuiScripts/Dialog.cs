@@ -9,7 +9,7 @@ public class Dialog : Abstract {
 	
 	void Start(){
 		if(GlobalOptions.gameState == GameStates.GAME_OVER){
-			dialogName.text = "Game is Over";
+			dialogName.text = "Game Over";
 		}else if(GlobalOptions.gameState == GameStates.PAUSE_MENU){
 			dialogName.text = "Game is Paused";
 		}else{

@@ -100,15 +100,6 @@ public class SimpleMissionEmmitter : BaseMissionEmmitter, IMissionListener
 		mission.SetId (id);
 		return mission;
 	}
-
-	public override void NotifyCoinsCollected (int coins)
-	{
-		ArrayList missions = GetActiveCurrentMissions ();
-		for (int i=0; i<missions.Count; i++) {
-			Mission mission = (Mission)missions [i];
-			mission.NotifyCoinsCollected (coins);
-		}
-	}
 	
 	public override ArrayList GetCurrentMissions ()
 	{
@@ -118,26 +109,6 @@ public class SimpleMissionEmmitter : BaseMissionEmmitter, IMissionListener
 	public override ArrayList GetThisLifeFinishedMissions ()
 	{
 		return thisLifeFinishedMissions;
-	}
-	
-	public override void NotifyMetersRunned (int meter)
-	{
-		ArrayList missions = GetActiveCurrentMissions ();
-		for (int i=0; i<missions.Count; i++) {
-			Mission mission = (Mission)missions [i];
-			mission.NotifyMetersRunned (meter);
-		}
-	}
-	
-	private ArrayList GetActiveCurrentMissions ()
-	{
-		ArrayList activeMissions = new ArrayList ();
-		for (int i=0; i<currentMissions.Count; i++) {
-			if (((Mission)currentMissions [i]).GetState () == MissionStates.ACTIVE) {
-				activeMissions.Add (currentMissions [i]);
-			}
-		}
-		return activeMissions;	
 	}
 	
 	public void MissionFinished (Mission mission)

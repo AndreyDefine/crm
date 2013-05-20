@@ -7,14 +7,14 @@ public class OnTrigger : Abstract {
 	
 	void OnTriggerEnter(Collider other) 
 	{
-		AbstractEnemy obj=other.gameObject.GetComponent<AbstractEnemy>();
+		AbstractBaseEnemy obj=other.gameObject.GetComponent<AbstractBaseEnemy>();
 		if (obj != null) {
             obj.OnHit(collider);
 		}
 	}
 	void OnTriggerExit (Collider other)
 	{
-    	AbstractEnemy obj=other.gameObject.GetComponent<AbstractEnemy>();
+    	AbstractBaseEnemy obj=other.gameObject.GetComponent<AbstractBaseEnemy>();
 		if (obj != null) {
             obj.OnExit(collider);
 		}

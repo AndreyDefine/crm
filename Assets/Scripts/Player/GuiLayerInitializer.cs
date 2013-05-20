@@ -110,6 +110,8 @@ public class GuiLayerInitializer : Abstract {
 		SetPoints (GlobalOptions.GetLevelStartPoints());
 		pause.active = true;
 		
+		GlobalOptions.GetMissionEmmitters().RestartActiveMissions();
+		
 		currentMissionsNotifierController.Restart();
 		upNotifierController.Restart();
 		boostNotifierController.Restart();
@@ -276,6 +278,7 @@ public class GuiLayerInitializer : Abstract {
 	
 	public void AddX2(Boost boostPrefab)
 	{
+		GlobalOptions.GetMissionEmmitters().NotifyX2Collected(1);
 		boostNotifierController.AddBoostNotifier(boostPrefab);
 		//PosScoreScale();
 		GlobalOptions.SetScoreScale(2);
@@ -287,6 +290,7 @@ public class GuiLayerInitializer : Abstract {
 	
 	public void AddVodka(Boost boostPrefab)
 	{
+		GlobalOptions.GetMissionEmmitters().NotifyVodkaCollected(1);
 		boostNotifierController.AddBoostNotifier(boostPrefab);
 		playerScript.MakeVodka();
 		flagVodka = true;
@@ -299,6 +303,7 @@ public class GuiLayerInitializer : Abstract {
 	
 	public void AddMagnit(Boost boostPrefab)
 	{
+		GlobalOptions.GetMissionEmmitters().NotifyMagnitCollected(1);
 		boostNotifierController.AddBoostNotifier(boostPrefab);
 		playerScript.MakeMagnit();
 	}
@@ -308,6 +313,7 @@ public class GuiLayerInitializer : Abstract {
 	}
 	
 	public void AddPostal(){
+		GlobalOptions.GetMissionEmmitters().NotifyPostCollected(1);
 		ShowPostal();
 	}
 	

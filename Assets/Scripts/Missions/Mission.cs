@@ -3,12 +3,12 @@ using System.Collections;
 
 public enum MissionStates{NOT_ACTIVE, ACTIVE, FINISHED}
 
-public class Mission : Abstract {
+public class Mission : Abstract, IMissionNotify {
 	
 	private MissionStates state = MissionStates.NOT_ACTIVE;
 	public MissionIco iconPrefab;
 	public string missionName="";
-	public string description="";
+	public string missionFinishedText="";
 	public bool oneLife;
 	
 	private ArrayList missionListeners = new ArrayList();
@@ -16,6 +16,10 @@ public class Mission : Abstract {
 	
 	public void SetActive(){
 		state = MissionStates.ACTIVE;
+	}
+	
+	public virtual void Restart(){
+		
 	}
 	
 	public MissionStates GetState(){
@@ -51,6 +55,7 @@ public class Mission : Abstract {
 		}
 	}
 	
+	
 	public virtual string GetProgressRepresentation(){
 		return "0";
 	}
@@ -71,7 +76,36 @@ public class Mission : Abstract {
 	public virtual void NotifyCoinsCollected(int coins){
 	}
 	
+	public virtual void NotifyPostCollected(int post){
+		
+	}
+	
+	public virtual void NotifyVodkaCollected(int vodka){
+		
+	}
+	
+	public virtual void NotifyMagnitCollected (int magnit)
+	{
+	}
+	
+	public virtual void NotifySenoDeath (int senoDeath)
+	{
+	}
+	
+	public virtual void NotifyTraktorDeath (int traktorDeath)
+	{
+
+	}
+	
+	public virtual void NotifyX2Collected (int x2)
+	{
+	}
+	//run
 	public virtual void NotifyMetersRunned (int meters){
+	}
+	
+	public virtual void NotifyJumpOverCaw (int caws)
+	{
 	}
 	
 	public virtual string Serialize(){

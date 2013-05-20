@@ -2,7 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 
-public class AbstractEnemy : Abstract {	
+public class AbstractEnemy : AbstractBaseEnemy {	
 	public AudioClip playOnHit;
 	public TerrainTag parentTerrainTag=null;
 	
@@ -23,20 +23,6 @@ public class AbstractEnemy : Abstract {
 	
 	public virtual void initEnemy()
 	{
-		//do nothing
-	}
-
-	// Use this for initialization
-	
-	public virtual void OnHit(Collider other)
-	{
-		//Debug.Log("AbstractEnemyOn");
-		//do nothing
-	}
-	
-	public virtual void OnExit(Collider other)
-	{
-		//Debug.Log("AbstractEnemyExit");
 		//do nothing
 	}
 	
