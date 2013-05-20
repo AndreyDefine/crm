@@ -7,6 +7,7 @@ public class OnTrigger : Abstract {
 	
 	void OnTriggerEnter(Collider other) 
 	{
+		Debug.LogWarning(other);
 		AbstractBaseEnemy obj=other.gameObject.GetComponent<AbstractBaseEnemy>();
 		if (obj != null) {
             obj.OnHit(collider);
