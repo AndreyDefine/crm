@@ -299,13 +299,14 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		//obstacles
 		if(currentRoadPos>1||!firstTimeInit)
 		{
-			for(jset=0;jset<interrainTag.ObstacleSetArray.Length&&(MakeObstacleSet||jset==0);jset++)
+			string[] terrainObstacleSetArray=interrainTag.GetObstacleSetNamesArray();
+			for(jset=0;jset<terrainObstacleSetArray.Length&&(MakeObstacleSet||jset==0);jset++)
 			{
 				//ObstacleSet
 				GameObject curSet;
 				Transform OneObstacle,marker;
 				int randomIndexOfSet;
-				for(i=0;i<markedObjectsObstacleSet.Count&&interrainTag.ObstacleSetArray.Length!=0;i++){
+				for(i=0;i<markedObjectsObstacleSet.Count&&terrainObstacleSetArray.Length!=0;i++){
 					if(curversionForCoRoutine!=versionForCoRoutine) yield break;
 					kolvo=neededNumberOfObstacleSet>markedObjectsObstacleSet.Count?markedObjectsObstacleSet.Count:neededNumberOfObstacleSet;
 					for(int i2=0;i2<kolvo;i2++){
@@ -320,10 +321,10 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 							randomIndexOfSet=jset;
 						}else
 						{
-							randomIndexOfSet=Random.Range(0,interrainTag.ObstacleSetArray.Length);
+							randomIndexOfSet=Random.Range(0,terrainObstacleSetArray.Length);
 						}
 						// получаем препятствие
-						curSet=obstacleSetElementFactory.GetNewObjectWithName((interrainTag.ObstacleSetArray[randomIndexOfSet] as GameObject).name);
+						curSet=obstacleSetElementFactory.GetNewObjectWithName(terrainObstacleSetArray[randomIndexOfSet]);
 						//поместим сет препятствий куда надо
 						curSet.transform.position=marker.position;
 						curSet.transform.rotation=marker.rotation;

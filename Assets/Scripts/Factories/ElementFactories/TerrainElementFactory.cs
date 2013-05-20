@@ -43,6 +43,7 @@ public class TerrainElementFactory: AbstractElementFactory{
 		//MakeInactiveObjectsActive
 		TerrainTag terrainTag=newTerrain.GetComponent("TerrainTag") as TerrainTag;
 		
+		terrainTag.ParseObstacleSets();
 		terrainTag.MakeAllActive();
 		terrainTag.RecalculateRoadPathArray();
 		if(terrainsList.Count>0){
