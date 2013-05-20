@@ -22,6 +22,19 @@ public class GuiButtonShowScreen : SpriteTouch {
 		return isTouchHandled;
 	}
 	
+	public override void TouchMoved(Vector2 position, int fingerId)
+	{
+		base.TouchMoved (position, fingerId);
+		bool isTouchHandled=MakeDetection(position);
+		if(isTouchHandled){	
+			singleTransform.localScale = initScale*1.05f;
+		}
+		else
+		{
+			singleTransform.localScale = initScale;
+		}
+	}
+	
 	public override void TouchEnded (Vector2 position, int fingerId)
 	{
 		singleTransform.localScale = initScale;

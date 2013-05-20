@@ -175,7 +175,6 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		int i;
 		
 		versionForCoRoutine++;
-		Debug.Log ("versionForCoRoutine++;");
 		
 		terrainElementFactory.ReStart();
 		uniqueElementFactory.ReStart();
@@ -300,16 +299,17 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		//obstacles
 		if(currentRoadPos>1||!firstTimeInit)
 		{
-			for(jset=0;jset<interrainTag.ObstacleSetArray.Length&&(MakeObstacleSet||jset==0);jset++)
+			string[] terrainObstacleSetArray=interrainTag.GetObstacleSetNamesArray();
+			for(jset=0;jset<terrainObstacleSetArray.Length&&(MakeObstacleSet||jset==0);jset++)
 			{
 				//ObstacleSet
 				GameObject curSet;
 				Transform OneObstacle,marker;
 				int randomIndexOfSet;
-				for(i=0;i<markedObjectsObstacleSet.Count&&interrainTag.ObstacleSetArray.Length!=0;i++){
+				for(i=0;i<markedObjectsObstacleSet.Count&&terrainObstacleSetArray.Length!=0;i++){
 					if(curversionForCoRoutine!=versionForCoRoutine) yield break;
 					kolvo=neededNumberOfObstacleSet>markedObjectsObstacleSet.Count?markedObjectsObstacleSet.Count:neededNumberOfObstacleSet;
-					for(i=0;i<kolvo;i++){
+					for(int i2=0;i2<kolvo;i2++){
 						if(curversionForCoRoutine!=versionForCoRoutine) yield break;
 						//случайный индекс маркера
 						randIndex=Random.Range(0,markedObjectsObstacleSet.Count);
@@ -321,10 +321,10 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 							randomIndexOfSet=jset;
 						}else
 						{
-							randomIndexOfSet=Random.Range(0,interrainTag.ObstacleSetArray.Length);
+							randomIndexOfSet=Random.Range(0,terrainObstacleSetArray.Length);
 						}
 						// получаем препятствие
-						curSet=obstacleSetElementFactory.GetNewObjectWithName((interrainTag.ObstacleSetArray[randomIndexOfSet] as GameObject).name);
+						curSet=obstacleSetElementFactory.GetNewObjectWithName(terrainObstacleSetArray[randomIndexOfSet]);
 						//поместим сет препятствий куда надо
 						curSet.transform.position=marker.position;
 						curSet.transform.rotation=marker.rotation;
@@ -342,18 +342,36 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 								continue;
 							}
 							curname=OneObstacle.name;
-							if(curname=="money")
+							
+							bool flagCompiled=false;
+							Transform parentOneObstacle;
+							parentOneObstacle=OneObstacle.parent;
+							//ищем отца
+							while(parentOneObstacle!=null&&!MakeObstacleSet)
+							{
+								if(parentOneObstacle.name.Contains("Compiled"))
+								{
+									flagCompiled=true;
+									break;
+								}
+								parentOneObstacle=parentOneObstacle.parent;
+							}
+							
+							if(curname=="money"&&!flagCompiled)
 							{
 								addOneMoneyAtMarker(OneObstacle,curSet.transform,interrainTag);
 							}
 							else
-							if(curname=="boost")
+							if(curname=="boost"&&!flagCompiled)
 							{
 								addOneBoostAtMarker(OneObstacle,curSet.transform,interrainTag);
 							}
 							else
 							{
-								addOneObstacleFromSetAtMarker(OneObstacle,curSet.transform,interrainTag,0);
+								if(!flagCompiled)
+								{
+									addOneObstacleFromSetAtMarker(OneObstacle,curSet.transform,interrainTag,0);
+								}
 							}
 							if(FlagCoRoutine) yield return null;
 						}
@@ -393,14 +411,15 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	
 	private GameObject addOneObstacleFromSetAtMarker(Transform marker,Transform inparent,TerrainTag interrainTag, int recursion){
 		GameObject newObject,vspObject;
+		bool flagCompiled=false;
 	
 		newObject = obstacleElementFactory.GetNewObjectWithName(marker.name);
 		
-		Debug.Log ("marker.name="+marker.name);
+		//Debug.Log ("marker.name="+marker.name);
 		
 		if(!newObject)
 		{
-			Debug.Log (marker.name+" NOT FOUND!!!");
+			//Debug.Log (marker.name+" NOT FOUND!!!");
 			return null;
 		}
 		
@@ -416,26 +435,45 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		//if compiled object
 		if(marker.name.Contains("Compiled"))
 		{
+			flagCompiled=true;
 			int j;
 			GameObject newObjectInContainer;
 			//ищем контейнер
-			Transform Container=newObject.transform.FindChild("ContainerOfObjects");
+			Transform Container;
+			Transform Container2;
+			Container=marker.transform.FindChild("ContainerOfObjects");
+			if(MakeObstacleSet)
+			{
+				vspObject=new GameObject();
+				Container2=vspObject.transform;
+				
+				Container2.parent=Container.parent;
+				Container2.position=Container.position;
+			    Container2.rotation=Container.rotation;
+				
+				Container2.name=Container.name;
+				Debug.Log ("Container2=vspObject.transform;");
+			}
+			else
+			{
+				Container2=newObject.transform.FindChild("ContainerOfObjects");
+			}
 			if(Container)
 			{
 				Transform[] allChildren = Container.gameObject.GetComponentsInChildren<Transform>();
 				//обрабатываем все трансформы
 				for(j=1;j<allChildren.Length;j++){
 					//reqursively
-					newObjectInContainer=addOneObstacleFromSetAtMarker(allChildren[j],inparent,interrainTag,recursion+1);
-					if(newObjectInContainer)
-					{
-						newObjectInContainer.transform.parent=Container;
-					}
+					newObjectInContainer=addOneObstacleFromSetAtMarker(allChildren[j],Container2,interrainTag,recursion+1);
+				}
+				if(MakeObstacleSet)
+				{
+					DestroyImmediate(Container.gameObject);
 				}
 			}
 		}
 				
-		if(MakeObstacleSet&&recursion==0)
+		if(MakeObstacleSet)
 		{
 			vspObject=new GameObject();
 			if(marker.name=="MonetaContainer")
@@ -453,12 +491,21 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 			}
 			vspObject.transform.position=marker.position;
 			vspObject.transform.rotation=marker.rotation;
-			vspObject.transform.parent=marker.parent;
-			DestroyImmediate(marker.gameObject);
-			Debug.Log ("Deleted All UnUsed");
+			vspObject.transform.parent=inparent;
+					
+			if(recursion==0&&!flagCompiled)
+			{
+				DestroyImmediate(marker.gameObject);
+			}
+			
+			if(recursion==0&&flagCompiled)
+			{
+				Transform Container=marker.transform.FindChild("ContainerOfObjects");
+				Container.parent=vspObject.transform;
+				DestroyImmediate(marker.gameObject);
+			}
 		}
-		
-		if(recursion==0&&!MakeObstacleSet)
+		else
 		{
 			newObject.transform.parent=inparent;
 		}

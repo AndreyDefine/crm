@@ -103,7 +103,7 @@ public class ZoomMap : SpriteTouch {
 			moveBy/=perPixel;
 			//position
 			Vector3 newPos=new Vector3(singleTransform.localPosition.x+moveBy.x,singleTransform.localPosition.y+moveBy.y,singleTransform.localPosition.z);
-			singleTransform.localPosition=newPos;
+			//singleTransform.localPosition=newPos;
 			Debug.Log ("moveByx="+moveBy.x+" moveByy="+moveBy.y+" moveByOld="+moveByOld+" moveByNew="+moveByNew+" curScale="+singleTransform.localScale);
 			
 		}

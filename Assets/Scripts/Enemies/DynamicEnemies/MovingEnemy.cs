@@ -63,7 +63,9 @@ public class MovingEnemy : AbstractEnemy {
 		Animation animationScript=GetComponentInChildren<Animation>();
 		if(animationScript)
 		{
-			animationScript.Play("Restart");
+			animationScript.Stop ();
+			animationScript.gameObject.transform.localPosition=new Vector3(0,0,0);
+			//animationScript.Play("Restart");
 		}
 	}
 }

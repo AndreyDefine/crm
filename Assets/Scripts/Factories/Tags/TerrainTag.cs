@@ -11,21 +11,35 @@ public enum TerrainTagNextGoingTo
 }
 
 public class TerrainTag : AbstractTag{
-	public GameObject []ObstacleSetArray;
 	public GameObject treeElementFactory;
 	public TerrainTagNextGoingTo nextGoingTo=TerrainTagNextGoingTo.FORWARD;
-	public float sizeOfTexture;
 	public float sizeOfPlane;
+	public string RoadTerrains="";
 	
-	public string obstacleSetName;
+	public string obstacleSetNames;
 	
 	public bool DynamicSize=true;
+	
+	private string curobstacleSetName;
+	
+	public string obstacleSetName
+    {
+        get
+        {
+            return curobstacleSetName;
+        }
+        set
+        {
+            curobstacleSetName = value;
+        }
+    }
 	
 	protected Vector3 endOfTerrain;
 	
 	protected Transform []roadPathTransform=null;
 	
 	protected List<Transform> roadPathTransformArray=new List<Transform>();
+	private string []obstacleSetNamesArray=null;
 	
 	int curDotIndex=1;
 	float curPos=0;
@@ -43,9 +57,29 @@ public class TerrainTag : AbstractTag{
 	
 	private bool flagNextTerrainCustom;
 	
+	public string[] GetObstacleSetNamesArray()
+	{
+		return obstacleSetNamesArray;
+	}
+	
 	//rotation
 	public int rotatePointIndex=0;
 	private	bool FlagLeft=false;
+	
+	public void ParseObstacleSets()
+	{
+		if(obstacleSetNamesArray==null){
+			ParseObstacleSetNames();
+		}
+	}
+	
+	private void ParseObstacleSetNames()
+	{
+		//получили массив террейнов
+		char []separator={',','\n',' '};
+		string []names=obstacleSetNames.Split(separator);;
+		obstacleSetNamesArray=names;
+	}
 	
 	public bool isEndOfTerrain()
 	{

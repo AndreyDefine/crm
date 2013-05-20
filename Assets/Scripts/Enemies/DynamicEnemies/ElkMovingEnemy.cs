@@ -6,6 +6,8 @@ public class ElkMovingEnemy : AbstractEnemy {
 	
 	public float rasstChuvstv=255;
 	
+	private float animationSpeed;
+	
 	private bool effectMade=false;
 	
 	private Animation animationScript;
@@ -23,7 +25,8 @@ public class ElkMovingEnemy : AbstractEnemy {
 	public override void initEnemy()
 	{
 		animationScript=GetComponentInChildren<Animation>();
-		animationScriptBaran=null;		
+		animationScriptBaran=null;	
+		animationSpeed=Random.Range(0.6f,1.1f);
 	}
 	
 	public void TestPlayer()
@@ -52,7 +55,7 @@ public class ElkMovingEnemy : AbstractEnemy {
 			{
 				animationScript["MoveAnimation"].speed=playerScript.GetVelocityCurMnoshitel();
 				if(animationScriptBaran)
-					animationScriptBaran["Take_001"].speed=playerScript.GetVelocityCurMnoshitel()*2.5f;
+					animationScriptBaran["Take_001"].speed=playerScript.GetVelocityCurMnoshitel()*2.5f*animationSpeed;
 			}
 		}
 	}
@@ -87,7 +90,8 @@ public class ElkMovingEnemy : AbstractEnemy {
 		}
 		if(animationScript)
 		{
-			animationScript.Play("Restart");
+			animationScript.Stop ();
+			animationScript.gameObject.transform.localPosition=new Vector3(0,0,0);
 		}
 	}
 }
