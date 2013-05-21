@@ -3,13 +3,20 @@ using System.Collections;
 
 public class ZoomMap : SpriteTouch {
 	
-	public float minScale=1, maxScale=2;
+	public float minScale, maxScale;
 	public Vector2 minPos,maxPos;
 	
 	private int numberOfFingers;
 	private int []fingers;
 	private Vector2 []fingerPos;
 	private Vector2 []initFingerPos;
+	
+	private Vector2 []prevFingerPos = new Vector2[2];
+	float prevScale = 1f;
+	Vector3 prevPos;
+	
+	//private Vector2 previouseCenterPos = Vector2.zero;
+	//private float previousScale = 0;
 	
 	private float curScale;
 
@@ -34,7 +41,13 @@ public class ZoomMap : SpriteTouch {
 			fingers[numberOfFingers]=fingerId;
 			initFingerPos[numberOfFingers]=position;
 			fingerPos[numberOfFingers]=position;
-			numberOfFingers++;
+			numberOfFingers++;	
+			if(numberOfFingers==2){
+				prevScale = singleTransform.localScale.x;		
+				prevPos = singleTransform.localPosition;
+				prevFingerPos[0] = initFingerPos[0];
+				prevFingerPos[1] = initFingerPos[1];
+			}
 		}
 		return isTouchHandled;
 	}
@@ -101,10 +114,45 @@ public class ZoomMap : SpriteTouch {
 			
 			moveBy =moveByOld-moveByNew;
 			moveBy/=perPixel;
-			//position
-			Vector3 newPos=new Vector3(singleTransform.localPosition.x+moveBy.x,singleTransform.localPosition.y+moveBy.y,singleTransform.localPosition.z);
+			//position		
+			
+			
+			Vector2 centerFingerPrev = new Vector2(prevFingerPos[0].x-(prevFingerPos[0].x-prevFingerPos[1].x)/2, prevFingerPos[0].y-(prevFingerPos[0].y-prevFingerPos[1].y)/2);
+			Vector2 centerFingerCurrent = new Vector2(fingerPos[0].x-(fingerPos[0].x-fingerPos[1].x)/2, fingerPos[0].y-(fingerPos[0].y-fingerPos[1].y)/2);
+			
+			Debug.Log(centerFingerPrev.x+ " "+ centerFingerPrev.y+ " "+ centerFingerCurrent.x+ " "+ centerFingerCurrent.y);
+			
+			
+			Camera guiCamera = Cameras.GetGUICamera();
+			
+			Vector3 wordCenterFingerCurrent = guiCamera.ScreenToWorldPoint(new Vector3(centerFingerCurrent.x, centerFingerCurrent.y,1f));
+			Vector2 smCurrent = curScale*wordCenterFingerCurrent;
+			Vector2 smPrevNewCenter = prevScale*wordCenterFingerCurrent;
+			
+			
+			Vector3 wordCenterFingerPrev = guiCamera.ScreenToWorldPoint(new Vector3(centerFingerPrev.x, centerFingerPrev.y,1f));
+			Vector2 smPrev = prevScale*wordCenterFingerPrev;
+			Vector2 smPrevNewScale = curScale*wordCenterFingerPrev;
+			
+			Debug.LogWarning(wordCenterFingerPrev.x+ " "+wordCenterFingerPrev.y+ " " +wordCenterFingerCurrent.x+" "+wordCenterFingerCurrent.y);
+				
+			//точка в старом масштабе сместилась в место между пальцами.
+			Vector3 pos = new Vector3(prevPos.x-smPrev.x+smPrevNewCenter.x,
+				prevPos.y-smPrev.y+smPrevNewCenter.y,
+				prevPos.z);
+			
+			singleTransform.localPosition = new Vector3(pos.x+pos.x*(curScale-prevScale),pos.y+pos.y*(curScale-prevScale),pos.z);
+			
+			
+			//prevScale = singleTransform.localScale.x;		
+			//prevPos = singleTransform.localPosition;
+			//prevFingerPos[0] = fingerPos[0];
+			//prevFingerPos[1] = fingerPos[1];
+			
+			
+			
 			//singleTransform.localPosition=newPos;
-			Debug.Log ("moveByx="+moveBy.x+" moveByy="+moveBy.y+" moveByOld="+moveByOld+" moveByNew="+moveByNew+" curScale="+singleTransform.localScale);
+			//Debug.Log ("moveByx="+moveBy.x+" moveByy="+moveBy.y+" moveByOld="+moveByOld+" moveByNew="+moveByNew+" curScale="+singleTransform.localScale);
 			
 		}
 	}
