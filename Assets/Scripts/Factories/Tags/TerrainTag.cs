@@ -170,7 +170,10 @@ public class TerrainTag : AbstractTag{
 	
 	private void ParsePath()
 	{
-		ParsePath3D();
+		if(!GlobalOptions.flagOnlyFizik)
+		{
+			ParsePath3D();
+		}
 	}
 	
 	private void ParsePath3D()
@@ -274,6 +277,7 @@ public class TerrainTag : AbstractTag{
 	
 	public Vector3 GetXandYandAngleSmexForZ(Vector3 inposition, bool usecustomDotIndexAndCustomPos)
 	{
+		Debug.Log ("GetXandYandAngleSmexForZ");
 		Vector3 returnXandYandAngle=new Vector3(0,0,0);
 		int i;
 		float length=0;

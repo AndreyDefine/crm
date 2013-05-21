@@ -193,7 +193,11 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		}
 	}
 	
-	public void TryAddTerrrain() {		
+	public void TryAddTerrrain() {	
+		if(GlobalOptions.flagOnlyFizik)
+		{
+			terrainElementFactory.SetNextCurrentTerrainNext();				
+		}
 		AddNextTerrain(true);
 		//удаляем старый кусочек земли
 		DeleteOneFirstTerrain();
@@ -437,7 +441,6 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		{
 			flagCompiled=true;
 			int j;
-			GameObject newObjectInContainer;
 			//ищем контейнер
 			Transform Container;
 			Transform Container2;
@@ -464,7 +467,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 				//обрабатываем все трансформы
 				for(j=1;j<allChildren.Length;j++){
 					//reqursively
-					newObjectInContainer=addOneObstacleFromSetAtMarker(allChildren[j],Container2,interrainTag,recursion+1);
+					addOneObstacleFromSetAtMarker(allChildren[j],Container2,interrainTag,recursion+1);
 				}
 				if(MakeObstacleSet)
 				{
@@ -625,55 +628,6 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		}
 	}
 	
-	private void addSomeMoneyAtMarker(Transform marker,TerrainTag interrainTag)
-	{
-		float angletesttransform;
-		Vector3 right;
-		MoneyMarker moneyMarker;
-		
-		moneyMarker=marker.GetComponent<MoneyMarker>();
-		
-		int pathnumber=moneyMarker.pathnumber;
-		int kolvo=moneyMarker.numberOfCoins;
-		int startPoint=moneyMarker.startPoint;
-
-		GameObject newObject;
-		int i;
-		interrainTag.SetCustomDotIndex(startPoint,0);
-		Vector3 XandYandAngleSmexForz,oldXandYandAngleSmexForz;
-		Vector3 angle=Vector3.zero;
-		XandYandAngleSmexForz=interrainTag.GetXandYandAngleSmexForZ(new Vector3(0,0,0.1f),true);
-		for(i=0;i<kolvo;i++)
-		{	
-			if(interrainTag.GetflagNextTerrainCustom())
-			{
-				//Debug.Log ("interrainTag.GetflagNextTerrainCustom()");
-				break;
-			}
-			
-			oldXandYandAngleSmexForz=XandYandAngleSmexForz;
-			XandYandAngleSmexForz=interrainTag.GetXandYandAngleSmexForZ(new Vector3(0,0,2f),true);
-			angletesttransform=GlobalOptions.GetAngleOfRotation(oldXandYandAngleSmexForz,XandYandAngleSmexForz);
-			marker.rotation=Quaternion.Euler(0,angletesttransform,0);
-			right=marker.TransformDirection(Vector3.right);
-			
-			
-			if(!interrainTag.GetflagNextTerrainCustom())
-			{
-				newObject = moneyElementFactory.GetNewObject();
-				//set position & rotation
-				newObject.transform.position=new Vector3(XandYandAngleSmexForz.x,marker.position.y,XandYandAngleSmexForz.z)+right*GlobalOptions.GetPlayerScript().meshPath*pathnumber;
-				newObject.transform.rotation=Quaternion.Euler(angle.x,angle.y,angle.z);
-				angle.y+=15;
-			
-		
-				if(interrainTag){
-					interrainTag.PushToAllElements(newObject);
-				}
-			}
-		}
-	}
-	
 	private IEnumerator AddObjects(bool FlagCoRoutine){	
 		
 		GameObject newTerrain=null;
@@ -753,6 +707,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	
 	public override void DeleteOneFirstTerrain()
 	{		
+		Debug.Log ("DeleteOneFirstTerrain");
 		if(terrainElementFactory.flagGenerate){
 			terrainElementFactory.DeleteOneFirstTerrain();
 		}
@@ -760,10 +715,15 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	
 	//get xsmex
 	public Vector3 GetXandYandAngleSmexForZ(Vector3 inposition){
-		Vector3 returnXandYandAngle=terrainElementFactory.GetXandYandAngleSmexForZ(inposition);
-		//addDotToPathIndicator(new Vector3(returnXandYandAngle.x,returnXandYandAngle.y,inposition.z));
+		Debug.Log ("GetXandYandAngleSmexForZ");
+		if(GlobalOptions.flagOnlyFizik)
+		{
+			return new Vector3(0f,0f,0f);
+		}
 		
-		return returnXandYandAngle;
+		
+		return terrainElementFactory.GetXandYandAngleSmexForZ(inposition);
+		//addDotToPathIndicator(new Vector3(returnXandYandAngle.x,returnXandYandAngle.y,inposition.z));
 	}
 	
 	public float GetCurTerrainCenter(){
@@ -807,6 +767,11 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	public override Vector3 GetCurTerrainPos()
 	{
 		return terrainElementFactory.GetCurrentTerrainForZ().transform.position;
+	}
+	
+	public Vector3 GetCurTerrainEnd()
+	{
+		return terrainElementFactory.GetCurrentTerrainForZ().GetComponent<TerrainTag>().GetEndOfTerrain();
 	}
 	
 	public override float GetTerrainLength()

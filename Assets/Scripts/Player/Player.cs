@@ -53,16 +53,9 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	private float posx;
 	
-	private bool flagOnlyFizik=false;
-	
 	private bool magnitFlag=false;
 	
 	private GameObject walkingBear;
-	
-	public bool GetFlagOnlyFizik()
-	{
-		return flagOnlyFizik;
-	}
 	
 	public bool GetMagnitFlag()
 	{
@@ -345,17 +338,16 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 			GlobalOptions.playerVelocity+=acceleration*Time.deltaTime;
 		}
 		Vector3 smex=new Vector3(0,0,GetRealVelocity());
-		Vector3 oldPos=Vector3.zero;
-		if(flagOnlyFizik)
+		/*Vector3 oldPos=Vector3.zero;
+		if(GlobalOptions.flagOnlyFizik)
 		{
 			oldPos=Character.transform.position;
 		}
 		else
 		{
 			oldPos=singleTransform.position;
-		}
-		//Vector3 oldPos=Character.transform.position;
-		centerXandYandAngle=worldFactoryScript.GetXandYandAngleSmexForZ(smex);	
+		}*/
+		//centerXandYandAngle=worldFactoryScript.GetXandYandAngleSmexForZ(smex);	
 		
 		Transform curtransform=Character.transform;
 		
@@ -383,26 +375,33 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		
 		
 		//accelerometer
-		if(typeOfControl==2)
+		/*if(typeOfControl==2)
 		{
 			xSmexcontrol1+=inmoveForce*mnoshOfForce*Time.deltaTime;
 			posx=centerx;
 			xSmexcontrol1=xSmexcontrol1>=meshPath?meshPath:xSmexcontrol1;
 			xSmexcontrol1=xSmexcontrol1<=-meshPath?-meshPath:xSmexcontrol1;
 			posx+=xSmexcontrol1;
-		}
+		}*/
 			
 			
 		///////////
-		
+		//noangle
+		/*
 		if(typeOfControl==0||typeOfControl==1||typeOfControl==2)
 		{
 			float angle=GlobalOptions.GetAngleOfRotation(oldPos,centerXandYandAngle);
 			
 			RotatePlayer(angle);
-		}
+		}*/
 		
-		PlaceCharacter(new Vector3(centerXandYandAngle.x,PlayerFirstPos.y,centerXandYandAngle.z));
+		if(GlobalOptions.flagOnlyFizik)
+		{
+			MakeMovingCharacterControllerForward();
+		}
+		{
+			PlaceCharacter(new Vector3(centerXandYandAngle.x,PlayerFirstPos.y,centerXandYandAngle.z));
+		}
 		
 		oneMeterz+=smex.z/2;
 		
@@ -422,7 +421,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	private void RotatePlayer(float inangle)
 	{
-		if(flagOnlyFizik)
+		if(GlobalOptions.flagOnlyFizik)
 		{
 			//no rotation
 			//MakeRotationCharacterController(inangle);
@@ -469,14 +468,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	public void PlaceCharacter(Vector3 inpos)
 	{
-		if(flagOnlyFizik)
-		{
-			MakeMovingCharacterControllerForward(inpos);
-		}
-		else
-		{
-			singleTransform.position=inpos;
-		}
+		singleTransform.position=inpos;
 	}
 	
 	private void BearRespawn(){
@@ -619,11 +611,15 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		characterMarioC.LeftRight(inx);
 	}
 	
-	private void MakeMovingCharacterControllerForward(Vector3 inpos){
-		Vector3 curpos=Character.transform.position;
-		Debug.Log ("MakeMovingCharacterControllerForward");
-		float forward=Mathf.Sqrt(Mathf.Pow (inpos.x-curpos.x,2)+Mathf.Pow (inpos.z-curpos.z,2));
+	private void MakeMovingCharacterControllerForward(){
+		//Vector3 curpos=Character.transform.position;
+		float forward=GetRealVelocityWithNoDeltaTime();
 		characterMarioC.SetMovement(forward);
+		
+		if(Character.transform.position.z>worldFactoryScript.GetCurTerrainEnd().z+20)
+		{
+			worldFactoryScript.TryAddTerrrain();
+		}
 	}
 	
 	private void MakeRotationCharacterController(float inangle)

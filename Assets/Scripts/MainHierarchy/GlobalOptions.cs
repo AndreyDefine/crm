@@ -30,7 +30,9 @@ public enum PlayerStatesPathChanging
 	FORWARD
 }
 
-public class GlobalOptions {		
+public class GlobalOptions {	
+	public static bool flagOnlyFizik=true;
+	
 	public static bool qualitySeted = false;
 	
 	public static int PlayingLevelNumber = 0;
@@ -40,7 +42,7 @@ public class GlobalOptions {
 	
 	public static float playerVelocity;
 	
-	public static float globalPerspective=60;
+	public static float globalPerspective=100;
 	
 	public static TerrainTagNextGoingTo terrainTagNextGoingTo;
 	public static int countsOfTerrains=0;

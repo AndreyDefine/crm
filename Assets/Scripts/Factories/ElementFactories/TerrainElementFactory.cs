@@ -33,7 +33,7 @@ public class TerrainElementFactory: AbstractElementFactory{
 			
 			AllElements.Clear();
 			terrainsList.Remove(newterrainToDel);			
-			terrainsListToDel.Add(newterrainToDel);		
+			terrainsListToDel.Add(newterrainToDel);	
 		}
 	}
 	
@@ -45,11 +45,14 @@ public class TerrainElementFactory: AbstractElementFactory{
 		
 		terrainTag.ParseObstacleSets();
 		terrainTag.MakeAllActive();
-		terrainTag.RecalculateRoadPathArray();
-		if(terrainsList.Count>0){
-			TerrainTag terrainTagPrev=(terrainsList[terrainsList.Count-1] as GameObject).GetComponent("TerrainTag") as TerrainTag;
-			terrainTag.SetPrev(terrainTagPrev);
-			terrainTagPrev.SetNext(terrainTag);
+		if(!GlobalOptions.flagOnlyFizik)
+		{
+			terrainTag.RecalculateRoadPathArray();
+			if(terrainsList.Count>0){
+				TerrainTag terrainTagPrev=(terrainsList[terrainsList.Count-1] as GameObject).GetComponent("TerrainTag") as TerrainTag;
+				terrainTag.SetPrev(terrainTagPrev);
+				terrainTagPrev.SetNext(terrainTag);
+			}
 		}
 	}
 	
@@ -58,10 +61,13 @@ public class TerrainElementFactory: AbstractElementFactory{
 		if(!currentTerrain)
 		{
 			currentTerrain=terrainsList[0] as GameObject;
-			TerrainTag terrainTag=currentTerrain.GetComponent<TerrainTag>();
-			terrainTag.SetCurDotIndexAndCurPos(1,0);
+			if(!GlobalOptions.flagOnlyFizik)
+			{
+				TerrainTag terrainTag=currentTerrain.GetComponent<TerrainTag>();
+				terrainTag.SetCurDotIndexAndCurPos(1,0);
+			}
 			
-			GlobalOptions.GetPlayerScript().PlaceCharacterFirstly(terrainTag.GetXandYandAngleSmexForZ(new Vector3(0,0,0.0001f),false));
+			//GlobalOptions.GetPlayerScript().PlaceCharacterFirstly(terrainTag.GetXandYandAngleSmexForZ(new Vector3(0,0,0.0001f),false));
 		}
 	
 		return currentTerrain;
@@ -69,7 +75,13 @@ public class TerrainElementFactory: AbstractElementFactory{
 	
 	public void SetNextCurrentTerrain(GameObject interrain)
 	{
+		Debug.Log ("SetNextCurrentTerrain");
 		currentTerrain=interrain;
+	}
+	
+	public void  SetNextCurrentTerrainNext()
+	{
+		SetNextCurrentTerrain(terrainsList[1]as GameObject);
 	}
 	
 	//get xsmex
