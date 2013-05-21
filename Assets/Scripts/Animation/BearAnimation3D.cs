@@ -43,7 +43,7 @@ public class BearAnimation3D : Abstract{
 			
 			(clothesList[i] as GameObject).animation["down"].speed=0.5f;
 			(clothesList[i] as GameObject).animation["stumble"].speed=1.5f;
-			(clothesList[i] as GameObject).animation["jump"].speed=1f;
+			(clothesList[i] as GameObject).animation["jump"].speed=0.5f;
 			(clothesList[i] as GameObject).animation["left"].speed=1f;
 			(clothesList[i] as GameObject).animation["right"].speed=1f;
 			(clothesList[i] as GameObject).animation["death"].speed=0.9f;
