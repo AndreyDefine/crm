@@ -27,6 +27,10 @@ public class MonetaEnemy : AbstractEnemy {
 	
 	void LateUpdate()
 	{
+		if(GlobalOptions.gameState==GameStates.PAUSE_MENU||GlobalOptions.gameState==GameStates.GAME_OVER)
+		{
+			return;
+		}
 		MakeMagnit();
 	}
 	
@@ -37,6 +41,7 @@ public class MonetaEnemy : AbstractEnemy {
 			return;
 		}
 		singleTransform.Rotate(new Vector3(0,Time.deltaTime*200,0));
+		//Random.Range (0,1f)
 	}
 	
 	public override void initEnemy()
@@ -78,7 +83,7 @@ public class MonetaEnemy : AbstractEnemy {
 			razny=-parentTransform.position.y+walkingBearTransform.position.y+1;
 			raznz=-parentTransform.position.z+walkingBearTransform.position.z;
 	
-			float delitel=20;
+			float delitel=30;
 			if(Mathf.Abs(raznx)>smex)
 			{
 				//raznx/=Mathf.Abs(raznx)>smex*3?delitel:delitel/1.5f;
@@ -111,7 +116,14 @@ public class MonetaEnemy : AbstractEnemy {
 	{
 		effectMade=true;
 		oldParent=parentTransform.parent;
-		parentTransform.parent=playertransform;
+		if(GlobalOptions.flagOnlyFizik)
+		{
+			parentTransform.parent=walkingBearTransform;
+		}
+		else
+		{
+			parentTransform.parent=playertransform;
+		}
 	}
 	
 	

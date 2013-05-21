@@ -32,7 +32,7 @@ public class CharacterMarioC : Abstract {
 	
 	float stopTime=0,startstopTime=0;//время остановки
 	
-	private float heightnormal=1.5f, heightslide=0.5f;
+	private float heightnormal=1.5f, heightslide=0.9f;
 	private CapsuleCollider walkinbearCollider;
 	
 	private GameObject walkingBear;
@@ -45,7 +45,7 @@ public class CharacterMarioC : Abstract {
 	
 	private void UpdateSmoothedMovementDirection ()
 	{
-		if(!playerScript.GetFlagOnlyFizik())
+		if(!GlobalOptions.flagOnlyFizik)
 		{
 			if(moveforward>=0)
 			{
@@ -101,7 +101,14 @@ public class CharacterMarioC : Abstract {
 			
 			if(stumble&&!flying&&!groundingFlag&&moveforward>0)
 			{
-				playerScript.Stumble(curStumbleTransform);
+				if(curStumbleTransform.name.Contains("Zabiratsa"))
+				{
+					Debug.Log ("Zabiratsa");
+				}
+				else
+				{
+					playerScript.Stumble(curStumbleTransform);
+				}
 			}
 			
 			// We are in jump mode but just became grounded
@@ -312,7 +319,7 @@ public class CharacterMarioC : Abstract {
 	public void SetMovement(float inmovement)
 	{
 		moveforward=inmovement;
-		Debug.Log (moveforward);
+		//Debug.Log (moveforward);
 	}
 	
 	public void LeftRight(float inx)
