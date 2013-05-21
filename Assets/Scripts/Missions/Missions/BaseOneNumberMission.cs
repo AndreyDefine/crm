@@ -27,6 +27,12 @@ public class BaseOneNumberMission : Mission {
 		}
 	}
 	
+	
+	public void ResetNumber(){
+		currentNumber = 0;	
+		MissionProgressChanged();
+	}
+	
 	public void AddNumber(int addNumber){
 		currentNumber+=addNumber;
 		if(currentNumber>needNumber){

@@ -13,6 +13,10 @@ public class ElkMovingEnemy : AbstractEnemy {
 	private Animation animationScript;
 	private Animation animationScriptBaran;
 	
+	public bool GetEffectMade(){
+		return effectMade;
+	}
+	
 	public override void OnHit(Collider other)
 	{
 		//Do nothing on hit

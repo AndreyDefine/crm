@@ -46,6 +46,42 @@ public abstract class BaseMissionEmmitter : Abstract, IMissionEmmitter, IMission
 		}
 	}
 	
+	public void NotifySlideUnderRope (int rope)
+	{
+		ArrayList missions = GetActiveCurrentMissions ();
+		for (int i=0; i<missions.Count; i++) {
+			Mission mission = (Mission)missions [i];
+			mission.NotifySlideUnderRope (rope);
+		}
+	}
+	
+	public void NotifyJumpOverHaystack (int haystack)
+	{
+		ArrayList missions = GetActiveCurrentMissions ();
+		for (int i=0; i<missions.Count; i++) {
+			Mission mission = (Mission)missions [i];
+			mission.NotifyJumpOverHaystack (haystack);
+		}
+	}
+	
+	public void NotifyDodgeBaran (int baran)
+	{
+		ArrayList missions = GetActiveCurrentMissions ();
+		for (int i=0; i<missions.Count; i++) {
+			Mission mission = (Mission)missions [i];
+			mission.NotifyDodgeBaran (baran);
+		}
+	}
+	
+	public void NotifyDodgeTractor (int tractor)
+	{
+		ArrayList missions = GetActiveCurrentMissions ();
+		for (int i=0; i<missions.Count; i++) {
+			Mission mission = (Mission)missions [i];
+			mission.NotifyDodgeTractor (tractor);
+		}
+	}
+	
 	//collect
 	public void NotifyPostCollected (int post)
 	{

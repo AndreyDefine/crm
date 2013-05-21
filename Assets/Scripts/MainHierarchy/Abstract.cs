@@ -31,6 +31,18 @@ public class Abstract : MonoBehaviour {
             _singleRenderer = value;
         }
     }
+	
+	public Transform GetParent(int number){
+		Transform current = singleTransform;
+		for(int i=0;i<number;i++){
+			current = current.parent;
+			if(current == null){
+				return null;
+			}
+		}
+		return current;
+	}
+	
 }
 
 

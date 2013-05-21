@@ -3,7 +3,7 @@ using System.Collections;
 
 public class GuiMission : Abstract {
 	
-	public CrmFont missionName;
+	public TwoLineText missionName;
 	public CrmFont progressText;
 	public GuiProgress progress;
 	public GuiProgress progressBlick;

@@ -10,6 +10,10 @@ public class MovingEnemy : AbstractEnemy {
 	
 	private Animation animationScript;
 	
+	public bool GetEffectMade(){
+		return effectMade;
+	}
+	
 	public override void OnHit(Collider other)
 	{
 		//Do nothing on hit

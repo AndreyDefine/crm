@@ -103,6 +103,34 @@ public class MissionEmmitters : Abstract, IMissionEmmitter, IMissionNotify
 		}
 	}
 	
+	public void NotifySlideUnderRope (int rope)
+	{
+		for(int i=0;i<missionEmmitters.Length;i++){
+			missionEmmitters[i].NotifySlideUnderRope(rope);
+		}
+	}
+	
+	public void NotifyJumpOverHaystack (int haystack)
+	{
+		for(int i=0;i<missionEmmitters.Length;i++){
+			missionEmmitters[i].NotifyJumpOverHaystack(haystack);
+		}
+	}
+	
+	public void NotifyDodgeBaran (int baran)
+	{
+		for(int i=0;i<missionEmmitters.Length;i++){
+			missionEmmitters[i].NotifyDodgeBaran(baran);
+		}
+	}
+	
+	public void NotifyDodgeTractor (int tractor)
+	{
+		for(int i=0;i<missionEmmitters.Length;i++){
+			missionEmmitters[i].NotifyDodgeTractor(tractor);
+		}
+	}
+	
 	public int GetCountFinishedMissions ()
 	{
 		int finishedMissionsNumber = 0;

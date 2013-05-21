@@ -5,7 +5,7 @@ using System.Collections;
 public class MissionNotifier : BaseNotifier
 {
 	public Abstract missionIconPlace;
-	public CrmFont crmFont;
+	public TwoLineText missionName;
 	private Mission mission;
 	private MissionIco missionIco;
 	
@@ -28,7 +28,7 @@ public class MissionNotifier : BaseNotifier
 	}
 	
 	private void SetMissionText (string text){
-		crmFont.text = text;
+		missionName.text = text;
 	}
 	
 	void Update(){

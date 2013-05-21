@@ -108,6 +108,24 @@ public class Mission : Abstract, IMissionNotify {
 	{
 	}
 	
+	public virtual void NotifySlideUnderRope (int rope)
+	{
+		
+	}
+	
+	public virtual void NotifyJumpOverHaystack (int haystack)
+	{
+	}
+	
+	public virtual void NotifyDodgeBaran (int baran)
+	{
+		
+	}
+	
+	public virtual void NotifyDodgeTractor (int tractor)
+	{
+	}
+	
 	public virtual string Serialize(){
 		return " ";
 	}
