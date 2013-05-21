@@ -1,45 +1,70 @@
 Shader "Shaders/HorizontCutOutDiffuse" {
-Properties {
-    _MainTex ("Base (RGB) Trans (A)", 2D) = "white" {}
+Properties 
+{
+    _MainTex ("Texture", 2D) = "white" {}
     _Cutoff ("Alpha cutoff", Range(0,1)) = 0.5
 }
- 
-SubShader {
-    Tags {"Queue"="AlphaTest" "IgnoreProjector"="True" "RenderType"="TransparentCutout"}
-    LOD 200
-    Cull Off
- 
-CGPROGRAM
-#pragma surface surf Lambert alphatest:_Cutoff vertex:vert
- 
-sampler2D _MainTex;
- 
-struct Input {
-    float2 uv_MainTex;
-};
- 
-void vert (inout appdata_full v) {
-float pos = length(mul (UNITY_MATRIX_MVP, v.vertex).xyz);
-
-float curpos = length(mul (UNITY_MATRIX_MVP, v.vertex).xyz);
-curpos=sin(curpos/100); 
-pos-=20;
-
-if(pos>0)
+SubShader 
 {
-	pos/=50;
-	pos*=pos;
-	//v.vertex.y -= pos * 3;
-	//v.vertex.x += pos * 10*curpos;
-}
-  
-}
+    Cull Off
+    //Blend SrcAlpha Zero 
+    Blend SrcAlpha OneMinusSrcAlpha 
+    //Alphatest Greater [_Cutoff]
+    //AlphaToMask True
+    //ColorMask RGB
+    
+    Tags 
+    {
+        "Queue" = "Transparent" 
+        "IgnoreProjector" = "True" 
+        "RenderType" = "TransparentCutoff"
+    }
+    
+    //Pass{
+    //	SetTexture [_MainTex] 
+    //    {
+    //        Combine texture, texture
+    //   }
+    //}
+    
+    Pass{
+    //Blend SrcAlpha OneMinusSrcAlpha 
+      
+    	CGPROGRAM
+			#pragma vertex vert
+			#pragma fragment frag
+			#include "UnityCG.cginc"
 
-void surf (Input IN, inout SurfaceOutput o) {
-    fixed4 c = tex2D(_MainTex, IN.uv_MainTex);
-    o.Albedo = c.rgb;
-    o.Alpha = c.a;
-}
-ENDCG
+            sampler2D _MainTex;
+            float _Cutoff;
+			
+			struct v2f {
+			    float4 pos : SV_POSITION;
+			    float4 uv : TEXCOORD0;
+			};
+
+			v2f vert (appdata_full v)
+			{
+				float _Dist=100;
+				float4	_QOffset=float4(3,-8,0,0);
+				
+			    v2f o;
+			    float4 vPos = mul (UNITY_MATRIX_MV, v.vertex);
+			    float zOff = vPos.z/_Dist;
+			    vPos += _QOffset*zOff*zOff;
+			    
+			    o.pos = mul (UNITY_MATRIX_P, vPos);
+			    o.uv = mul( UNITY_MATRIX_TEXTURE0, v.texcoord );
+			    return o;
+			}
+			
+			half4 frag (v2f i) : COLOR
+			{
+			    half4 col = tex2D(_MainTex, i.uv.xy);
+			    if(col.a<_Cutoff)col.a=0;
+			    return col;
+			}
+			ENDCG
+    }
 }
 }

@@ -280,7 +280,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 				}	
 			}
 			
-			if(FlagCoRoutine&&i%1==0) yield return null;
+			if(FlagCoRoutine&&i%100==0) yield return null;
 		}
 		
 		//unique terrains

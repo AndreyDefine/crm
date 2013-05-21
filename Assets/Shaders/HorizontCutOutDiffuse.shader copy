@@ -1,0 +1,45 @@
+Shader "Shaders/HorizontCutOutDiffuse" {
+Properties {
+    _MainTex ("Base (RGB) Trans (A)", 2D) = "white" {}
+    _Cutoff ("Alpha cutoff", Range(0,1)) = 0.5
+}
+ 
+SubShader {
+    Tags {"Queue"="AlphaTest" "IgnoreProjector"="True" "RenderType"="TransparentCutout"}
+    Cull Off
+ 
+CGPROGRAM
+#pragma surface surf Lambert alphatest:_Cutoff vertex:vert
+ 
+sampler2D _MainTex;
+ 
+			struct Input {
+			    float2 uv_MainTex;
+				float4 pos : SV_POSITION;
+				float4 uv : TEXCOORD0;
+			};
+
+			void vert (inout appdata_full v, out Input o)
+			{
+				float _Dist=100;
+				float4	_QOffset=float4(3,-8,0,0);
+
+			    float4 vPos = mul (UNITY_MATRIX_MV, v.vertex);
+			    float zOff = vPos.z/_Dist;
+			    vPos += _QOffset*zOff*zOff;
+			    
+			    v.vertex+=_QOffset*zOff*zOff;
+			    
+			    o.pos = mul (UNITY_MATRIX_P, vPos);
+			    o.uv = mul( UNITY_MATRIX_TEXTURE0, v.texcoord );
+			}
+			
+
+void surf (Input IN, inout SurfaceOutput o) {
+    fixed4 c = tex2D(_MainTex, IN.uv_MainTex);
+    o.Albedo = c.rgb;
+    o.Alpha = c.a;
+}
+ENDCG
+}
+}

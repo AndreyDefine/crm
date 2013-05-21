@@ -108,6 +108,7 @@ public class CharacterMarioC : Abstract {
 				{
 					Debug.Log ("Zabiratsa");
 				}
+				else
 				//под водкой
 				if(prevcurStumbleTransform==curStumbleTransform&&playerScript.isVodka())
 				{
