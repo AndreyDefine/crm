@@ -46,6 +46,15 @@ public abstract class BaseMissionEmmitter : Abstract, IMissionEmmitter, IMission
 		}
 	}
 	
+	public void NotifyJumpOverDrova (int drova)
+	{
+		ArrayList missions = GetActiveCurrentMissions ();
+		for (int i=0; i<missions.Count; i++) {
+			Mission mission = (Mission)missions [i];
+			mission.NotifyJumpOverDrova (drova);
+		}
+	}
+	
 	public void NotifySlideUnderRope (int rope)
 	{
 		ArrayList missions = GetActiveCurrentMissions ();

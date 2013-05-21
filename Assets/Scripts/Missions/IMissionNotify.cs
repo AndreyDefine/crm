@@ -5,6 +5,7 @@ public interface IMissionNotify{
 	//run
 	void NotifyMetersRunned (int meters);
 	void NotifyJumpOverCaw (int caws);
+	void NotifyJumpOverDrova (int drova);
 	void NotifyJumpOverHaystack (int haystack);
 	void NotifySlideUnderRope (int rope);
 	void NotifyDodgeBaran (int baran);

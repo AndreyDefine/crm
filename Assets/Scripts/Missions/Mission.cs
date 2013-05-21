@@ -117,6 +117,11 @@ public class Mission : Abstract, IMissionNotify {
 	{
 	}
 	
+	public virtual void NotifyJumpOverDrova (int drova)
+	{
+		
+	}
+	
 	public virtual void NotifyDodgeBaran (int baran)
 	{
 		

@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class JumpOverCaws : BaseOneNumberMission {
+public class RunJumpOverCaw : BaseOneNumberMission {
 	
 	public override void NotifyJumpOverCaw (int caws)
 	{

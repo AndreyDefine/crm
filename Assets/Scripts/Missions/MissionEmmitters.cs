@@ -103,6 +103,13 @@ public class MissionEmmitters : Abstract, IMissionEmmitter, IMissionNotify
 		}
 	}
 	
+	public void NotifyJumpOverDrova (int drova)
+	{
+		for(int i=0;i<missionEmmitters.Length;i++){
+			missionEmmitters[i].NotifyJumpOverDrova(drova);
+		}
+	}
+	
 	public void NotifySlideUnderRope (int rope)
 	{
 		for(int i=0;i<missionEmmitters.Length;i++){
