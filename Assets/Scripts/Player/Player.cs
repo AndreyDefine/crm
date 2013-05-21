@@ -162,7 +162,6 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		{
 			return true;
 		}
-		
 		return false;
 	}
 	

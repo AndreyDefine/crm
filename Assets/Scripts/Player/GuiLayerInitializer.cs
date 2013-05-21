@@ -411,7 +411,7 @@ public class GuiLayerInitializer : Abstract {
 		
 		int oldlife=curLife;
 		//препятствие и водка
-		if(inlife<0&&flagVodka){
+		if(inlife<0&&playerScript.isVodka()){
 			return;
 		}
 		curLife+=inlife;

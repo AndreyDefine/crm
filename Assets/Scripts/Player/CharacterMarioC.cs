@@ -16,6 +16,9 @@ public class CharacterMarioC : Abstract {
 	private bool movingToFlyGround=false;
 	private float vsletAcceleration=10;
 	private Transform curStumbleTransform=null;
+	private Transform prevcurStumbleTransform=null;
+	
+	private int curStumbleTransformLayer;
 	//private bool downing=false;
 	
 	private bool freezed=false;
@@ -104,6 +107,12 @@ public class CharacterMarioC : Abstract {
 				if(curStumbleTransform.name.Contains("Zabiratsa"))
 				{
 					Debug.Log ("Zabiratsa");
+				}
+				//под водкой
+				if(prevcurStumbleTransform==curStumbleTransform&&playerScript.isVodka())
+				{
+					curStumbleTransformLayer=curStumbleTransform.gameObject.layer;
+					curStumbleTransform.gameObject.layer=10;
 				}
 				else
 				{
@@ -340,6 +349,11 @@ public class CharacterMarioC : Abstract {
 		
 		if(pushDir.x!=0||pushDir.z!=0)
 		{
+			prevcurStumbleTransform=curStumbleTransform;
+			if(prevcurStumbleTransform)
+			{
+				prevcurStumbleTransform.gameObject.layer=curStumbleTransformLayer;
+			}
 			curStumbleTransform=hit.collider.transform;
 		}
 	}

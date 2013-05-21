@@ -79,7 +79,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		curFactoryObject=Instantiate (MoneyFactory) as GameObject;
 		moneyElementFactory=curFactoryObject.GetComponent("AbstractElementFactory") as AbstractElementFactory;
 		
-		numberOfTerrains=2;
+		numberOfTerrains=3;
 		
 		//Get current level
 		LoadCurrentLevel();
@@ -280,7 +280,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 				}	
 			}
 			
-			if(FlagCoRoutine&&i%30==0) yield return null;
+			if(FlagCoRoutine&&i%1==0) yield return null;
 		}
 		
 		//unique terrains
@@ -397,7 +397,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 				if(!curname.Contains("Left")&&!curname.Contains("Right"))
 				{
 					addOneUniqueAtMarker(curUnique,interrainTag);
-					if(FlagCoRoutine&&i%2==0) yield return null;
+					if(FlagCoRoutine&&i%1==0) yield return null;
 				}
 			}
 		}
@@ -406,7 +406,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		for(i=0;i<markedObjectsTrees.Count;i++){
 			if(curversionForCoRoutine!=versionForCoRoutine) yield break;
 			addOneTreeAtMarker(markedObjectsTrees[i] as Transform,interrainTag);
-			if(FlagCoRoutine&&i%2==0) yield return null;
+			if(FlagCoRoutine&&i%1==0) yield return null;
 		}
 		
 		if(curversionForCoRoutine!=versionForCoRoutine) yield break;
