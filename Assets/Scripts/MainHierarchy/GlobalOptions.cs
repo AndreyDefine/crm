@@ -42,7 +42,7 @@ public class GlobalOptions {
 	
 	public static float playerVelocity;
 	
-	public static float globalPerspective=100;
+	public static float globalPerspective=200;
 	
 	public static TerrainTagNextGoingTo terrainTagNextGoingTo;
 	public static int countsOfTerrains=0;
