@@ -11,7 +11,7 @@ Shader "Shaders/HorizontDiffuze" {
 			#pragma vertex vert
 			#pragma fragment frag
 			#include "UnityCG.cginc"
-			#pragma fragmentoption ARB_precision_hint_fastest 
+			//#pragma fragmentoption ARB_precision_hint_fastest 
 
             sampler2D _MainTex;
 			
@@ -22,13 +22,12 @@ Shader "Shaders/HorizontDiffuze" {
 
 			v2f vert (appdata_full v)
 			{
-				float _Dist=90;
-				float4	_QOffset=float4(4,-8,0,0);
-				
+				float _Dist=90;			
 			    v2f o;
 			    float4 vPos = mul (UNITY_MATRIX_MV, v.vertex);
 			    float zOff = vPos.z/_Dist;
-			    vPos += _QOffset*zOff*zOff;
+			    
+			    vPos += float4(4,-10,0,0)*zOff*zOff;
 			    
 			    o.pos = mul (UNITY_MATRIX_P, vPos);
 			    o.uv = mul( UNITY_MATRIX_TEXTURE0, v.texcoord );

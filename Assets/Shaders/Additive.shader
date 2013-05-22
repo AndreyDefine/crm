@@ -21,8 +21,8 @@ Shader "Shaders/FX/Additive" {
 			v2f vert (appdata_full v)
 			{
 				float _Dist=90;
-				float4	_QOffset=float4(4,-8,0,0);
-				
+				float4	_QOffset=float4(4,-10,0,0);
+								
 			    v2f o;
 			    float4 vPos = mul (UNITY_MATRIX_MV, v.vertex);
 			    float zOff = vPos.z/_Dist;
@@ -54,7 +54,7 @@ Shader "Shaders/FX/Additive" {
 		
 		#pragma vertex vert
 		#pragma fragment frag
-		#pragma fragmentoption ARB_precision_hint_fastest 
+		//#pragma fragmentoption ARB_precision_hint_fastest 
 		
 		ENDCG
 		 

@@ -611,7 +611,6 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	}
 	
 	private void MakeMovingCharacterControllerForward(){
-		//Vector3 curpos=Character.transform.position;
 		float forward=GetRealVelocityWithNoDeltaTime();
 		characterMarioC.SetMovement(forward);
 		
