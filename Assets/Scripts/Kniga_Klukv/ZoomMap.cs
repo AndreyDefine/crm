@@ -141,7 +141,7 @@ public class ZoomMap : SpriteTouch {
 				prevPos.y-smPrev.y+smPrevNewCenter.y,
 				prevPos.z);
 			
-			singleTransform.localPosition = new Vector3(pos.x+pos.x*(curScale-prevScale),pos.y+pos.y*(curScale-prevScale),pos.z);
+			singleTransform.localPosition = new Vector3(pos.x-(wordCenterFingerCurrent.x-singleTransform.localPosition.x)*(curScale-prevScale),pos.y-(wordCenterFingerCurrent.y-singleTransform.localPosition.y)*(curScale-prevScale),pos.z);
 			
 			
 			//prevScale = singleTransform.localScale.x;		
