@@ -49,6 +49,7 @@ public static class AnimationFactory {
 
         obj.animation.AddClip (animClip, clipName);
         obj.animation [clipName].layer = 1;
+		obj.animation.wrapMode = WrapMode.Once;
         if (play) {
             obj.animation.Play (clipName);
         }
@@ -85,6 +86,7 @@ public static class AnimationFactory {
 
         obj.animation.AddClip (animClip, clipName);
         obj.animation [clipName].layer = 1;
+		obj.animation.wrapMode = WrapMode.Once;
         if (play) {
             obj.animation.Play (clipName);
         }
@@ -124,6 +126,7 @@ public static class AnimationFactory {
 
         obj.animation.AddClip (animClip, clipName);
         obj.animation [clipName].layer = 1;
+		obj.animation.wrapMode = WrapMode.Once;
         if (play) {
             obj.animation.Play (clipName);
         }
@@ -166,6 +169,7 @@ public static class AnimationFactory {
 
         obj.animation.AddClip (animClip, clipName);
         obj.animation [clipName].layer = 1;
+		obj.animation.wrapMode = WrapMode.Once;
         if (play) {
             obj.animation.Play (clipName);
         }
@@ -392,8 +396,8 @@ public static class AnimationFactory {
 		float intervalTeta = Mathf.PI*2/deleter;
 		float intervalTime = secs/deleter;
 		
-		float beginPositionX = obj.singleTransform.localPosition.x+radius*Mathf.Cos(0f);
-		float beginPositionY = obj.singleTransform.localPosition.y+radius*Mathf.Sin(Mathf.PI*2-0f);
+		float beginPositionX = obj.singleTransform.localPosition.x;
+		float beginPositionY = obj.singleTransform.localPosition.y;
 		
 		AnimationCurve curveX = AnimationCurve.EaseInOut (0, beginPositionX, secs, beginPositionX);
         AnimationCurve curveY = AnimationCurve.EaseInOut (0, beginPositionY, secs, beginPositionY);
@@ -401,7 +405,7 @@ public static class AnimationFactory {
 		
 		for(int i=1;i<deleter;i++)
 		{
-			curveX.AddKey(new Keyframe(i*intervalTime,obj.singleTransform.localPosition.x+radius*Mathf.Cos(i*intervalTeta)));
+			curveX.AddKey(new Keyframe(i*intervalTime,obj.singleTransform.localPosition.x-radius+radius*Mathf.Cos(i*intervalTeta)));
 			curveY.AddKey(new Keyframe(i*intervalTime,obj.singleTransform.localPosition.y+radius*Mathf.Sin(Mathf.PI*2-i*intervalTeta)));
 		}
 		
@@ -457,6 +461,7 @@ public static class AnimationFactory {
 
         obj.animation.AddClip (animClip, clipName);
         obj.animation [clipName].layer = 1;
+		obj.animation.wrapMode = WrapMode.Once;
         if (play) {
             obj.animation.Play (clipName);
         }
@@ -493,6 +498,7 @@ public static class AnimationFactory {
 
         obj.animation.AddClip (animClip, clipName);
         obj.animation [clipName].layer = 1;
+		obj.animation.wrapMode = WrapMode.Once;
         if (play) {
             obj.animation.Play (clipName);
         }

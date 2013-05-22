@@ -4,6 +4,7 @@ using System.Collections;
 public class DialogFerma : Abstract {
 	
 	private float padding = 15;
+	public Factory factory;
 	
 	public void ShowForPosition(Vector3 pos){
 		singleTransform.position = pos;
@@ -40,6 +41,15 @@ public class DialogFerma : Abstract {
 	}
 	
 	public void ScaleInEnd(){
+		float radius = 0.015f;
 		AnimationFactory.MoveRound(this,2.5f,0.015f,"MoveRound");
+	}
+		
+	public void CloseDialog(){
+		AnimationFactory.ScaleOutXYZ(this,new Vector3(0f,0f,0f),0.5f,"ScaleOut", "ScaleOutEnd");
+	}	
+	
+	public void ScaleOutEnd(){
+		Destroy(gameObject);
 	}
 }

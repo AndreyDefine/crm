@@ -4,9 +4,13 @@ using System.Collections;
 public class Factory : SpriteTouch {
 	
 	public int price;
-	private static string FACTORY_DATA_TAG = "factory_data";
+	private static string FACTORY_DATA_TAG = "factory_data_";
 	private Vector3 initScale;
 	public DialogFerma dialogFermaPrefab;
+	public DialogFerma dialogFerma;
+	private bool dialogFermaShown = false;
+	
+	
 	public float smX = 0f;
 	public float smY = 0.5f;
 	
@@ -79,8 +83,26 @@ public class Factory : SpriteTouch {
 	}
 	
 	virtual protected void MakeOnTouch(){
-		DialogFerma dialogFerma = Instantiate(dialogFermaPrefab) as DialogFerma;
+		if(!bought){
+			ShowDialog();
+		}
+	}
+	
+	public void ShowDialog(){
+		if(dialogFermaShown){
+			return;		
+		}
+		dialogFermaShown = true;
+		dialogFerma = Instantiate(dialogFermaPrefab) as DialogFerma;
+		dialogFerma.factory = this;
 		dialogFerma.singleTransform.parent = singleTransform.parent;
 		dialogFerma.ShowForPosition(new Vector3(singleTransform.position.x+smX, singleTransform.position.y+smY, singleTransform.position.z-0.01f));
+	}
+	
+	public void Buy(){
+		bought = true;
+		SetBought(true);
+		dialogFerma.CloseDialog();
+		dialogFermaShown = false;
 	}
 }

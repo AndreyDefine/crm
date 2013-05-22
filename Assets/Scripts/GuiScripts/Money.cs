@@ -6,7 +6,7 @@ public class Money : Abstract {
 	public CrmFont crmFont;
 	private int money;
 	
-	void Awake(){
+	void Start(){
 		Vector3 pos=new Vector3(GlobalOptions.Vsizex-15,GlobalOptions.Vsizey-92,singleTransform.position.z);
 		pos=GlobalOptions.NormalisePos(pos);
 		pos=Cameras.GetGUICamera().ScreenToWorldPoint(pos);
