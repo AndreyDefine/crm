@@ -144,14 +144,14 @@ public class SpriteTouch : Abstract,TouchTargetedDelegate {
 	protected virtual bool MakeDetectionOnRect(Vector2 position)
 	{
 		bool isTouchHandled;
-		/*if(renderer&&flagCanChangePosition)
+		if(renderer&&flagCanChangePosition)
 		{
 			Debug.Log ("touchZone = new Rect");
 	        touchZone = new Rect(pos.x-renderer.bounds.extents.x*perPixel*scale, 
 				pos.y -  renderer.bounds.extents.y*perPixel*scale,
 				renderer.bounds.size.x*perPixel*scale, 
 				renderer.bounds.size.y*perPixel*scale);
-		}*/
+		}
 		//need to write about position changing on rect colliders
 		isTouchHandled=touchZone.Contains(position);
 		
