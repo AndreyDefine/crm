@@ -4,35 +4,43 @@ Shader "Shaders/HorizontDiffuze" {
     }
     
     SubShader {
-      Tags { "RenderType" = "Transparent"}
-      CGPROGRAM
-      #pragma surface surf Lambert vertex:vert
-      struct Input {
-           float2 uv_MainTex;
-      };
-      
-void vert (inout appdata_full v) {
-float pos = length(mul (UNITY_MATRIX_MVP, v.vertex).xyz);
+      Tags { "RenderType"="Opaque" }
+     Pass
+		{
+			CGPROGRAM
+			#pragma vertex vert
+			#pragma fragment frag
+			#include "UnityCG.cginc"
 
-float curpos = length(mul (UNITY_MATRIX_MVP, v.vertex).xyz);
-curpos=sin(curpos/100);  
-pos-=20;
+            sampler2D _MainTex;
+			
+			struct v2f {
+			    float4 pos : SV_POSITION;
+			    float4 uv : TEXCOORD0;
+			};
 
-if(pos>0)
-{
-	pos/=50;
-	pos*=pos;
-	//v.vertex.y -= pos * 3;
-	//v.vertex.x += pos * 10*curpos;
+			v2f vert (appdata_full v)
+			{
+				float _Dist=100;
+				float4	_QOffset=float4(3,-8,0,0);
+				
+			    v2f o;
+			    float4 vPos = mul (UNITY_MATRIX_MV, v.vertex);
+			    float zOff = vPos.z/_Dist;
+			    vPos += _QOffset*zOff*zOff;
+			    
+			    o.pos = mul (UNITY_MATRIX_P, vPos);
+			    o.uv = mul( UNITY_MATRIX_TEXTURE0, v.texcoord );
+			    return o;
+			}
+			
+			half4 frag (v2f i) : COLOR
+			{
+			    half4 col = tex2D(_MainTex, i.uv.xy);
+			    
+			    return col;
+			}
+			ENDCG
+		}
+	}
 }
-  
-}
-      
-      sampler2D _MainTex;
-      void surf (Input IN, inout SurfaceOutput o) {
-          o.Albedo = tex2D (_MainTex, IN.uv_MainTex).rgb;
-      }
-      ENDCG
-    } 
-
-  }

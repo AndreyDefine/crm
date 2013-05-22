@@ -1,14 +1,14 @@
-Shader "Shaders/HorizontDiffuzeCullOff" {
-   Properties {
-      _MainTex ("Texture", 2D) = "white" {}
-    }
-    
-    SubShader {
-      Tags { "RenderType"="Opaque" }
-      Cull Off
-     Pass
+Shader "Shaders/Curved" {
+	Properties {
+		_MainTex ("Base (RGB)", 2D) = "white" {}
+	}
+	SubShader {
+		Tags { "RenderType"="Opaque" }
+		Pass
 		{
 			CGPROGRAM
+// Upgrade NOTE: excluded shader from OpenGL ES 2.0 because it does not contain a surface program or both vertex and fragment programs.
+            #pragma exclude_renderers gles
 			#pragma vertex vert
 			#pragma fragment frag
 			#include "UnityCG.cginc"
@@ -23,7 +23,7 @@ Shader "Shaders/HorizontDiffuzeCullOff" {
 			v2f vert (appdata_full v)
 			{
 				float _Dist=100;
-				float4	_QOffset=float4(3,-8,0,0);
+				float4	_QOffset=float4(5,5,0,0);
 				
 			    v2f o;
 			    float4 vPos = mul (UNITY_MATRIX_MV, v.vertex);
@@ -43,4 +43,5 @@ Shader "Shaders/HorizontDiffuzeCullOff" {
 			ENDCG
 		}
 	}
+	FallBack "Diffuse"
 }
