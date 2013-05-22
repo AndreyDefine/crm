@@ -451,19 +451,19 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		}
 		Vector3 walkbearpos=walkingBear.transform.localPosition;
 		Vector3 charpos=Character.transform.localPosition;
+		float raznost=raznFromWhereToLookAndCharacter.y;
+		float heightDamping;
 		if(characterMarioC.isJumping()&&GlobalOptions.gameState!=GameStates.GAME_OVER)
 		{
 			WhereToLook.transform.localPosition=new Vector3(charpos.x*whereToLookParalax,WhereToLook.transform.localPosition.y,raznFromWhereToLookAndCharacter.z+charpos.z);
 		}
 		else
 		{
-			float heightDamping=2f;
+			heightDamping=2f;
 			if(characterMarioC.isFlying()||characterMarioC.ismovingToFlyGround())
 			{
 				heightDamping=10f;
 			}			
-			
-			float raznost=raznFromWhereToLookAndCharacter.y;
 			if(characterMarioC.isGliding()&&GlobalOptions.playerStates!=PlayerStates.DIE)
 			{
 				raznost-=3f;
