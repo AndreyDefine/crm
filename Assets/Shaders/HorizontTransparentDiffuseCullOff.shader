@@ -33,6 +33,7 @@ SubShader
 			#pragma vertex vert
 			#pragma fragment frag
 			#include "UnityCG.cginc"
+			#pragma fragmentoption ARB_precision_hint_fastest 
 
             sampler2D _MainTex;
             float _Cutoff;
@@ -44,8 +45,8 @@ SubShader
 
 			v2f vert (appdata_full v)
 			{
-				float _Dist=100;
-				float4	_QOffset=float4(3,-8,0,0);
+				float _Dist=90;
+				float4	_QOffset=float4(4,-8,0,0);
 				
 			    v2f o;
 			    float4 vPos = mul (UNITY_MATRIX_MV, v.vertex);

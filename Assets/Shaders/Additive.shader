@@ -14,18 +14,24 @@ Shader "Shaders/FX/Additive" {
 		half4 _MainTex_ST;
 						
 		struct v2f {
-			half4 pos : SV_POSITION;
-			half2 uv : TEXCOORD0;
-		};
+			    float4 pos : SV_POSITION;
+			    float4 uv : TEXCOORD0;
+			};
 
-		v2f vert(appdata_full v) {
-			v2f o;
-			
-			o.pos = mul (UNITY_MATRIX_MVP, v.vertex);	
-			o.uv.xy = TRANSFORM_TEX(v.texcoord, _MainTex);
-					
-			return o; 
-		}
+			v2f vert (appdata_full v)
+			{
+				float _Dist=90;
+				float4	_QOffset=float4(4,-8,0,0);
+				
+			    v2f o;
+			    float4 vPos = mul (UNITY_MATRIX_MV, v.vertex);
+			    float zOff = vPos.z/_Dist;
+			    vPos += _QOffset*zOff*zOff;
+			    
+			    o.pos = mul (UNITY_MATRIX_P, vPos);
+			    o.uv = mul( UNITY_MATRIX_TEXTURE0, v.texcoord );
+			    return o;
+			}
 		
 		fixed4 frag( v2f i ) : COLOR {	
 			return tex2D (_MainTex, i.uv.xy) * _TintColor;
