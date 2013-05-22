@@ -6,26 +6,13 @@ Properties
 }
 SubShader 
 {
-    Cull Off
-    //Blend SrcAlpha Zero 
-    Blend SrcAlpha OneMinusSrcAlpha 
-    
+    Cull Off    
     Tags 
     {
         "Queue" = "Transparent" 
         "IgnoreProjector" = "True" 
         "RenderType" = "TransparentCutoff"
     }
-    
-    //Pass{
-    //Alphatest Greater [_Cutoff]
-    //AlphaToMask True
-    //ColorMask RGB
-    //	SetTexture [_MainTex] 
-    //    {
-    //       Combine texture, texture
-    //  }
-    //}
     
     CGINCLUDE
 
@@ -56,7 +43,7 @@ SubShader
 			half4 frag (v2f i) : COLOR
 			{
 			    half4 col = tex2D(_MainTex, i.uv.xy);
-			    if(col.a<_Cutoff)col.a=0;
+			    if(col.a<_Cutoff)discard;
 			    return col;
 			}
 			ENDCG
