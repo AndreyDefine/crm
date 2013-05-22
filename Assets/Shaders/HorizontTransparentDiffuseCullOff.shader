@@ -6,25 +6,14 @@ Properties
 SubShader 
 {
     Cull Off
-    //Blend SrcAlpha Zero 
     Blend SrcAlpha OneMinusSrcAlpha 
-    //Alphatest Greater [_Cutoff]
-    //AlphaToMask True
-    //ColorMask RGB
     
     Tags 
     {
         "Queue" = "Transparent" 
         "IgnoreProjector" = "True" 
-        "RenderType" = "TransparentCutoff"
     }
-    
-    //Pass{
-    //	SetTexture [_MainTex] 
-    //    {
-    //        Combine texture, texture
-    //   }
-    //}
+
     
     Pass{
     //Blend SrcAlpha OneMinusSrcAlpha 
@@ -33,10 +22,9 @@ SubShader
 			#pragma vertex vert
 			#pragma fragment frag
 			#include "UnityCG.cginc"
-			#pragma fragmentoption ARB_precision_hint_fastest 
+			//#pragma fragmentoption ARB_precision_hint_fastest 
 
             sampler2D _MainTex;
-            float _Cutoff;
 			
 			struct v2f {
 			    float4 pos : SV_POSITION;
@@ -46,7 +34,7 @@ SubShader
 			v2f vert (appdata_full v)
 			{
 				float _Dist=90;
-				float4	_QOffset=float4(4,-8,0,0);
+				float4	_QOffset=float4(4,-10,0,0);
 				
 			    v2f o;
 			    float4 vPos = mul (UNITY_MATRIX_MV, v.vertex);

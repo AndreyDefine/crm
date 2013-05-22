@@ -9,7 +9,7 @@ public class MonetaEnemy : AbstractEnemy {
 	private float rasstChuvstv=155;
 	private Transform parentTransform;
 	
-	private Transform oldParent;
+	//private Transform oldParent;
 	
 	public override void OnHit(Collider other)
 	{
@@ -78,44 +78,50 @@ public class MonetaEnemy : AbstractEnemy {
 		{
 			bool flagMoving=false;
 			float raznx,raznz,razny;
-			float smex=0.35f;
+			float smex=0.05f;
 			raznx=-parentTransform.position.x+walkingBearTransform.position.x;
 			razny=-parentTransform.position.y+walkingBearTransform.position.y+1;
 			raznz=-parentTransform.position.z+walkingBearTransform.position.z;
 	
-			float delitel=30;
 			if(Mathf.Abs(raznx)>smex)
 			{
 				//raznx/=Mathf.Abs(raznx)>smex*3?delitel:delitel/1.5f;
-				raznx/=delitel;
+				//raznx/=delitel;
+				raznx=Mathf.Sign(raznx)*smex;
 				flagMoving=true;
 			}
 			if(Mathf.Abs(razny)>smex)
 			{
 				//razny/=Mathf.Abs(razny)>smex*3?delitel:delitel/1.5f;
-				razny/=delitel;
+				//razny/=delitel;
+				razny=Mathf.Sign(razny)*smex;
 				flagMoving=true;
 			}
 				
 			if(Mathf.Abs(raznz)>smex)
 			{
 				//raznz/=Mathf.Abs(raznz)>smex*3?delitel:delitel/1.5f;
-				raznz/=delitel;
+				//raznz/=delitel;
+				raznz=Mathf.Sign(raznz)*smex;
+				if(raznz>0)
+				{
+					raznz+=playerScript.GetRealVelocity();
+				}
 				flagMoving=true;
 			}
 			
 			parentTransform.position+=new Vector3(raznx,razny,raznz);	
-			if(!flagMoving)
+			/*if(!flagMoving)
 			{
 				parentTransform.parent=oldParent;
-			}
+			}*/
 		}
 	}
 	
 	private void MakeEffect()
 	{
 		effectMade=true;
-		oldParent=parentTransform.parent;
+		/*oldParent=parentTransform.parent;
 		if(GlobalOptions.flagOnlyFizik)
 		{
 			parentTransform.parent=walkingBearTransform;
@@ -123,16 +129,16 @@ public class MonetaEnemy : AbstractEnemy {
 		else
 		{
 			parentTransform.parent=playertransform;
-		}
+		}*/
 	}
 	
 	
 	private void UnMakeEffect()
 	{
 		effectMade=false;
-		if(parentTransform)
+		/*if(parentTransform)
 		{
 			parentTransform.parent=oldParent;
-		}
+		}*/
 	}
 }

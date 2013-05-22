@@ -104,18 +104,21 @@ public class CharacterMarioC : Abstract {
 			
 			if(stumble&&!flying&&!groundingFlag&&moveforward>0)
 			{
+				bool needStumble=true;
 				if(curStumbleTransform.name.Contains("Zabiratsa"))
 				{
+					needStumble=false;
 					Debug.Log ("Zabiratsa");
 				}
-				else
 				//под водкой
 				if(prevcurStumbleTransform==curStumbleTransform&&playerScript.isVodka())
 				{
+					needStumble=false;
 					curStumbleTransformLayer=curStumbleTransform.gameObject.layer;
 					curStumbleTransform.gameObject.layer=10;
 				}
-				else
+				
+				if(needStumble)
 				{
 					playerScript.Stumble(curStumbleTransform);
 				}
