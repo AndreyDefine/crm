@@ -6,13 +6,7 @@ Properties
 }
 SubShader 
 {
-    Cull Off
-    //Blend SrcAlpha Zero 
-    Blend SrcAlpha OneMinusSrcAlpha 
-    //Alphatest Greater [_Cutoff]
-    //AlphaToMask True
-    //ColorMask RGB
-    
+    Cull Off    
     Tags 
     {
         "Queue" = "Transparent" 
@@ -20,20 +14,9 @@ SubShader
         "RenderType" = "TransparentCutoff"
     }
     
-    //Pass{
-    //	SetTexture [_MainTex] 
-    //    {
-    //        Combine texture, texture
-    //   }
-    //}
-    
-    Pass{
-    //Blend SrcAlpha OneMinusSrcAlpha 
-      
-    	CGPROGRAM
-			#pragma vertex vert
-			#pragma fragment frag
-			#include "UnityCG.cginc"
+    CGINCLUDE
+
+		#include "UnityCG.cginc"
 
             sampler2D _MainTex;
             float _Cutoff;
@@ -45,9 +28,8 @@ SubShader
 
 			v2f vert (appdata_full v)
 			{
-				float _Dist=100;
-				float4	_QOffset=float4(3,-8,0,0);
-				
+				float _Dist=90;
+				float4	_QOffset=float4(4,-8,0,0);				
 			    v2f o;
 			    float4 vPos = mul (UNITY_MATRIX_MV, v.vertex);
 			    float zOff = vPos.z/_Dist;
@@ -61,10 +43,22 @@ SubShader
 			half4 frag (v2f i) : COLOR
 			{
 			    half4 col = tex2D(_MainTex, i.uv.xy);
-			    if(col.a<_Cutoff)col.a=0;
+			    if(col.a<_Cutoff)discard;
 			    return col;
 			}
 			ENDCG
-    }
-}
+    
+    Pass {
+	
+		CGPROGRAM
+		
+		#pragma vertex vert
+		#pragma fragment frag
+		#pragma fragmentoption ARB_precision_hint_fastest 
+		
+		ENDCG
+		 
+		}
+				
+	} 
 }
