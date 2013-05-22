@@ -388,21 +388,21 @@ public static class AnimationFactory {
 		AddAnimation (obj.gameObject);
         DeleteClipIfExists (obj.gameObject, clipName);
            
-		int deleter = 20;
+		int deleter = 50;
 		float intervalTeta = Mathf.PI*2/deleter;
 		float intervalTime = secs/deleter;
 		
 		float beginPositionX = obj.singleTransform.localPosition.x+radius*Mathf.Cos(0f);
-		float beginPositionY = obj.singleTransform.localPosition.y+radius*Mathf.Sin(0f);
+		float beginPositionY = obj.singleTransform.localPosition.y+radius*Mathf.Sin(Mathf.PI*2-0f);
 		
-		AnimationCurve curveX = AnimationCurve.Linear (0, beginPositionX, secs, beginPositionX);
-        AnimationCurve curveY = AnimationCurve.Linear (0, beginPositionY, secs, beginPositionY);
+		AnimationCurve curveX = AnimationCurve.EaseInOut (0, beginPositionX, secs, beginPositionX);
+        AnimationCurve curveY = AnimationCurve.EaseInOut (0, beginPositionY, secs, beginPositionY);
         AnimationCurve curveZ = AnimationCurve.Linear (0, obj.singleTransform.localPosition.z, secs, obj.singleTransform.localPosition.z);
 		
 		for(int i=1;i<deleter;i++)
 		{
-			curveX.AddKey(new Keyframe(i*intervalTime,radius*Mathf.Cos(i*intervalTeta)));
-			curveY.AddKey(new Keyframe(i*intervalTime,radius*Mathf.Sin(i*intervalTeta)));
+			curveX.AddKey(new Keyframe(i*intervalTime,obj.singleTransform.localPosition.x+radius*Mathf.Cos(i*intervalTeta)));
+			curveY.AddKey(new Keyframe(i*intervalTime,obj.singleTransform.localPosition.y+radius*Mathf.Sin(Mathf.PI*2-i*intervalTeta)));
 		}
 		
         AnimationClip animClip = new AnimationClip ();  
@@ -425,4 +425,76 @@ public static class AnimationFactory {
             obj.animation.Play (clipName);
         }
 	}
+	
+	public static void ScaleInXYZ(Abstract obj, Vector3 scaleTo, float secs, string clipName, string stopFunctionName = null, bool play = true) {
+        AddAnimation (obj.gameObject);
+        DeleteClipIfExists (obj.gameObject, clipName);
+    
+        AnimationClip animClip = new AnimationClip ();
+        AnimationCurve curveX = AnimationCurve.EaseInOut (0, obj.singleTransform.localScale.x, secs, scaleTo.x);
+        AnimationCurve curveY = AnimationCurve.EaseInOut (0, obj.singleTransform.localScale.y, secs, scaleTo.y);
+        AnimationCurve curveZ = AnimationCurve.EaseInOut (0, obj.singleTransform.localScale.z, secs, scaleTo.z);
+            
+        curveX.AddKey (0.4f * secs, 0.55f * (scaleTo.x));
+        curveX.AddKey (0.7f * secs, 1.1f * (scaleTo.x));
+            
+        curveY.AddKey (0.4f * secs, 0.55f * (scaleTo.y));
+        curveY.AddKey (0.7f * secs, 1.1f * (scaleTo.y));
+            
+        //curveZ.AddKey (0.4f * secs, obj.singleTransform.localPosition.z - 0.55f * (obj.singleTransform.localPosition.z - moveTo.z));
+        //curveZ.AddKey (0.7f * secs, obj.singleTransform.localPosition.z - 1.1f * (obj.singleTransform.localPosition.z - moveTo.z));
+            
+        animClip.SetCurve ("", typeof(Transform), "localScale.x", curveX);
+        animClip.SetCurve ("", typeof(Transform), "localScale.y", curveY);
+        animClip.SetCurve ("", typeof(Transform), "localScale.z", curveZ);
+
+        if (stopFunctionName != null && stopFunctionName != "None") {
+            AnimationEvent eventStop = new AnimationEvent ();
+            eventStop.functionName = stopFunctionName;
+            eventStop.time = secs;
+            animClip.AddEvent (eventStop);
+        }
+
+        obj.animation.AddClip (animClip, clipName);
+        obj.animation [clipName].layer = 1;
+        if (play) {
+            obj.animation.Play (clipName);
+        }
+    }
+	
+	public static void ScaleOutXYZ(Abstract obj, Vector3 scaleTo, float secs, string clipName, string stopFunctionName = null, bool play = true) {
+        AddAnimation (obj.gameObject);
+        DeleteClipIfExists (obj.gameObject, clipName);
+    
+        AnimationClip animClip = new AnimationClip ();
+        AnimationCurve curveX = AnimationCurve.EaseInOut (0, obj.singleTransform.localScale.x, secs, scaleTo.x);
+        AnimationCurve curveY = AnimationCurve.EaseInOut (0, obj.singleTransform.localScale.y, secs, scaleTo.y);
+        AnimationCurve curveZ = AnimationCurve.EaseInOut (0, obj.singleTransform.localScale.z, secs, scaleTo.z);
+            
+        curveX.AddKey (0.4f * secs, 1.1f * (obj.singleTransform.localScale.x));
+        curveX.AddKey (0.7f * secs, 0.55f * (obj.singleTransform.localScale.x));
+            
+        curveY.AddKey (0.4f * secs, 1.1f * (obj.singleTransform.localScale.y));
+        curveY.AddKey (0.7f * secs, 0.55f * (obj.singleTransform.localScale.y));
+		
+        //curveZ.AddKey (0.4f * secs, obj.singleTransform.localPosition.z - 0.55f * (obj.singleTransform.localPosition.z - moveTo.z));
+        //curveZ.AddKey (0.7f * secs, obj.singleTransform.localPosition.z - 1.1f * (obj.singleTransform.localPosition.z - moveTo.z));
+            
+        animClip.SetCurve ("", typeof(Transform), "localScale.x", curveX);
+        animClip.SetCurve ("", typeof(Transform), "localScale.y", curveY);
+        animClip.SetCurve ("", typeof(Transform), "localScale.z", curveZ);
+
+        if (stopFunctionName != null && stopFunctionName != "None") {
+            AnimationEvent eventStop = new AnimationEvent ();
+            eventStop.functionName = stopFunctionName;
+            eventStop.time = secs;
+            animClip.AddEvent (eventStop);
+        }
+
+        obj.animation.AddClip (animClip, clipName);
+        obj.animation [clipName].layer = 1;
+        if (play) {
+            obj.animation.Play (clipName);
+        }
+    }
 }

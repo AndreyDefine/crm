@@ -34,6 +34,12 @@ public class DialogFerma : Abstract {
 			pos.y = posRightBottom.y+singleRenderer.bounds.extents.y;
 		}
 		singleTransform.position=pos;	
-		AnimationFactory.MoveRound(this,2f,0.3f,"MoveRound");
+		
+		singleTransform.localScale = new Vector3(0f,0f,0f);
+		AnimationFactory.ScaleInXYZ(this,new Vector3(1f,1f,1f),0.5f,"scaleIn","ScaleInEnd");
+	}
+	
+	public void ScaleInEnd(){
+		AnimationFactory.MoveRound(this,2.5f,0.015f,"MoveRound");
 	}
 }
