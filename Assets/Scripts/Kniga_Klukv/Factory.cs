@@ -1,15 +1,16 @@
 using UnityEngine;
 using System.Collections;
 
-public class GuiButtonShowScreen : SpriteTouch {
-	public string screenToShow="";
+public class Factory : SpriteTouch {
+	
 	private Vector3 initScale;
+	public DialogFerma dialogFermaPrefab;
+	public float smX = 0f;
+	public float smY = 0.5f;
 	
-	protected ScreenLoader screenLoader;
-	
-	private void Start() {
-        init();
-		screenLoader=GameObject.Find("/ScreenLoader").GetComponent("ScreenLoader")as ScreenLoader;
+	protected override void Start(){
+		base.Start();
+		initScale = singleTransform.localScale;
 	}
 	
 	public override bool TouchBegan(Vector2 position,int fingerId) {
@@ -46,11 +47,8 @@ public class GuiButtonShowScreen : SpriteTouch {
 	}
 	
 	virtual protected void MakeOnTouch(){
-		if(screenToShow=="ScreenShop"||screenToShow=="ScreenSettings"||screenToShow=="ScreenMap"||screenToShow=="ScreenKniga")
-		{
-			FlurryPlugin.FlurryLogEvent(screenToShow);
-		}
-		screenLoader.LoadScreenByName(screenToShow);
+		DialogFerma dialogFerma = Instantiate(dialogFermaPrefab) as DialogFerma;
+		dialogFerma.singleTransform.parent = singleTransform;
+		dialogFerma.ShowForPosition(new Vector3(singleTransform.position.x+smX, singleTransform.position.y+smY, singleTransform.position.z-0.01f));
 	}
-	
 }

@@ -41,7 +41,7 @@ public class SpriteTouch : Abstract,TouchTargetedDelegate {
 		}
     }
     
-    private void Start() {
+    protected virtual void Start() {
 		scale=1;
 		init();
     }
@@ -201,7 +201,8 @@ public class SpriteTouch : Abstract,TouchTargetedDelegate {
 	}
 	
 	protected virtual void GetSizePos() {
-		Vector3 p1 = GUIcamera.WorldToScreenPoint (new Vector3 (singleTransform.position.x, singleTransform.position.y, singleTransform.position.z));  
+		Vector3 p1 = GUIcamera.WorldToScreenPoint (new Vector3 (singleTransform.position.x, singleTransform.position.y, singleTransform.position.z)); 
+		Debug.Log (singleTransform.name+p1);
 		
 		scale=singleTransform.lossyScale.x;
 		if(renderer)

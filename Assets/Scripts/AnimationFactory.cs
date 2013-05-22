@@ -383,4 +383,46 @@ public static class AnimationFactory {
             obj.animation.Play (clipName);
         }
     }
+	
+	public static void MoveRound(Abstract obj, float secs, float radius, string clipName, string stopFunctionName = null, bool play = true){
+		AddAnimation (obj.gameObject);
+        DeleteClipIfExists (obj.gameObject, clipName);
+           
+		int deleter = 20;
+		float intervalTeta = Mathf.PI*2/deleter;
+		float intervalTime = secs/deleter;
+		
+		float beginPositionX = obj.singleTransform.localPosition.x+radius*Mathf.Cos(0f);
+		float beginPositionY = obj.singleTransform.localPosition.y+radius*Mathf.Sin(0f);
+		
+		AnimationCurve curveX = AnimationCurve.Linear (0, beginPositionX, secs, beginPositionX);
+        AnimationCurve curveY = AnimationCurve.Linear (0, beginPositionY, secs, beginPositionY);
+        AnimationCurve curveZ = AnimationCurve.Linear (0, obj.singleTransform.localPosition.z, secs, obj.singleTransform.localPosition.z);
+		
+		for(int i=1;i<deleter;i++)
+		{
+			curveX.AddKey(new Keyframe(i*intervalTime,radius*Mathf.Cos(i*intervalTeta)));
+			curveY.AddKey(new Keyframe(i*intervalTime,radius*Mathf.Sin(i*intervalTeta)));
+		}
+		
+        AnimationClip animClip = new AnimationClip ();  
+            
+        animClip.SetCurve ("", typeof(Transform), "localPosition.x", curveX);
+        animClip.SetCurve ("", typeof(Transform), "localPosition.y", curveY);
+        animClip.SetCurve ("", typeof(Transform), "localPosition.z", curveZ);
+        
+        if (stopFunctionName != null && stopFunctionName != "None") {
+            AnimationEvent eventStop = new AnimationEvent ();
+            eventStop.functionName = stopFunctionName;
+            eventStop.time = secs;
+            animClip.AddEvent (eventStop);
+        }
+
+        obj.animation.AddClip (animClip, clipName);
+        obj.animation [clipName].layer = 1;
+        obj.animation.wrapMode = WrapMode.Loop;
+        if (play) {
+            obj.animation.Play (clipName);
+        }
+	}
 }

@@ -120,7 +120,7 @@ public class ZoomMap : SpriteTouch {
 			Vector2 centerFingerPrev = new Vector2(prevFingerPos[0].x-(prevFingerPos[0].x-prevFingerPos[1].x)/2, prevFingerPos[0].y-(prevFingerPos[0].y-prevFingerPos[1].y)/2);
 			Vector2 centerFingerCurrent = new Vector2(fingerPos[0].x-(fingerPos[0].x-fingerPos[1].x)/2, fingerPos[0].y-(fingerPos[0].y-fingerPos[1].y)/2);
 			
-			Debug.Log(centerFingerPrev.x+ " "+ centerFingerPrev.y+ " "+ centerFingerCurrent.x+ " "+ centerFingerCurrent.y);
+			//Debug.Log(centerFingerPrev.x+ " "+ centerFingerPrev.y+ " "+ centerFingerCurrent.x+ " "+ centerFingerCurrent.y);
 			
 			
 			Camera guiCamera = Cameras.GetGUICamera();
@@ -134,14 +134,21 @@ public class ZoomMap : SpriteTouch {
 			Vector2 smPrev = prevScale*wordCenterFingerPrev;
 			Vector2 smPrevNewScale = curScale*wordCenterFingerPrev;
 			
-			Debug.LogWarning(wordCenterFingerPrev.x+ " "+wordCenterFingerPrev.y+ " " +wordCenterFingerCurrent.x+" "+wordCenterFingerCurrent.y);
+			//Debug.LogWarning(wordCenterFingerPrev.x+ " "+wordCenterFingerPrev.y+ " " +wordCenterFingerCurrent.x+" "+wordCenterFingerCurrent.y);
 				
 			//точка в старом масштабе сместилась в место между пальцами.
+			
+			
+			
 			Vector3 pos = new Vector3(prevPos.x-smPrev.x+smPrevNewCenter.x,
 				prevPos.y-smPrev.y+smPrevNewCenter.y,
 				prevPos.z);
 			
-			singleTransform.localPosition = new Vector3(pos.x-(wordCenterFingerCurrent.x-singleTransform.localPosition.x)*(curScale-prevScale),pos.y-(wordCenterFingerCurrent.y-singleTransform.localPosition.y)*(curScale-prevScale),pos.z);
+			pos = new Vector3(pos.x-(wordCenterFingerCurrent.x-pos.x)*(curScale-prevScale),
+				pos.y-(wordCenterFingerCurrent.y-pos.y)*(curScale-prevScale),
+				pos.z);
+			
+			singleTransform.localPosition = pos;
 			
 			
 			//prevScale = singleTransform.localScale.x;		
