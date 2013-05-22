@@ -45,8 +45,7 @@ public class GuiLayerInitializer : Abstract {
 	private float Vsizex,Vsizey;
 	private float nullTime;
 	private int curLife;
-	
-	private GameObject curStrobile;
+
 	private float curStarPos=250;
 	
 	private Player playerScript;
@@ -77,7 +76,6 @@ public class GuiLayerInitializer : Abstract {
 	// Use this for initialization
 	void Start() {
 		StarsList=new ArrayList();
-		curStrobile=null;
 		GUIcamera = Cameras.GetGUICamera(); 
 		
 		playerScript=GlobalOptions.GetPlayer().GetComponent("Player")as Player;
@@ -95,7 +93,6 @@ public class GuiLayerInitializer : Abstract {
 		stopTime=0;
 		startstopTime=0;
 		
-		curStrobile=null;
 		curLife=MaxLife;
 		nullTime=0;
 		flagHeadStars=false;

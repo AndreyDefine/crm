@@ -103,7 +103,7 @@ public class SwypeDetector : SpriteTouch {
 	
 	private void SwypeUp(){
 		//Debug.Log ("up");
-		if(GlobalOptions.playerStates!=PlayerStates.DOWN&&GlobalOptions.playerStates!=PlayerStates.FLY&&GlobalOptions.playerStates!=PlayerStates.JUMP&&GlobalOptions.playerStates!=PlayerStates.DIE)
+		if(GlobalOptions.playerStates!=PlayerStates.FLY&&GlobalOptions.playerStates!=PlayerStates.JUMP&&GlobalOptions.playerStates!=PlayerStates.DIE)
 		{
 			GlobalOptions.playerStates=PlayerStates.JUMP;
 		}

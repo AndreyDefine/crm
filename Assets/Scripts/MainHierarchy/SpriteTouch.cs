@@ -146,7 +146,6 @@ public class SpriteTouch : Abstract,TouchTargetedDelegate {
 		bool isTouchHandled;
 		if(renderer&&flagCanChangePosition)
 		{
-			Debug.Log ("touchZone = new Rect");
 	        touchZone = new Rect(pos.x-renderer.bounds.extents.x*perPixel*scale, 
 				pos.y -  renderer.bounds.extents.y*perPixel*scale,
 				renderer.bounds.size.x*perPixel*scale, 
@@ -211,7 +210,6 @@ public class SpriteTouch : Abstract,TouchTargetedDelegate {
 	
 	protected virtual void GetSizePos() {
 		Vector3 p1 = GUIcamera.WorldToScreenPoint (new Vector3 (singleTransform.position.x, singleTransform.position.y, singleTransform.position.z)); 
-		Debug.Log (singleTransform.name+p1);
 		
 		scale=singleTransform.lossyScale.x;
 		if(renderer)

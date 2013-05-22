@@ -35,7 +35,7 @@ public class CharacterMarioC : Abstract {
 	
 	float stopTime=0,startstopTime=0;//время остановки
 	
-	private float heightnormal=1.5f, heightslide=0.9f;
+	private float heightnormal=1.5f, heightslide=0.1f;
 	private CapsuleCollider walkinbearCollider;
 	
 	private GameObject walkingBear;
@@ -127,7 +127,7 @@ public class CharacterMarioC : Abstract {
 			// We are in jump mode but just became grounded
 			if (grounded)
 			{
-				if(jumping)
+				if(jumping&&!glideFlag)
 				{
 					if(GlobalOptions.playerStates!=PlayerStates.DIE)
 					{
@@ -139,9 +139,21 @@ public class CharacterMarioC : Abstract {
 				{
 					Glide();
 				}
+				
+				if(jumping&&downing)
+				{
+					Debug.Log ("GlobalOptions.playerStates=PlayerStates.DOWN;");
+					downing=false;
+					GlobalOptions.playerStates=PlayerStates.DOWN;
+				}
+				
 				jumping = false;
 			}
-			downing = false;
+			
+			if(!jumping)
+			{
+				downing=false;
+			}
 			
 			if(glideFlag)
 			{
@@ -178,17 +190,26 @@ public class CharacterMarioC : Abstract {
 		}
 	}
 	
-	private void MakeGlide()
+	private void UnMakeGlide()
 	{
-		if(Time.time-glideTimer>1)
+		if(glideFlag)
 		{
 			walkinbearCollider.height=heightnormal;
 			walkinbearCollider.center=new Vector3(walkinbearCollider.center.x,walkinbearCollider.center.y+(heightnormal-heightslide)/2,walkinbearCollider.center.z);
 			glideFlag=false;
-			if(GlobalOptions.playerStates!=PlayerStates.DIE)
-			{
-				GlobalOptions.playerStates=PlayerStates.WALK;
-			}
+		}
+		downing=false;
+		if(GlobalOptions.playerStates!=PlayerStates.DIE)
+		{
+			GlobalOptions.playerStates=PlayerStates.WALK;
+		}
+	}
+	
+	private void MakeGlide()
+	{
+		if(Time.time-glideTimer>1)
+		{
+			UnMakeGlide();
 		}
 	}
 	
@@ -219,9 +240,11 @@ public class CharacterMarioC : Abstract {
 	
 	public void Jump()
 	{
-		if (grounded&&!jumping&&!glideFlag&&!flying) {
+		if (grounded&&!jumping&&!flying) {
+			UnMakeGlide();
 			jumping = true;
 			verticalSpeed = jumpSpeed;
+			GlobalOptions.playerStates=PlayerStates.JUMP;
 		}
 	}
 	
@@ -229,13 +252,8 @@ public class CharacterMarioC : Abstract {
 	{
 		if (grounded||jumping&&!flying) {
 			downing = true;
-			verticalSpeed = -jumpSpeed;
+			verticalSpeed = -jumpSpeed*1.5f;
 		}
-		if(jumping)
-		{
-			GlobalOptions.playerStates=PlayerStates.JUMP;
-		}
-		
 		if(flying)
 		{
 			GlobalOptions.playerStates=PlayerStates.FLY;
