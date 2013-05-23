@@ -8,6 +8,6 @@ public class DialogFermaPlay : DialogFerma {
 	public override void SetFactory (Factory factory)
 	{
 		base.SetFactory (factory);
-		crmFont.text = factory.name;
+		crmFont.text = factory.factoryName;
 	}	
 }

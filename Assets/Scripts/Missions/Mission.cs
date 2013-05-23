@@ -100,8 +100,26 @@ public class Mission : Abstract, IMissionNotify {
 	public virtual void NotifyX2Collected (int x2)
 	{
 	}
+	
+	public virtual void NotifyScarecrowDeath (int scarecrowDeath)
+	{
+		
+	}
 	//run
 	public virtual void NotifyMetersRunned (int meters){
+	}
+	
+	public virtual void NotifySlideUnderSomething (int something)
+	{
+	}
+	
+	public virtual void NotifyJump (int jump)
+	{
+		
+	}
+	
+	public virtual void NotifyPointsAdded (int points)
+	{
 	}
 	
 	public virtual void NotifyJumpOverCaw (int caws)
@@ -110,7 +128,6 @@ public class Mission : Abstract, IMissionNotify {
 	
 	public virtual void NotifySlideUnderRope (int rope)
 	{
-		
 	}
 	
 	public virtual void NotifyJumpOverHaystack (int haystack)

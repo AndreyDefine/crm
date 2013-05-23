@@ -8,5 +8,6 @@ public class SlideUnderBelie : AbstractBaseEnemy{
 	public override void OnHit(Collider other)
 	{
 		GlobalOptions.GetMissionEmmitters().NotifySlideUnderRope(1);
+		GlobalOptions.GetMissionEmmitters().NotifySlideUnderSomething(1);
 	}
 }

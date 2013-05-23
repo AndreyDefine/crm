@@ -255,6 +255,7 @@ public class GuiLayerInitializer : Abstract {
 	public void AddPoints(int addPoints)
 	{
 		this.points.AddPoints(addPoints);
+		GlobalOptions.GetMissionEmmitters().NotifyPointsAdded(addPoints);
 	}
 	
 	public void AddMoney(int addMoney)

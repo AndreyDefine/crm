@@ -4,10 +4,13 @@ using System.Collections;
 public interface IMissionNotify{
 	//run
 	void NotifyMetersRunned (int meters);
+	void NotifyJump (int jump);
+	void NotifyPointsAdded (int points);
 	void NotifyJumpOverCaw (int caws);
 	void NotifyJumpOverDrova (int drova);
 	void NotifyJumpOverHaystack (int haystack);
 	void NotifySlideUnderRope (int rope);
+	void NotifySlideUnderSomething (int something);
 	void NotifyDodgeBaran (int baran);
 	void NotifyDodgeTractor (int tractor);
 	//collect
@@ -18,4 +21,5 @@ public interface IMissionNotify{
 	void NotifyX2Collected(int x2);
 	void NotifySenoDeath(int senoDeath);
 	void NotifyTraktorDeath(int traktorDeath);
+	void NotifyScarecrowDeath(int scarecrowDeath);
 }

@@ -37,6 +37,33 @@ public abstract class BaseMissionEmmitter : Abstract, IMissionEmmitter, IMission
 		}
 	}
 	
+	public void NotifySlideUnderSomething (int something)
+	{
+		ArrayList missions = GetActiveCurrentMissions ();
+		for (int i=0; i<missions.Count; i++) {
+			Mission mission = (Mission)missions [i];
+			mission.NotifySlideUnderSomething (something);
+		}
+	}
+	
+	public void NotifyPointsAdded (int points)
+	{
+		ArrayList missions = GetActiveCurrentMissions ();
+		for (int i=0; i<missions.Count; i++) {
+			Mission mission = (Mission)missions [i];
+			mission.NotifyPointsAdded (points);
+		}
+	}
+	
+	public void NotifyJump (int jump)
+	{
+		ArrayList missions = GetActiveCurrentMissions ();
+		for (int i=0; i<missions.Count; i++) {
+			Mission mission = (Mission)missions [i];
+			mission.NotifyJump (jump);
+		}
+	}
+	
 	public void NotifyJumpOverCaw (int caws)
 	{
 		ArrayList missions = GetActiveCurrentMissions ();
@@ -107,6 +134,15 @@ public abstract class BaseMissionEmmitter : Abstract, IMissionEmmitter, IMission
 		for (int i=0; i<missions.Count; i++) {
 			Mission mission = (Mission)missions [i];
 			mission.NotifyVodkaCollected (vodka);
+		}
+	}
+	
+	public void NotifyScarecrowDeath (int scarecrowDeath)
+	{
+		ArrayList missions = GetActiveCurrentMissions ();
+		for (int i=0; i<missions.Count; i++) {
+			Mission mission = (Mission)missions [i];
+			mission.NotifyScarecrowDeath (scarecrowDeath);
 		}
 	}
 	

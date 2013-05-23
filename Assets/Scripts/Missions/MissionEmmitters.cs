@@ -89,10 +89,38 @@ public class MissionEmmitters : Abstract, IMissionEmmitter, IMissionNotify
 		return thisLifeFinishedMissions;
 	}
 	
+	public void NotifyScarecrowDeath (int scarecrowDeath)
+	{
+		for(int i=0;i<missionEmmitters.Length;i++){
+			missionEmmitters[i].NotifyScarecrowDeath(scarecrowDeath);
+		}
+	}
+	
 	//run
 	public void NotifyMetersRunned(int meter){
 		for(int i=0;i<missionEmmitters.Length;i++){
 			missionEmmitters[i].NotifyMetersRunned(meter);
+		}
+	}
+	
+	public void NotifySlideUnderSomething (int something)
+	{
+		for(int i=0;i<missionEmmitters.Length;i++){
+			missionEmmitters[i].NotifySlideUnderSomething(something);
+		}
+	}
+	
+	public void NotifyJump (int jump)
+	{
+		for(int i=0;i<missionEmmitters.Length;i++){
+			missionEmmitters[i].NotifyJump(jump);
+		}
+	}
+	
+	public void NotifyPointsAdded (int points)
+	{
+		for(int i=0;i<missionEmmitters.Length;i++){
+			missionEmmitters[i].NotifyPointsAdded(points);
 		}
 	}
 	

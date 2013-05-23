@@ -245,6 +245,7 @@ public class CharacterMarioC : Abstract {
 		if (grounded&&!jumping&&!flying) {
 			UnMakeGlide();
 			jumping = true;
+			GlobalOptions.GetMissionEmmitters().NotifyJump(1);
 			verticalSpeed = jumpSpeed;
 			GlobalOptions.playerStates=PlayerStates.JUMP;
 		}

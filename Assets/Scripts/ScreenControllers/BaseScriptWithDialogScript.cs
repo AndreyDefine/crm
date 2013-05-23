@@ -7,7 +7,7 @@ public class BaseScriptWithDialogScript : Abstract,ScreenControllerToShow {
 	private Dialog dialog = null;
 	
 	// Screen Controller To Show Methods
-	public void ShowOnScreen()
+	public virtual void ShowOnScreen()
 	{
 		dialog = Instantiate(dialogPrefab) as Dialog;
 		dialog.singleTransform.parent = singleTransform;

@@ -5,6 +5,7 @@ public class Factory : SpriteTouch {
 	
 	public int price;
 	public string levelToLoad="";
+	public string factoryName = "";
 	public bool initBought = false;
 	public int needLevel;
 	
