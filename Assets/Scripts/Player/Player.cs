@@ -31,6 +31,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	private Quaternion CameraFirstRotation;
 	private Vector3 CharacterFirstPos;
 	private Vector3 raznFromWhereToLookAndCharacter;
+	private bool flyingPathChange=false;
 	
 	private Vector3 firstWhereToLookLocalPos;
 	
@@ -265,12 +266,21 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 			{
 				bearAnimation.Walk();
 			}
-			if(GlobalOptions.playerStatesPathChanging==PlayerStatesPathChanging.LEFT)
+			else
+			{
+				if(flyingPathChange)
+				{
+					bearAnimation.Walk();
+				}
+					
+			}
+			
+			if(GlobalOptions.playerStatesPathChanging==PlayerStatesPathChanging.LEFT&&!flyingPathChange)
 			{
 				bearAnimation.Left();
 			}
 			
-			if(GlobalOptions.playerStatesPathChanging==PlayerStatesPathChanging.RIGHT)
+			if(GlobalOptions.playerStatesPathChanging==PlayerStatesPathChanging.RIGHT&&!flyingPathChange)
 			{
 				bearAnimation.Right();
 			}
@@ -279,9 +289,10 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		{
 			bearAnimation.Idle();
 		}
-		if(GlobalOptions.playerStates==PlayerStates.JUMP&&!characterMarioC.isGliding())
+		if(GlobalOptions.playerStates==PlayerStates.JUMP)
 		{
 			bearAnimation.Jump();
+			flyingPathChange=true;
 		}
 		if(GlobalOptions.playerStates==PlayerStates.DOWN&&!characterMarioC.isJumping())
 		{
@@ -314,6 +325,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	{
 		//смена дорожки
 		if(!toRight){
+			flyingPathChange=false;
 			PathChanging=true;
 			GlobalOptions.playerStatesPathChanging=PlayerStatesPathChanging.LEFT;
 			prevPathNumber=PathNumber;
@@ -322,6 +334,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		}
 		
 		if(toRight){
+			flyingPathChange=false;
 			PathChanging=true;
 			GlobalOptions.playerStatesPathChanging=PlayerStatesPathChanging.RIGHT;
 			prevPathNumber=PathNumber;
@@ -438,19 +451,19 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		}
 		Vector3 walkbearpos=walkingBear.transform.localPosition;
 		Vector3 charpos=Character.transform.localPosition;
+		float raznost=raznFromWhereToLookAndCharacter.y;
+		float heightDamping;
 		if(characterMarioC.isJumping()&&GlobalOptions.gameState!=GameStates.GAME_OVER)
 		{
 			WhereToLook.transform.localPosition=new Vector3(charpos.x*whereToLookParalax,WhereToLook.transform.localPosition.y,raznFromWhereToLookAndCharacter.z+charpos.z);
 		}
 		else
 		{
-			float heightDamping=2f;
+			heightDamping=2f;
 			if(characterMarioC.isFlying()||characterMarioC.ismovingToFlyGround())
 			{
 				heightDamping=10f;
 			}			
-			
-			float raznost=raznFromWhereToLookAndCharacter.y;
 			if(characterMarioC.isGliding()&&GlobalOptions.playerStates!=PlayerStates.DIE)
 			{
 				raznost-=3f;
