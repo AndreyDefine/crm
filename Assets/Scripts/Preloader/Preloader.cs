@@ -78,7 +78,7 @@ public class Preloader : Abstract {
 	
 	private void PosPersantage(){
 		Vector3 pos;
-		pos=new Vector3(606,75,0.5f);
+		pos=new Vector3(606,75,-10f);
 		pos=GlobalOptions.NormalisePos(pos);
 		pos=GUIcamera.ScreenToWorldPoint(pos);
 		//pos.x-=Persantage.renderer.bounds.size.x;

@@ -55,8 +55,8 @@ ModelImporter:
     - name: down
       firstFrame: 136
       lastFrame: 143
-      wrapMode: 8
-      loop: 0
+      wrapMode: 0
+      loop: 1
     - name: stumble
       firstFrame: 110
       lastFrame: 135
