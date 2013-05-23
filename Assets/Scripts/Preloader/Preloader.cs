@@ -23,7 +23,9 @@ public class Preloader : Abstract {
 		levelName=GlobalOptions.loadingLevel;
 		curTime=0;
 		GUIcamera = Cameras.GetGUICamera(); 
-
+		
+		Application.targetFrameRate = 300;
+		
 		InitSprites();
 		if(GlobalOptions.UnityPro){
 			isLoading=true;

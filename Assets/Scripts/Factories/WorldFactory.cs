@@ -75,6 +75,10 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		curFactoryObject=Instantiate (ObstacleSetFactory) as GameObject;
 		obstacleSetElementFactory=curFactoryObject.GetComponent("AbstractElementFactory") as AbstractElementFactory;
 		
+		if(MakeObstacleSet)
+		{
+			obstacleSetElementFactory.pathInResources="ObstacleSets/new";
+		}
 		//money
 		curFactoryObject=Instantiate (MoneyFactory) as GameObject;
 		moneyElementFactory=curFactoryObject.GetComponent("AbstractElementFactory") as AbstractElementFactory;
