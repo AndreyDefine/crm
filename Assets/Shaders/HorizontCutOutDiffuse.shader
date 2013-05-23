@@ -28,10 +28,10 @@ SubShader
 
 			v2f vert (appdata_full v)
 			{
-				float _Dist=90;
+				float _Dist=100;
 				float4	_QOffset=float4(4,-10,0,0);
 				
-				v2f o;
+			    v2f o;
 			    float4 vPos = mul (UNITY_MATRIX_MV, v.vertex);
 			    float zOff = vPos.z/_Dist;
 			    /////vPos += _QOffset*zOff*zOff;

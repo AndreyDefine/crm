@@ -707,7 +707,6 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	
 	public override void DeleteOneFirstTerrain()
 	{		
-		Debug.Log ("DeleteOneFirstTerrain");
 		if(terrainElementFactory.flagGenerate){
 			terrainElementFactory.DeleteOneFirstTerrain();
 		}

@@ -75,7 +75,6 @@ public class TerrainElementFactory: AbstractElementFactory{
 	
 	public void SetNextCurrentTerrain(GameObject interrain)
 	{
-		Debug.Log ("SetNextCurrentTerrain");
 		currentTerrain=interrain;
 	}
 	

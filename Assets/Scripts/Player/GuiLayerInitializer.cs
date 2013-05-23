@@ -293,6 +293,11 @@ public class GuiLayerInitializer : Abstract {
 		flagVodka = true;
 	}
 	
+	public void AddPosilka()
+	{
+		playerScript.MakePosilka();
+	}
+	
 	public void StopVodka(){
 		playerScript.UnMakeVodka();
 		flagVodka = false;

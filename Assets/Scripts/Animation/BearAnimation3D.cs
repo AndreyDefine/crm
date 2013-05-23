@@ -41,12 +41,19 @@ public class BearAnimation3D : Abstract{
 			(clothesList[i] as GameObject).animation["down"].layer=0;
 			(clothesList[i] as GameObject).animation["stumble"].layer=1;
 			
+			(clothesList[i] as GameObject).animation["posilka_left"].layer=1;
+			(clothesList[i] as GameObject).animation["posilka_right"].layer=1;
+			
 			(clothesList[i] as GameObject).animation["down"].speed=0.5f;
 			(clothesList[i] as GameObject).animation["stumble"].speed=1.5f;
 			(clothesList[i] as GameObject).animation["jump"].speed=0.7f;
 			(clothesList[i] as GameObject).animation["left"].speed=1f;
 			(clothesList[i] as GameObject).animation["right"].speed=1f;
 			(clothesList[i] as GameObject).animation["death"].speed=0.9f;
+			
+			(clothesList[i] as GameObject).animation["posilka_left"].speed=1.2f;
+			(clothesList[i] as GameObject).animation["posilka_right"].speed=1.2f;
+			
 			//(clothesList[i] as GameObject).animation["down"].weight=1;
 		}
 	}
@@ -131,6 +138,14 @@ public class BearAnimation3D : Abstract{
 	public void Down() {
 		CrossFadeAnimationForName("down");
 		//Debug.Log ("Down");
+	}
+	
+	public void Posilka_Right() {
+		CrossFadeAnimationForName("posilka_right");
+	}
+	
+	public void Posilka_Left() {
+		CrossFadeAnimationForName("posilka_left");
 	}
 	
 	public void SetWalkSpeed(float inspeed) {

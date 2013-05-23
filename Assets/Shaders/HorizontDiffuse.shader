@@ -22,7 +22,7 @@ Shader "Shaders/HorizontDiffuze" {
 
 			v2f vert (appdata_full v)
 			{
-				float _Dist=90;			
+				float _Dist=100;			
 			    v2f o;
 			    float4 vPos = mul (UNITY_MATRIX_MV, v.vertex);
 			    float zOff = vPos.z/_Dist;

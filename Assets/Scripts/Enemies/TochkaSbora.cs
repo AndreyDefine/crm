@@ -7,7 +7,7 @@ public class TochkaSbora : AbstractEnemy {
 	
 	public override void OnHit(Collider other)
 	{
-		//GuiLayer.AddMission();
+		GuiLayer.AddPosilka();
 		PlayClipSound();
 	}
 }

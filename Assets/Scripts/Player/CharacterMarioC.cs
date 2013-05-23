@@ -7,6 +7,7 @@ public class CharacterMarioC : Abstract {
 
 	private float moveforward=0;
 	private float verticalSpeed = 0f;
+	private bool flagPathChangeJump=false;
 	
 	private bool grounded=false;
 	private bool jumping=false;
@@ -48,7 +49,7 @@ public class CharacterMarioC : Abstract {
 	
 	private void UpdateSmoothedMovementDirection ()
 	{
-		if(!GlobalOptions.flagOnlyFizik)
+		/*if(!GlobalOptions.flagOnlyFizik)
 		{
 			if(moveforward>=0)
 			{
@@ -57,7 +58,7 @@ public class CharacterMarioC : Abstract {
 			{
 				moveforward=0.00001f;
 			}
-		}
+		}*/
 	}
 	
 	void Start()
@@ -75,9 +76,11 @@ public class CharacterMarioC : Abstract {
 			AddAllTimes();
 			UpdateSmoothedMovementDirection();
 		
-			if (grounded&&!jumping) {
+			if (grounded&&!jumping&&!flagPathChangeJump) {
 				verticalSpeed = 0;
 			}
+			
+			flagPathChangeJump=false;
 			// Apply gravity
 			//if(!freezed)
 			//{
@@ -378,5 +381,19 @@ public class CharacterMarioC : Abstract {
 			}
 			curStumbleTransform=hit.collider.transform;
 		}
+	}
+	
+	public void PathChangeJump()
+	{
+		if(grounded&&!glideFlag)
+		{
+			flagPathChangeJump=true;
+			verticalSpeed = jumpSpeed/1.5f;
+		}
+	}
+	
+	public float GetVerticalSpeed()
+	{
+		return verticalSpeed;
 	}
 }

@@ -4,6 +4,10 @@ ModelImporter:
   fileIDToRecycleName:
     4300000: bear
     7400000: Take 001 //// Animation
+    7400002: anim_1 //// Animation
+    7400004: anim_2 //// Animation
+    7400006: posilka_left //// Animation
+    7400008: posilka_right //// Animation
   serializedVersion: 10
   materials:
     importMaterials: 1
@@ -18,10 +22,20 @@ ModelImporter:
     animationPositionError: .5
     animationScaleError: .5
     animationWrapMode: 0
-    clipAnimations: []
+    clipAnimations:
+    - name: posilka_left
+      firstFrame: 0
+      lastFrame: 18
+      wrapMode: 0
+      loop: 0
+    - name: posilka_right
+      firstFrame: 20
+      lastFrame: 38
+      wrapMode: 0
+      loop: 0
   meshes:
     lODScreenPercentages: []
-    globalScale: .00999999978
+    globalScale: .224999994
     meshCompression: 3
     addColliders: 0
     swapUVChannels: 0

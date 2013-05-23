@@ -56,6 +56,10 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	private bool magnitFlag=false;
 	
+	private bool flagPosilka=false;
+	
+	float posilkaTimer;
+	
 	private GameObject walkingBear;
 	
 	public bool GetMagnitFlag()
@@ -99,6 +103,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		oldMetersz=0;
 		oneMeterz=0;
 		allMeters=0;
+		flagPosilka=false;
 		
 		posx=0;
 		
@@ -127,6 +132,8 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		oldMetersz=0;
 		oneMeterz=0;
 		allMeters=0;
+		flagPosilka=false;
+		
 		posx=0;
 		UnMakePropeller();
 		UnMakeMagnit();
@@ -164,6 +171,32 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 			return true;
 		}
 		return false;
+	}
+	
+	public void MakePosilka()
+	{
+		int curPathNumber;
+		//if(PathChanging)
+		//{
+		//	curPathNumber=prevPathNumber;
+		//}
+		//else
+		{
+			curPathNumber=PathNumber;
+		}
+		if(curPathNumber==1)
+		{
+			bearAnimation.Posilka_Right();	
+			flagPosilka=true;
+			posilkaTimer=Time.time;
+		}
+		
+		if(curPathNumber==-1)
+		{
+			bearAnimation.Posilka_Left();
+			flagPosilka=true;
+			posilkaTimer=Time.time;
+		}
 	}
 	
 	public void MakeVodka()
@@ -261,8 +294,15 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	private void SwitchAnimation()
 	{
+		if(flagPosilka)
+		{
+			if(Time.time-posilkaTimer>1)
+			{
+				flagPosilka=false;
+			}
+		}
 		if(GlobalOptions.playerStates==PlayerStates.WALK||GlobalOptions.playerStates==PlayerStates.FLY){
-			if(GlobalOptions.playerStatesPathChanging==PlayerStatesPathChanging.FORWARD)
+			if(GlobalOptions.playerStatesPathChanging==PlayerStatesPathChanging.FORWARD&&!flagPosilka)
 			{
 				bearAnimation.Walk();
 			}
@@ -278,11 +318,13 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 			if(GlobalOptions.playerStatesPathChanging==PlayerStatesPathChanging.LEFT&&!flyingPathChange)
 			{
 				bearAnimation.Left();
+				characterMarioC.PathChangeJump();
 			}
 			
 			if(GlobalOptions.playerStatesPathChanging==PlayerStatesPathChanging.RIGHT&&!flyingPathChange)
 			{
 				bearAnimation.Right();
+				characterMarioC.PathChangeJump();
 			}
 		}
 		if(GlobalOptions.playerStates==PlayerStates.IDLE)
@@ -453,7 +495,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		Vector3 charpos=Character.transform.localPosition;
 		float raznost=raznFromWhereToLookAndCharacter.y;
 		float heightDamping;
-		if(characterMarioC.isJumping()&&GlobalOptions.gameState!=GameStates.GAME_OVER)
+		if((characterMarioC.isJumping())&&GlobalOptions.gameState!=GameStates.GAME_OVER)
 		{
 			WhereToLook.transform.localPosition=new Vector3(charpos.x*whereToLookParalax,WhereToLook.transform.localPosition.y,raznFromWhereToLookAndCharacter.z+charpos.z);
 		}
@@ -654,10 +696,12 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	public void Stumble(Transform inTransform)
 	{
 		MoveCharacterControllerLeftRight(0);
-		PathNumber=prevPathNumber;
-		PathChanging=true;
-		guiLayer.AddToLife(-3,inTransform);
-		guiLayer.AddHeadStars();
+		if(!isVodka())
+		{
+			PathNumber=prevPathNumber;
+			PathChanging=true;
+			guiLayer.AddToLife(-3,inTransform);
+		}
 	}
 	
 	public void StumbleTrigger()
