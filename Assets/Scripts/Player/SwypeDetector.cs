@@ -20,9 +20,9 @@ public class SwypeDetector : SpriteTouch {
         init();
 		
 		//1 дюйм = 2.54 см
-		//хотим чтобы свайп был от 0.5 см
+		//хотим чтобы свайп был от 6,35 миллиметра
 		if (Screen.dpi != 0f) {
-			Epsilonxx = Epsilonyy = Screen.dpi*0.2f;
+			Epsilonxx = Epsilonyy = Screen.dpi*0.25f;
         }
 		else{
 			Epsilonxx=30*GlobalOptions.scaleFactorx;
