@@ -35,11 +35,14 @@ public class BearAnimation3D : Abstract{
 		
 		for(int i=0;i<clothesList.Count;i++)
 		{
-			(clothesList[i] as GameObject).animation["jump"].layer=0;
+			(clothesList[i] as GameObject).animation["jump"].layer=1;
 			(clothesList[i] as GameObject).animation["left"].layer=1;
 			(clothesList[i] as GameObject).animation["right"].layer=1;
-			(clothesList[i] as GameObject).animation["down"].layer=0;
+			(clothesList[i] as GameObject).animation["down"].layer=1;
 			(clothesList[i] as GameObject).animation["stumble"].layer=1;
+			(clothesList[i] as GameObject).animation["walk"].layer=0;
+			(clothesList[i] as GameObject).animation["death"].layer=0;
+			
 			
 			(clothesList[i] as GameObject).animation["posilka_left"].layer=1;
 			(clothesList[i] as GameObject).animation["posilka_right"].layer=1;
@@ -86,6 +89,7 @@ public class BearAnimation3D : Abstract{
 			curAnimationName=inAnimationName;
 			for(int i=0;i<clothesList.Count;i++)
 			{
+				Debug.Log (inAnimationName);
 				(clothesList[i] as GameObject).animation.CrossFade(inAnimationName);
 			}
 		}
@@ -119,7 +123,7 @@ public class BearAnimation3D : Abstract{
 	}
 	
 	public void Dead() {
-		CrossFadeAnimationForName("death");
+		PlayAnimationForName("death");
 	}
 	
 	public void Idle() {
@@ -136,7 +140,7 @@ public class BearAnimation3D : Abstract{
 	}
 	
 	public void Down() {
-		CrossFadeAnimationForName("down");
+		PlayAnimationForName("down");
 		//Debug.Log ("Down");
 	}
 	
