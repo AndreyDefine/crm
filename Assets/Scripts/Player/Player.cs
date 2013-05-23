@@ -45,9 +45,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	private ParticleEmitter HeadStarsParticleEmitter;
 	
 	private Vector3 centerXandYandAngle;
-	
-	private float xSmexcontrol1;
-	
+		
 	private float oldMetersz,allMeters,oneMeterz;
 	
 	private CharacterMarioC characterMarioC;
@@ -99,7 +97,6 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		PathChanging=false;
 		VelocityVodka=1;
 		VelocityMushroom=1;
-		xSmexcontrol1=0;
 		oldMetersz=0;
 		oneMeterz=0;
 		allMeters=0;
@@ -128,7 +125,6 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		PathNumber=0;
 		MoveCharacterControllerLeftRight(0);
 		prevPathNumber=0;
-		xSmexcontrol1=0;
 		oldMetersz=0;
 		oneMeterz=0;
 		allMeters=0;
@@ -407,7 +403,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		
 		posx=curtransform.localPosition.x;
 		
-		float centerx=0;
+		//float centerx=0;
 		
 		//Ezxtra test out of bounds
 		if(typeOfControl==0||typeOfControl==1)

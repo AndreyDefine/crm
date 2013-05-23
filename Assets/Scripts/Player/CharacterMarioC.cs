@@ -36,7 +36,7 @@ public class CharacterMarioC : Abstract {
 	
 	float stopTime=0,startstopTime=0;//время остановки
 	
-	private float heightnormal=1.5f, heightslide=0.1f;
+	private float heightnormal=1.5f, heightslide=0.8f;
 	private CapsuleCollider walkinbearCollider;
 	
 	private GameObject walkingBear;
@@ -70,7 +70,6 @@ public class CharacterMarioC : Abstract {
 	}
 	
 	void Update() {
-		
 		if(GlobalOptions.gameState==GameStates.GAME||GlobalOptions.gameState==GameStates.GAME_OVER)
 		{
 			AddAllTimes();
