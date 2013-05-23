@@ -25,4 +25,13 @@ public class PersonInfo {
 	public static void AddCoins(int addCoins){
 		PlayerPrefs.SetInt(TAG+"coins",coins+addCoins);
 	}
+	
+	public static string lastFactoryName{
+		get {
+            return PlayerPrefs.GetString(TAG+"lastFactory","Post");
+        }
+		set{
+			PlayerPrefs.SetString(TAG+"lastFactory",value);
+		}
+	}
 }

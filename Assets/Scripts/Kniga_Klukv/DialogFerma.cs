@@ -3,11 +3,14 @@ using System.Collections;
 
 public class DialogFerma : Abstract {
 	
-	private float padding = 15;
 	public Factory factory;
 	
+	public virtual void SetFactory(Factory factory){
+		this.factory = factory;
+	}
+	
 	public void ShowForPosition(Vector3 pos){
-		singleTransform.position = pos;
+		/*singleTransform.position = pos;
 		
 		Vector3 posLeftTop=new Vector3(padding,GlobalOptions.Vsizey-padding,1f);
 		posLeftTop=GlobalOptions.NormalisePos(posLeftTop);
@@ -33,7 +36,7 @@ public class DialogFerma : Abstract {
 		//bottom
 		if(pos.y-singleRenderer.bounds.extents.y<posRightBottom.y){
 			pos.y = posRightBottom.y+singleRenderer.bounds.extents.y;
-		}
+		}*/
 		singleTransform.position=pos;	
 		
 		singleTransform.localScale = new Vector3(0f,0f,0f);
@@ -41,7 +44,7 @@ public class DialogFerma : Abstract {
 	}
 	
 	public void ScaleInEnd(){
-		float radius = 0.015f;
+		float radius = 0.005f;
 		AnimationFactory.MoveRound(this,2.5f,0.015f,"MoveRound");
 	}
 		

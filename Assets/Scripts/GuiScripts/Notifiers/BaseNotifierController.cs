@@ -23,7 +23,7 @@ public abstract class BaseNotifierController : Abstract {
 		notifier.SetNotifierController(this);
 	}
 	
-	void Update(){
+	protected virtual void Update(){
 		if(notifiersInProgress.Count<GetMaxNotifiersToShow()){
 			if(notifiersQueue.Count>0)
 			{

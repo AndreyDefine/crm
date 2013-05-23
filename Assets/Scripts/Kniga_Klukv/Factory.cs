@@ -4,16 +4,15 @@ using System.Collections;
 public class Factory : SpriteTouch {
 	
 	public int price;
+	public bool initBought = false;
+	public int needLevel;
+	
 	private static string FACTORY_DATA_TAG = "factory_data_";
 	private Vector3 initScale;
-	public DialogFerma dialogFermaPrefab;
-	public DialogFerma dialogFerma;
+	public DialogFermaBuy dialogFermaBuyPrefab;
+	public DialogFermaPlay dialogFermaPlayPrefab;
+	private DialogFerma dialogFerma;
 	private bool dialogFermaShown = false;
-	
-	
-	public float smX = 0f;
-	public float smY = 0.5f;
-	
 	private bool _bought;
     public bool bought {
         get {
@@ -36,7 +35,7 @@ public class Factory : SpriteTouch {
 	protected override void Start(){
 		base.Start();
 		initScale = singleTransform.localScale;
-		_bought = PlayerPrefs.GetInt(GetBoughtTag(),0)==1;
+		_bought = initBought||PlayerPrefs.GetInt(GetBoughtTag(),0)==1;
 		SetBought(bought);
 	}
 	
@@ -83,12 +82,16 @@ public class Factory : SpriteTouch {
 	}
 	
 	virtual protected void MakeOnTouch(){
-		if(!bought){
-			ShowDialog();
+		if(bought){
+			ShowPlayDialog();
+		}else{
+			ShowBuyDialog();
 		}
 	}
-	
-	public void ShowDialog(){
+		
+	private void ShowDialog(DialogFerma dialogFermaPrefab){
+		
+		PersonInfo.lastFactoryName = name;
 		if(dialogFermaShown){
 			return;		
 		}
@@ -96,12 +99,30 @@ public class Factory : SpriteTouch {
 		dialogFerma = Instantiate(dialogFermaPrefab) as DialogFerma;
 		dialogFerma.factory = this;
 		dialogFerma.singleTransform.parent = singleTransform.parent;
-		dialogFerma.ShowForPosition(new Vector3(singleTransform.position.x+smX, singleTransform.position.y+smY, singleTransform.position.z-0.01f));
+		dialogFerma.ShowForPosition(new Vector3(0f, 0f, singleTransform.position.z-0.01f));
+	}
+	
+	public void ShowBuyDialog(){
+		ShowDialog(dialogFermaBuyPrefab);
+	}
+	
+	public void ShowPlayDialog(){
+		ShowDialog(dialogFermaPlayPrefab);
 	}
 	
 	public void Buy(){
 		bought = true;
 		SetBought(true);
+		dialogFerma.CloseDialog();
+		dialogFermaShown = false;
+	}
+	
+	public void Cancel(){
+		dialogFerma.CloseDialog();
+		dialogFermaShown = false;
+	}
+	
+	public void Play(){
 		dialogFerma.CloseDialog();
 		dialogFermaShown = false;
 	}
