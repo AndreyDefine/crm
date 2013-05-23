@@ -385,11 +385,11 @@ public class CharacterMarioC : Abstract {
 	
 	public void PathChangeJump()
 	{
-		if(grounded&&!glideFlag)
+		/*if(grounded&&!glideFlag)
 		{
 			flagPathChangeJump=true;
 			verticalSpeed = jumpSpeed/1.5f;
-		}
+		}*/
 	}
 	
 	public float GetVerticalSpeed()

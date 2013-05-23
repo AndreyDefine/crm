@@ -4,8 +4,10 @@ using System.Collections;
 public class Factory : SpriteTouch {
 	
 	public int price;
+	public string levelToLoad="";
 	public bool initBought = false;
 	public int needLevel;
+	public int playingLevelNumber;
 	
 	private Factories facotries;
 	
