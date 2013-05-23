@@ -5,5 +5,6 @@ public class ClearAllButton : GuiButtonBase {
 	public DialogFerma dialogFerma;
 	override protected void MakeOnTouch(){
 		PlayerPrefs.DeleteAll();
+		Application.LoadLevel("Preloader"); 
 	}
 }
