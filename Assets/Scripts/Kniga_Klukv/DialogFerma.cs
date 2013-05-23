@@ -3,10 +3,14 @@ using System.Collections;
 
 public class DialogFerma : Abstract {
 	
-	public Factory factory;
+	private Factory factory;
 	
 	public virtual void SetFactory(Factory factory){
 		this.factory = factory;
+	}
+	
+	public Factory GetFactory(){
+		return factory;
 	}
 	
 	public void ShowForPosition(Vector3 pos){

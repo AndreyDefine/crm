@@ -4,6 +4,6 @@ using System.Collections;
 public class DialogFermaButtonBuy: GuiButtonBase {
 	public DialogFerma dialogFerma;
 	override protected void MakeOnTouch(){
-		dialogFerma.factory.Buy();
+		dialogFerma.GetFactory().Buy();
 	}
 }

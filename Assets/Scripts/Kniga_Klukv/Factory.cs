@@ -97,7 +97,7 @@ public class Factory : SpriteTouch {
 		}
 		dialogFermaShown = true;
 		dialogFerma = Instantiate(dialogFermaPrefab) as DialogFerma;
-		dialogFerma.factory = this;
+		dialogFerma.SetFactory(this);
 		dialogFerma.singleTransform.parent = singleTransform.parent;
 		dialogFerma.ShowForPosition(new Vector3(0f, 0f, singleTransform.position.z-0.01f));
 	}
