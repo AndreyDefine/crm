@@ -10,7 +10,7 @@ public class Factory : SpriteTouch {
 	public int playingLevelNumber;
 	
 	private Factories facotries;
-	
+	private bool play;
 	private static string FACTORY_DATA_TAG = "factory_data_";
 	private Vector3 initScale;
 	public DialogFermaBuy dialogFermaBuyPrefab;
@@ -41,6 +41,7 @@ public class Factory : SpriteTouch {
 		initScale = singleTransform.localScale;
 		_bought = initBought||PlayerPrefs.GetInt(GetBoughtTag(),0)==1;
 		SetBought(bought);
+		AnimationFactory.AttentionLoop(this,2f,1.05f,"Attention");
 	}
 	
 	public void SetFactories(Factories factories){
@@ -99,14 +100,12 @@ public class Factory : SpriteTouch {
 		
 	private void ShowDialog(DialogFerma dialogFermaPrefab){
 		facotries.DialogOpened(this);
-		PersonInfo.lastFactoryName = name;
 		if(dialogFermaShown){
 			return;		
 		}
 		dialogFermaShown = true;
 		dialogFerma = Instantiate(dialogFermaPrefab) as DialogFerma;
 		dialogFerma.SetFactory(this);
-		dialogFerma.singleTransform.parent = singleTransform.parent;
 		dialogFerma.ShowForPosition(new Vector3(0f, 0f, singleTransform.position.z-0.01f));
 	}
 	
@@ -137,6 +136,22 @@ public class Factory : SpriteTouch {
 	}
 	
 	public void Play(){
+		play = true;
+		PersonInfo.lastFactoryName = name;
 		CloseDialog();
+	}
+	
+	public void DialogClosed(){
+		if(play){
+			play = false;
+			string screenToShow="ScreenGame";
+			ScreenLoader screenLoader;
+			screenLoader=GameObject.Find("/ScreenLoader").GetComponent("ScreenLoader")as ScreenLoader;
+			GlobalOptions.loadingLevel=levelToLoad;
+			GlobalOptions.PlayingLevelNumber=playingLevelNumber;
+			GlobalOptions.SavePrefsLastPlayed();
+			screenLoader.LoadScreenByName(screenToShow);
+			Debug.Log (GlobalOptions.PlayingLevelNumber);
+		}
 	}
 }

@@ -57,6 +57,7 @@ public class DialogFerma : Abstract {
 	}	
 	
 	public void ScaleOutEnd(){
+		GetFactory().DialogClosed();
 		Destroy(gameObject);
 	}
 }

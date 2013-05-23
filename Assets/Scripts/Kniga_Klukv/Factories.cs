@@ -17,6 +17,7 @@ public class Factories : Abstract {
 		Factory factory = factoriesHashtable[PersonInfo.lastFactoryName] as Factory;
 		if(factory!=null){
 			singleTransform.position = new Vector3(-factory.singleTransform.localPosition.x,-factory.singleTransform.localPosition.y,singleTransform.position.z);
+			factory.ShowPlayDialog();
 		}
 	}
 	

@@ -18,6 +18,11 @@ public class ZoomMap : SpriteTouch {
 	//private Vector2 previouseCenterPos = Vector2.zero;
 	//private float previousScale = 0;
 	
+	protected override void InitTouchZone ()
+	{
+		touchZone = new Rect (0, 0, Screen.width, Screen.height);
+	}
+	
 	private float curScale;
 
 	// Use this for initialization
