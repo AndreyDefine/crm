@@ -7,6 +7,8 @@ public class Factory : SpriteTouch {
 	public bool initBought = false;
 	public int needLevel;
 	
+	private Factories facotries;
+	
 	private static string FACTORY_DATA_TAG = "factory_data_";
 	private Vector3 initScale;
 	public DialogFermaBuy dialogFermaBuyPrefab;
@@ -37,6 +39,10 @@ public class Factory : SpriteTouch {
 		initScale = singleTransform.localScale;
 		_bought = initBought||PlayerPrefs.GetInt(GetBoughtTag(),0)==1;
 		SetBought(bought);
+	}
+	
+	public void SetFactories(Factories factories){
+		this.facotries = factories;	
 	}
 	
 	public void SetBought(bool b){

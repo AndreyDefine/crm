@@ -9,12 +9,18 @@ public class Factories : Abstract {
 	
 	void Start(){
 		for(int i=0;i<factories.Length;i++){
-			factoriesHashtable.Add(factories[i].name,factories[i]);		
+			Factory fact = factories[i];
+			factoriesHashtable.Add(fact.name,fact);	
+			fact.SetFactories(this);
 		}
 		
 		Factory factory = factoriesHashtable[PersonInfo.lastFactoryName] as Factory;
 		if(factory!=null){
 			singleTransform.position = new Vector3(-factory.singleTransform.localPosition.x,-factory.singleTransform.localPosition.y,singleTransform.position.z);
 		}
+	}
+	
+	public void NewDialogOpened(){
+		
 	}
 }
