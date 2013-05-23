@@ -18,7 +18,7 @@ public class PersonInfo {
 	
 	public static int coins {
         get {
-            return PlayerPrefs.GetInt(TAG+"coins",1000);
+            return PlayerPrefs.GetInt(TAG+"coins",2000);
         }
     }
 	

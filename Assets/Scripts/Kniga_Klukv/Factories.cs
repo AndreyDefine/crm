@@ -20,7 +20,12 @@ public class Factories : Abstract {
 		}
 	}
 	
-	public void NewDialogOpened(){
-		
+	public void DialogOpened(Factory factory){
+		for(int i=0;i<factories.Length;i++){
+			Factory fact = factories[i];
+			if(factory!=fact){
+				fact.Cancel();
+			}
+		}
 	}
 }

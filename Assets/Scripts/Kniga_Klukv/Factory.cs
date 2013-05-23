@@ -96,7 +96,7 @@ public class Factory : SpriteTouch {
 	}
 		
 	private void ShowDialog(DialogFerma dialogFermaPrefab){
-		
+		facotries.DialogOpened(this);
 		PersonInfo.lastFactoryName = name;
 		if(dialogFermaShown){
 			return;		
@@ -119,17 +119,22 @@ public class Factory : SpriteTouch {
 	public void Buy(){
 		bought = true;
 		SetBought(true);
-		dialogFerma.CloseDialog();
-		dialogFermaShown = false;
+		PersonInfo.AddCoins(-price);
+		CloseDialog();
 	}
 	
 	public void Cancel(){
-		dialogFerma.CloseDialog();
-		dialogFermaShown = false;
+		CloseDialog();
+	}
+	
+	public void CloseDialog(){
+		if(dialogFermaShown){
+			dialogFerma.CloseDialog();
+			dialogFermaShown = false;
+		}	
 	}
 	
 	public void Play(){
-		dialogFerma.CloseDialog();
-		dialogFermaShown = false;
+		CloseDialog();
 	}
 }
