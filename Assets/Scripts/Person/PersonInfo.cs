@@ -32,7 +32,7 @@ public class PersonInfo {
 	
 	public static string lastFactoryName{
 		get {
-            return PlayerPrefs.GetString(TAG+"lastFactory","Village");
+            return PlayerPrefs.GetString(TAG+"lastFactory","1_Village");
         }
 		set{
 			PlayerPrefs.SetString(TAG+"lastFactory",value);

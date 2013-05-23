@@ -8,8 +8,8 @@ public class LoadPlayingLevelButton : LoadLevelButton {
 		if(isTouchHandled){		
 			//LoadMenu2
 			GlobalOptions.loadingLevel=levelToLoad;
-			GlobalOptions.PlayingLevelNumber=playingLevelNumber;
-			GlobalOptions.SavePrefsLastPlayed();
+			//GlobalOptions.PlayingLevelNumber=playingLevelNumber;
+			//GlobalOptions.SavePrefsLastPlayed();
 			Application.LoadLevel("Preloader"); 
 		}
 

@@ -6,9 +6,8 @@ public class GuiButtonNextLevel : GuiButtonShowScreen {
 		
 		//Get NextLevel
 		GlobalOptions.loadingLevel=GlobalOptions.GetWorldFactory().GetComponent<WorldFactory>().GetNextLevelName();
-		GlobalOptions.PlayingLevelNumber=GlobalOptions.PlayingLevelNumber++;
-		GlobalOptions.SavePrefsLastPlayed();
+		//GlobalOptions.PlayingLevelNumber=GlobalOptions.PlayingLevelNumber++;
+		//GlobalOptions.SavePrefsLastPlayed();
 		screenLoader.LoadScreenByName(screenToShow);
-		Debug.Log (GlobalOptions.PlayingLevelNumber);
 	}
 }

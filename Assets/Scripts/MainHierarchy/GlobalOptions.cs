@@ -35,7 +35,6 @@ public class GlobalOptions {
 	
 	public static bool qualitySeted = false;
 	
-	public static int PlayingLevelNumber = 0;
 	public static string loadingLevel="MainMenu";
 	
 	public static bool UnityPro=true;
@@ -246,20 +245,6 @@ public class GlobalOptions {
 		if(curLevelOpened<inLevel){
 			PlayerPrefs.SetInt("OpenedLevel",inLevel);
 		}
-	}
-	
-	public static void SavePrefsLastPlayed()
-	{
-		player=null;
-		playerScript=null;
-		PlayerPrefs.SetString("LastPlayedLevel",loadingLevel);
-		PlayerPrefs.SetInt("LastPlayedLevelNumber",PlayingLevelNumber);
-	}
-	
-	public static void GetPrefsLastPlayed()
-	{
-		loadingLevel=PlayerPrefs.GetString("LastPlayedLevel","E00L00");
-		PlayingLevelNumber=PlayerPrefs.GetInt("LastPlayedLevelNumber",0);
 	}
 	
 	//score

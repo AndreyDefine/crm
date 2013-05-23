@@ -7,7 +7,6 @@ public class Factory : SpriteTouch {
 	public string levelToLoad="";
 	public bool initBought = false;
 	public int needLevel;
-	public int playingLevelNumber;
 	
 	private Factories facotries;
 	private bool play;
@@ -148,10 +147,7 @@ public class Factory : SpriteTouch {
 			ScreenLoader screenLoader;
 			screenLoader=GameObject.Find("/ScreenLoader").GetComponent("ScreenLoader")as ScreenLoader;
 			GlobalOptions.loadingLevel=levelToLoad;
-			GlobalOptions.PlayingLevelNumber=playingLevelNumber;
-			GlobalOptions.SavePrefsLastPlayed();
 			screenLoader.LoadScreenByName(screenToShow);
-			Debug.Log (GlobalOptions.PlayingLevelNumber);
 		}
 	}
 }

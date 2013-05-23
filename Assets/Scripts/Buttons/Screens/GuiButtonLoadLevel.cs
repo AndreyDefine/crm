@@ -6,10 +6,9 @@ public class GuiButtonLoadLevel : GuiButtonShowScreen {
 	public string levelToLoad="";
 	
 	override protected void MakeOnTouch(){
-		GlobalOptions.loadingLevel=levelToLoad;
-		GlobalOptions.PlayingLevelNumber=playingLevelNumber;
-		GlobalOptions.SavePrefsLastPlayed();
+		//obalOptions.loadingLevel=levelToLoad;
+		//GlobalOptions.PlayingLevelNumber=playingLevelNumber;
+		//GlobalOptions.SavePrefsLastPlayed();
 		screenLoader.LoadScreenByName(screenToShow);
-		Debug.Log (GlobalOptions.PlayingLevelNumber);
 	}
 }
