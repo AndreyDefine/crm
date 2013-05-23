@@ -76,7 +76,6 @@ public class MonetaEnemy : AbstractEnemy {
 	{
 		if(effectMade)
 		{
-			bool flagMoving=false;
 			float raznx,raznz,razny;
 			float smex=0.05f;
 			raznx=-parentTransform.position.x+walkingBearTransform.position.x;
@@ -88,14 +87,12 @@ public class MonetaEnemy : AbstractEnemy {
 				//raznx/=Mathf.Abs(raznx)>smex*3?delitel:delitel/1.5f;
 				//raznx/=delitel;
 				raznx=Mathf.Sign(raznx)*smex;
-				flagMoving=true;
 			}
 			if(Mathf.Abs(razny)>smex)
 			{
 				//razny/=Mathf.Abs(razny)>smex*3?delitel:delitel/1.5f;
 				//razny/=delitel;
 				razny=Mathf.Sign(razny)*smex;
-				flagMoving=true;
 			}
 				
 			if(Mathf.Abs(raznz)>smex)
@@ -107,14 +104,9 @@ public class MonetaEnemy : AbstractEnemy {
 				{
 					raznz+=playerScript.GetRealVelocity();
 				}
-				flagMoving=true;
 			}
 			
 			parentTransform.position+=new Vector3(raznx,razny,raznz);	
-			/*if(!flagMoving)
-			{
-				parentTransform.parent=oldParent;
-			}*/
 		}
 	}
 	

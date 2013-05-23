@@ -113,9 +113,9 @@ public class AbstractElementFactory: Abstract{
 		{
 			if(flagGetFromResources)
 			{
-				int RandIndex=Random.Range(0,terrainsListToDel.Count);
-				newTerrain	= Instantiate(Resources.Load(pathInResources+"/"+(terrainsListToDel[RandIndex]as GameObject).name)) as GameObject;
-				newTerrain.name=(terrainsListToDel[RandIndex]as GameObject).name;
+				int RandIndex=Random.Range(0,terrainsList.Count);
+				newTerrain	= Instantiate(Resources.Load(pathInResources+"/"+(terrainsList[RandIndex]as GameObject).name)) as GameObject;
+				newTerrain.name=(terrainsList[RandIndex]as GameObject).name;
 			}
 			else
 			{

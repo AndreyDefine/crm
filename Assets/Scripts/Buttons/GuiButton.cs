@@ -4,8 +4,8 @@ using System.Collections;
 public class GuiButton : SpriteTouch {	
 	protected Player playerScript; 
 	
-	private void Start() {
-        init();
+	protected override void Start() {
+		base.Start();
 		getPlayer();
 	}
 	
