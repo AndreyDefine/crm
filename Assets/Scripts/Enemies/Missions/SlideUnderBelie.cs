@@ -2,12 +2,11 @@ using UnityEngine;
 using System.Collections;
 
 
-public class BelieEnemy : WoodEnemy {	
+public class SlideUnderBelie : AbstractBaseEnemy{	
 	// Use this for initialization
 	
 	public override void OnHit(Collider other)
 	{
-		base.OnHit(other);
 		GlobalOptions.GetMissionEmmitters().NotifySlideUnderRope(1);
 	}
 }
