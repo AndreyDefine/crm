@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class DialogFerma : Abstract {
+public class DialogFerma : SpriteTouch {
 	
 	private Factory factory;
 	
@@ -11,6 +11,11 @@ public class DialogFerma : Abstract {
 	
 	public Factory GetFactory(){
 		return factory;
+	}
+	
+	protected override void InitTouchZone ()
+	{
+		touchZone = new Rect (0, 0, Screen.width, Screen.height);
 	}
 	
 	public void ShowForPosition(Vector3 pos){

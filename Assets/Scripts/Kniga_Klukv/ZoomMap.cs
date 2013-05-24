@@ -3,8 +3,10 @@ using System.Collections;
 
 public class ZoomMap : SpriteTouch {
 	
-	public float minScale, maxScale;
-	public Vector2 minPos,maxPos;
+	public float maxScale;
+	private float minScale;
+	private Vector3 posLeftTop;
+	private Vector3 posRightBottom;
 	
 	private int numberOfFingers;
 	private int []fingers;
@@ -24,7 +26,11 @@ public class ZoomMap : SpriteTouch {
 	}
 	
 	private float curScale;
-
+	
+	public bool MapIsMovingTwoFingers(){
+		return numberOfFingers == 2;
+	}
+	
 	// Use this for initialization
 	void Start () {
 		swallowTouches=true;
@@ -35,6 +41,22 @@ public class ZoomMap : SpriteTouch {
 		fingers=new int[2];
 		fingerPos=new Vector2[2];
 		initFingerPos=new Vector2[2];
+		
+		float minScaleX = Screen.width/2/perPixel/singleRenderer.bounds.extents.x;
+		float minScaleY = Screen.height/2/perPixel/singleRenderer.bounds.extents.y;
+		minScale = minScaleX<minScaleY?minScaleY:minScaleX;
+		if(singleTransform.localScale.x>minScale){
+			singleTransform.localScale = new Vector3(minScale, minScale, minScale);
+		}
+		
+		int padding = -1;
+		posLeftTop=new Vector3(padding,GlobalOptions.Vsizey-padding,1f);
+		posLeftTop=GlobalOptions.NormalisePos(posLeftTop);
+		posLeftTop=Cameras.GetGUICamera().ScreenToWorldPoint(posLeftTop);
+	
+		posRightBottom=new Vector3(GlobalOptions.Vsizex-padding,padding,1f);
+		posRightBottom=GlobalOptions.NormalisePos(posRightBottom);
+		posRightBottom=Cameras.GetGUICamera().ScreenToWorldPoint(posRightBottom);		
 	}
 
 	public override bool TouchBegan(Vector2 position,int fingerId) {
@@ -57,6 +79,44 @@ public class ZoomMap : SpriteTouch {
 		return isTouchHandled;
 	}
 	
+	public void SetPos(Vector3 pos){
+		singleTransform.position = Norm(pos);
+	}
+	
+	public Vector3 Norm(Vector3 pos){
+		Vector2 extends = new Vector2(singleRenderer.bounds.extents.x,singleRenderer.bounds.extents.y);
+		bool topMax = false;
+		bool rightMax = false;
+		//right	
+		if(pos.x+extends.x<posRightBottom.x){
+			pos.x = posRightBottom.x-extends.x;
+			rightMax = true;
+		}
+		//left
+		if(pos.x-extends.x>posLeftTop.x){
+			if(rightMax){
+				pos.x = 0f;
+			}else
+			{
+				pos.x = posLeftTop.x+extends.x;
+			}
+		}
+		//top
+		if(pos.y+extends.y<posLeftTop.y){
+			pos.y = posLeftTop.y-extends.y;
+			topMax = true;
+		}
+		//bottom
+		if(pos.y-extends.y>posRightBottom.y){
+			if(topMax){
+				pos.y = 0f;
+			}else{
+				pos.y = posRightBottom.y+extends.y;
+			}
+		}
+		return pos;
+	}
+	
 	public override void TouchMoved(Vector2 position,int fingerId) {
 		int fingerNumber=0;
 		//палец 0
@@ -75,15 +135,8 @@ public class ZoomMap : SpriteTouch {
 			moveBy.x/=perPixel;
 			moveBy.y/=perPixel;
 			
-			Vector3 newPos=new Vector3(singleTransform.localPosition.x+moveBy.x,singleTransform.localPosition.y+moveBy.y,singleTransform.localPosition.z);
-			
-			newPos.x=newPos.x>maxPos.x?maxPos.x:newPos.x;
-			newPos.y=newPos.y>maxPos.y?maxPos.y:newPos.y;
-			
-			newPos.x=newPos.x<minPos.x?minPos.x:newPos.x;
-			newPos.y=newPos.y<minPos.y?minPos.y:newPos.y;
-			
-			singleTransform.localPosition=newPos;
+			Vector3 pos=new Vector3(singleTransform.localPosition.x+moveBy.x,singleTransform.localPosition.y+moveBy.y,singleTransform.localPosition.z);
+			singleTransform.localPosition=Norm(pos);
 		}
 		
 		//scale
@@ -153,13 +206,13 @@ public class ZoomMap : SpriteTouch {
 				pos.y-(wordCenterFingerCurrent.y-pos.y)*(curScale-prevScale),
 				pos.z);
 			
-			singleTransform.localPosition = pos;
+			singleTransform.localPosition = Norm(pos);
 			
 			
-			//prevScale = singleTransform.localScale.x;		
-			//prevPos = singleTransform.localPosition;
-			//prevFingerPos[0] = fingerPos[0];
-			//prevFingerPos[1] = fingerPos[1];
+			prevScale = singleTransform.localScale.x;		
+			prevPos = singleTransform.localPosition;
+			prevFingerPos[0] = fingerPos[0];
+			prevFingerPos[1] = fingerPos[1];
 			
 			
 			
@@ -175,10 +228,14 @@ public class ZoomMap : SpriteTouch {
 			 //return;
 		}
 		base.TouchEnded(position,fingerId);
+		if(numberOfFingers==2){
+			initFingerPos[0]=fingerPos[0];
+			initFingerPos[1]=fingerPos[1];
+		}
 		if(fingerId==fingers[0]&&numberOfFingers==2)
 		{
 			fingers[0]=fingers[1];
-			initFingerPos[0]=fingerPos[1];
+			initFingerPos[0]=initFingerPos[1];
 			fingerPos[0]=fingerPos[1];
 		}
 		numberOfFingers--;

@@ -388,6 +388,43 @@ public static class AnimationFactory {
         }
     }
 	
+	public static void AttentionXThenYLoop(Abstract obj, float secs, float scale, string clipName, string stopFunctionName = null, bool play = true) {
+        AddAnimation (obj.gameObject);
+        DeleteClipIfExists (obj.gameObject, clipName);
+           
+        AnimationClip animClip = new AnimationClip ();
+        AnimationCurve curveX = AnimationCurve.EaseInOut (0, obj.singleTransform.localScale.x, secs, obj.singleTransform.localScale.x);
+        AnimationCurve curveY = AnimationCurve.EaseInOut (0, obj.singleTransform.localScale.y, secs, obj.singleTransform.localScale.y);
+        AnimationCurve curveZ = AnimationCurve.EaseInOut (0, obj.singleTransform.localScale.z, secs, obj.singleTransform.localScale.z);
+                
+		float secsHalf = secs/2;
+        curveX.AddKey (secsHalf*0.3f, scale); 
+		curveX.AddKey (secsHalf, obj.singleTransform.localScale.x); 
+		curveX.AddKey (secsHalf*1.3f, obj.singleTransform.localScale.x*0.95f); 
+		
+		curveY.AddKey (secsHalf*0.3f, obj.singleTransform.localScale.y*0.95f);    
+        curveY.AddKey (secsHalf, obj.singleTransform.localScale.y);    
+        curveY.AddKey (secsHalf*1.3f, scale);    
+            
+        animClip.SetCurve ("", typeof(Transform), "localScale.x", curveX);
+        animClip.SetCurve ("", typeof(Transform), "localScale.y", curveY);
+        animClip.SetCurve ("", typeof(Transform), "localScale.z", curveZ);
+        
+        if (stopFunctionName != null && stopFunctionName != "None") {
+            AnimationEvent eventStop = new AnimationEvent ();
+            eventStop.functionName = stopFunctionName;
+            eventStop.time = secs;
+            animClip.AddEvent (eventStop);
+        }
+
+        obj.animation.AddClip (animClip, clipName);
+        obj.animation [clipName].layer = 1;
+        obj.animation.wrapMode = WrapMode.Loop;
+        if (play) {
+            obj.animation.Play (clipName);
+        }
+    }
+	
 	public static void MoveRound(Abstract obj, float secs, float radius, string clipName, string stopFunctionName = null, bool play = true){
 		AddAnimation (obj.gameObject);
         DeleteClipIfExists (obj.gameObject, clipName);

@@ -16,7 +16,7 @@ public class Factories : Abstract {
 		
 		Factory factory = factoriesHashtable[PersonInfo.lastFactoryName] as Factory;
 		if(factory!=null){
-			singleTransform.position = new Vector3(-factory.singleTransform.localPosition.x,-factory.singleTransform.localPosition.y,singleTransform.position.z);
+			GetComponent<ZoomMap>().SetPos(new Vector3(-factory.singleTransform.localPosition.x,-factory.singleTransform.localPosition.y,singleTransform.position.z));
 			factory.ShowPlayDialog();
 		}
 	}
@@ -29,4 +29,8 @@ public class Factories : Abstract {
 			}
 		}
 	}
+	
+	public bool MapIsMovingTwoFingers(){
+		return GetComponent<ZoomMap>().MapIsMovingTwoFingers();
+	}	
 }

@@ -17,6 +17,7 @@ public class Factory : SpriteTouch {
 	public DialogFermaPlay dialogFermaPlayPrefab;
 	private DialogFerma dialogFerma;
 	private bool dialogFermaShown = false;
+	private bool flagMapWasMoving = false;
 	private bool _bought;
     public bool bought {
         get {
@@ -41,7 +42,11 @@ public class Factory : SpriteTouch {
 		initScale = singleTransform.localScale;
 		_bought = initBought||PlayerPrefs.GetInt(GetBoughtTag(),0)==1;
 		SetBought(bought);
-		AnimationFactory.AttentionLoop(this,2f,1.05f,"Attention");
+		AnimationFactory.AttentionXThenYLoop(this,2f,1.05f,"AttentionXThenYLoop", "AttentionXThenYLoopStop",bought);
+	}
+	
+	public void AttentionXThenYLoopStop(){
+			
 	}
 	
 	public void SetFactories(Factories factories){
@@ -69,6 +74,10 @@ public class Factory : SpriteTouch {
 	
 	public override void TouchMoved(Vector2 position, int fingerId)
 	{
+		if(facotries.MapIsMovingTwoFingers()){
+			flagMapWasMoving = facotries.MapIsMovingTwoFingers();
+			return;
+		}
 		base.TouchMoved (position, fingerId);
 		bool isTouchHandled=MakeDetection(position);
 		if(isTouchHandled){	
@@ -82,8 +91,12 @@ public class Factory : SpriteTouch {
 	
 	public override void TouchEnded (Vector2 position, int fingerId)
 	{
-		singleTransform.localScale = initScale;
 		base.TouchEnded (position, fingerId);
+		if(flagMapWasMoving==true){
+			flagMapWasMoving = false;
+			return;
+		}
+		singleTransform.localScale = initScale;
 		bool isTouchHandled=MakeDetection(position);
 		if(isTouchHandled){	
 			MakeOnTouch();
@@ -106,7 +119,7 @@ public class Factory : SpriteTouch {
 		dialogFermaShown = true;
 		dialogFerma = Instantiate(dialogFermaPrefab) as DialogFerma;
 		dialogFerma.SetFactory(this);
-		dialogFerma.ShowForPosition(new Vector3(0f, 0f, singleTransform.position.z-0.01f));
+		dialogFerma.ShowForPosition(Vector3.zero);
 	}
 	
 	public void ShowBuyDialog(){
@@ -118,6 +131,7 @@ public class Factory : SpriteTouch {
 	}
 	
 	public void Buy(){
+		animation.Play();
 		bought = true;
 		SetBought(true);
 		PersonInfo.AddCoins(-price);

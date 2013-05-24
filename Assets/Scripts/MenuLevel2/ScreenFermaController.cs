@@ -1,17 +1,17 @@
 using UnityEngine;
 using System.Collections;
 
-public class GuiLayerInitMenuLevel2 : Abstract {
+public class ScreenFermaController : Abstract {
 	
-	Camera GUIcamera;
+	public GuiPerson guiPerson;
+	
 	// Use this for initialization
 	void Start () {
-		GUIcamera = Cameras.GetGUICamera();
-		
 		InitSprites();
 	}
 	
 	private void InitSprites()
 	{
+		guiPerson.InitPerson();
 	}
 }
