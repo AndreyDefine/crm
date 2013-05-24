@@ -29,7 +29,7 @@ Shader "Shaders/HorizontDiffuzeCullOff" {
 			    v2f o;
 			    float4 vPos = mul (UNITY_MATRIX_MV, v.vertex);
 			    float zOff = vPos.z/_Dist;
-			    vPos += _QOffset*zOff*zOff;
+			    //vPos += _QOffset*zOff*zOff;
 			    
 			    o.pos = mul (UNITY_MATRIX_P, vPos);
 			    o.uv = mul( UNITY_MATRIX_TEXTURE0, v.texcoord );
