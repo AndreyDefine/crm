@@ -207,14 +207,6 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		DeleteOneFirstTerrain();
     }
 	
-	void Update () {
-		if(currentRoadPos>=roadTerrainsNames.Length)
-		{
-			firstTimeInit=false;
-			currentRoadPos=0;
-		}
-	}
-	
 	private void ParseTerrainNames()
 	{
 		
@@ -699,6 +691,11 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		GameObject newTerrain=null;
 		if(firstTimeInit)
 		{
+			if(currentRoadPos>=roadTerrainsNames.Length)
+			{
+				firstTimeInit=false;
+				currentRoadPos=0;
+			}
 			newTerrain=terrainElementFactory.GetNewObjectWithName(roadTerrainsNames[currentRoadPos]);
 			currentRoadPos++;
 		}

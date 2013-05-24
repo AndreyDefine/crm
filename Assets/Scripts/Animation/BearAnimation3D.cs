@@ -89,7 +89,7 @@ public class BearAnimation3D : Abstract{
 			curAnimationName=inAnimationName;
 			for(int i=0;i<clothesList.Count;i++)
 			{
-				//(clothesList[i] as GameObject).animation.CrossFade(inAnimationName);
+				(clothesList[i] as GameObject).animation.CrossFade(inAnimationName);
 			}
 		}
 	}

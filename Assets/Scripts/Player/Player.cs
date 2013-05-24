@@ -84,7 +84,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		walkingBear=Character.transform.FindChild("WalkingBear").gameObject;
 		
 		
-		HeadStarsParticleEmitter=GameObject.Find("/ScreenGame/Player/BearToControl/HeadBoomParticle").GetComponent<ParticleEmitter>();
+		HeadStarsParticleEmitter=GameObject.Find("HeadBoomParticle").GetComponent<ParticleEmitter>();
 		
 		GlobalOptions.playerVelocity=startVelocity;
 		bearAnimation=Character.GetComponent("BearAnimation3D") as BearAnimation3D;
@@ -197,7 +197,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	public void MakeVodka()
 	{
-		VelocityVodka=1.2f;
+		VelocityVodka=1.1f;
 		(MainCamera.GetComponent("MotionBlur") as MotionBlur).enabled=true;
 	}
 	
@@ -281,12 +281,11 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 			//MakeMusicSpeed();
 		}
 		
-		PlaceBearToControl(posx);
-		
 		bearAnimation.SetWalkSpeed(GetRealVelocityWithNoDeltaTime()/startVelocity);
 		
 		SwitchAnimation();
 	}
+
 	
 	private void SwitchAnimation()
 	{
@@ -449,6 +448,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		{
 			MakeMovingCharacterControllerForward();
 		}
+		else
 		{
 			PlaceCharacter(new Vector3(centerXandYandAngle.x,PlayerFirstPos.y,centerXandYandAngle.z));
 		}
@@ -481,19 +481,47 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		}
 	}
 	
-	public void PlaceBearToControl(float inposx)
+	public Vector3 GetCameraDopSmex()
 	{
-		if(GlobalOptions.gameState==GameStates.PAUSE_MENU)
-		{
-			return;
-		}
-		Vector3 walkbearpos=walkingBear.transform.localPosition;
-		Vector3 charpos=Character.transform.localPosition;
+		Vector3 result=new Vector3(0,0,0);
 		float raznost=raznFromWhereToLookAndCharacter.y;
 		float heightDamping;
+		Vector3 charpos=Character.transform.localPosition;
+		
+		if(GlobalOptions.gameState==GameStates.PAUSE_MENU||!characterMarioC)
+		{
+			return result;
+		}
+		
 		if((characterMarioC.isJumping())&&GlobalOptions.gameState!=GameStates.GAME_OVER)
 		{
-			WhereToLook.transform.localPosition=new Vector3(charpos.x*whereToLookParalax,WhereToLook.transform.localPosition.y,raznFromWhereToLookAndCharacter.z+charpos.z);
+			result=new Vector3(-charpos.x*whereToLookParalax,-(charpos.y-CharacterFirstPos.y),0);
+			//WhereToLook.transform.localPosition=new Vector3(-charpos.x*whereToLookParalax,raznost-(charpos.y-CharacterFirstPos.y),WhereToLook.transform.localPosition.z);
+		}
+		
+		return result;
+	}
+	
+	public float PlaceBearToControl()
+	{
+		float dumping=4;
+		if(GlobalOptions.gameState==GameStates.PAUSE_MENU||!characterMarioC)
+		{
+			return dumping;
+		}
+		//Vector3 walkbearpos=walkingBear.transform.localPosition;
+		Vector3 charpos=Character.transform.localPosition;
+		//Vector3 charpos=Character.transform.position;
+		float raznost=raznFromWhereToLookAndCharacter.y;
+		float heightDamping=0.5f;
+		
+		//WhereToLook.transform.position=new Vector3(0,WhereToLook.transform.position.y,charpos.z-5);
+		if((characterMarioC.isJumping())&&GlobalOptions.gameState!=GameStates.GAME_OVER)
+		{
+			//Debug.Log ("characterMarioC");
+			WhereToLook.transform.localPosition=new Vector3(-charpos.x*whereToLookParalax, raznost-(charpos.y-CharacterFirstPos.y),WhereToLook.transform.localPosition.z);
+			
+			dumping=100;
 		}
 		else
 		{
@@ -511,13 +539,16 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 				raznost-=2;
 				heightDamping=2f;
 			}
-			float currentHeight = Mathf.Lerp (WhereToLook.transform.localPosition.y, charpos.y+walkbearpos.y+raznost, heightDamping * Time.deltaTime);
-			WhereToLook.transform.localPosition=new Vector3(charpos.x*whereToLookParalax,currentHeight,raznFromWhereToLookAndCharacter.z+charpos.z);
+			float currentHeight = Mathf.Lerp (WhereToLook.transform.localPosition.y, raznost, heightDamping * Time.deltaTime);
+			WhereToLook.transform.localPosition=new Vector3(-charpos.x*whereToLookParalax,currentHeight,WhereToLook.transform.localPosition.z);
 		}
+		
+		return dumping;
 	}
 	
 	public void PlaceCharacter(Vector3 inpos)
 	{
+		//Debug.Log ("PlaceCharacter(Vector3 inpos)");
 		singleTransform.position=inpos;
 	}
 	
@@ -526,10 +557,11 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		GlobalOptions.whereToBuild=new Vector3(0,0,1);
 		RotatePlayer(0);	
 		singleTransform.position=PlayerFirstPos;
+		Debug.Log (PlayerFirstPos);
 		
 		Character.transform.localPosition=new Vector3(0,0,0);
 		walkingBear.transform.localPosition=new Vector3(0,0,0);
-		PlaceBearToControl(0);
+		//PlaceBearToControl();
 
 		CharacterControllerRespawn();
 		
@@ -697,12 +729,14 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 			PathNumber=prevPathNumber;
 			PathChanging=true;
 			guiLayer.AddToLife(-3,inTransform);
+			guiLayer.AddHeadStars();
 		}
 	}
 	
 	public void StumbleTrigger()
 	{
 		bearAnimation.Stumble();
+		guiLayer.AddHeadStars();
 	}
 	
 	public void PlaceCharacterFirstly(Vector3 inpos)

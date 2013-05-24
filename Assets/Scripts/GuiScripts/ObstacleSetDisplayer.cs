@@ -46,6 +46,7 @@ public class ObstacleSetDisplayer : MonoBehaviour {
     
         // Interval ended - update GUI text and start new interval
         if (timeleft <= 0.0) {
+			timeleft = updateInterval;
             string format = worldFactoryScript.GetCurrentObstacleSet();
             guiText.text = format;
 			guiText.material.color = Color.blue;
