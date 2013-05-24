@@ -504,7 +504,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	public float PlaceBearToControl()
 	{
-		float dumping=4;
+		float dumping=10;
 		if(GlobalOptions.gameState==GameStates.PAUSE_MENU||!characterMarioC)
 		{
 			return dumping;
