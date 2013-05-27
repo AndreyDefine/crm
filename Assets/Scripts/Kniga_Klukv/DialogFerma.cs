@@ -3,14 +3,14 @@ using System.Collections;
 
 public class DialogFerma : SpriteTouch {
 	
-	private Factory factory;
+	private FermaLocationPlace place;
 	
-	public virtual void SetFactory(Factory factory){
-		this.factory = factory;
+	public virtual void SetFermaLocationPlace(FermaLocationPlace place){
+		this.place = place;
 	}
 	
-	public Factory GetFactory(){
-		return factory;
+	public FermaLocationPlace GetFermaLocationPlace(){
+		return place;
 	}
 	
 	protected override void InitTouchZone ()
@@ -18,36 +18,7 @@ public class DialogFerma : SpriteTouch {
 		touchZone = new Rect (0, 0, Screen.width, Screen.height);
 	}
 	
-	public void ShowForPosition(Vector3 pos){
-		/*singleTransform.position = pos;
-		
-		Vector3 posLeftTop=new Vector3(padding,GlobalOptions.Vsizey-padding,1f);
-		posLeftTop=GlobalOptions.NormalisePos(posLeftTop);
-		posLeftTop=Cameras.GetGUICamera().ScreenToWorldPoint(posLeftTop);
-	
-		Vector3 posRightBottom=new Vector3(GlobalOptions.Vsizex-padding,padding,1f);
-		posRightBottom=GlobalOptions.NormalisePos(posRightBottom);
-		posRightBottom=Cameras.GetGUICamera().ScreenToWorldPoint(posRightBottom);
-		
-		Vector3 newPos = pos;
-		//right	
-		if(pos.x+singleRenderer.bounds.extents.x>posRightBottom.x){
-			pos.x = posRightBottom.x-singleRenderer.bounds.extents.x;
-		}
-		//left
-		if(pos.x-singleRenderer.bounds.extents.x<posLeftTop.x){
-			pos.x = posLeftTop.x+singleRenderer.bounds.extents.x;
-		}
-		//top
-		if(pos.y+singleRenderer.bounds.extents.y>posLeftTop.y){
-			pos.y = posLeftTop.y-singleRenderer.bounds.extents.y;
-		}
-		//bottom
-		if(pos.y-singleRenderer.bounds.extents.y<posRightBottom.y){
-			pos.y = posRightBottom.y+singleRenderer.bounds.extents.y;
-		}*/
-		singleTransform.position=pos;	
-		
+	public void Show(){	
 		singleTransform.localScale = new Vector3(0f,0f,0f);
 		AnimationFactory.ScaleInXYZ(this,new Vector3(1f,1f,1f),0.5f,"scaleIn","ScaleInEnd");
 	}
@@ -62,7 +33,7 @@ public class DialogFerma : SpriteTouch {
 	}	
 	
 	public void ScaleOutEnd(){
-		GetFactory().DialogClosed();
+		GetFermaLocationPlace().DialogClosed();
 		Destroy(gameObject);
 	}
 }

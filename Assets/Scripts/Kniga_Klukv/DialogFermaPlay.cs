@@ -5,9 +5,9 @@ public class DialogFermaPlay : DialogFerma {
 	
 	public CrmFont crmFont;
 	
-	public override void SetFactory (Factory factory)
+	public override void SetFermaLocationPlace (FermaLocationPlace place)
 	{
-		base.SetFactory (factory);
-		crmFont.text = factory.factoryName;
+		base.SetFermaLocationPlace (place);
+		crmFont.text = place.factoryName;
 	}	
 }

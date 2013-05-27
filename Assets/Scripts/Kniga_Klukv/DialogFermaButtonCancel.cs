@@ -4,6 +4,6 @@ using System.Collections;
 public class DialogFermaButtonCancel: GuiButtonBase {
 	public DialogFerma dialogFerma;
 	override protected void MakeOnTouch(){
-		dialogFerma.GetFactory().Cancel();
+		dialogFerma.GetFermaLocationPlace().Cancel();
 	}
 }

@@ -8,17 +8,17 @@ public class DialogFermaBuy : DialogFerma {
 	public CrmFont errorText;
 	public GameObject buyButton;
 	
-	public override void SetFactory (Factory factory)
+	public override void SetFermaLocationPlace (FermaLocationPlace place)
 	{
-		base.SetFactory (factory);
-		if(factory.needLevel>PersonInfo.personLevel){
+		base.SetFermaLocationPlace (place);
+		if(place.needLevel>PersonInfo.personLevel){
 			money.SetActiveRecursively(false);
 			errorText.gameObject.SetActiveRecursively(true);
-			errorText.text = string.Format("You need {0} level", factory.needLevel);
+			errorText.text = string.Format("You need {0} level", place.needLevel);
 			buyButton.SetActiveRecursively(false);
 		}else{
 			money.SetActiveRecursively(true);
-			priceValue.text = string.Format("{0}", factory.price);
+			priceValue.text = string.Format("{0}", place.price);
 			errorText.gameObject.SetActiveRecursively(false);
 			buyButton.SetActiveRecursively(true);
 		}

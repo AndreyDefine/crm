@@ -1,12 +1,15 @@
 using UnityEngine;
 using System.Collections;
 
-public class Factory : SpriteTouch {
+public class FermaNight : SpriteTouch {
 	
-	public FactoryBuilding factoryBuilding;
 	bool flagMapWasMoving = false;
-	private Vector3 initScale;
 	private FermaLocationPlace fermaLocationPlace;
+	
+	private float nightAlpha = 0.85f;
+	private float curAlpha;
+	private float turnOffTime = 2f;
+	private bool turningOff = false;
 	
 	
 	public void SetFermaLocationPlace(FermaLocationPlace fermaLocationPlace){
@@ -14,20 +17,36 @@ public class Factory : SpriteTouch {
 	}
 	
 	public void SetActive(bool a){
-		factoryBuilding.SetActive(a);	
 		getTouches = a;
+		gameObject.active = a;
+	}
+	
+	public void TurnOffNight(){
+		turningOff = true;
+		curAlpha = nightAlpha;
+	}
+	
+	void Update(){
+		if(turningOff){
+			curAlpha -= nightAlpha*Time.deltaTime/turnOffTime;
+			if(curAlpha<=0f){
+				turningOff = false;
+				SetActive(false);
+				fermaLocationPlace.NightOff();
+			}else{
+				SetColor(curAlpha);
+			}
+		}
 	}
 	
 	protected override void Start(){
 		base.Start();
-		initScale = singleTransform.localScale;
+		SetColor(nightAlpha);
 	}
 	
 	public override bool TouchBegan(Vector2 position,int fingerId) {
 		bool isTouchHandled=base.TouchBegan(position,fingerId);
 		if(isTouchHandled){	
-			initScale = singleTransform.localScale;
-			singleTransform.localScale = initScale*1.05f;
 		}
 
 		return isTouchHandled;
@@ -42,11 +61,9 @@ public class Factory : SpriteTouch {
 		base.TouchMoved (position, fingerId);
 		bool isTouchHandled=MakeDetection(position);
 		if(isTouchHandled){	
-			singleTransform.localScale = initScale*1.05f;
 		}
 		else
 		{
-			singleTransform.localScale = initScale;
 		}
 	}
 	
@@ -57,7 +74,6 @@ public class Factory : SpriteTouch {
 			flagMapWasMoving = false;
 			return;
 		}
-		singleTransform.localScale = initScale;
 		bool isTouchHandled=MakeDetection(position);
 		if(isTouchHandled){	
 			MakeOnTouch();
@@ -65,6 +81,10 @@ public class Factory : SpriteTouch {
 	}
 	
 	virtual protected void MakeOnTouch(){
-		fermaLocationPlace.ShowPlayDialog();
+		fermaLocationPlace.ShowBuyDialog();
+	}
+	
+	void SetColor(float alpha){
+		GetComponent<tk2dSprite>().color = new Color(0f,0f,0f,alpha);
 	}
 }
