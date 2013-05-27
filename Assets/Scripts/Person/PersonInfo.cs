@@ -30,6 +30,20 @@ public class PersonInfo {
 		}
 	}
 	
+	public static int gold {
+        get {
+            return PlayerPrefs.GetInt(TAG+"gold",1);
+        }
+    }
+	
+	public static void AddGold(int addGold){
+		PlayerPrefs.SetInt(TAG+"gold",gold+addGold);
+		GlobalGold[] globalGold = GameObject.FindObjectsOfType(typeof(GlobalGold)) as GlobalGold[];
+		for(int i=0;i<globalGold.Length;i++){
+			globalGold[i].SetGold(gold);	
+		}
+	}
+	
 	public static string lastFactoryName{
 		get {
             return PlayerPrefs.GetString(TAG+"lastFactory","1_Village");

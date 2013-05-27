@@ -10,6 +10,8 @@ public class Mission : Abstract, IMissionNotify {
 	public string missionName="";
 	public string missionFinishedText="";
 	public bool oneLife;
+	public int coinAward;
+	public int goldAward;
 	
 	private ArrayList missionListeners = new ArrayList();
 	private string id;

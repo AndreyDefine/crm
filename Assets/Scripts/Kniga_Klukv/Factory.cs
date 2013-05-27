@@ -7,6 +7,7 @@ public class Factory : SpriteTouch {
 	bool flagMapWasMoving = false;
 	private Vector3 initScale;
 	private FermaLocationPlace fermaLocationPlace;
+	float epsilon;
 	
 	
 	public void SetFermaLocationPlace(FermaLocationPlace fermaLocationPlace){
@@ -20,6 +21,14 @@ public class Factory : SpriteTouch {
 	
 	protected override void Start(){
 		base.Start();
+		
+		if (Screen.dpi != 0f) {
+			epsilon = Screen.dpi*0.25f;
+        }
+		else{
+			epsilon=30*GlobalOptions.scaleFactorx;
+		}
+		
 		initScale = singleTransform.localScale;
 	}
 	
@@ -35,10 +44,19 @@ public class Factory : SpriteTouch {
 	
 	public override void TouchMoved(Vector2 position, int fingerId)
 	{
+		if(flagMapWasMoving){
+			return;
+		}
 		if(ZoomMap.instance.MapIsMovingTwoFingers()){
 			flagMapWasMoving = true;
 			return;
 		}
+		if(Mathf.Abs(position.x-firstTouchLocation.x)>epsilon||Mathf.Abs(position.y-firstTouchLocation.y)>epsilon){
+			flagMapWasMoving = true;
+			singleTransform.localScale = initScale;
+			return;
+		}
+		
 		base.TouchMoved (position, fingerId);
 		bool isTouchHandled=MakeDetection(position);
 		if(isTouchHandled){	

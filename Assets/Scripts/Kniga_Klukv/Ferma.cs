@@ -21,7 +21,7 @@ public class Ferma : Abstract {
 		FermaLocationPlace place = placesHashtable[PersonInfo.lastFactoryName] as FermaLocationPlace;
 		if(place!=null){
 			GetComponent<ZoomMap>().SetPos(new Vector3(-place.singleTransform.localPosition.x,-place.singleTransform.localPosition.y,singleTransform.position.z));
-			place.ShowPlayDialog();
+			//place.ShowPlayDialog();
 		}
 	}
 	

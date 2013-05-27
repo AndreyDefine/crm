@@ -10,6 +10,7 @@ public class FermaNight : SpriteTouch {
 	private float curAlpha;
 	private float turnOffTime = 2f;
 	private bool turningOff = false;
+	float epsilon;
 	
 	
 	public void SetFermaLocationPlace(FermaLocationPlace fermaLocationPlace){
@@ -41,6 +42,12 @@ public class FermaNight : SpriteTouch {
 	
 	protected override void Start(){
 		base.Start();
+		if (Screen.dpi != 0f) {
+			epsilon = Screen.dpi*0.25f;
+        }
+		else{
+			epsilon=30*GlobalOptions.scaleFactorx;
+		}
 		SetColor(nightAlpha);
 	}
 	
@@ -54,10 +61,18 @@ public class FermaNight : SpriteTouch {
 	
 	public override void TouchMoved(Vector2 position, int fingerId)
 	{
+		if(flagMapWasMoving){
+			return;
+		}
 		if(ZoomMap.instance.MapIsMovingTwoFingers()){
 			flagMapWasMoving = true;
 			return;
 		}
+		if(Mathf.Abs(position.x-firstTouchLocation.x)>epsilon||Mathf.Abs(position.y-firstTouchLocation.y)>epsilon){
+			flagMapWasMoving = true;
+			return;
+		}		
+		
 		base.TouchMoved (position, fingerId);
 		bool isTouchHandled=MakeDetection(position);
 		if(isTouchHandled){	

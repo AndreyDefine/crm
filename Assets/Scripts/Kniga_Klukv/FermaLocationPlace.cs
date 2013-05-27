@@ -9,6 +9,8 @@ public class FermaLocationPlace : Abstract {
 	public bool initBought = false;
 	public int needLevel;
 	
+	public BaseFermaMission[] missions;
+	
 	public Factory factory;
 	public FermaNight night=null;
 	public FermaLight light=null;
