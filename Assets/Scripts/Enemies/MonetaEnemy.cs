@@ -77,7 +77,7 @@ public class MonetaEnemy : AbstractEnemy {
 		if(effectMade)
 		{
 			float raznx,raznz,razny,vspz;
-			float smex=0.06f;
+			float smex=0.12f;
 			raznx=-parentTransform.position.x+walkingBearTransform.position.x;
 			razny=-parentTransform.position.y+walkingBearTransform.position.y+1;
 			raznz=-parentTransform.position.z+walkingBearTransform.position.z;

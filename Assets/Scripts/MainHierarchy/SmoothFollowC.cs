@@ -13,6 +13,7 @@ public class SmoothFollowC : MonoBehaviour {
 	
 	// How much we 
 	public float heightDamping = 2.0f;
+	public float xDamping = 5.0f;
 	public float rotationDamping = 3.0f;
 	
 	// Update is called once per frame
@@ -24,21 +25,29 @@ public class SmoothFollowC : MonoBehaviour {
 		if(player)
 		{
 			heightDamping=player.PlaceBearToControl();
-		}
-		
+		} 		
 		// Calculate the current rotation angles
 		float wantedRotationAngle = target.eulerAngles.y;
 		float wantedHeight = target.position.y + height;
+		float wantedX=target.position.x;
 			
 		float currentRotationAngle = transform.eulerAngles.y;
 		float currentHeight = transform.position.y;
+		float currentX = transform.position.x;
 		
 		// Damp the rotation around the y-axis
 		currentRotationAngle = Mathf.LerpAngle (currentRotationAngle, wantedRotationAngle, rotationDamping * Time.deltaTime);
 	
 		// Damp the height
-		currentHeight = Mathf.Lerp (currentHeight, wantedHeight, heightDamping * Time.deltaTime);
-	
+		if(heightDamping>0)
+		{
+			currentHeight = Mathf.Lerp (currentHeight, wantedHeight, heightDamping * Time.deltaTime);
+		}
+		
+		//Damp the x
+		
+		currentX = Mathf.Lerp (currentX, wantedX, xDamping * Time.deltaTime);
+		
 		// Convert the angle into a rotation
 		Quaternion currentRotation = Quaternion.Euler (0, currentRotationAngle, 0);
 		
@@ -48,14 +57,14 @@ public class SmoothFollowC : MonoBehaviour {
 		transform.position -= currentRotation * Vector3.forward * distance;
 	
 		// Set the height of the camera
-		transform.position = new Vector3 (transform.position.x,currentHeight,transform.position.z);
+		transform.position = new Vector3 (currentX,currentHeight,transform.position.z);
 		//if(player)
 		//{
 		//	transform.position+=player.GetCameraDopSmex();
 		//}
 		
 		// Always look at the target
-		transform.LookAt (target);
+		//transform.LookAt (target);
 	}
 
 	

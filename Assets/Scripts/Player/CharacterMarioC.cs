@@ -85,7 +85,7 @@ public class CharacterMarioC : Abstract {
 			Vector3 right = singleTransform.TransformDirection(Vector3.right);
 			Vector3 forward = singleTransform.TransformDirection(Vector3.forward);
 			
-			moveforward=Mathf.Lerp(controller.velocity.z,moveforward,Time.deltaTime*1f);
+			//moveforward=Mathf.Lerp(controller.velocity.z,moveforward,Time.deltaTime*1f);
 			
 			if(freezed)
 			{
@@ -119,7 +119,7 @@ public class CharacterMarioC : Abstract {
 					Debug.Log ("Zabiratsa");
 				}
 				//под водкой
-				if(prevcurStumbleTransform==curStumbleTransform&&playerScript.isVodka())
+				if(playerScript.isVodka())
 				{
 					needStumble=false;
 					curStumbleTransformLayer=curStumbleTransform.gameObject.layer;

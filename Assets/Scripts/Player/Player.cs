@@ -513,15 +513,17 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		Vector3 charpos=Character.transform.localPosition;
 		//Vector3 charpos=Character.transform.position;
 		float raznost=raznFromWhereToLookAndCharacter.y;
-		float heightDamping=0.5f;
+		float heightDamping=2f;
 		
 		//WhereToLook.transform.position=new Vector3(0,WhereToLook.transform.position.y,charpos.z-5);
 		if((characterMarioC.isJumping())&&GlobalOptions.gameState!=GameStates.GAME_OVER)
 		{
 			//Debug.Log ("characterMarioC");
-			WhereToLook.transform.localPosition=new Vector3(-charpos.x*whereToLookParalax, raznost-(charpos.y-CharacterFirstPos.y),WhereToLook.transform.localPosition.z);
+			float currentHeight = Mathf.Lerp (WhereToLook.transform.localPosition.y, raznost, heightDamping * Time.deltaTime);
+
+			WhereToLook.transform.localPosition=new Vector3(-charpos.x*whereToLookParalax, currentHeight,WhereToLook.transform.localPosition.z);
 			
-			dumping=100;
+			dumping=0;
 		}
 		else
 		{
