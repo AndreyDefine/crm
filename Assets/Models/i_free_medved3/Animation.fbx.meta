@@ -21,7 +21,7 @@ ModelImporter:
     generateAnimations: 3
     bakeSimulation: 0
     splitAnimations: 1
-    animationCompression: 1
+    animationCompression: 0
     animationRotationError: .5
     animationPositionError: .5
     animationScaleError: .5
@@ -69,7 +69,7 @@ ModelImporter:
       loop: 1
   meshes:
     lODScreenPercentages: []
-    globalScale: .224999994
+    globalScale: .209999993
     meshCompression: 3
     addColliders: 1
     swapUVChannels: 1

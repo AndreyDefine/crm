@@ -80,25 +80,31 @@ public class CharacterMarioC : Abstract {
 			}
 			
 			flagPathChangeJump=false;
-			// Apply gravity
-			//if(!freezed)
-			//{
 			verticalSpeed -= gravity * Time.deltaTime;
-			//}
+			
+			Vector3 right = singleTransform.TransformDirection(Vector3.right);
+			Vector3 forward = singleTransform.TransformDirection(Vector3.forward);
+			
+			//moveforward=Mathf.Lerp(controller.velocity.z,moveforward,Time.deltaTime*1f);
+			
 			if(freezed)
 			{
 				moveforward=0;
 				forcex=0;
 			}
 			
-			Vector3 right = singleTransform.TransformDirection(Vector3.right);
-			Vector3 forward = singleTransform.TransformDirection(Vector3.forward);
+			
 			
 			Vector3 movement = moveforward*forward + new Vector3 (0, verticalSpeed, 0) + forcex*right;
 			
 			
+			//Debug.Log (controller.velocity.z);
+			
+			
+			
 			movement *= Time.deltaTime;
 			// Move the controller
+			
 			CollisionFlags flags = controller.Move(movement);
 			grounded = (flags & CollisionFlags.CollidedBelow) != 0;
 			
@@ -107,13 +113,13 @@ public class CharacterMarioC : Abstract {
 			if(stumble&&!flying&&!groundingFlag&&moveforward>0)
 			{
 				bool needStumble=true;
-				if(curStumbleTransform.name.Contains("Zabiratsa"))
+				if(curStumbleTransform&&curStumbleTransform.name.Contains("Zabiratsa"))
 				{
 					needStumble=false;
 					Debug.Log ("Zabiratsa");
 				}
 				//под водкой
-				if(prevcurStumbleTransform==curStumbleTransform&&playerScript.isVodka())
+				if(playerScript.isVodka())
 				{
 					needStumble=false;
 					curStumbleTransformLayer=curStumbleTransform.gameObject.layer;
@@ -353,7 +359,6 @@ public class CharacterMarioC : Abstract {
 	public void SetMovement(float inmovement)
 	{
 		moveforward=inmovement;
-		//Debug.Log (moveforward);
 	}
 	
 	public void LeftRight(float inx)

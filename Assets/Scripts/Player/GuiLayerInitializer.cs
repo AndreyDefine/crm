@@ -50,7 +50,7 @@ public class GuiLayerInitializer : Abstract {
 	
 	private Player playerScript;
 	private int scoreScale;
-	private bool flagHeadStars, flagVodka;
+	private bool flagHeadStars;
 	private bool flagPostal,flagGameOver;
 	private float ScoreScaleTime,scoreTime,headStarsTime,GameOverTime, addToLifeTime;
 	
@@ -291,7 +291,6 @@ public class GuiLayerInitializer : Abstract {
 		GlobalOptions.GetMissionEmmitters().NotifyVodkaCollected(1);
 		boostNotifierController.AddBoostNotifier(boostPrefab);
 		playerScript.MakeVodka();
-		flagVodka = true;
 	}
 	
 	public void AddPosilka()
@@ -301,7 +300,6 @@ public class GuiLayerInitializer : Abstract {
 	
 	public void StopVodka(){
 		playerScript.UnMakeVodka();
-		flagVodka = false;
 	}
 	
 	public void AddMagnit(Boost boostPrefab)

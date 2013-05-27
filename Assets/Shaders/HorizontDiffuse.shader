@@ -27,7 +27,7 @@ Shader "Shaders/HorizontDiffuze" {
 			    float4 vPos = mul (UNITY_MATRIX_MV, v.vertex);
 			    float zOff = vPos.z/_Dist;
 			    
-			    //vPos += float4(4,-12,0,0)*zOff*zOff;
+			    vPos += float4(4,-12,0,0)*zOff*zOff;
 			    
 			    o.pos = mul (UNITY_MATRIX_P, vPos);
 			    o.uv = mul( UNITY_MATRIX_TEXTURE0, v.texcoord );
