@@ -4,7 +4,7 @@ Shader "Shaders/HorizontDiffuze" {
     }
     
     SubShader {
-      Tags { "RenderType"="Opaque" }
+      Tags { "RenderType"="Opaque" "Queue" = "Geometry" }
      Pass
 		{
 			CGPROGRAM

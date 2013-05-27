@@ -34,12 +34,29 @@ public class TerrainTag : AbstractTag{
         }
     }
 	
+	
+	private bool flagFirstTimeInited=true;
+	
+	public bool firstTimeInited
+    {
+        get
+        {
+            return flagFirstTimeInited;
+        }
+        set
+        {
+            flagFirstTimeInited = value;
+        }
+    }
+	
 	protected Vector3 endOfTerrain;
 	
 	protected Transform []roadPathTransform=null;
 	
 	protected List<Transform> roadPathTransformArray=new List<Transform>();
 	private string []obstacleSetNamesArray=null;
+	
+	private ArrayList obstacleSetNamesArrayUnique=new ArrayList();
 	
 	int curDotIndex=1;
 	float curPos=0;
@@ -57,9 +74,9 @@ public class TerrainTag : AbstractTag{
 	
 	private bool flagNextTerrainCustom;
 	
-	public string[] GetObstacleSetNamesArray()
+	public ArrayList GetObstacleSetNamesArrayUnique()
 	{
-		return obstacleSetNamesArray;
+		return obstacleSetNamesArrayUnique;
 	}
 	
 	//rotation
@@ -73,12 +90,33 @@ public class TerrainTag : AbstractTag{
 		}
 	}
 	
+	public void RemoveFromobstacleSetNamesArrayUniqueAt(int inindex)
+	{
+		obstacleSetNamesArrayUnique.RemoveAt(inindex);
+		
+		if(obstacleSetNamesArrayUnique.Count==0)
+		{
+			ReloadUniqueSets();
+		}
+	}
+	
 	private void ParseObstacleSetNames()
 	{
 		//получили массив террейнов
 		char []separator={',','\n',' '};
 		string []names=obstacleSetNames.Split(separator);;
 		obstacleSetNamesArray=names;
+		
+		
+		ReloadUniqueSets();
+	}
+	
+	public void ReloadUniqueSets()
+	{
+		for (int j=0;j<obstacleSetNamesArray.Length;j++)
+		{
+			obstacleSetNamesArrayUnique.Add (obstacleSetNamesArray[j]);
+		}
 	}
 	
 	public bool isEndOfTerrain()

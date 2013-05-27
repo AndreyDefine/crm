@@ -168,7 +168,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		
 		//really need this!!!
 		//obstacleSetElementFactory.PreloadPullObjects();
-		boostElementFactory.PreloadPullObjects();
+		//boostElementFactory.PreloadPullObjects();
 	}
 	
 	public override void ReStart(){
@@ -245,7 +245,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		
 		//ObstacleSet
 		ArrayList markedObjectsObstacleSet=new ArrayList();	
-		int neededNumberOfObstacleSet=10;
+		int neededNumberOfObstacleSet=1;
 		
 		//find all marks
 		Transform[] allChildren = inTerrain.gameObject.GetComponentsInChildren<Transform>();
@@ -299,14 +299,14 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		//obstacles
 		if(currentRoadPos>1||!firstTimeInit)
 		{
-			string[] terrainObstacleSetArray=interrainTag.GetObstacleSetNamesArray();
-			for(jset=0;jset<terrainObstacleSetArray.Length&&(MakeObstacleSet||jset==0);jset++)
-			{
+			ArrayList terrainObstacleSetList=interrainTag.GetObstacleSetNamesArrayUnique();
+			for(jset=0;jset<terrainObstacleSetList.Count&&(MakeObstacleSet||jset==0);jset++)
+			{				
 				//ObstacleSet
 				GameObject curSet;
 				Transform OneObstacle,marker;
-				int randomIndexOfSet;
-				for(i=0;i<markedObjectsObstacleSet.Count&&terrainObstacleSetArray.Length!=0;i++){
+				int randomIndexOfSet=0;
+				for(i=0;i<markedObjectsObstacleSet.Count&&terrainObstacleSetList.Count!=0;i++){
 					if(curversionForCoRoutine!=versionForCoRoutine) yield break;
 					kolvo=neededNumberOfObstacleSet>markedObjectsObstacleSet.Count?markedObjectsObstacleSet.Count:neededNumberOfObstacleSet;
 					for(int i2=0;i2<kolvo;i2++){
@@ -315,16 +315,18 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 						randIndex=Random.Range(0,markedObjectsObstacleSet.Count);
 						//получим марке
 						marker=markedObjectsObstacleSet[randIndex]as Transform;
-						//теперь выбираем сет
+						//теперь выбираем сет						
+						if(interrainTag)
+						
 						if(MakeObstacleSet)
 						{
 							randomIndexOfSet=jset;
 						}else
 						{
-							randomIndexOfSet=Random.Range(0,terrainObstacleSetArray.Length);
+							randomIndexOfSet=Random.Range(0,terrainObstacleSetList.Count);
 						}
 						// получаем препятствие
-						curSet=obstacleSetElementFactory.GetNewObjectWithName(terrainObstacleSetArray[randomIndexOfSet]);
+						curSet=obstacleSetElementFactory.GetNewObjectWithName(terrainObstacleSetList[randomIndexOfSet]as string);
 						//поместим сет препятствий куда надо
 						curSet.transform.position=marker.position;
 						curSet.transform.rotation=marker.rotation;
@@ -375,7 +377,12 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 							}
 							if(FlagCoRoutine) yield return null;
 						}
-						//добавим в сет
+						
+						if(!MakeObstacleSet)
+						{
+							interrainTag.RemoveFromobstacleSetNamesArrayUniqueAt(randomIndexOfSet);
+						}
+						//добавим в terrain
 						interrainTag.PushToAllElements(curSet);
 					}
 				}

@@ -1,8 +1,7 @@
-Shader "Shaders/Source/Internal-Halo" { 
+Shader "Hidden/Internal-Halo" { 
 	SubShader {
-		Tags {"RenderType"="Overlay"}
-		ZWrite off 
-		Cull off	// NOTE: 'Cull off' is important as the halo meshes flip handedness each time... BUG: #1220
+		Tags {"RenderType"="Overlay" "Queue" = "Overlay"}
+		ZWrite off Cull off	// NOTE: 'Cull off' is important as the halo meshes flip handedness each time... BUG: #1220
 		Fog { Color (0,0,0,0) } 
 		Blend OneMinusDstColor One
 		AlphaTest Greater 0
@@ -34,29 +33,28 @@ Shader "Shaders/Source/Internal-Halo" {
 			}
 			fixed4 frag (v2f i) : COLOR
 			{
-				half a;// = tex2D(_HaloFalloff, i.texcoord).a;
+				half a = tex2D(_HaloFalloff, i.texcoord).a;
 				return half4 (i.color.rgb * a, a);
 			}
 			ENDCG  
 		}  
 	}  
-	//SubShader {  
-	//	Tags {"RenderType"="Overlay"}  
-	//	ZWrite off 
-	//	Cull off 
-	////	Fog { Color (0,0,0,0) }   
-	//	Blend OneMinusDstColor One  
-	//	AlphaTest Greater 0  
-	//	ColorMask RGB  
-	//	Pass {
-	//		BindChannels {
-	//			Bind "Vertex", vertex
-	//			Bind "Color", color
+	SubShader {  
+		Tags {"RenderType"="Overlay" "Queue" = "Overlay"}  
+		ZWrite off Cull off  	// NOTE: 'Cull off' is important as the halo meshes flip handedness each time... BUG: #1220
+		Fog { Color (0,0,0,0) }   
+		Blend OneMinusDstColor One  
+		AlphaTest Greater 0  
+		ColorMask RGB  
+		Pass {
+			BindChannels {
+				Bind "Vertex", vertex
+				Bind "Color", color
 				// caveat: because _HaloFalloff is a global texture prop,
 				// can't bind to texcoord; need explicit texcoord0
-	//			Bind "TexCoord", texcoord0
-	//		}
-	//		SetTexture [_HaloFalloff] { combine primary * texture alpha, texture alpha }
-	//	}
-	//}
+				Bind "TexCoord", texcoord0
+			}
+			SetTexture [_HaloFalloff] { combine primary * texture alpha, texture alpha }
+		}
+	}
 }
