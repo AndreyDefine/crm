@@ -2,19 +2,17 @@ using UnityEngine;
 using System.Collections;
 
 public class AbstractElementFactory: Abstract{
-	
-	public bool flagGetFromResources=false;
 	public string pathInResources="";
 	public bool flagGenerate;
-	public Vector3 initialPos;
-	public GameObject[] terrain1;
 	public int NumberOfTerrainsToDel;
+	
+	public string preloadNames="";
+	
+	private string []terrain1=null;
 	
 	private GameObject terrainToDel1,terrainToDel2;
 	protected ArrayList terrainsList=new ArrayList();
 	protected ArrayList terrainsListToDel=new ArrayList();
-	
-	private Vector3 smexPos;
 	
 	public GameObject GetLastObject(){
 		if(terrainsList.Count!=0)
@@ -36,13 +34,24 @@ public class AbstractElementFactory: Abstract{
 		}
 	}
 	
-	void Start(){
-		smexPos=initialPos;
+	void Start(){		
+		if(preloadNames!="")
+		{
+			parseTerrainNames();
+		}
+	}
+	
+	public void parseTerrainNames()
+	{
+		//получили массив террейнов
+		char []separator={',','\n',' '};
+		string []names=preloadNames.Split(separator);
+		terrain1=names;
 	}
 	
 	public virtual void ReStart(){
 		int i;
-		Vector3 newPos=new Vector3(-400,-400,-400);
+		Vector3 newPos=new Vector3(-9999,-9999,-9999);
 		for(i=0;i<terrainsListToDel.Count;i++){
 			(terrainsListToDel[i]as GameObject).transform.position=newPos;
 		}
@@ -52,10 +61,6 @@ public class AbstractElementFactory: Abstract{
 		}
 		
 		terrainsList.Clear();
-	}
-	
-	public virtual Vector3 GetInitialPos(){
-		return smexPos;
 	}
 	
 	public virtual void DeleteOneFirstTerrain()
@@ -85,8 +90,8 @@ public class AbstractElementFactory: Abstract{
 		for(i=0;i<terrain1.Length;i++)
 		{
 			//нашли
-			if((terrain1[i] as GameObject).name==instr){
-				newTerrain	= Instantiate (terrain1[i]) as GameObject;
+			if(terrain1[i]==instr){
+				newTerrain	= Instantiate(Resources.Load(pathInResources+"/"+terrain1[i])) as GameObject;
 				addTagToObject(newTerrain);	
 				terrainsListToDel.Add(newTerrain);
 				newTerrain.name=instr;
@@ -111,18 +116,24 @@ public class AbstractElementFactory: Abstract{
 			PutToFirstState(newTerrain);
 		}else
 		{
-			if(flagGetFromResources)
+			if(terrain1==null&&preloadNames!="")
+			{
+				parseTerrainNames();
+			}
+			
+			if(preloadNames=="")
 			{
 				int RandIndex=Random.Range(0,terrainsList.Count);
-				newTerrain	= Instantiate(Resources.Load(pathInResources+"/"+(terrainsList[RandIndex]as GameObject).name)) as GameObject;
-				newTerrain.name=(terrainsList[RandIndex]as GameObject).name;
+				newTerrain	= Instantiate(terrainsList[RandIndex] as GameObject) as GameObject;
+				newTerrain.name=(terrainsList[RandIndex] as GameObject).name;
 			}
 			else
 			{
 				int RandIndex=Random.Range(0,terrain1.Length);
-				newTerrain	= Instantiate (terrain1[RandIndex]) as GameObject;
-				newTerrain.name=(terrain1[RandIndex] as GameObject).name;
+				newTerrain	= Instantiate(Resources.Load(pathInResources+"/"+terrain1[RandIndex])) as GameObject;
+				newTerrain.name=terrain1[RandIndex];
 			}
+
 			addTagToObject(newTerrain);	
 			PutToFirstState(newTerrain);
 		}
@@ -149,16 +160,13 @@ public class AbstractElementFactory: Abstract{
 	//add all objects into pull
 	public virtual void PreloadPullObjects()
 	{
-		if(!flagGetFromResources)
-		{
-			GameObject newTerrain=null;
-			for (int i=0; i<terrain1.Length;i++){
-				newTerrain	= Instantiate (terrain1[i]) as GameObject;
-				newTerrain.name=(terrain1[i] as GameObject).name;
-				addTagToObject(newTerrain);	
-				newTerrain.transform.position=new Vector3(-200,-200,-200);
-				terrainsListToDel.Add (newTerrain);
-			}
+		GameObject newTerrain=null;
+		for (int i=0; i<terrain1.Length;i++){
+			newTerrain	= Instantiate(Resources.Load(pathInResources+"/"+terrain1[i])) as GameObject;
+			newTerrain.name=terrain1[i];
+			addTagToObject(newTerrain);	
+			newTerrain.transform.position=new Vector3(-9999,-9999,-9999);
+			terrainsListToDel.Add (newTerrain);
 		}
 	}
 	
@@ -182,27 +190,13 @@ public class AbstractElementFactory: Abstract{
 		//ничего не нашли
 		if(!newTerrain)
 		{
-			if(flagGetFromResources)
+			if(Resources.Load(pathInResources+"/"+instr)==null)
 			{
-				if(Resources.Load(pathInResources+"/"+instr)==null)
-				{
 					//Debug.Log (instr);
-				}
-				else
-				{
-					newTerrain	= Instantiate(Resources.Load(pathInResources+"/"+instr)) as GameObject;
-				}
 			}
 			else
 			{
-				for(i=0;i<terrain1.Length;i++)
-				{
-					//нашли
-					if((terrain1[i] as GameObject).name==instr){
-						newTerrain	= Instantiate (terrain1[i]) as GameObject;
-						break;
-					}
-				}	
+					newTerrain	= Instantiate(Resources.Load(pathInResources+"/"+instr)) as GameObject;
 			}
 			
 			if(newTerrain)

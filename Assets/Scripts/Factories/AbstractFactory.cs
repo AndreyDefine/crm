@@ -44,8 +44,9 @@ public class AbstractFactory : Abstract {
 	}
 	
 	private void PreloadTerrains() {
+		Debug.Log (name);
 		int i;
-		AddObjectsInPulls(false);
+		//AddObjectsInPulls(false);
 		for(i=0;i<=numberOfTerrains;i++)
 		{
 			AddNextTerrain(false);
