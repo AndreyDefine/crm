@@ -7,4 +7,6 @@ public interface IMissionEmmitter{
 	ArrayList GetCurrentMissions();
 	ArrayList GetThisLifeFinishedMissions();
 	int GetCountFinishedMissions();
+	int GetCountMissions();
+	float GetProgress();
 }

@@ -3,10 +3,16 @@ using System.Collections;
 
 public abstract class BaseMissionEmmitter : Abstract, IMissionEmmitter, IMissionNotify
 {
+	public string missionEmmitterName;
 	public abstract void LevelBegin();
 	public abstract ArrayList GetCurrentMissions();
 	public abstract ArrayList GetThisLifeFinishedMissions();
 	public abstract int GetCountFinishedMissions();
+	public abstract int GetCountMissions();
+	public float GetProgress ()
+	{
+		return GetCountFinishedMissions()/(float)GetCountMissions();
+	}
 	
 	public void RestartActiveMissions ()
 	{

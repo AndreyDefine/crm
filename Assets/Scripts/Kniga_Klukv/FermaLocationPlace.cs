@@ -30,6 +30,17 @@ public class FermaLocationPlace : Abstract {
         }
     }
 	
+	private long _lastMissionEmmitTime;
+    public long lastMissionEmmitTime {
+        get {
+            return _lastMissionEmmitTime;
+        }
+        set {
+            _lastMissionEmmitTime = value;
+			PlayerPrefs.SetString(GetLastMissionEmmitTimeTag(),_lastMissionEmmitTime.ToString());
+        }
+    }
+	
 	private string GetFactoryTag(){
 		return FACTORY_DATA_TAG+name;
 	}
@@ -38,8 +49,15 @@ public class FermaLocationPlace : Abstract {
 		return GetFactoryTag()+"bought";
 	}
 	
+	private string GetLastMissionEmmitTimeTag(){
+		return GetFactoryTag()+"last_mission_emmit";
+	}
+	
 	protected void Start(){
 		_bought = initBought||PlayerPrefs.GetInt(GetBoughtTag(),0)==1;
+		string lastEmmitTime = PlayerPrefs.GetString(GetLastMissionEmmitTimeTag(),"");
+		_lastMissionEmmitTime = lastEmmitTime.Equals("")?new System.DateTime(0).ToBinary():long.Parse(lastEmmitTime);
+		
 		factory.SetFermaLocationPlace(this);
 		factory.SetActive(bought);
 		if(night!=null){

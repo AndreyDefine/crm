@@ -3,7 +3,7 @@ using System.Collections;
 
 public class MissionEmmitters : Abstract, IMissionEmmitter, IMissionNotify
 {
-	public BaseMissionEmmitter[] missionEmmitters;//TODO переделать потом по-другому
+	public BaseMissionEmmitter[] missionEmmitters;
 	
 	void Awake ()
 	{
@@ -173,5 +173,25 @@ public class MissionEmmitters : Abstract, IMissionEmmitter, IMissionNotify
 			finishedMissionsNumber+=missionEmmitters[i].GetCountFinishedMissions();
 		}
 		return finishedMissionsNumber;
+	}
+	
+	public int GetCountMissions ()
+	{
+		int missionsNumber = 0;
+		for(int i=0;i<missionEmmitters.Length;i++){
+			missionsNumber+=missionEmmitters[i].GetCountMissions();
+		}
+		return missionsNumber;
+	}
+	
+	public float GetProgress ()
+	{
+		int missionsNumber = 0;
+		int finishedMissionsNumber = 0;
+		for(int i=0;i<missionEmmitters.Length;i++){
+			missionsNumber+=missionEmmitters[i].GetCountMissions();
+			finishedMissionsNumber+=missionEmmitters[i].GetCountFinishedMissions();
+		}
+		return finishedMissionsNumber/(float)missionsNumber;
 	}
 }

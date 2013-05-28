@@ -42,6 +42,11 @@ public class SimpleMissionEmmitter : BaseMissionEmmitter, IMissionListener
 		}
 	}
 	
+	public override int GetCountMissions ()
+	{
+		return missions.Length;
+	}
+	
 	public bool IsMissionFinished (string id)
 	{
 		return PlayerPrefs.GetInt (misionFinishedTag + id, 0) != 0;
