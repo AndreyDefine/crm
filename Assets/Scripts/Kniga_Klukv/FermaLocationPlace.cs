@@ -9,7 +9,7 @@ public class FermaLocationPlace : Abstract {
 	public bool initBought = false;
 	public int needLevel;
 	
-	public BaseFermaMission[] missions;
+	public BaseMissionEmmitter missionEmmitterPrefab;
 	
 	public Factory factory;
 	public FermaNight night=null;
