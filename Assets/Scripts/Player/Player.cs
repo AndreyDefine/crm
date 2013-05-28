@@ -14,6 +14,8 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	public int typeOfControl;
 	public GameObject MainCamera;
 	
+	public GameObject PosilkaRight;
+	
 	public float roadChangeForce;
 	
 	protected int accelPriority;
@@ -182,6 +184,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		}
 		if(curPathNumber==1)
 		{
+			DropPosilkaRight();
 			bearAnimation.Posilka_Right();	
 			flagPosilka=true;
 			posilkaTimer=Time.time;
@@ -189,10 +192,27 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		
 		if(curPathNumber==-1)
 		{
+			DropPosilkaLeft();
 			bearAnimation.Posilka_Left();
 			flagPosilka=true;
 			posilkaTimer=Time.time;
 		}
+	}
+	
+	private void DropPosilkaRight()
+	{
+		GameObject posilka=Instantiate(PosilkaRight) as GameObject;
+		posilka.transform.position=Character.transform.position+new Vector3(0,2,0);
+		posilka.transform.GetChild(0).animation.Play("DropPostalRight");
+		Destroy(posilka,2);
+	}
+	
+	private void DropPosilkaLeft()
+	{
+		GameObject posilka=Instantiate(PosilkaRight) as GameObject;
+		posilka.transform.position=Character.transform.position+new Vector3(0,2,0);
+		posilka.transform.GetChild(0).animation.Play("DropPostalLeft");
+		Destroy(posilka,2);
 	}
 	
 	public void MakeVodka()
@@ -481,27 +501,6 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		}
 	}
 	
-	public Vector3 GetCameraDopSmex()
-	{
-		Vector3 result=new Vector3(0,0,0);
-		float raznost=raznFromWhereToLookAndCharacter.y;
-		float heightDamping;
-		Vector3 charpos=Character.transform.localPosition;
-		
-		if(GlobalOptions.gameState==GameStates.PAUSE_MENU||!characterMarioC)
-		{
-			return result;
-		}
-		
-		if((characterMarioC.isJumping())&&GlobalOptions.gameState!=GameStates.GAME_OVER)
-		{
-			result=new Vector3(-charpos.x*whereToLookParalax,-(charpos.y-CharacterFirstPos.y),0);
-			//WhereToLook.transform.localPosition=new Vector3(-charpos.x*whereToLookParalax,raznost-(charpos.y-CharacterFirstPos.y),WhereToLook.transform.localPosition.z);
-		}
-		
-		return result;
-	}
-	
 	public float PlaceBearToControl()
 	{
 		float dumping=10;
@@ -521,7 +520,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 			//Debug.Log ("characterMarioC");
 			float currentHeight = Mathf.Lerp (WhereToLook.transform.localPosition.y, raznost, heightDamping * Time.deltaTime);
 
-			WhereToLook.transform.localPosition=new Vector3(-charpos.x*whereToLookParalax, currentHeight,WhereToLook.transform.localPosition.z);
+			WhereToLook.transform.localPosition=new Vector3(charpos.x*whereToLookParalax, currentHeight,WhereToLook.transform.localPosition.z);
 			
 			dumping=0;
 		}
@@ -542,7 +541,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 				heightDamping=2f;
 			}
 			float currentHeight = Mathf.Lerp (WhereToLook.transform.localPosition.y, raznost, heightDamping * Time.deltaTime);
-			WhereToLook.transform.localPosition=new Vector3(-charpos.x*whereToLookParalax,currentHeight,WhereToLook.transform.localPosition.z);
+			WhereToLook.transform.localPosition=new Vector3(charpos.x*whereToLookParalax,currentHeight,WhereToLook.transform.localPosition.z);
 		}
 		
 		return dumping;

@@ -3,6 +3,7 @@ guid: 59dc5ba5eaab944028dd6d0bad2d5a47
 ModelImporter:
   fileIDToRecycleName:
     4300000: Bereza
+    4300002: polySurface65
   serializedVersion: 10
   materials:
     importMaterials: 1
@@ -20,13 +21,13 @@ ModelImporter:
     clipAnimations: []
   meshes:
     lODScreenPercentages: []
-    globalScale: .00999999978
-    meshCompression: 0
+    globalScale: .289999992
+    meshCompression: 3
     addColliders: 0
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMesh: 0
+    optimizeMesh: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
