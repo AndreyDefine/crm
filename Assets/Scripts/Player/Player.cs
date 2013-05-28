@@ -561,7 +561,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		singleTransform.position=PlayerFirstPos;
 		Debug.Log (PlayerFirstPos);
 		
-		Character.transform.localPosition=new Vector3(0,0,0);
+		Character.transform.localPosition=new Vector3(0,0,20);
 		walkingBear.transform.localPosition=new Vector3(0,0,0);
 		//PlaceBearToControl();
 

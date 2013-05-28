@@ -3,17 +3,25 @@ using System.Collections;
 
 public class FactoryBuilding : Abstract {
 	
+	public bool flagAddAnimation=true;
+	
 	bool animationAdded = false;
 
-	public void SetActive(bool a){
-		if(!animationAdded){
+	public void SetActive(bool a){	
+		if(!animationAdded&&flagAddAnimation){
 			AnimationFactory.AttentionXThenYLoop(this,2f,1.05f,"AttentionXThenYLoop", "AttentionXThenYLoopStop",false);
 			animationAdded = true;
 		}
 		if(a){
-			animation.Play("AttentionXThenYLoop");	
+			if(flagAddAnimation)
+			{
+				animation.Play("AttentionXThenYLoop");	
+			}
 		}else{
-			animation.Stop();	
+			if(flagAddAnimation)
+			{
+				animation.Stop();
+			}
 		}
 	}
 	

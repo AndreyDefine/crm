@@ -8,6 +8,8 @@ public class ZoomMap : SpriteTouch {
 	private Vector3 posLeftTop;
 	private Vector3 posRightBottom;
 	
+	private ArrayList particleChangeScaleList=new ArrayList();
+	
 	private int numberOfFingers;
 	private int []fingers;
 	private Vector2 []fingerPos;
@@ -23,6 +25,19 @@ public class ZoomMap : SpriteTouch {
 	protected override void InitTouchZone ()
 	{
 		touchZone = new Rect (0, 0, Screen.width, Screen.height);
+	}
+	
+	public void AddToParticleChangeScaleList(ParticleChangeScale inobject)
+	{
+		particleChangeScaleList.Add(inobject);
+	}
+	
+	private void ChangeParticleScales()
+	{
+		for (int i=0;i<particleChangeScaleList.Count;i++)
+		{
+			(particleChangeScaleList[i]as ParticleChangeScale).ChangeScale(singleTransform.localScale.x);
+		}
 	}
 	
 	private float curScale;
@@ -168,6 +183,8 @@ public class ZoomMap : SpriteTouch {
 			curScale=curScale<minScale?minScale:curScale;
 		
 			singleTransform.localScale=new Vector3(curScale,curScale,1);
+			ChangeParticleScales();
+			
 			
 			Vector2 moveByNew=new Vector2(moveBy.x*curScale,moveBy.y*curScale);
 			
