@@ -107,7 +107,14 @@ public class BearAnimation3D : Abstract{
 	}
 	
 	public void Walk () {
-		CrossFadeAnimationForName("walk");
+		if(GlobalOptions.gameState==GameStates.GAME_OVER)
+		{
+			PlayAnimationForName("death");
+		}
+		else
+		{
+			CrossFadeAnimationForName("walk");
+		}
 		//Debug.Log ("Walk");
 	}
 	
