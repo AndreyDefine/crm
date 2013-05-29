@@ -173,6 +173,8 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	public void MakePosilka()
 	{
+		
+		GlobalOptions.GetMissionEmmitters().NotifyPostDropped(1);
 		int curPathNumber;
 		//if(PathChanging)
 		//{

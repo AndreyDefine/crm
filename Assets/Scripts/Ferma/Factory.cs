@@ -83,6 +83,7 @@ public class Factory : SpriteTouch {
 	}
 	
 	virtual protected void MakeOnTouch(){
+		GlobalOptions.GetMissionEmmitters().SetFermaMissionEmmitter(fermaLocationPlace.missionEmmitter);
 		fermaLocationPlace.ShowPlayDialog();
 	}
 }

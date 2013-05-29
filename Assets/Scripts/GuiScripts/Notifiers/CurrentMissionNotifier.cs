@@ -43,6 +43,7 @@ public class CurrentMissionNotifier : BaseNotifier, IMissionListener
 	
 	public void SetMission(Mission mission){
 		mission.SetActive();
+		this.priority = mission.GetPriority();
 		this.mission = mission;
 		mission.AddMissionListener(this);
 		SetText(mission.GetProgressRepresentation());

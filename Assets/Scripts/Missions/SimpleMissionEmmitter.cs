@@ -1,22 +1,12 @@
 using UnityEngine;
 using System.Collections;
 
-public class SimpleMissionEmmitter : BaseMissionEmmitter, IMissionListener
+public class SimpleMissionEmmitter : BaseMissionEmmitter
 {
-	public string misionFinishedTag{
-		get{
-			return this.name+"_finished_";
-		}
-	}
+	public int priority;
 	public int missionRespaunTime;
 	private int missionMaxCount = 1;
-	public Mission[] missions;
-	private ArrayList availableMissionsPrefabs = new ArrayList ();
-	Hashtable prefabKeyHashTable = new Hashtable ();
-	private ArrayList currentMissions = new ArrayList ();
-	private ArrayList thisLifeFinishedMissions = new ArrayList ();
 	private bool canEmmitMission = true;
-	private int finishedMissionsNumber = 0;
 	float curTime;
 	
 	void Start ()
@@ -25,7 +15,7 @@ public class SimpleMissionEmmitter : BaseMissionEmmitter, IMissionListener
 		curTime = Time.time;
 		
 		//Ищем только миссии, которые еще не выполнялись и текущие тоже ищем
-		Hashtable currentMissionsKeyData = CurrentMissionsSerializer.GetCurrentMissionsKeyData (misionFinishedTag + "data_");
+		Hashtable currentMissionsKeyData = CurrentMissionsSerializer.GetCurrentMissionsKeyData (misionCurrentTag);
 		for (int i=0; i<missions.Length; i++) {
 			Mission missionPrefab = missions [i];
 			string id = missionPrefab.name;
@@ -46,19 +36,14 @@ public class SimpleMissionEmmitter : BaseMissionEmmitter, IMissionListener
 		}
 	}
 	
-	public override int GetCountMissions ()
+	protected override int GetPriority ()
 	{
-		return missions.Length;
+		return priority;
 	}
 	
-	public bool IsMissionFinished (string id)
+	protected override bool canEmmitMissions ()
 	{
-		return PlayerPrefs.GetInt (misionFinishedTag + id, 0) != 0;
-	}
-	
-	public void SetMissionFinished (string id)
-	{
-		PlayerPrefs.SetInt (misionFinishedTag + id, 1);
+		return canEmmitMission;
 	}
 	
 	public override void LevelBegin ()
@@ -95,45 +80,14 @@ public class SimpleMissionEmmitter : BaseMissionEmmitter, IMissionListener
 		Mission missionPrefab = (Mission)availableMissionsPrefabs [randomIndex];
 		Mission mission = InstantiateMission (missionPrefab);
 		currentMissions.Add (mission);
-		CurrentMissionsSerializer.SaveCurrentMissions (currentMissions, misionFinishedTag + "data_");
-		GlobalOptions.GetGuiLayer ().AddMission (mission);
+		CurrentMissionsSerializer.SaveCurrentMissions (currentMissions, misionCurrentTag);
+		GlobalOptions.GetGuiLayer ().AddMission (mission, priority);
 		availableMissionsPrefabs.Remove (missionPrefab);
-	}
-	
-	private Mission InstantiateMission (Mission missionPrefab)
-	{
-		string id = (string)prefabKeyHashTable [missionPrefab];
-		Mission mission = (Instantiate (missionPrefab) as Mission);
-		mission.AddMissionListener (this);
-		mission.SetId (id);
-		return mission;
 	}
 	
 	public override ArrayList GetCurrentMissions ()
 	{
 		return currentMissions;
-	}
-	
-	public override ArrayList GetThisLifeFinishedMissions ()
-	{
-		return thisLifeFinishedMissions;
-	}
-	
-	public void MissionFinished (Mission mission)
-	{
-		finishedMissionsNumber++;
-		SetMissionFinished (mission.GetId ());
-		currentMissions.Remove (mission);
-		thisLifeFinishedMissions.Add(mission);
-		CurrentMissionsSerializer.SaveCurrentMissions (currentMissions, misionFinishedTag + "data_");
-		CurrentMissionsSerializer.RemoveMissionData (mission);
-	}
-	
-	public void MissionProgressChanged (Mission mission)
-	{
-		if (!mission.oneLife) {
-			CurrentMissionsSerializer.SaveMissionData (mission);
-		}
 	}
 	
 	public override int GetCountFinishedMissions ()

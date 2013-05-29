@@ -1,14 +1,43 @@
 using UnityEngine;
 using System.Collections;
 
-public abstract class BaseMissionEmmitter : Abstract, IMissionEmmitter, IMissionNotify
+public abstract class BaseMissionEmmitter : Abstract, IMissionEmmitter, IMissionNotify, IMissionListener
 {
+	protected ArrayList availableMissionsPrefabs = new ArrayList ();
+	protected Hashtable prefabKeyHashTable = new Hashtable ();
+	protected ArrayList currentMissions = new ArrayList ();
+	protected ArrayList thisLifeFinishedMissions = new ArrayList ();
 	public string missionEmmitterName;
+	protected int finishedMissionsNumber = 0;
+	public Mission[] missions;
 	public abstract void LevelBegin();
 	public abstract ArrayList GetCurrentMissions();
-	public abstract ArrayList GetThisLifeFinishedMissions();
 	public abstract int GetCountFinishedMissions();
-	public abstract int GetCountMissions();
+	protected abstract bool canEmmitMissions ();
+	protected abstract int GetPriority ();
+	
+	protected string misionCurrentTag {
+		get {
+			return this.name+"current";
+		}
+	}
+	
+	protected string misionFinishedTag{
+		get{
+			return this.name+"finished";
+		}
+	}
+	
+	public int GetCountMissions ()
+	{
+		return missions.Length;
+	}
+	
+	public ArrayList GetThisLifeFinishedMissions ()
+	{
+		return thisLifeFinishedMissions;
+	}
+	
 	public float GetProgress ()
 	{
 		return GetCountFinishedMissions()/(float)GetCountMissions();
@@ -32,6 +61,33 @@ public abstract class BaseMissionEmmitter : Abstract, IMissionEmmitter, IMission
 			}
 		}
 		return activeMissions;	
+	}
+	//IMissionListener
+	public void MissionProgressChanged (Mission mission)
+	{
+		if (!mission.oneLife) {
+			CurrentMissionsSerializer.SaveMissionData (mission);
+		}
+	}
+	
+	public void MissionFinished (Mission mission)
+	{
+		finishedMissionsNumber++;
+		SetMissionFinished (mission.GetId ());
+		currentMissions.Remove (mission);
+		thisLifeFinishedMissions.Add(mission);
+		CurrentMissionsSerializer.SaveCurrentMissions (currentMissions, misionCurrentTag);
+		CurrentMissionsSerializer.RemoveMissionData (mission);
+	}
+	
+	public bool IsMissionFinished (string id)
+	{
+		return PlayerPrefs.GetInt (misionFinishedTag + id, 0) != 0;
+	}
+	
+	public void SetMissionFinished (string id)
+	{
+		PlayerPrefs.SetInt (misionFinishedTag + id, 1);
 	}
 	//run
 	public void NotifyMetersRunned (int meter)
@@ -195,5 +251,27 @@ public abstract class BaseMissionEmmitter : Abstract, IMissionEmmitter, IMission
 			Mission mission = (Mission)missions [i];
 			mission.NotifyTraktorDeath (traktorDeath);
 		}
+	}
+	
+	//drop
+	public void NotifyPostDropped (int post)
+	{
+		ArrayList missions = GetActiveCurrentMissions ();
+		for (int i=0; i<missions.Count; i++) {
+			Mission mission = (Mission)missions [i];
+			mission.NotifyPostDropped (post);
+		}
+	}
+	
+	//Корректное создание миссии
+	protected Mission InstantiateMission (Mission missionPrefab)
+	{
+		string id = (string)prefabKeyHashTable [missionPrefab];
+		Mission mission = (Instantiate (missionPrefab) as Mission);
+		mission.singleTransform.parent = singleTransform;
+		mission.AddMissionListener (this);
+		mission.SetId (id);
+		mission.SetPriority(GetPriority());
+		return mission;
 	}
 }

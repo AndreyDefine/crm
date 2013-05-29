@@ -5,6 +5,7 @@ public enum NotifierStates{HIDE,FLYING_IN,SHOWN,FLYING_OUT};
 
 public abstract class BaseNotifier : Abstract
 {
+	public int priority = 0;
 	protected float SHOW_TIME=2.2f;
 	protected float FLY_ANIMATION_TIME = 0.8f;
 	protected NotifierStates state = NotifierStates.HIDE;

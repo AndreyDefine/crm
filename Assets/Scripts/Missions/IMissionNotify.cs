@@ -22,4 +22,6 @@ public interface IMissionNotify{
 	void NotifySenoDeath(int senoDeath);
 	void NotifyTraktorDeath(int traktorDeath);
 	void NotifyScarecrowDeath(int scarecrowDeath);
+	//posilka
+	void NotifyPostDropped(int post);
 }

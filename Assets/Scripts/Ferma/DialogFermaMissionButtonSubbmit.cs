@@ -2,8 +2,8 @@ using UnityEngine;
 using System.Collections;
 
 public class DialogFermaMissionButtonSubbmit: GuiButtonBase {
-	public DialogFermaBuyMission dialogFermaBuyMission;
+	public DialogFermaBuySlot dialogFermaBuySlot;
 	override protected void MakeOnTouch(){
-		dialogFermaBuyMission.GetFermaMission().Subbmit();
+		dialogFermaBuySlot.Submit();
 	}
 }

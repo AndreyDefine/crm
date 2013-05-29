@@ -5,6 +5,14 @@ public enum MissionStates{NOT_ACTIVE, ACTIVE, FINISHED}
 
 public class Mission : Abstract, IMissionNotify {
 	
+	private int priority = 0;
+	public int GetPriority(){
+		return priority;
+	}
+	public void SetPriority(int priority){
+		this.priority = priority;
+	}
+	
 	private MissionStates state = MissionStates.NOT_ACTIVE;
 	public MissionIco iconPrefab;
 	public string missionName="";
@@ -12,8 +20,6 @@ public class Mission : Abstract, IMissionNotify {
 	public bool oneLife;
 	public int coinAward;
 	public int goldAward;
-	public int coinPrice;
-	public int goldPrice;
 	
 	private ArrayList missionListeners = new ArrayList();
 	private string id;
@@ -150,6 +156,11 @@ public class Mission : Abstract, IMissionNotify {
 	
 	public virtual void NotifyDodgeTractor (int tractor)
 	{
+	}
+	//drop
+	public virtual void NotifyPostDropped (int post)
+	{
+		
 	}
 	
 	public virtual string Serialize(){

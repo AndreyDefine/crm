@@ -1,15 +1,11 @@
 using UnityEngine;
 using System.Collections;
 
-public class DialogFermaBuyMission : SpriteTouch {
+public class DialogFermaBuySlot : SpriteTouch {
 	
 	public CrmFont priceValue;
 	public CrmFont goldValue;
-	public CrmFont rewardCoinsValue;
-	public CrmFont rewardGoldValue;
-	public TwoLineText missionName;
-	public GameObject buyButton;
-	private Mission mission;
+	private Slot slot;
 	
 	private FermaMission fermaMission;
 	
@@ -26,18 +22,15 @@ public class DialogFermaBuyMission : SpriteTouch {
 		touchZone = new Rect (0, 0, Screen.width, Screen.height);
 	}
 	
-	public void SetMissionToBuy (Mission mission)
+	public void SetSlotToBuy (Slot slot)
 	{
-		this.mission = mission;
-		missionName.text = mission.missionName;
-		priceValue.text = string.Format("{0}",mission.coinPrice);
-		goldValue.text = string.Format("{0}",mission.goldPrice);
-		rewardCoinsValue.text = string.Format("{0}",mission.coinAward);
-		rewardGoldValue.text = string.Format("{0}",mission.goldAward);
+		this.slot = slot;
+		priceValue.text = string.Format("{0}",slot.coin);
+		goldValue.text = string.Format("{0}",slot.gold);
 	}
 	
-	public Mission GetMissionToBuy(){
-		return mission;
+	public Slot GetSlotToBuy(){
+		return slot;
 	}
 	
 	public void Show(){	
@@ -53,6 +46,15 @@ public class DialogFermaBuyMission : SpriteTouch {
 	public void CloseDialog(){
 		AnimationFactory.ScaleOutXYZ(this,new Vector3(0f,0f,0f),0.5f,"ScaleOut", "ScaleOutEnd");
 	}	
+	
+	public void Cancel(){
+		CloseDialog();
+	}
+	
+	public void Submit(){
+		CloseDialog();
+		fermaMission.BuySlot();
+	}
 	
 	public void ScaleOutEnd(){
 		//GetFermaLocationPlace().DialogClosed();

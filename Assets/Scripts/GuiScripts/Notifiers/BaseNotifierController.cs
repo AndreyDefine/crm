@@ -27,12 +27,20 @@ public abstract class BaseNotifierController : Abstract {
 		if(notifiersInProgress.Count<GetMaxNotifiersToShow()){
 			if(notifiersQueue.Count>0)
 			{
+				
 				BaseNotifier notifier = (BaseNotifier)notifiersQueue[0];
-				int position = notifiersInProgress.Count;
+				int i=0;
+				for(;i<notifiersInProgress.Count;i++){
+					if(((BaseNotifier)notifiersInProgress[i]).priority>notifier.priority){
+						break;
+					}
+				}
+				int position = i;
 				notifier.singleTransform.localPosition = GetOutNotifierPlace(position);
-				notifiersInProgress.Add(notifier);
+				notifiersInProgress.Insert(position,notifier);
 				notifiersQueue.Remove(notifier);
 				notifier.FlyIn(GetInNotifierPlace(position));
+				ChangePlaces(position+1);
 			}
 		}
 	}
@@ -53,8 +61,8 @@ public abstract class BaseNotifierController : Abstract {
 		Destroy(notifier.gameObject);
 	}
 	
-	public virtual void ChangePlaces(){
-		for(int i=0;i<notifiersInProgress.Count;i++){
+	public virtual void ChangePlaces(int startPlace = 0){
+		for(int i=startPlace;i<notifiersInProgress.Count;i++){
 			BaseNotifier inProgressNotifier = (BaseNotifier)notifiersInProgress[i];
 			inProgressNotifier.FlyPlace(GetInNotifierPlace(i));
 		}	

@@ -43,6 +43,13 @@ public class Abstract : MonoBehaviour {
 		return current;
 	}
 	
+	public void RemoveAllChildren(){
+		int count = singleTransform.GetChildCount();
+		for(int i=0;i<count;i++){
+			Destroy(singleTransform.GetChild(0).gameObject);
+		}
+	}
+	
 }
 
 

@@ -18,10 +18,7 @@ public class MissionNotifier : BaseNotifier
 	}
 	
 	private void SetMissionIcon (MissionIco ico){
-		int count = missionIconPlace.singleTransform.GetChildCount();
-		for(int i=0;i<count;i++){
-			Destroy(missionIconPlace.singleTransform.GetChild(0).gameObject);
-		}
+		missionIconPlace.RemoveAllChildren();
 		ico.singleTransform.parent = missionIconPlace.singleTransform;
 		ico.singleTransform.localPosition = new Vector3(0f,0f,-0.01f);
 		missionIco = ico;

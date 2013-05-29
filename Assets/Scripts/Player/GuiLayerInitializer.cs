@@ -183,7 +183,7 @@ public class GuiLayerInitializer : Abstract {
 		return nullTime;
 	}
 	
-	public void AddMission(Mission mission){
+	public void AddMission(Mission mission, int priority){
 		upNotifierController.AddMissionNotifier(mission);
 	}
 	
