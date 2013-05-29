@@ -9,7 +9,14 @@ public class FermaLocationPlace : Abstract {
 	public bool initBought = false;
 	public int needLevel;
 	
-	public BaseMissionEmmitter missionEmmitterPrefab;
+	public FermaMissionEmmitter missionEmmitterPrefab;
+	
+	private FermaMissionEmmitter _missionEmmitter=null;
+	public FermaMissionEmmitter missionEmmitter{
+		get{
+			return _missionEmmitter;
+		}
+	}
 	
 	public Factory factory;
 	public FermaNight night=null;
@@ -30,17 +37,6 @@ public class FermaLocationPlace : Abstract {
         }
     }
 	
-	private long _lastMissionEmmitTime;
-    public long lastMissionEmmitTime {
-        get {
-            return _lastMissionEmmitTime;
-        }
-        set {
-            _lastMissionEmmitTime = value;
-			PlayerPrefs.SetString(GetLastMissionEmmitTimeTag(),_lastMissionEmmitTime.ToString());
-        }
-    }
-	
 	private string GetFactoryTag(){
 		return FACTORY_DATA_TAG+name;
 	}
@@ -54,9 +50,11 @@ public class FermaLocationPlace : Abstract {
 	}
 	
 	protected void Start(){
+		_missionEmmitter = Instantiate(missionEmmitterPrefab) as FermaMissionEmmitter;
+		_missionEmmitter.singleTransform.parent = singleTransform;
+		
 		_bought = initBought||PlayerPrefs.GetInt(GetBoughtTag(),0)==1;
-		string lastEmmitTime = PlayerPrefs.GetString(GetLastMissionEmmitTimeTag(),"");
-		_lastMissionEmmitTime = lastEmmitTime.Equals("")?new System.DateTime(0).ToBinary():long.Parse(lastEmmitTime);
+		
 		
 		factory.SetFermaLocationPlace(this);
 		factory.SetActive(bought);

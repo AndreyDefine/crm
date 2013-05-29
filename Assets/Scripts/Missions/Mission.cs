@@ -12,6 +12,8 @@ public class Mission : Abstract, IMissionNotify {
 	public bool oneLife;
 	public int coinAward;
 	public int goldAward;
+	public int coinPrice;
+	public int goldPrice;
 	
 	private ArrayList missionListeners = new ArrayList();
 	private string id;

@@ -1,23 +1,47 @@
 using UnityEngine;
 using System.Collections;
 
-public class SimpleMissionEmmitter : BaseMissionEmmitter, IMissionListener
+public class FermaMissionEmmitter : BaseMissionEmmitter, IMissionListener
 {
-	public string misionFinishedTag{
+	private string misionFinishedTag{
 		get{
-			return this.name+"_finished_";
+			return this.name;
 		}
 	}
-	public int missionRespaunTime;
+	
+	private string misionBoughtTag{
+		get{
+			return this.name+"_bought_";
+		}
+	}
+	
+	private string lastMissionEmmitTimeTag{
+		get{
+			return this.name+"_emmitte";
+		}
+	}
 	private int missionMaxCount = 1;
 	public Mission[] missions;
 	private ArrayList availableMissionsPrefabs = new ArrayList ();
+	private ArrayList availableNotBoughtMissionsPrefabs = new ArrayList ();
 	Hashtable prefabKeyHashTable = new Hashtable ();
 	private ArrayList currentMissions = new ArrayList ();
 	private ArrayList thisLifeFinishedMissions = new ArrayList ();
-	private bool canEmmitMission = true;
 	private int finishedMissionsNumber = 0;
 	float curTime;
+	
+	private long _lastMissionEmmitTime;
+    public long lastMissionEmmitTime {
+        get {
+			string lastEmmitTime = PlayerPrefs.GetString(lastMissionEmmitTimeTag,"");
+			_lastMissionEmmitTime = lastEmmitTime.Equals("")?GlobalOptions.GetLongFromDateTime(System.DateTime.MinValue):long.Parse(lastEmmitTime);
+            return _lastMissionEmmitTime;
+        }
+        set {
+            _lastMissionEmmitTime = value;
+			PlayerPrefs.SetString(lastMissionEmmitTimeTag,_lastMissionEmmitTime.ToString());
+        }
+    }
 	
 	void Start ()
 	{
@@ -35,10 +59,13 @@ public class SimpleMissionEmmitter : BaseMissionEmmitter, IMissionListener
 					Mission mission = InstantiateMission (missionPrefab);	
 					mission.Unserialize (currentMissionsKeyData [id].ToString ());
 					currentMissions.Add (mission);
-					canEmmitMission = false;
 					mission.SetActive ();
 				} else {
-					availableMissionsPrefabs.Add (missionPrefab);
+					if(IsMissionBought(id)){
+						availableMissionsPrefabs.Add (missionPrefab);
+					}else{
+						availableNotBoughtMissionsPrefabs.Add (missionPrefab);
+					}
 				}
 			}else{
 				finishedMissionsNumber++;
@@ -61,20 +88,30 @@ public class SimpleMissionEmmitter : BaseMissionEmmitter, IMissionListener
 		PlayerPrefs.SetInt (misionFinishedTag + id, 1);
 	}
 	
+	public bool IsMissionBought (string id)
+	{
+		return PlayerPrefs.GetInt (misionBoughtTag + id, 0) != 0;
+	}
+	
+	public void SetMissionBought (string id)
+	{
+		PlayerPrefs.SetInt (misionBoughtTag + id, 1);
+	}
+	
 	public override void LevelBegin ()
 	{
-		for(int i=0;i<thisLifeFinishedMissions.Count;i++){
+		/*for(int i=0;i<thisLifeFinishedMissions.Count;i++){
 			Destroy(((Mission)thisLifeFinishedMissions[i]).gameObject);
 		}
 		thisLifeFinishedMissions.Clear();
 		if (GetCurrentMissions ().Count == 0) {
 			canEmmitMission = true;
-		}
+		}*/
 	}
 		
 	void Update ()
 	{
-		if (GlobalOptions.gameState != GameStates.GAME) {//TODO: check
+		/*if (GlobalOptions.gameState != GameStates.GAME) {//TODO: check
 			curTime = Time.time;	
 			return;
 		}
@@ -85,7 +122,7 @@ public class SimpleMissionEmmitter : BaseMissionEmmitter, IMissionListener
 				AddOneMissionObject ();
 			}
 			curTime = Time.time;
-		}
+		}*/
 	}
 	
 	private void AddOneMissionObject ()
@@ -112,6 +149,23 @@ public class SimpleMissionEmmitter : BaseMissionEmmitter, IMissionListener
 	public override ArrayList GetCurrentMissions ()
 	{
 		return currentMissions;
+	}
+	
+	public ArrayList GetAvailableNotBoughtMissionsPrefabs(){
+		return availableNotBoughtMissionsPrefabs;
+	}
+	
+	public ArrayList GetAvailableMissionsPrefabs(){
+		return availableMissionsPrefabs;
+	}
+	
+	public void BuyMission(Mission missionPrefab){
+		PersonInfo.AddCoins(-missionPrefab.coinPrice);
+		PersonInfo.AddGold(-missionPrefab.goldPrice);
+		availableMissionsPrefabs.Add(missionPrefab);
+		SetMissionBought(missionPrefab.name);
+		availableNotBoughtMissionsPrefabs.Remove(missionPrefab);
+		lastMissionEmmitTime = GlobalOptions.GetLongFromDateTime(System.DateTime.UtcNow);
 	}
 	
 	public override ArrayList GetThisLifeFinishedMissions ()

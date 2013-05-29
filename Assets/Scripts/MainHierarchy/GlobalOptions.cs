@@ -322,5 +322,10 @@ public class GlobalOptions {
 		
 		return angle;
 	}
+	
+	public static long GetLongFromDateTime(System.DateTime dateTime){
+		System.TimeSpan curTimeSpan = new System.TimeSpan(dateTime.Ticks);
+		return long.Parse(string.Format("{0:0}",curTimeSpan.TotalSeconds));
+	}
 }
 
