@@ -7,7 +7,7 @@ public class FactoryBuilding : Abstract {
 	
 	bool animationAdded = false;
 
-	public void SetActive(bool a){	
+	public virtual void SetActive(bool a){	
 		if(!animationAdded&&flagAddAnimation){
 			AnimationFactory.AttentionXThenYLoop(this,2f,1.05f,"AttentionXThenYLoop", "AttentionXThenYLoopStop",false);
 			animationAdded = true;
