@@ -201,6 +201,7 @@ public class MissionEmmitters : Abstract, IMissionEmmitter, IMissionNotify
 	
 	public void SetFermaMissionEmmitter(BaseMissionEmmitter missionEmmitter){
 		missionEmmitters[0] = missionEmmitter;
+		missionEmmitter.singleTransform.parent = singleTransform;
 		begin = 0;
 	}
 	
