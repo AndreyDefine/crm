@@ -26,7 +26,6 @@ public class SimpleMissionEmmitter : BaseMissionEmmitter
 					mission.Unserialize (currentMissionsKeyData [id].ToString ());
 					currentMissions.Add (mission);
 					canEmmitMission = false;
-					mission.SetActive ();
 				} else {
 					availableMissionsPrefabs.Add (missionPrefab);
 				}

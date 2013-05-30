@@ -66,7 +66,6 @@ public class FermaMissionEmmitter : BaseMissionEmmitter, IMissionListener
 					Mission mission = InstantiateMission (missionPrefab);	
 					mission.Unserialize (currentMissionsKeyData [id].ToString ());
 					currentMissions.Add (mission);
-					mission.SetActive ();
 				} else if(emittedMissionsKeyData.ContainsKey (id)){
 					emmittedMissionsPrefabs.Add(missionPrefab);
 				}else{
