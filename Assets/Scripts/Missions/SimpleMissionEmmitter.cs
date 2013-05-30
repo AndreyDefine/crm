@@ -28,6 +28,7 @@ public class SimpleMissionEmmitter : BaseMissionEmmitter
 				finishedMissionsNumber++;
 			}
 		}
+		EmmitMissions (true);
 	}
 	
 	protected override int GetPriority ()
@@ -43,7 +44,7 @@ public class SimpleMissionEmmitter : BaseMissionEmmitter
 	
 	public void EmmitMissions (bool force = false)
 	{
-		if(GlobalOptions.gameState!=GameStates.GAME||!force&&IsTimeOut()){
+		if(!force&&(GlobalOptions.gameState!=GameStates.GAME||IsTimeOut())){
 			return;
 		}
 		if (currentMissions.Count == 0) {//инициализируем текущую

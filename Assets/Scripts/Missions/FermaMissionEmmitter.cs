@@ -80,11 +80,11 @@ public class FermaMissionEmmitter : BaseMissionEmmitter, IMissionListener
 			Slot slot = slots [i];
 			slot.Init ();
 		}
-		EmmitMissions();
+		EmmitMissions(false);
 	}
 		
 	private void TryToGetNextFromEmmitted(bool force = false){
-		if(GlobalOptions.gameState!=GameStates.GAME||!force&&IsTimeOut()){
+		if(!force&&(GlobalOptions.gameState!=GameStates.GAME||IsTimeOut())){
 			return;
 		}
 		if(currentMissions.Count==0){//инициализируем текущую
