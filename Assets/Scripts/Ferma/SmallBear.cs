@@ -20,7 +20,7 @@ public class SmallBear : Abstract {
 		{
 			if(Time.time-timeToEase>neededTimeToEase)
 			{
-				singleTransform.position=new Vector3(0,0,0);
+				singleTransform.localPosition=new Vector3(0,0,0);
 				GetComponent<tk2dSprite>().color=new Color(1,1,1,1);
 				flagEasing=false;
 				factoryBuilding.PlayAnimation();

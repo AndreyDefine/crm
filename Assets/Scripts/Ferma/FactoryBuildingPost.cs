@@ -64,6 +64,8 @@ public class FactoryBuildingPost : FactoryBuildingWihtSpriteAnimation {
 		Golub=Instantiate(Golubs[RandIndex]) as GameObject;
 		Golub.transform.position=EmmisionPoint.transform.position;
 		Golub.GetComponentInChildren<GolubLeft>().LeftPost=LeftPost;
+		Golub.transform.localScale=ZoomMap.instance.gameObject.transform.localScale;
+		Golub.transform.parent=ZoomMap.instance.gameObject.transform;
 	}
 	
 	private void PlayRightPost()
