@@ -6,7 +6,7 @@ public class FermaAchievements : Abstract {
 	public FermaAchievement fermaAchievementRun;
 	
 	void Start(){
-		fermaAchievementCollect.SetMissionEmmitter(GlobalOptions.GetMissionEmmitters().missionEmmitters[0]);
-		fermaAchievementRun.SetMissionEmmitter(GlobalOptions.GetMissionEmmitters().missionEmmitters[1]);
+		fermaAchievementCollect.SetMissionEmmitter(GlobalOptions.GetMissionEmmitters().missionEmmitters[1]);
+		fermaAchievementRun.SetMissionEmmitter(GlobalOptions.GetMissionEmmitters().missionEmmitters[2]);
 	}
 }

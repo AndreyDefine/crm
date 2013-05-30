@@ -10,11 +10,34 @@ public abstract class BaseMissionEmmitter : Abstract, IMissionEmmitter, IMission
 	public string missionEmmitterName;
 	protected int finishedMissionsNumber = 0;
 	public Mission[] missions;
-	public abstract void LevelBegin();
+	public virtual void LevelBegin(){
+		for(int i=0;i<thisLifeFinishedMissions.Count;i++){
+			Destroy(((Mission)thisLifeFinishedMissions[i]).gameObject);
+		}
+		thisLifeFinishedMissions.Clear();
+	}
+	
+	protected Mission GetOneMissionObject ()
+	{
+		if(availableMissionsPrefabs.Count==0){
+			return null;
+		}
+		//int randomIndex = Random.Range (0, availableMissions.Count);
+		Mission missionPrefab = (Mission)availableMissionsPrefabs [0];
+		Mission mission = InstantiateMission (missionPrefab);
+		//CurrentMissionsSerializer.SaveCurrentMissions (currentMissions, misionCurrentTag);
+		availableMissionsPrefabs.Remove (missionPrefab);
+		return mission;
+	}
+	
 	public abstract ArrayList GetCurrentMissions();
 	public abstract int GetCountFinishedMissions();
-	protected abstract bool canEmmitMissions ();
 	protected abstract int GetPriority ();
+	protected float timeOutTime = 0;
+	
+	protected bool IsTimeOut(){
+		return Time.time<timeOutTime;
+	}
 	
 	protected string misionCurrentTag {
 		get {
@@ -75,9 +98,15 @@ public abstract class BaseMissionEmmitter : Abstract, IMissionEmmitter, IMission
 		finishedMissionsNumber++;
 		SetMissionFinished (mission.GetId ());
 		currentMissions.Remove (mission);
-		thisLifeFinishedMissions.Add(mission);
+		thisLifeFinishedMissions.Add (mission);
 		CurrentMissionsSerializer.SaveCurrentMissions (currentMissions, misionCurrentTag);
 		CurrentMissionsSerializer.RemoveMissionData (mission);
+		timeOutTime = Time.time+Random.Range(5f,10f);
+	}
+	
+	public void MissionActivated (Mission mission)
+	{
+		CurrentMissionsSerializer.SaveMissionData (mission);
 	}
 	
 	public bool IsMissionFinished (string id)
@@ -264,6 +293,7 @@ public abstract class BaseMissionEmmitter : Abstract, IMissionEmmitter, IMission
 	}
 	
 	//Корректное создание миссии
+	//Только так она создастся правильно
 	protected Mission InstantiateMission (Mission missionPrefab)
 	{
 		string id = (string)prefabKeyHashTable [missionPrefab];
@@ -272,6 +302,9 @@ public abstract class BaseMissionEmmitter : Abstract, IMissionEmmitter, IMission
 		mission.AddMissionListener (this);
 		mission.SetId (id);
 		mission.SetPriority(GetPriority());
+		if(GlobalOptions.gameState==GameStates.GAME){
+			GlobalOptions.GetGuiLayer ().AddMission (mission);//notify
+		}
 		return mission;
 	}
 }

@@ -7,11 +7,11 @@ public abstract class BaseNotifierController : Abstract {
 	
 	public virtual void Restart(){
 		for(int i=0;i<notifiersQueue.Count;i++){
-			((BaseNotifier)notifiersQueue[i]).DestroyNotifier();	
+			Destroy(((BaseNotifier)notifiersQueue[i]).gameObject);	
 		}
 		notifiersQueue.Clear();
 		for(int i=0;i<notifiersInProgress.Count;i++){
-			((BaseNotifier)notifiersInProgress[i]).DestroyNotifier();
+			Destroy(((BaseNotifier)notifiersInProgress[i]).gameObject);
 		}
 		notifiersInProgress.Clear();
 	}

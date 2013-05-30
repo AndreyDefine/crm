@@ -76,11 +76,7 @@ public abstract class BaseNotifier : Abstract
 		notifierController.NotifierWantsToFlyOut(this);
 	}
 	
-	/// <summary>
-	/// Удалить нотифайер и все связанные с ним данные
-	/// </summary>
-	public virtual void DestroyNotifier(){
-		Destroy(gameObject);
+	protected virtual void OnDestroy(){
 	}
 	
 	public abstract void FlyInStopped();

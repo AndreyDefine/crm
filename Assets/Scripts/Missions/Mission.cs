@@ -13,7 +13,7 @@ public class Mission : Abstract, IMissionNotify {
 		this.priority = priority;
 	}
 	
-	private MissionStates state = MissionStates.NOT_ACTIVE;
+	protected MissionStates state = MissionStates.NOT_ACTIVE;
 	public MissionIco iconPrefab;
 	public string missionName="";
 	public string missionFinishedText="";
@@ -25,7 +25,11 @@ public class Mission : Abstract, IMissionNotify {
 	private string id;
 	
 	public void SetActive(){
-		state = MissionStates.ACTIVE;
+		if(state!=MissionStates.ACTIVE){
+			state = MissionStates.ACTIVE;
+			MissionActivated();
+		}
+		state = MissionStates.ACTIVE;		
 	}
 	
 	public virtual void Restart(){
@@ -62,6 +66,12 @@ public class Mission : Abstract, IMissionNotify {
 	protected void MissionProgressChanged(){
 		for(int i=0;i<missionListeners.Count;i++){
 			((IMissionListener)missionListeners[i]).MissionProgressChanged(this);
+		}
+	}
+	
+	protected void MissionActivated(){
+		for(int i=0;i<missionListeners.Count;i++){
+			((IMissionListener)missionListeners[i]).MissionActivated(this);
 		}
 	}
 	

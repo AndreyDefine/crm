@@ -5,7 +5,6 @@ public class FermaMissionEmmitter : BaseMissionEmmitter, IMissionListener
 {
 	
 	private int priority=0;
-	
 	protected override int GetPriority ()
 	{
 		return priority;
@@ -60,6 +59,7 @@ public class FermaMissionEmmitter : BaseMissionEmmitter, IMissionListener
 		for (int i=0; i<missions.Length; i++) {
 			Mission missionPrefab = missions [i];
 			string id = missionPrefab.name;
+			missionPrefab.SetId(id);
 			if (!IsMissionFinished (id)) {
 				prefabKeyHashTable [missionPrefab] = id;
 				if (currentMissionsKeyData.ContainsKey (id)) {
@@ -80,32 +80,33 @@ public class FermaMissionEmmitter : BaseMissionEmmitter, IMissionListener
 			Slot slot = slots [i];
 			slot.Init ();
 		}
-		EmmitMissions(true);
-	}
-	
-	public override void LevelBegin ()
-	{
-		/*for(int i=0;i<thisLifeFinishedMissions.Count;i++){
-			Destroy(((Mission)thisLifeFinishedMissions[i]).gameObject);
-		}
-		thisLifeFinishedMissions.Clear();
-		if (GetCurrentMissions ().Count == 0) {
-			canEmmitMission = true;
-		}*/
+		EmmitMissions();
 	}
 		
-	public void EmmitMissions (bool force = false)
-	{
-		if(force||canEmmitMissions()){
-			Mission currentMission = null;
-			if(currentMissions.Count==0){//инициализируем текущую
+	private void TryToGetNextFromEmmitted(bool force = false){
+		if(GlobalOptions.gameState!=GameStates.GAME||!force&&IsTimeOut()){
+			return;
+		}
+		if(currentMissions.Count==0){//инициализируем текущую
 				if(emmittedMissionsPrefabs.Count>0){
 					Mission missionPrefab = (Mission)emmittedMissionsPrefabs [0];
-					currentMission = InstantiateMission (missionPrefab);
+					Mission currentMission = InstantiateMission (missionPrefab);
 					emmittedMissionsPrefabs.RemoveAt(0);
-				}else{
-					currentMission = GetOneMissionObject();	
-				}
+					currentMissions.Add(currentMission);
+					CurrentMissionsSerializer.SaveCurrentMissions (currentMissions, misionCurrentTag);//save
+				CurrentMissionsSerializer.SaveCurrentMissions (emmittedMissionsPrefabs, misionEmmittedTag);
+			}
+		}
+	}
+	public void EmmitMissions (bool force = false)
+	{
+		TryToGetNextFromEmmitted();
+		
+		if(force||canEmmitMissions()){
+			Mission currentMission = null;
+			TryToGetNextFromEmmitted(true);
+			if(currentMissions.Count==0){//инициализируем текущую
+				currentMission = GetOneMissionObject();	
 				if(currentMission!=null){
 					currentMissions.Add(currentMission);
 				}
@@ -125,9 +126,8 @@ public class FermaMissionEmmitter : BaseMissionEmmitter, IMissionListener
 			}
 			lastMissionEmmitTime = GlobalOptions.GetLongFromDateTime (System.DateTime.UtcNow);
 			MissionsUpdated();
-			Debug.LogWarning(currentMissions.Count);
-			Debug.LogWarning(emmittedMissionsPrefabs.Count);
 		}
+		Debug.LogWarning(currentMissions.Count);
 	}
 	
 	protected void MissionsUpdated(){
@@ -146,7 +146,7 @@ public class FermaMissionEmmitter : BaseMissionEmmitter, IMissionListener
 		return number;
 	}
 	
-	protected override bool canEmmitMissions ()
+	protected bool canEmmitMissions ()
 	{
 		long curTime = GlobalOptions.GetLongFromDateTime (System.DateTime.UtcNow);
 		return curTime - lastMissionEmmitTime > emmitPeriod;
@@ -157,19 +157,6 @@ public class FermaMissionEmmitter : BaseMissionEmmitter, IMissionListener
 		EmmitMissions();
 	}
 	
-	private Mission GetOneMissionObject ()
-	{
-		if(availableMissionsPrefabs.Count==0){
-			return null;
-		}
-		//int randomIndex = Random.Range (0, availableMissions.Count);
-		Mission missionPrefab = (Mission)availableMissionsPrefabs [0];
-		Mission mission = InstantiateMission (missionPrefab);
-		//CurrentMissionsSerializer.SaveCurrentMissions (currentMissions, misionCurrentTag);
-		availableMissionsPrefabs.Remove (missionPrefab);
-		return mission;
-	}
-	
 	public override ArrayList GetCurrentMissions ()
 	{
 		return currentMissions;
@@ -178,16 +165,6 @@ public class FermaMissionEmmitter : BaseMissionEmmitter, IMissionListener
 	public ArrayList GetAvailableMissionsPrefabs ()
 	{
 		return availableMissionsPrefabs;
-	}
-	
-	public void MissionFinished (Mission mission)
-	{
-		finishedMissionsNumber++;
-		SetMissionFinished (mission.GetId ());
-		currentMissions.Remove (mission);
-		thisLifeFinishedMissions.Add (mission);
-		CurrentMissionsSerializer.SaveCurrentMissions (currentMissions, misionCurrentTag);
-		CurrentMissionsSerializer.RemoveMissionData (mission);
 	}
 	
 	public void MissionProgressChanged (Mission mission)

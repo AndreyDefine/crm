@@ -12,9 +12,10 @@ public class BoostNotifier : BaseNotifier,IBoostListener
 		return boost;
 	}
 	
-	public override void DestroyNotifier ()
+	
+	protected override void OnDestroy ()
 	{
-		base.DestroyNotifier ();
+		base.OnDestroy ();
 		boost.RemoveBoostListener(this);
 	}
 	

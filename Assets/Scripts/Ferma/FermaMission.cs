@@ -15,9 +15,14 @@ public class FermaMission : GuiButtonBase {
 	private bool hasMission = true;
 	public DialogFermaBuySlot dialogFermaBuySlotPrefab;
 	DialogFermaBuySlot dialog = null;
+	
+	public DialogFermaMissionInfo dialogFermaMissionInfo;
+	DialogFermaMissionInfo dialogInfo = null;
 	MissionIco missionIco = null;
 	
 	private FermaMissions fermaMissions;
+	
+	Mission mission;
 	
 	public void SetFermaMissions(FermaMissions fermaMissions){
 		this.fermaMissions = fermaMissions;
@@ -58,6 +63,7 @@ public class FermaMission : GuiButtonBase {
 	}
 	
 	public void SetMission(Mission mission){
+		this.mission = mission;
 		hasMission = true;
 		emmitTime.gameObject.SetActiveRecursively(false);
 		GetComponent<tk2dSprite>().color = new Color(1f,1f,1f,1f);
@@ -111,6 +117,15 @@ public class FermaMission : GuiButtonBase {
 			dialog.singleTransform.localPosition = new Vector3(0f,0f,-0.5f);
 			dialog.singleTransform.position = new Vector3(0f,0f,dialog.singleTransform.position.z);
 			dialog.Show();
+		}
+		if(state == FermaMissionStates.OPENED&&hasMission){
+			dialogInfo = Instantiate(dialogFermaMissionInfo) as DialogFermaMissionInfo;
+			//ArrayList missionsToBuy = fermaMissions.GetFermaLocationPlace().missionEmmitter.GetAvailableNotBoughtMissionsPrefabs();
+			dialogInfo.SetMission(mission);
+			dialogInfo.singleTransform.parent = singleTransform;
+			dialogInfo.singleTransform.localPosition = new Vector3(0f,0f,-0.5f);
+			dialogInfo.singleTransform.position = new Vector3(0f,0f,dialogInfo.singleTransform.position.z);
+			dialogInfo.Show();
 		}
 	}
 	

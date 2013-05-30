@@ -1,20 +1,32 @@
 using UnityEngine;
 using System.Collections;
 
-public class GuiMissions : Abstract {
+public class GuiMissions : Abstract
+{
 
 	public GuiMission[] guiMissions;
 	
-	public void InitMissions(){
-		ArrayList missions = GlobalOptions.GetMissionEmmitters().GetThisLifeFinishedMissions();
-		missions.AddRange(GlobalOptions.GetMissionEmmitters().GetCurrentMissions());
-		
-		for(int i=0;i<missions.Count;i++){
-			guiMissions[i].gameObject.SetActiveRecursively(true);
-			guiMissions[i].SetMission((Mission)missions[i]);
+	public void InitMissions ()
+	{
+		BaseMissionEmmitter[] emmitters = GlobalOptions.GetMissionEmmitters ().missionEmmitters;
+		int j = 0;
+		for (int i=0; i<3; i++) {
+			Mission mission = null;
+			ArrayList currentMissions = emmitters [i].GetCurrentMissions ();
+			ArrayList thisLifeFinishedMissions = emmitters [i].GetThisLifeFinishedMissions ();
+			if (currentMissions.Count > 0) {
+				mission = currentMissions [0] as Mission;
+			} else if (thisLifeFinishedMissions.Count > 0) {
+				mission = thisLifeFinishedMissions [thisLifeFinishedMissions.Count - 1] as Mission;
+			}
+			if (mission != null) {
+				guiMissions [j].gameObject.SetActiveRecursively (true);
+				guiMissions [j].SetMission (mission);
+				j++;
+			}
 		}
-		for(int j=missions.Count;j<guiMissions.Length;j++){
-			guiMissions[j].gameObject.SetActiveRecursively(false);
+		for (; j<3; j++) {
+			guiMissions [j].gameObject.SetActiveRecursively (false);
 		}
 	}
 }

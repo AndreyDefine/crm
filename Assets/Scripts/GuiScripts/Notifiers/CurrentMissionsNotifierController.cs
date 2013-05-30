@@ -16,7 +16,9 @@ public class CurrentMissionsNotifierController : BaseNotifierController {
 		ArrayList missions = GlobalOptions.GetMissionEmmitters().GetCurrentMissions();
 		for(int i=0;i<missions.Count;i++){
 			Mission mission = (Mission)missions[i];
-			AddCurrentMissionNotifier(mission);
+			if(mission.GetState()==MissionStates.ACTIVE){
+				AddCurrentMissionNotifier(mission);
+			}
 		}
 	}
 	

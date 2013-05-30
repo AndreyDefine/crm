@@ -46,16 +46,27 @@ public class BaseOneNumberMission : Mission {
 	
 	public override string Serialize ()
 	{
+		string str = "";
 		if(!oneLife){
-			return currentNumber.ToString();
+			str+=currentNumber.ToString();
+		}else{
+			str+="0";
 		}
-		return "0";
+		str+="|";
+		str+=GetState()==MissionStates.ACTIVE?"1":"0";
+		return str;
 	}
 	
 	public override void Unserialize (string data)
 	{
+		char[] splitData = new char[] { '|' };
+		string[] numbers = data.Split (splitData);
 		if(!oneLife){
-			currentNumber = int.Parse(data);
+			currentNumber = int.Parse(numbers[0]);
+		}
+		int active = int.Parse(numbers[1]);
+		if(active==1){
+			state = MissionStates.ACTIVE;
 		}
 	}
 	

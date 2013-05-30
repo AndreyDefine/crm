@@ -14,9 +14,9 @@ public class CurrentMissionNotifier : BaseNotifier, IMissionListener
 		complete.active = false;	
 	}
 		
-	public override void DestroyNotifier ()
+	protected override void OnDestroy ()
 	{
-		base.DestroyNotifier();
+		base.OnDestroy ();
 		mission.RemoveMissionListener(this);
 	}
 	
@@ -28,6 +28,11 @@ public class CurrentMissionNotifier : BaseNotifier, IMissionListener
 		}else if(!missionIconPlace.animation.isPlaying){
 			missionIconPlace.animation.Play("Attention");
 		}
+	}
+	
+	public void MissionActivated (Mission mission)
+	{
+		//do nothing
 	}
 	
 	private void SetText(string text){
