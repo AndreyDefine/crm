@@ -200,11 +200,7 @@ public class MissionEmmitters : Abstract, IMissionEmmitter, IMissionNotify
 	}
 	
 	public void SetFermaMissionEmmitter(BaseMissionEmmitter missionEmmitter){
-		if(missionEmmitters[0]!=null&&missionEmmitters[0]!=missionEmmitter){
-			Destroy(missionEmmitters[0].gameObject);
-		}
 		missionEmmitters[0] = missionEmmitter;
-		missionEmmitter.singleTransform.parent = singleTransform;
 		begin = 0;
 	}
 	
