@@ -2,6 +2,7 @@ using UnityEngine;
 using System.Collections;
 
 public class Preloader : Abstract {
+	public static bool clearAll = false;
 	public float extraDelay;
 	public GameObject GuiPersantage;
 	public bool ResetAllSettings;
@@ -16,6 +17,10 @@ public class Preloader : Abstract {
 	private string levelName = "E00L01";
 	
     IEnumerator Start() {
+		if(clearAll){
+			PlayerPrefs.DeleteAll();
+			clearAll = false;
+		}
 		if(ResetAllSettings)
 		{
 			PlayerPrefs.DeleteAll();

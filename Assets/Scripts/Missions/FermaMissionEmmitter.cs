@@ -127,7 +127,6 @@ public class FermaMissionEmmitter : BaseMissionEmmitter, IMissionListener
 			lastMissionEmmitTime = GlobalOptions.GetLongFromDateTime (System.DateTime.UtcNow);
 			MissionsUpdated();
 		}
-		Debug.LogWarning(currentMissions.Count);
 	}
 	
 	protected void MissionsUpdated(){
