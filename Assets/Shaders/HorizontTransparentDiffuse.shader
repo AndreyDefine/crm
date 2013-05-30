@@ -32,12 +32,18 @@ SubShader
 			v2f vert (appdata_full v)
 			{
 				float _Dist=80;
+				float nechuvstv=0.5;
 				float4	_QOffset=float4(10,-12,0,0);
 				
 			    v2f o;
 			    float4 vPos = mul (UNITY_MATRIX_MV, v.vertex);
 			    float zOff = vPos.z/_Dist;
-			    vPos += _QOffset*zOff*zOff;
+			    
+			    if(zOff<-nechuvstv)
+			    {
+			    	zOff+=nechuvstv;
+			   		vPos += _QOffset*zOff*zOff;
+			    }
 			    
 			    o.pos = mul (UNITY_MATRIX_P, vPos);
 			    o.uv = v.texcoord;
