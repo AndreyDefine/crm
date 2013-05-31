@@ -2,9 +2,6 @@ using UnityEngine;
 using System.Collections;
 
 public class AbstractFactory : Abstract {
-	public Vector3 initialPos;
-	public bool MakeObstacleSet=false;
-
 	protected Vector3 oldObjectPos;
 	
 	protected int numberOfTerrains;
@@ -12,6 +9,8 @@ public class AbstractFactory : Abstract {
 	protected float drawnPerspective;
 	protected GameObject Player;
 	protected float terrainLength;
+	
+	protected Vector3 initialPos=new Vector3(0,0,0);
 	
 	// Use this for initialization
 	void Start () {		

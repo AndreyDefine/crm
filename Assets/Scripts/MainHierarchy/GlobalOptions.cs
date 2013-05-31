@@ -79,6 +79,8 @@ public class GlobalOptions {
         }
     }
 	
+	private static ScreenLoader screenLoader;
+	
 	private static GameObject player=null;
 	private static Player playerScript;
 	
@@ -192,6 +194,15 @@ public class GlobalOptions {
 			result.x=-invector.x;
 		}
 		return result;
+	}
+	
+	public static ScreenLoader GetScreenLoader()
+	{
+		if(!screenLoader)
+		{
+			screenLoader=GameObject.Find("/ScreenLoader").GetComponent("ScreenLoader")as ScreenLoader;
+		}
+		return screenLoader;
 	}
 	
 	public static GameObject GetPlayer(){

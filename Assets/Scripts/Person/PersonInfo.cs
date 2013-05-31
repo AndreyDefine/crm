@@ -36,6 +36,16 @@ public class PersonInfo {
         }
     }
 	
+	public static int post {
+        get {
+            return PlayerPrefs.GetInt(TAG+"post",0);
+        }
+    }
+	
+	public static void AddPost(int addPost){
+		PlayerPrefs.SetInt(TAG+"post",post+addPost);
+	}
+	
 	public static void AddGold(int addGold){
 		PlayerPrefs.SetInt(TAG+"gold",gold+addGold);
 		GlobalGold[] globalGold = GameObject.FindObjectsOfType(typeof(GlobalGold)) as GlobalGold[];

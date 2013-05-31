@@ -3,8 +3,9 @@ using System.Collections;
 
 public class WorldFactory : AbstractFactory,ScreenControllerToShow {	
 	
+	public bool MakeObstacleSet=false;
+	public bool MakeTerrains=false;
 	public bool FlagAddExtraObjectsInPull;
-	public int numOfTrees;
 	public string PreloadTerrains="";
 	public string RoadTerrains="";
 	public GameObject debugPathIndicator;
@@ -620,6 +621,16 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 			
 		//set position & rotation
 		newObject.transform.position=marker.position;
+		
+		MarkerTag markerTag=newObject.GetComponent<MarkerTag>();
+		if(markerTag)
+		{
+			markerTag.ApplyRotation(marker.rotation,interrainTag.singleTransform.rotation);
+		}
+		else
+		{
+			newObject.transform.rotation=marker.rotation;
+		}
 		
 		if(interrainTag){
 			interrainTag.PushToAllElements(newObject);

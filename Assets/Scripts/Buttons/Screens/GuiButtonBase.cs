@@ -4,7 +4,7 @@ using System.Collections;
 public class GuiButtonBase : SpriteTouch {
 	private Vector3 initScale;
 	
-	protected virtual void Start() {
+	protected override void Start() {
         init();
 	}
 	

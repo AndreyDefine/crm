@@ -334,17 +334,6 @@ public class GuiLayerInitializer : Abstract {
 	
 	public void AddPostal(){
 		GlobalOptions.GetMissionEmmitters().NotifyPostCollected(1);
-		ShowPostal();
-	}
-	
-	private void ShowPostal()
-	{
-		//Postal.active=true;
-	}
-	
-	private void HidePostal()
-	{
-		//Postal.active=false;
 	}
 	
 	public void AddMeters(float inMeters){
@@ -369,12 +358,20 @@ public class GuiLayerInitializer : Abstract {
 	private void MakeGameOver()
 	{
 		//gameover
-		if(Time.time-GameOverTime>3)
+		if(Time.time-GameOverTime>2)
 		{
 			flagGameOver=false;
 			ScreenLoader screenLoader;
-			screenLoader=GameObject.Find("/ScreenLoader").GetComponent("ScreenLoader")as ScreenLoader;
-			screenLoader.LoadScreenByName("ScreenGameOver");
+			screenLoader=GlobalOptions.GetScreenLoader();
+			//есть почта
+			if(PersonInfo.post<=0)
+			{
+				screenLoader.LoadScreenByName("ScreenGameOver");
+			}
+			else
+			{
+				screenLoader.LoadScreenByName("ScreenPost");
+			}
 		}
 	}
 	
@@ -385,7 +382,7 @@ public class GuiLayerInitializer : Abstract {
 			GlobalOptions.playerStates=PlayerStates.IDLE;
 			GlobalOptions.gameState=GameStates.LEVEL_COPLETE;
 			ScreenLoader screenLoader;
-			screenLoader=GameObject.Find("/ScreenLoader").GetComponent("ScreenLoader")as ScreenLoader;
+			screenLoader=GlobalOptions.GetScreenLoader();
 			screenLoader.LoadScreenByName("ScreenYouWon");
 		}
 	}
