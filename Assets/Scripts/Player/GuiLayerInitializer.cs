@@ -20,6 +20,8 @@ public class GuiLayerInitializer : Abstract {
 	
 	public Points points;
 	
+	public X multiplier;
+	
 	public UpNotifierController upNotifierController;
 	
 	public DownNotifierController downNotifierController;
@@ -53,6 +55,8 @@ public class GuiLayerInitializer : Abstract {
 	private bool flagHeadStars;
 	private bool flagPostal,flagGameOver;
 	private float ScoreScaleTime,scoreTime,headStarsTime,GameOverTime, addToLifeTime;
+	private bool flagX2=false;
+	int curX2 = 0;
 	
 	float stopTime=0,startstopTime=0;//время остановки
 	
@@ -103,6 +107,10 @@ public class GuiLayerInitializer : Abstract {
 		AddToLife(0,null);
 		GlobalOptions.SetScoreScale(1);
 		
+		flagX2 = false;
+		//simply set X
+		SetMultiplier();
+		
 		SetMoney(GlobalOptions.GetLevelStartMoney());
 		SetPoints (GlobalOptions.GetLevelStartPoints());
 		pause.active = true;
@@ -123,6 +131,7 @@ public class GuiLayerInitializer : Abstract {
 			
 			AddScoreForVelocity();
 			AddLifeForVelocity();
+			SetMultiplier();//Пока так.
 					
 			//уменьшаем звёздочки надо головой
 			if(flagHeadStars)
@@ -274,16 +283,30 @@ public class GuiLayerInitializer : Abstract {
 		this.money.SetMoney(money);
 	}
 	
+	public void SetMultiplier()
+	{
+		int m = PersonInfo.personLevel;
+		if(flagX2){
+			m*=2;
+		}
+		if(curX2!=m){
+			curX2 = m;
+			this.multiplier.SetValue(m);
+			GlobalOptions.SetScoreScale(m);
+		}
+	}
+	
 	public void AddX2(Boost boostPrefab)
 	{
 		GlobalOptions.GetMissionEmmitters().NotifyX2Collected(1);
 		boostNotifierController.AddBoostNotifier(boostPrefab);
-		//PosScoreScale();
-		GlobalOptions.SetScoreScale(2);
+		flagX2 = true;
+		SetMultiplier();
 	}
 	
 	public void StopX2(){
-		GlobalOptions.SetScoreScale(1);
+		flagX2 = false;
+		SetMultiplier();
 	}
 	
 	public void AddVodka(Boost boostPrefab)

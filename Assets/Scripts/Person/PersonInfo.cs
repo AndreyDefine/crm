@@ -4,7 +4,7 @@ using System.Collections;
 public class PersonInfo {
 	private static string TAG = "personal_info_";
 	
-	public static float personLevel{
+	public static int personLevel{
 		get {
             return GlobalOptions.GetMissionEmmitters().GetCountFinishedMissions()/3+1;
         }
