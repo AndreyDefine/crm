@@ -8,7 +8,7 @@ public class GuiButtonShowScreen : GuiButtonBase {
 	
 	protected override void Start() {
         init();
-		screenLoader=GameObject.Find("/ScreenLoader").GetComponent("ScreenLoader")as ScreenLoader;
+		screenLoader=GlobalOptions.GetScreenLoader();
 	}
 	
 	override protected void MakeOnTouch(){

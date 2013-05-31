@@ -52,8 +52,6 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	private CharacterMarioC characterMarioC;
 	
-	private float posx;
-	
 	private bool magnitFlag=false;
 	
 	private bool flagPosilka=false;
@@ -103,9 +101,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		oneMeterz=0;
 		allMeters=0;
 		flagPosilka=false;
-		
-		posx=0;
-		
+				
 		accelPriority=1;
 		swallowAcceles=false;
 		
@@ -132,7 +128,6 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		allMeters=0;
 		flagPosilka=false;
 		
-		posx=0;
 		UnMakePropeller();
 		UnMakeMagnit();
 		UnMakeVodka();
@@ -409,22 +404,6 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 			GlobalOptions.playerVelocity+=acceleration*Time.deltaTime;
 		}
 		Vector3 smex=new Vector3(0,0,GetRealVelocity());
-		/*Vector3 oldPos=Vector3.zero;
-		if(GlobalOptions.flagOnlyFizik)
-		{
-			oldPos=Character.transform.position;
-		}
-		else
-		{
-			oldPos=singleTransform.position;
-		}*/
-		//centerXandYandAngle=worldFactoryScript.GetXandYandAngleSmexForZ(smex);	
-		
-		Transform curtransform=Character.transform;
-		
-		posx=curtransform.localPosition.x;
-		
-		//float centerx=0;
 		
 		//Ezxtra test out of bounds
 		if(typeOfControl==0||typeOfControl==1)
@@ -444,27 +423,6 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 			}
 		}	
 		
-		
-		//accelerometer
-		/*if(typeOfControl==2)
-		{
-			xSmexcontrol1+=inmoveForce*mnoshOfForce*Time.deltaTime;
-			posx=centerx;
-			xSmexcontrol1=xSmexcontrol1>=meshPath?meshPath:xSmexcontrol1;
-			xSmexcontrol1=xSmexcontrol1<=-meshPath?-meshPath:xSmexcontrol1;
-			posx+=xSmexcontrol1;
-		}*/
-			
-			
-		///////////
-		//noangle
-		/*
-		if(typeOfControl==0||typeOfControl==1||typeOfControl==2)
-		{
-			float angle=GlobalOptions.GetAngleOfRotation(oldPos,centerXandYandAngle);
-			
-			RotatePlayer(angle);
-		}*/
 		
 		if(GlobalOptions.flagOnlyFizik)
 		{
@@ -559,9 +517,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		bearAnimation.ResumeAnimation();
 		GlobalOptions.whereToBuild=new Vector3(0,0,1);
 		RotatePlayer(0);	
-		singleTransform.position=PlayerFirstPos;
-		Debug.Log (PlayerFirstPos);
-		
+		singleTransform.position=PlayerFirstPos;		
 		Character.transform.localPosition=new Vector3(0,0,20);
 		walkingBear.transform.localPosition=new Vector3(0,0,0);
 		//PlaceBearToControl();

@@ -7,6 +7,7 @@ public class PostalEnemy : AbstractEnemy {
 	
 	public override void OnHit(Collider other)
 	{
+		PersonInfo.AddPost(1);
 		GuiLayer.AddPostal();
 		PlayClipSound();
 		MakeInactive();

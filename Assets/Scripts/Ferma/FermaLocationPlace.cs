@@ -110,7 +110,7 @@ public class FermaLocationPlace : Abstract {
 			play = false;
 			string screenToShow="ScreenGame";
 			ScreenLoader screenLoader;
-			screenLoader=GameObject.Find("/ScreenLoader").GetComponent("ScreenLoader")as ScreenLoader;
+			screenLoader=GlobalOptions.GetScreenLoader();
 			GlobalOptions.loadingLevel=levelToLoad;
 			screenLoader.LoadScreenByName(screenToShow);
 		}
