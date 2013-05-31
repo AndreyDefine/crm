@@ -51,7 +51,6 @@ public class GuiLayerInitializer : Abstract {
 	private float curStarPos=250;
 	
 	private Player playerScript;
-	private int scoreScale;
 	private bool flagHeadStars;
 	private bool flagPostal,flagGameOver;
 	private float ScoreScaleTime,scoreTime,headStarsTime,GameOverTime, addToLifeTime;
@@ -84,8 +83,6 @@ public class GuiLayerInitializer : Abstract {
 		
 		playerScript=GlobalOptions.GetPlayer().GetComponent("Player")as Player;
 
-		scoreScale=GlobalOptions.GetScoreScale();
-		
 		InitSprites();
 		Restart();
 	}
@@ -105,8 +102,7 @@ public class GuiLayerInitializer : Abstract {
 		addToLifeTime=Time.time;
 		StopVodka();
 		AddToLife(0,null);
-		GlobalOptions.SetScoreScale(1);
-		
+	
 		flagX2 = false;
 		//simply set X
 		SetMultiplier();
@@ -246,7 +242,7 @@ public class GuiLayerInitializer : Abstract {
 		if(Time.time-scoreTime>=playerScript.GetRealVelocityWithNoDeltaTime()/1000)
 		{
 			//так редко меняем счёт
-			AddPoints(11*scoreScale);
+			AddPoints(GlobalOptions.GetScoreScale());
 			scoreTime=Time.time;
 		}
 	}

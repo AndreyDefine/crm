@@ -1,8 +1,9 @@
 using UnityEngine;
 using System.Collections;
 
-public class FermaAchievementMission : GuiButtonBase {
+public class GuiMissionPlace : GuiButtonBase {
 	
+	public GameObject complete;
 	public Abstract missionIcoPlace;
 	public DialogFermaMissionInfo dialogFermaMissionInfo;
 	DialogFermaMissionInfo dialogInfo = null;
@@ -11,6 +12,11 @@ public class FermaAchievementMission : GuiButtonBase {
 	bool hasMission = false;
 	public void SetMission(Mission mission){
 		this.mission = mission;
+		if(mission.GetState()==MissionStates.FINISHED){
+			complete.active = true;
+		}else{
+			complete.active = false;	
+		}
 		hasMission = true;
 		missionIco = Instantiate(mission.iconPrefab) as MissionIco;
 		missionIco.singleTransform.parent = missionIcoPlace.singleTransform;

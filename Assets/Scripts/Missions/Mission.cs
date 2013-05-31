@@ -57,6 +57,8 @@ public class Mission : Abstract, IMissionNotify {
 	}
 	
 	protected void MissionFinished(){
+		PersonInfo.AddCoins(coinAward);
+		PersonInfo.AddGold(goldAward);
 		this.state = MissionStates.FINISHED;
 		for(int i=0;i<missionListeners.Count;i++){
 			((IMissionListener)missionListeners[i]).MissionFinished(this);
