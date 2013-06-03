@@ -87,6 +87,10 @@ public class AbstractElementFactory: Abstract{
 	public void AddExtraObjectInPullWithName(string instr){
 		GameObject newTerrain;
 		int i;
+		if(terrain1==null&&preloadNames!="")
+		{
+			parseTerrainNames();
+		}
 		for(i=0;i<terrain1.Length;i++)
 		{
 			//нашли
@@ -160,6 +164,10 @@ public class AbstractElementFactory: Abstract{
 	//add all objects into pull
 	public virtual void PreloadPullObjects()
 	{
+		if(terrain1==null&&preloadNames!="")
+		{
+			parseTerrainNames();
+		}
 		GameObject newTerrain=null;
 		for (int i=0; i<terrain1.Length;i++){
 			newTerrain	= Instantiate(Resources.Load(pathInResources+"/"+terrain1[i])) as GameObject;

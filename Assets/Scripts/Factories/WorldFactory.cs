@@ -169,7 +169,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		
 		//really need this!!!
 		//obstacleSetElementFactory.PreloadPullObjects();
-		//boostElementFactory.PreloadPullObjects();
+		boostElementFactory.PreloadPullObjects();
 	}
 	
 	public override void ReStart(){
@@ -459,7 +459,6 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 			    Container2.rotation=Container.rotation;
 				
 				Container2.name=Container.name;
-				Debug.Log ("Container2=vspObject.transform;");
 			}
 			else
 			{
@@ -547,12 +546,29 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		if(interrainTag){
 			interrainTag.PushToAllElements(newObject);
 		}
+		
+		if(MakeTerrains)
+		{
+			GameObject vspObject;
+			vspObject=new GameObject();
+			Transform vspTerrain=vspObject.transform;
+				
+			vspTerrain.parent=marker.parent;
+			vspTerrain.position=marker.position;
+			vspTerrain.rotation=marker.rotation;
+			
+			marker.parent=null;
+				
+			vspTerrain.name=marker.name;
+		}
 	}
 	
 	private void addOneBoostAtMarker(Transform marker,Transform inparent,TerrainTag interrainTag){
 		GameObject newObject;
-		
-		newObject = boostElementFactory.GetNewObject();
+		do
+		{
+			newObject = boostElementFactory.GetNewObject();
+		}while(newObject.name=="PostalContainer"&&PersonInfo.post>2);
 		
 		//set position & rotation
 		newObject.transform.position=marker.position;
@@ -611,6 +627,21 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	
 		if(interrainTag){
 			interrainTag.PushToAllElements(newObject);
+		}
+		
+		if(MakeTerrains)
+		{
+			GameObject vspObject;
+			vspObject=new GameObject();
+			Transform vspTerrain=vspObject.transform;
+				
+			vspTerrain.parent=marker.parent;
+			vspTerrain.position=marker.position;
+			vspTerrain.rotation=marker.rotation;
+			
+			marker.parent=null;
+				
+			vspTerrain.name=marker.name;
 		}
 	}
 	
