@@ -24,6 +24,7 @@ public class FermaNight : SpriteTouch {
 	
 	public void TurnOffNight(){
 		turningOff = true;
+		getTouches = false;
 		curAlpha = nightAlpha;
 	}
 	
