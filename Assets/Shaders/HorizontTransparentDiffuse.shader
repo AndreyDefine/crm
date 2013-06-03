@@ -32,12 +32,16 @@ SubShader
 			v2f vert (appdata_full v)
 			{
 				float _Dist=80;
-				float nechuvstv=0.5;
-				float4	_QOffset=float4(10,-12,0,0);
+				float nechuvstv=0.40;
 				
 			    v2f o;
 			    float4 vPos = mul (UNITY_MATRIX_MV, v.vertex);
+			    
+			    float xsmeh=sin(_WorldSpaceCameraPos.z/120);
+			 			    
 			    float zOff = vPos.z/_Dist;
+			    
+			    float4	_QOffset=float4(14*xsmeh,-12,0,0);
 			    
 			    if(zOff<-nechuvstv)
 			    {
