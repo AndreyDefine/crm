@@ -150,7 +150,6 @@ public class CharacterMarioC : Abstract {
 				
 				if(jumping&&downing)
 				{
-					Debug.Log ("GlobalOptions.playerStates=PlayerStates.DOWN;");
 					downing=false;
 					GlobalOptions.playerStates=PlayerStates.DOWN;
 				}
