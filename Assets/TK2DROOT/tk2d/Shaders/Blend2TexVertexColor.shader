@@ -38,7 +38,7 @@ Shader "tk2d/Blend2TexVertexColor"
 			{
 				float4 vertex : POSITION;
 				fixed4 color : COLOR;
-				float4 texcoord01 : TEXCOORD0;
+				half4 texcoord01 : TEXCOORD0;
 			};
 
 			v2f_vctt vert_vctt(vin_vctt v)

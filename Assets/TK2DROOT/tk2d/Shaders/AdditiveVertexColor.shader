@@ -36,7 +36,7 @@ Shader "tk2d/AdditiveVertexColor"
 			{
 				float4 vertex : POSITION;
 				fixed4 color : COLOR;
-				float2 texcoord : TEXCOORD0;
+				half2 texcoord : TEXCOORD0;
 			};
 
 			v2f_vct vert_vct(vin_vct v)

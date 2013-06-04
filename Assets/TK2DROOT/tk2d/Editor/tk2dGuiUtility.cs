@@ -4,6 +4,18 @@ using System.Collections.Generic;
 
 public static class tk2dGuiUtility  
 {
+	public static bool HasActivePositionHandle { get { return activePositionHandleId != 0; } }
+	public static Vector2 ActiveHandlePosition { get { return activePositionHandlePosition; } }
+	
+	static int activePositionHandleId = 0;
+	static Vector2 activePositionHandlePosition = Vector2.zero;
+	
+	public static void SetPositionHandleValue(int id, Vector2 val)
+	{
+		if (id == activePositionHandleId)
+			activePositionHandlePosition = val;
+	}
+	
 	public static Vector2 PositionHandle(int id, Vector2 position, float size, Color inactiveColor, Color activeColor)
 	{
 		KeyCode discardKeyCode = KeyCode.None;
@@ -22,6 +34,7 @@ public static class tk2dGuiUtility
 			{
 				if (rect.Contains(Event.current.mousePosition))
 				{
+					activePositionHandleId = id;
 					GUIUtility.hotControl = controlID;
 					Event.current.Use();
 				}
@@ -42,6 +55,7 @@ public static class tk2dGuiUtility
 			{
 				if (GUIUtility.hotControl == controlID)
 				{
+					activePositionHandleId = 0;
 					GUIUtility.hotControl = 0;
 					Event.current.Use();
 				}
@@ -55,6 +69,7 @@ public static class tk2dGuiUtility
 					keyCode = Event.current.keyCode;
 					if (GUIUtility.hotControl == controlID)
 					{
+						activePositionHandleId = 0;
 						GUIUtility.hotControl = 0;
 						Event.current.Use();
 					}
@@ -148,6 +163,60 @@ public static class tk2dGuiUtility
 		
 		return buttonPressed;
 	}
+
+	public enum DragDirection
+	{
+		Horizontal,
+	}
+	// Size is the offset into the rect to draw the DragableHandle
+	const float resizeBarHotSpotSize = 2.0f;
+	public static float DragableHandle(int id, Rect windowRect, float offset, DragDirection direction)
+	{
+		int controlID = GUIUtility.GetControlID(id, FocusType.Passive);
+
+		Vector2 positionFilter = Vector2.zero;
+		Rect controlRect = windowRect;
+		switch (direction)
+		{
+			case DragDirection.Horizontal: 
+				controlRect = new Rect(controlRect.x + offset - resizeBarHotSpotSize, 
+									   controlRect.y, 
+									   resizeBarHotSpotSize * 2 + 1.0f, 
+									   controlRect.height); 
+				positionFilter.x = 1.0f;
+				break;
+		}
+		EditorGUIUtility.AddCursorRect(controlRect, MouseCursor.ResizeHorizontal);
+
+		if (GUIUtility.hotControl == 0)
+		{
+			if (Event.current.type == EventType.MouseDown && controlRect.Contains(Event.current.mousePosition))
+			{
+				GUIUtility.hotControl = controlID;
+				Event.current.Use();
+			}
+		}
+		else if (GUIUtility.hotControl == controlID)
+		{
+			if (Event.current.type == EventType.MouseDrag)
+			{
+				Vector2 mousePosition = Event.current.mousePosition;
+				Vector2 handleOffset = new Vector2((mousePosition.x - windowRect.x) * positionFilter.x, 
+												   (mousePosition.y - windowRect.y) * positionFilter.y);
+				offset = handleOffset.x + handleOffset.y;
+				HandleUtility.Repaint();
+			}
+			else if (Event.current.type == EventType.MouseUp)
+			{
+				GUIUtility.hotControl = 0;
+			}
+		}
+
+		// Debug draw
+		// GUI.Box(controlRect, "");
+
+		return offset;
+	}
 	
 	private static bool backupGuiChangedValue = false;
 	public static void BeginChangeCheck()
@@ -161,5 +230,43 @@ public static class tk2dGuiUtility
 		bool hasChanged = GUI.changed;
 		GUI.changed |= backupGuiChangedValue;
 		return hasChanged;
+	}
+
+
+	public static string PlatformPopup(tk2dSystem system, string label, string platform)
+	{
+		if (system == null)
+			return label;
+
+		int selectedIndex = -1;
+		string[] platformNames = new string[system.assetPlatforms.Length];
+
+		for (int i = 0; i < system.assetPlatforms.Length; ++i)
+		{
+			platformNames[i] = system.assetPlatforms[i].name;
+			if (platformNames[i] == platform) selectedIndex = i;
+		}
+
+		selectedIndex = EditorGUILayout.Popup(label, selectedIndex, platformNames);
+		if (selectedIndex == -1) return "";
+		else return platformNames[selectedIndex];
+	}
+
+	public static string SaveFileInProject(string title, string directory, string filename, string ext)
+	{
+		string path = EditorUtility.SaveFilePanel(title, directory, filename, ext);
+		if (path.Length == 0) // cancelled
+			return "";
+		string cwd = System.IO.Directory.GetCurrentDirectory().Replace("\\","/") + "/assets/";
+		if (path.ToLower().IndexOf(cwd.ToLower()) != 0)
+		{
+			path = "";
+			EditorUtility.DisplayDialog(title, "Assets must be saved inside the Assets folder", "Ok");
+		}
+		else 
+		{
+			path = path.Substring(cwd.Length - "/assets".Length);
+		}
+		return path;
 	}
 }

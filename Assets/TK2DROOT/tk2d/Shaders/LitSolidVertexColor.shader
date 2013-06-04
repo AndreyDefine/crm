@@ -14,7 +14,7 @@ Shader "tk2d/LitSolidVertexColor"
 		CGPROGRAM
 		#pragma surface surf Lambert
 		struct Input {
-			float2 uv_MainTex;
+			half2 uv_MainTex;
 			fixed4 color : COLOR;
 		};
 		sampler2D _MainTex;
