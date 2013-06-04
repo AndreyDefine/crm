@@ -21,7 +21,7 @@ public class GuiMissionPlace : GuiButtonBase {
 		missionIco = Instantiate(mission.iconPrefab) as MissionIco;
 		missionIco.singleTransform.parent = missionIcoPlace.singleTransform;
 		missionIco.singleTransform.localScale = new Vector3(1f,1f,1f);//tk2d bug?
-		missionIco.singleTransform.localPosition = new Vector3(0f,0f,-0.1f);
+		missionIco.singleTransform.localPosition = new Vector3(0f,0f,-0.01f);
 	}
 	
 	protected override void MakeOnTouch ()
