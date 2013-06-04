@@ -14,6 +14,8 @@ namespace tk2dEditor.SpriteCollectionEditor
 			Collider
 		}
 		
+		int textureBorderPixels = 16;
+		
 		Mode mode = Mode.Texture;
 		Vector2 textureScrollPos = new Vector2(0.0f, 0.0f);
 		bool drawColliderNormals = false;
@@ -49,6 +51,15 @@ namespace tk2dEditor.SpriteCollectionEditor
 		}
 		SpriteCollectionProxy SpriteCollection { get { return host.SpriteCollection; } }
 		
+		public void SetMode(Mode mode)
+		{
+			if (this.mode != mode)
+			{
+				this.mode = mode;
+				HandleUtility.Repaint();
+			}
+		}
+
 		Vector2 ClosestPointOnLine(Vector2 p, Vector2 p1, Vector2 p2)
 		{
 			float magSq = (p2 - p1).sqrMagnitude;
@@ -64,6 +75,9 @@ namespace tk2dEditor.SpriteCollectionEditor
 		
 		void DrawPolygonColliderEditor(Rect r, ref tk2dSpriteColliderIsland[] islands, Texture2D tex, bool forceClosed)
 		{
+			Vector2 origin = new Vector2(r.x, r.y);
+			Vector3 origin3 = new Vector3(r.x, r.y, 0);
+			
 			// Sanitize
 			if (islands == null || islands.Length == 0 ||
 				!islands[0].IsValid())
@@ -143,12 +157,13 @@ namespace tk2dEditor.SpriteCollectionEditor
 					
 					if (insertPoint)
 					{
-						Vector2 closestPointToCursor = ClosestPointOnLine(Event.current.mousePosition, ov * editorDisplayScale, v * editorDisplayScale);
-						float lengthSq = (closestPointToCursor - Event.current.mousePosition).sqrMagnitude;
+						Vector2 localMousePosition = (Event.current.mousePosition - origin) / editorDisplayScale;
+						Vector2 closestPointToCursor = ClosestPointOnLine(localMousePosition, ov, v);
+						float lengthSq = (closestPointToCursor - localMousePosition).sqrMagnitude;
 						if (lengthSq < closestDistanceSq)
 						{
 							closestDistanceSq = lengthSq;
-							closestPoint = (closestPointToCursor) / editorDisplayScale;
+							closestPoint = closestPointToCursor;
 							closestPreviousPoint = i;
 						}
 					}
@@ -157,11 +172,11 @@ namespace tk2dEditor.SpriteCollectionEditor
 					{
 						Vector2 l = (ov - v).normalized;
 						Vector2 n = new Vector2(l.y, -l.x);
-						Vector2 c = (v + ov) * 0.5f * editorDisplayScale;
+						Vector2 c = (v + ov) * 0.5f * editorDisplayScale + origin;
 						Handles.DrawLine(c, c + n * 16.0f);
 					}
 					
-					Handles.DrawLine(v * editorDisplayScale, ov * editorDisplayScale);
+					Handles.DrawLine(v * editorDisplayScale + origin, ov * editorDisplayScale + origin);
 					ov = v;
 				}
 				Handles.color = previousHandleColor;
@@ -182,7 +197,8 @@ namespace tk2dEditor.SpriteCollectionEditor
 				{
 					Vector3 cp = island.points[i];
 					KeyCode keyCode = KeyCode.None;
-					cp = tk2dGuiUtility.PositionHandle(16433 + i, cp * editorDisplayScale, 4.0f, handleInactiveColor, handleActiveColor, out keyCode) / editorDisplayScale;
+					int id = 16433 + i;
+					cp = (tk2dGuiUtility.PositionHandle(id, cp * editorDisplayScale + origin3, 4.0f, handleInactiveColor, handleActiveColor, out keyCode) - origin) / editorDisplayScale;
 					
 					if (keyCode == KeyCode.Backspace || keyCode == KeyCode.Delete)
 					{
@@ -210,6 +226,8 @@ namespace tk2dEditor.SpriteCollectionEditor
 					// constrain
 					cp.x = Mathf.Clamp(cp.x, 0.0f, tex.width);
 					cp.y = Mathf.Clamp(cp.y, 0.0f, tex.height);
+
+					tk2dGuiUtility.SetPositionHandleValue(id, new Vector2(cp.x, cp.y));
 					
 					island.points[i] = cp;
 				}
@@ -256,6 +274,8 @@ namespace tk2dEditor.SpriteCollectionEditor
 		
 		void DrawCustomBoxColliderEditor(Rect r, tk2dSpriteCollectionDefinition param, Texture2D tex)
 		{
+			Vector2 origin = new Vector2(r.x, r.y);
+			
 			// sanitize
 			if (param.boxColliderMin == Vector2.zero && param.boxColliderMax == Vector2.zero)
 			{
@@ -263,10 +283,10 @@ namespace tk2dEditor.SpriteCollectionEditor
 			}
 			
 			Vector3[] pt = new Vector3[] {
-				new Vector3(param.boxColliderMin.x * editorDisplayScale, param.boxColliderMin.y * editorDisplayScale, 0.0f),
-				new Vector3(param.boxColliderMax.x * editorDisplayScale, param.boxColliderMin.y * editorDisplayScale, 0.0f),
-				new Vector3(param.boxColliderMax.x * editorDisplayScale, param.boxColliderMax.y * editorDisplayScale, 0.0f),
-				new Vector3(param.boxColliderMin.x * editorDisplayScale, param.boxColliderMax.y * editorDisplayScale, 0.0f),
+				new Vector3(param.boxColliderMin.x * editorDisplayScale + origin.x, param.boxColliderMin.y * editorDisplayScale + origin.y, 0.0f),
+				new Vector3(param.boxColliderMax.x * editorDisplayScale + origin.x, param.boxColliderMin.y * editorDisplayScale + origin.y, 0.0f),
+				new Vector3(param.boxColliderMax.x * editorDisplayScale + origin.x, param.boxColliderMax.y * editorDisplayScale + origin.y, 0.0f),
+				new Vector3(param.boxColliderMin.x * editorDisplayScale + origin.x, param.boxColliderMax.y * editorDisplayScale + origin.y, 0.0f),
 			};
 			Color32 transparentColor = handleInactiveColor;
 			transparentColor.a = 10;
@@ -275,27 +295,29 @@ namespace tk2dEditor.SpriteCollectionEditor
 			// Draw grab handles
 			Vector3 handlePos;
 			
+			int id = 16433;
+			
 			// Draw top handle
 			handlePos = (pt[0] + pt[1]) * 0.5f;
-			handlePos = tk2dGuiUtility.PositionHandle(16433 + 0, handlePos, 4.0f, handleInactiveColor, handleActiveColor) / editorDisplayScale;
+			handlePos = (tk2dGuiUtility.PositionHandle(id + 0, handlePos, 4.0f, handleInactiveColor, handleActiveColor) - origin) / editorDisplayScale;
 			param.boxColliderMin.y = handlePos.y;
 			if (param.boxColliderMin.y > param.boxColliderMax.y) param.boxColliderMin.y = param.boxColliderMax.y;
 	
 			// Draw bottom handle
 			handlePos = (pt[2] + pt[3]) * 0.5f;
-			handlePos = tk2dGuiUtility.PositionHandle(16433 + 1, handlePos, 4.0f, handleInactiveColor, handleActiveColor) / editorDisplayScale;
+			handlePos = (tk2dGuiUtility.PositionHandle(id + 1, handlePos, 4.0f, handleInactiveColor, handleActiveColor) - origin) / editorDisplayScale;
 			param.boxColliderMax.y = handlePos.y;
 			if (param.boxColliderMax.y < param.boxColliderMin.y) param.boxColliderMax.y = param.boxColliderMin.y;
 	
 			// Draw left handle
 			handlePos = (pt[0] + pt[3]) * 0.5f;
-			handlePos = tk2dGuiUtility.PositionHandle(16433 + 2, handlePos, 4.0f, handleInactiveColor, handleActiveColor) / editorDisplayScale;
+			handlePos = (tk2dGuiUtility.PositionHandle(id + 2, handlePos, 4.0f, handleInactiveColor, handleActiveColor) - origin) / editorDisplayScale;
 			param.boxColliderMin.x = handlePos.x;
 			if (param.boxColliderMin.x > param.boxColliderMax.x) param.boxColliderMin.x = param.boxColliderMax.x;
 	
 			// Draw right handle
 			handlePos = (pt[1] + pt[2]) * 0.5f;
-			handlePos = tk2dGuiUtility.PositionHandle(16433 + 3, handlePos, 4.0f, handleInactiveColor, handleActiveColor) / editorDisplayScale;
+			handlePos = (tk2dGuiUtility.PositionHandle(id + 3, handlePos, 4.0f, handleInactiveColor, handleActiveColor) - origin) / editorDisplayScale;
 			param.boxColliderMax.x = handlePos.x;
 			if (param.boxColliderMax.x < param.boxColliderMin.x) param.boxColliderMax.x = param.boxColliderMin.x;
 	
@@ -309,10 +331,38 @@ namespace tk2dEditor.SpriteCollectionEditor
 			param.boxColliderMax.y = Mathf.Clamp(param.boxColliderMax.y, 0.0f, tex.height);
 			param.boxColliderMin.x = Mathf.Clamp(param.boxColliderMin.x, 0.0f, tex.width);
 			param.boxColliderMin.y = Mathf.Clamp(param.boxColliderMin.y, 0.0f, tex.height);
+
+			tk2dGuiUtility.SetPositionHandleValue(id + 0, new Vector2(0, param.boxColliderMin.y));
+			tk2dGuiUtility.SetPositionHandleValue(id + 1, new Vector2(0, param.boxColliderMax.y));
+			tk2dGuiUtility.SetPositionHandleValue(id + 2, new Vector2(param.boxColliderMin.x, 0));
+			tk2dGuiUtility.SetPositionHandleValue(id + 3, new Vector2(param.boxColliderMax.x, 0));
 		}
 		
+		void HandleKeys()
+		{
+			Event evt = Event.current;
+			if (evt.type == EventType.KeyUp && evt.shift)
+			{
+				Mode newMode = Mode.None;
+				switch (evt.keyCode)
+				{
+					case KeyCode.Q: newMode = Mode.Texture; break;
+					case KeyCode.W: newMode = Mode.Anchor; break;
+					case KeyCode.E: newMode = Mode.Collider; break;
+					case KeyCode.N: drawColliderNormals = !drawColliderNormals; HandleUtility.Repaint(); break;
+				}
+				if (newMode != Mode.None)
+				{
+					mode = newMode;
+					evt.Use();
+				}
+			}
+		}
+
 		public void DrawTextureView(tk2dSpriteCollectionDefinition param, Texture2D texture)
 		{
+			HandleKeys();
+
 			if (mode == Mode.None)
 				mode = Mode.Texture;
 			
@@ -350,8 +400,9 @@ namespace tk2dEditor.SpriteCollectionEditor
 			}
 			
 			bool alphaBlend = true;
-			textureScrollPos = GUI.BeginScrollView(rect, textureScrollPos, new Rect(0, 0, (texture.width) * editorDisplayScale, (texture.height) * editorDisplayScale));
-			Rect textureRect = new Rect(0, 0, texture.width * editorDisplayScale, texture.height * editorDisplayScale);
+			textureScrollPos = GUI.BeginScrollView(rect, textureScrollPos, 
+				new Rect(0, 0, textureBorderPixels * 2 + (texture.width) * editorDisplayScale, textureBorderPixels * 2 + (texture.height) * editorDisplayScale));
+			Rect textureRect = new Rect(textureBorderPixels, textureBorderPixels, texture.width * editorDisplayScale, texture.height * editorDisplayScale);
 			texture.filterMode = FilterMode.Point;
 			GUI.DrawTexture(textureRect, texture, ScaleMode.ScaleAndCrop, alphaBlend);
 
@@ -374,21 +425,26 @@ namespace tk2dEditor.SpriteCollectionEditor
 				Color handleColor = new Color(0,0,0,0.2f);
 				Color lineColor = Color.white;
 				Vector2 anchor = new Vector2(param.anchorX, param.anchorY);
+				Vector2 origin = new Vector2(textureRect.x, textureRect.y);
 				
-				anchor = tk2dGuiUtility.PositionHandle(99999, anchor * editorDisplayScale, 12.0f, handleColor, handleColor ) / editorDisplayScale;
+				int id = 99999;
+				anchor = (tk2dGuiUtility.PositionHandle(id, anchor * editorDisplayScale + origin, 12.0f, handleColor, handleColor ) - origin) / editorDisplayScale;
 	
 				Color oldColor = Handles.color;
 				Handles.color = lineColor;
 				float w = Mathf.Max(rect.width, texture.width * editorDisplayScale);
 				float h = Mathf.Max(rect.height, texture.height * editorDisplayScale);
 				
-				Handles.DrawLine(new Vector3(0, anchor.y * editorDisplayScale, 0), new Vector3(w, anchor.y * editorDisplayScale, 0));
-				Handles.DrawLine(new Vector3(anchor.x * editorDisplayScale, 0, 0), new Vector3(anchor.x * editorDisplayScale, h, 0));
+				Handles.DrawLine(new Vector3(textureRect.x, textureRect.y + anchor.y * editorDisplayScale, 0), new Vector3(textureRect.x + w, textureRect.y + anchor.y * editorDisplayScale, 0));
+				Handles.DrawLine(new Vector3(textureRect.x + anchor.x * editorDisplayScale, textureRect.y + 0, 0), new Vector3(textureRect.x + anchor.x * editorDisplayScale, textureRect.y + h, 0));
 				Handles.color = oldColor;
 	
 				// constrain
 				param.anchorX = Mathf.Clamp(Mathf.Round(anchor.x), 0.0f, texture.width);
 				param.anchorY = Mathf.Clamp(Mathf.Round(anchor.y), 0.0f, texture.height);
+				
+				tk2dGuiUtility.SetPositionHandleValue(id, new Vector2(param.anchorX, param.anchorY));
+				
 				HandleUtility.Repaint();			
 			}
 			GUI.EndScrollView();
@@ -406,17 +462,23 @@ namespace tk2dEditor.SpriteCollectionEditor
 				param.colliderType == tk2dSpriteCollectionDefinition.ColliderType.BoxCustom);
 
 			GUILayout.BeginHorizontal(EditorStyles.toolbar, GUILayout.ExpandWidth(true));
-			mode = GUILayout.Toggle((mode == Mode.Texture), "Sprite", EditorStyles.toolbarButton)?Mode.Texture:mode;
+			mode = GUILayout.Toggle((mode == Mode.Texture), new GUIContent("Sprite", "Shift+Q"), EditorStyles.toolbarButton)?Mode.Texture:mode;
 			if (allowAnchor)
-				mode = GUILayout.Toggle((mode == Mode.Anchor), "Anchor", EditorStyles.toolbarButton)?Mode.Anchor:mode;
+				mode = GUILayout.Toggle((mode == Mode.Anchor), new GUIContent("Anchor", "Shift+W"), EditorStyles.toolbarButton)?Mode.Anchor:mode;
 			if (allowCollider)
-				mode = GUILayout.Toggle((mode == Mode.Collider), "Collider", EditorStyles.toolbarButton)?Mode.Collider:mode;
+				mode = GUILayout.Toggle((mode == Mode.Collider), new GUIContent("Collider", "Shift+E"), EditorStyles.toolbarButton)?Mode.Collider:mode;
 			GUILayout.FlexibleSpace();
+			
+			if (tk2dGuiUtility.HasActivePositionHandle)
+			{
+				string str = "X: " + tk2dGuiUtility.ActiveHandlePosition.x + " Y: " + tk2dGuiUtility.ActiveHandlePosition.y;
+				GUILayout.Label(str, EditorStyles.toolbarTextField);
+			}
 			
 			if ((mode == Mode.Collider && param.colliderType == tk2dSpriteCollectionDefinition.ColliderType.Polygon) ||
 				(mode == Mode.Texture && param.customSpriteGeometry))
 			{
-				drawColliderNormals = GUILayout.Toggle(drawColliderNormals, "Show Normals", EditorStyles.toolbarButton);
+				drawColliderNormals = GUILayout.Toggle(drawColliderNormals, new GUIContent("Show Normals", "Shift+N"), EditorStyles.toolbarButton);
 			}
 			GUILayout.EndHorizontal();			
 		}

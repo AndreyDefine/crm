@@ -18,6 +18,15 @@ public class tk2dSparseTile
 		spriteId = -1;
 		blendAmount = 0.0f;
 	}
+
+	public tk2dSparseTile(tk2dSparseTile source)
+	{
+		this.x = source.x;
+		this.y = source.y;
+		this.layer = source.layer;
+		this.spriteId = source.spriteId;
+		this.blendAmount = source.blendAmount;
+	}
 	
 	public tk2dSparseTile(int x, int y, int layer, int spriteId)
 	{
@@ -78,6 +87,7 @@ public class tk2dTileMapEditorBrush
 	public int[] multiSelectTiles;
 	public EdgeMode edgeMode = EdgeMode.None;
 	public bool multiLayer = false;
+	public bool overrideWithSpriteBounds = false;
 	
 	public tk2dTileMapEditorBrush()
 	{
@@ -85,6 +95,25 @@ public class tk2dTileMapEditorBrush
 			new tk2dSparseTile(0, 0, 0, 0)
 		};
 		UpdateBrushHash();
+	}
+
+	public tk2dTileMapEditorBrush(tk2dTileMapEditorBrush source)
+	{
+		this.name = source.name;
+		this.type = source.type;
+		this.paintMode = source.paintMode;
+		
+		tiles = new tk2dSparseTile[source.tiles.Length];		
+		for (int i = 0; i < source.tiles.Length; ++i)
+			tiles[i] = new tk2dSparseTile(source.tiles[i]);
+		
+		multiSelectTiles = new int[source.multiSelectTiles.Length];
+		for (int i = 0; i < source.multiSelectTiles.Length; ++i)
+			multiSelectTiles[i] = source.multiSelectTiles[i];
+	
+		edgeMode = source.edgeMode;
+		multiLayer = source.multiLayer;
+		overrideWithSpriteBounds = source.overrideWithSpriteBounds;
 	}
 	
 	public bool Empty
@@ -147,6 +176,18 @@ public class tk2dTileMapEditorData : ScriptableObject
 		Add,
 	}
 	
+	public enum SetupMode
+	{
+		None = 0,
+		Dimensions = 1,
+		TileProperties = 2,
+		PaletteProperties = 4,
+		AdvancedProperties = 8,
+		Info = 16,
+		Layers = 32,
+		Import = 64,
+	}
+	
 	public Color brushColor = Color.white;
 	public float brushRadius = 1.0f;
 	public float blendStrength = 1.0f;
@@ -160,12 +201,7 @@ public class tk2dTileMapEditorData : ScriptableObject
 	public tk2dTileMapEditorBrush paletteBrush;
 	public int paletteTilesPerRow = 8;
 	
-	public bool showDimensions = true;
-	public bool showTileProperties = true;	
-	public bool showPaletteProperties = true;
-	public bool showAdvancedProperties = true;
-	public bool showInfo = false;
-	public bool showLayers = false;
+	public SetupMode setupMode = 0;
 	
 	public bool showBrush = true;
 	public bool showPalette = true;
@@ -184,9 +220,10 @@ public class tk2dTileMapEditorData : ScriptableObject
 			brushes = new List<tk2dTileMapEditorBrush>();
 		}
 		
-		if (paletteBrush == null || paletteBrush.Empty)
+		if (paletteBrush == null || paletteBrush.Empty || !paletteBrush.overrideWithSpriteBounds)
 		{
 			paletteBrush = new tk2dTileMapEditorBrush();
+			paletteBrush.overrideWithSpriteBounds = true;
 			CreateDefaultPalette(spriteCollection, paletteBrush, paletteTilesPerRow);
 		}
 		

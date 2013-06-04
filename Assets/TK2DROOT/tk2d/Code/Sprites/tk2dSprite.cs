@@ -16,19 +16,22 @@ public class tk2dSprite : tk2dBaseSprite
 	Vector4[] meshTangents = null;
 	Color[] meshColors;
 	
-	void Awake()
+	new void Awake()
 	{
+		base.Awake();
+
 		// Create mesh, independently to everything else
 		mesh = new Mesh();
+		mesh.hideFlags = HideFlags.DontSave;
 		GetComponent<MeshFilter>().mesh = mesh;
 		
 		// This will not be set when instantiating in code
 		// In that case, Build will need to be called
-		if (collection)
+		if (Collection)
 		{
 			// reset spriteId if outside bounds
 			// this is when the sprite collection data is corrupt
-			if (_spriteId < 0 || _spriteId >= collection.Count)
+			if (_spriteId < 0 || _spriteId >= Collection.Count)
 				_spriteId = 0;
 			
 			Build();
@@ -58,7 +61,7 @@ public class tk2dSprite : tk2dBaseSprite
 	
 	public override void Build()
 	{
-		var sprite = collection.spriteDefinitions[spriteId];
+		var sprite = collectionInst.spriteDefinitions[spriteId];
 
 		meshVertices = new Vector3[sprite.positions.Length];
         meshColors = new Color[sprite.positions.Length];
@@ -81,6 +84,7 @@ public class tk2dSprite : tk2dBaseSprite
 		if (mesh == null)
 		{
 			mesh = new Mesh();
+			mesh.hideFlags = HideFlags.DontSave;
 			GetComponent<MeshFilter>().mesh = mesh;
 		}
 		
@@ -96,6 +100,26 @@ public class tk2dSprite : tk2dBaseSprite
 		CreateCollider();
 	}
 	
+	/// <summary>
+	/// Adds a tk2dSprite as a component to the gameObject passed in, setting up necessary parameters and building geometry.
+	/// Convenience alias of tk2dBaseSprite.AddComponent<tk2dSprite>(...).
+	/// </summary>
+	public static tk2dSprite AddComponent(GameObject go, tk2dSpriteCollectionData spriteCollection, int spriteId)
+	{
+		return tk2dBaseSprite.AddComponent<tk2dSprite>(go, spriteCollection, spriteId);
+	}
+	
+	/// <summary>
+	/// Create a sprite (and gameObject) displaying the region of the texture specified.
+	/// Use <see cref="tk2dSpriteCollectionData.CreateFromTexture"/> if you need to create a sprite collection
+	/// with multiple sprites.
+	/// Convenience alias of tk2dBaseSprite.CreateFromTexture<tk2dSprite>(...)
+	/// </summary>
+	public static GameObject CreateFromTexture(Texture2D texture, tk2dRuntime.SpriteCollectionSize size, Rect region, Vector2 anchor)
+	{
+		return tk2dBaseSprite.CreateFromTexture<tk2dSprite>(texture, size, region, anchor);
+	}
+
 	protected override void UpdateGeometry() { UpdateGeometryImpl(); }
 	protected override void UpdateColors() { UpdateColorsImpl(); }
 	protected override void UpdateVertices() { UpdateVerticesImpl(); }
@@ -105,7 +129,7 @@ public class tk2dSprite : tk2dBaseSprite
 	{
 #if UNITY_EDITOR
 		// This can happen with prefabs in the inspector
-		if (meshColors == null || meshColors.Length == 0)
+		if (mesh == null || meshColors == null || meshColors.Length == 0)
 			return;
 #endif
 		
@@ -115,11 +139,11 @@ public class tk2dSprite : tk2dBaseSprite
 	
 	protected void UpdateVerticesImpl()
 	{
-		var sprite = collection.spriteDefinitions[spriteId];
+		var sprite = collectionInst.spriteDefinitions[spriteId];
 		
 #if UNITY_EDITOR
 		// This can happen with prefabs in the inspector
-		if (meshVertices == null || meshVertices.Length == 0)
+		if (mesh == null || meshVertices == null || meshVertices.Length == 0)
 			return;
 #endif
 		
@@ -152,8 +176,8 @@ public class tk2dSprite : tk2dBaseSprite
 			Build();
 #endif
 		
-		var sprite = collection.spriteDefinitions[spriteId];
-		if (meshVertices.Length != sprite.positions.Length)
+		var sprite = collectionInst.spriteDefinitions[spriteId];
+		if (meshVertices == null || meshVertices.Length != sprite.positions.Length)
 		{
 			meshVertices = new Vector3[sprite.positions.Length];
 			meshNormals = (sprite.normals != null && sprite.normals.Length > 0)?(new Vector3[sprite.normals.Length]):(new Vector3[0]);
@@ -175,8 +199,8 @@ public class tk2dSprite : tk2dBaseSprite
 	
 	protected override void UpdateMaterial()
 	{
-		if (renderer.sharedMaterial != collection.spriteDefinitions[spriteId].material)
-			renderer.material = collection.spriteDefinitions[spriteId].material;
+		if (renderer.sharedMaterial != collectionInst.spriteDefinitions[spriteId].materialInst)
+			renderer.material = collectionInst.spriteDefinitions[spriteId].materialInst;
 	}
 	
 	protected override int GetCurrentVertexCount()
@@ -190,5 +214,11 @@ public class tk2dSprite : tk2dBaseSprite
 #endif
 		// Really nasty bug here found by Andrew Welch.
 		return meshVertices.Length;
+	}
+	
+	public override void ForceBuild()
+	{
+		base.ForceBuild();
+		GetComponent<MeshFilter>().mesh = mesh;
 	}
 }

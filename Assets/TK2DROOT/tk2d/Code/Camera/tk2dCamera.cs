@@ -9,11 +9,16 @@ using System.Collections;
 public class tk2dCameraResolutionOverride
 {
 	/// <summary>
-	/// Screen width to match
+	/// Name of the override
+	/// </summary>
+	public string name;
+	
+	/// <summary>
+	/// Screen width to match. Set to -1 to match any width.
 	/// </summary>
 	public int width;
 	/// <summary>
-	/// Screen height to match
+	/// Screen height to match. Set to -1 to match any height.
 	/// </summary>
 	public int height;
 	
@@ -21,7 +26,31 @@ public class tk2dCameraResolutionOverride
 	/// Amount to scale the matched resolution by
 	/// 1.0 = pixel perfect, 0.5 = 50% of pixel perfect size
 	/// </summary>
-	public float scale;
+	public float scale = 1.0f;
+	
+	/// <summary>
+	/// Amount to offset from the bottom left, in number of pixels in target resolution. Example, if override resolution is
+	/// 1024x768, an offset of 20 will offset in by 20 pixels
+	/// </summary>
+	public Vector2 offsetPixels = new Vector2(0, 0);
+	
+	public enum AutoScaleMode
+	{
+		None, // explicitly use the scale parameter
+		FitWidth, // fits the width to the current resolution
+		FitHeight, // fits the height to the current resolution
+		FitVisible, // best fit (either width or height)
+		StretchToFit, // stretch to fit, could be non-uniform and/or very ugly
+	};
+	public AutoScaleMode autoScaleMode = AutoScaleMode.None;
+	
+	public enum FitMode
+	{
+		Constant,	// Use the screenOffset
+		Center, 	// Align to center of screen
+	};
+	public FitMode fitMode = FitMode.Constant;
+	
 	
 	/// <summary>
 	/// Returns true if this instance of tk2dCameraResolutionOverride matches the curent resolution.
@@ -29,7 +58,7 @@ public class tk2dCameraResolutionOverride
 	/// </summary>
 	public bool Match(int pixelWidth, int pixelHeight)
 	{
-		return (pixelWidth == width && pixelHeight == height);
+		return ((width == -1 || pixelWidth == width) && (height == -1 || pixelHeight == height));
 	}
 }
 
@@ -49,8 +78,19 @@ public class tk2dCamera : MonoBehaviour
 	tk2dCameraResolutionOverride currentResolutionOverride = null;
 	
 	/// <summary>
+	/// Native resolution width of the camera. Override this in the inspector.
+	/// </summary>
+	public int nativeResolutionWidth = 960;
+	/// <summary>
+	/// Native resolution height of the camera. Override this in the inspector.
+	/// </summary>
+	public int nativeResolutionHeight = 640;
+	public bool enableResolutionOverrides = true;
+	
+	/// <summary>
 	/// The camera this script is attached to is treated as the main camera in the scene.
 	/// </summary>
+	[HideInInspector]
 	public Camera mainCamera;
 	
 	/// <summary>
@@ -68,9 +108,35 @@ public class tk2dCamera : MonoBehaviour
 	/// Scaled resolution of screen.
 	/// The top right point in screen space.
 	/// </summary>
-	[System.NonSerialized]
-	public Vector2 resolution = new Vector2(1,1);
-	
+	public Vector2 ScaledResolution { get { return _scaledResolution; } }
+
+	/// <summary>
+	/// Returns screen extents - top, bottom, left and right will be the extent of the screen
+	/// Regardless of resolution or override
+	/// </summary>
+	public Rect ScreenExtents { get { return _screenExtents; } }
+
+	/// <summary>
+	/// Offset in pixels used to center content
+	/// </summary>
+	public Vector2 ScreenOffset { get { return _screenOffset; } }
+
+	[System.Obsolete]
+	public Vector2 resolution { get { return ScaledResolution; } }
+
+	/// <summary>
+	/// Target resolution
+	/// The target resolution currently being used.
+	/// If displaying on a 960x640 display, this will be the number returned here, regardless of scale, etc.
+	/// If the editor resolution is forced, the returned value will be the forced resolution.
+	/// </summary>
+	public Vector2 TargetResolution { get { return _targetResolution; } }
+
+	Vector2 _targetResolution = Vector2.zero;
+	Vector2 _scaledResolution = Vector2.zero;
+	Vector2 _screenOffset = Vector2.zero;
+
+
 	[HideInInspector]
 	/// <summary>
 	/// Forces the resolution in the editor - The game window in the Unity editor returns the actual resolution of the window
@@ -97,10 +163,12 @@ public class tk2dCamera : MonoBehaviour
 		inst = this;
 	}
 	
-	void Update() 
+	void LateUpdate() 
 	{
 		UpdateCameraMatrix();
 	}
+
+	Rect _screenExtents;
 
 	/// <summary>
 	/// Updates the camera matrix to ensure 1:1 pixel mapping
@@ -108,10 +176,17 @@ public class tk2dCamera : MonoBehaviour
 	public void UpdateCameraMatrix()
 	{
 		inst = this;
+
+		if (!mainCamera.orthographic)
+		{
+			// Must be orthographic
+			Debug.LogError("tk2dCamera must be orthographic");
+			mainCamera.orthographic = true;
+		}
 		
 		float pixelWidth = mainCamera.pixelWidth;
 		float pixelHeight = mainCamera.pixelHeight;
-		
+
 #if UNITY_EDITOR
 		if (forceResolutionInEditor)
 		{
@@ -119,11 +194,17 @@ public class tk2dCamera : MonoBehaviour
 			pixelHeight = forceResolution.y;
 		}
 #endif
+	
+		_targetResolution = new Vector2(pixelWidth, pixelHeight);
 		
 		// Find an override if necessary
-		if (currentResolutionOverride == null ||
+		if (!enableResolutionOverrides)
+			currentResolutionOverride = null;
+		
+		if (enableResolutionOverrides && 
+			(currentResolutionOverride == null ||
 			(currentResolutionOverride != null && (currentResolutionOverride.width != pixelWidth || currentResolutionOverride.height != pixelHeight))
-			)
+			))
 		{
 			currentResolutionOverride = null;
 			// find one if it matches the current resolution
@@ -140,17 +221,72 @@ public class tk2dCamera : MonoBehaviour
 			}
 		}
 		
-		float scale = (currentResolutionOverride != null)?currentResolutionOverride.scale:1.0f;
+		Vector2 scale = new Vector2(1, 1);
+		Vector2 offset = new Vector2(0, 0);
+		float s = 0.0f;
+		if (currentResolutionOverride != null)
+		{
+			switch (currentResolutionOverride.autoScaleMode)
+			{
+			case tk2dCameraResolutionOverride.AutoScaleMode.FitHeight: 
+				s = pixelHeight / nativeResolutionHeight; 
+				scale.Set(s, s);
+				break;
+
+			case tk2dCameraResolutionOverride.AutoScaleMode.FitWidth: 
+				s = pixelWidth / nativeResolutionWidth; 
+				scale.Set(s, s);
+				break;
+
+			case tk2dCameraResolutionOverride.AutoScaleMode.FitVisible:
+				float nativeAspect = (float)nativeResolutionWidth / nativeResolutionHeight;
+				float currentAspect = pixelWidth / pixelHeight;
+				if (currentAspect < nativeAspect)
+					s = pixelWidth / nativeResolutionWidth;
+				else
+					s = pixelHeight / nativeResolutionHeight;
+				scale.Set(s, s);
+				break;
+
+			case tk2dCameraResolutionOverride.AutoScaleMode.StretchToFit:
+				scale.Set(pixelWidth / nativeResolutionWidth, pixelHeight / nativeResolutionHeight);
+				break;
+
+			default:
+			case tk2dCameraResolutionOverride.AutoScaleMode.None: 
+				s = currentResolutionOverride.scale;
+				scale.Set(s, s);
+				break;
+			}
+			
+			// no offset when ScaleToFit
+			if (currentResolutionOverride.autoScaleMode != tk2dCameraResolutionOverride.AutoScaleMode.StretchToFit)
+			{
+				switch (currentResolutionOverride.fitMode)
+				{
+				case tk2dCameraResolutionOverride.FitMode.Center:
+					offset = new Vector2(Mathf.Round((nativeResolutionWidth  * scale.x - pixelWidth ) / 2.0f), 
+										 Mathf.Round((nativeResolutionHeight * scale.y - pixelHeight) / 2.0f));
+					break;
+					
+				default:
+				case tk2dCameraResolutionOverride.FitMode.Constant: 
+					offset = -currentResolutionOverride.offsetPixels; break;
+				}
+			}
+		}
 		
-		float left = 0.0f, top = 0.0f;
-		float right = pixelWidth, bottom = pixelHeight;
-		
+		float left = offset.x, bottom = offset.y;
+		float right = pixelWidth + offset.x, top = pixelHeight + offset.y;
+		_screenExtents.Set(left / scale.x, top / scale.y, (right - left) / scale.x, (bottom - top) / scale.y);
+
 		float far = mainCamera.farClipPlane;
 		float near = mainCamera.near;
 		
 		// set up externally used variables
-		orthoSize = (bottom - top) / 2.0f;
-		resolution = new Vector2(right / scale, bottom / scale);
+		orthoSize = (top - bottom) / 2.0f;
+		_scaledResolution = new Vector2(right / scale.x, top / scale.y);
+		_screenOffset = offset;
 		
 		// Additional half texel offset
 		// Takes care of texture unit offset, if necessary.
@@ -163,21 +299,21 @@ public class tk2dCamera : MonoBehaviour
 						   Application.platform == RuntimePlatform.WindowsEditor);
 		
 		float halfTexelOffsetAmount = (halfTexelOffset)?1.0f:0.0f;
-		
-		float x =  (2.0f) / (right - left) * scale;
-		float y = (2.0f) / (bottom - top) * scale;
+
+		float x =  (2.0f) / (right - left) * scale.x;
+		float y = (2.0f) / (top - bottom) * scale.y;
 		float z = -2.0f / (far - near);
 
 		float a = -(right + left + halfTexelOffsetAmount) / (right - left);
-		float b = -(top + bottom - halfTexelOffsetAmount) / (bottom - top);
-		float c = -(2.0f * far * near) / (far - near);
+		float b = -(bottom + top - halfTexelOffsetAmount) / (top - bottom);
+		float c = -(far + near) / (far - near);
 		
 		Matrix4x4 m = new Matrix4x4();
 		m[0,0] = x;  m[0,1] = 0;  m[0,2] = 0;  m[0,3] = a;
 		m[1,0] = 0;  m[1,1] = y;  m[1,2] = 0;  m[1,3] = b;
 		m[2,0] = 0;  m[2,1] = 0;  m[2,2] = z;  m[2,3] = c;
 		m[3,0] = 0;  m[3,1] = 0;  m[3,2] = 0;  m[3,3] = 1;
-		
+
 		mainCamera.projectionMatrix = m;			
 	}
 }

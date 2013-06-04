@@ -21,6 +21,8 @@ namespace tk2dEditor.SpriteCollectionEditor
 		SpriteView SpriteView { get; }
 		void SelectSpritesFromList(int[] indices);
 		void SelectSpritesInSpriteSheet(int spriteSheetId, int[] spriteIds);
+
+		void Commit();
 	}
 	
 	public class SpriteCollectionEditorEntry
@@ -163,7 +165,7 @@ public class tk2dSpriteCollectionEditorPopup : EditorWindow, IEditorHost
 			entries[i].listIndex = i;
 	}
 	
-	public int InspectorWidth { get { return 260; } }
+	public int InspectorWidth { get { return tk2dPreferences.inst.spriteCollectionInspectorWidth; } }
 	
 	// populate the entries struct for display in the listbox
 	void PopulateEntries()
@@ -176,7 +178,7 @@ public class tk2dSpriteCollectionEditorPopup : EditorWindow, IEditorHost
 		for (int spriteIndex = 0; spriteIndex < spriteCollectionProxy.textureParams.Count; ++spriteIndex)
 		{
 			var sprite = spriteCollectionProxy.textureParams[spriteIndex];
-			var spriteSourceTexture = spriteCollectionProxy.textureRefs[spriteIndex];
+			var spriteSourceTexture = sprite.texture;
 			if (spriteSourceTexture == null) continue;
 			
 			var newEntry = new SpriteCollectionEditorEntry();
@@ -253,7 +255,7 @@ public class tk2dSpriteCollectionEditorPopup : EditorWindow, IEditorHost
 		{
 			if (cachedSpriteTexture == null)
 			{
-				var tex = spriteCollectionProxy.textureRefs[spriteId];
+				var tex = param.texture;
 				cachedSpriteTexture = new Texture2D(param.regionW, param.regionH);
 				for (int y = 0; y < param.regionH; ++y)
 				{
@@ -269,7 +271,7 @@ public class tk2dSpriteCollectionEditorPopup : EditorWindow, IEditorHost
 		}
 		else
 		{
-			return spriteCollectionProxy.textureRefs[spriteId];
+			return param.texture;
 		}
 	}
 	
@@ -301,6 +303,9 @@ public class tk2dSpriteCollectionEditorPopup : EditorWindow, IEditorHost
 	void OnDisable()
 	{
 		ClearTextureCache();
+
+		_spriteCollection = null;
+		tk2dEditorUtility.CollectAndUnloadUnusedAssets();
 	}
 	
 	string searchFilter = "";
@@ -338,15 +343,24 @@ public class tk2dSpriteCollectionEditorPopup : EditorWindow, IEditorHost
 							UpdateSelection();
 							break;
 						case 1:
-							int addedFontIndex = spriteCollectionProxy.FindOrCreateEmptyFontSlot();
-							searchFilter = "";
-							PopulateEntries();
-							foreach (var entry in entries)
+							if (SpriteCollection.allowMultipleAtlases)
 							{
-								if (entry.type == SpriteCollectionEditorEntry.Type.Font && entry.index == addedFontIndex)
-									entry.selected = true;
+								EditorUtility.DisplayDialog("Create Font", 
+											"Adding fonts to sprite collections isn't allowed when multi atlas spanning is enabled. " +
+											"Please disable it and try again.", "Ok");
 							}
-							UpdateSelection();
+							else 
+							{
+								int addedFontIndex = spriteCollectionProxy.FindOrCreateEmptyFontSlot();
+								searchFilter = "";
+								PopulateEntries();
+								foreach (var entry in entries)
+								{
+									if (entry.type == SpriteCollectionEditorEntry.Type.Font && entry.index == addedFontIndex)
+										entry.selected = true;
+								}
+								UpdateSelection();
+							}
 							break;
 					}
 				}
@@ -404,14 +418,17 @@ public class tk2dSpriteCollectionEditorPopup : EditorWindow, IEditorHost
 		}
 		
 		if (GUILayout.Button("Commit", EditorStyles.toolbarButton) && spriteCollectionProxy != null)
-		{
-			spriteCollectionProxy.CopyToTarget();
-			tk2dSpriteCollectionBuilder.ResetCurrentBuild();
-			tk2dSpriteCollectionBuilder.Rebuild(_spriteCollection);
-			spriteCollectionProxy.CopyFromSource();
-		}
+			Commit();
 		
 		GUILayout.EndHorizontal();
+	}
+
+	public void Commit()
+	{
+		spriteCollectionProxy.CopyToTarget();
+		tk2dSpriteCollectionBuilder.ResetCurrentBuild();
+		tk2dSpriteCollectionBuilder.Rebuild(_spriteCollection);
+		spriteCollectionProxy.CopyFromSource();
 	}
 	
 	Vector2 spriteListScroll = Vector2.zero;
@@ -538,18 +555,26 @@ public class tk2dSpriteCollectionEditorPopup : EditorWindow, IEditorHost
 		
 		GUILayout.EndVertical();
 		GUILayout.EndScrollView();
+
+		Rect viewRect = GUILayoutUtility.GetLastRect();
+		tk2dPreferences.inst.spriteCollectionListWidth = (int)tk2dGuiUtility.DragableHandle(4819283, 
+			viewRect, tk2dPreferences.inst.spriteCollectionListWidth, 
+			tk2dGuiUtility.DragDirection.Horizontal);
 	}
 	
 	bool IsValidDragPayload()
 	{
-		int numTextures = 0;
+		int idx = 0;
 		foreach (var v in DragAndDrop.objectReferences)
 		{
 			var type = v.GetType();
 			if (type == typeof(Texture2D))
-				numTextures++;
+				return true;
+			else if (type == typeof(Object) && System.IO.Directory.Exists(DragAndDrop.paths[idx]))
+				return true;
+			++idx;
 		}
-		return numTextures != 0;
+		return false;
 	}
 	
 	string GetEntryTypeString(SpriteCollectionEditorEntry.Type kind)
@@ -574,8 +599,8 @@ public class tk2dSpriteCollectionEditorPopup : EditorWindow, IEditorHost
 			string name = spriteCollectionProxy.FindUniqueTextureName(tex.name);
 			int slot = spriteCollectionProxy.FindOrCreateEmptySpriteSlot();
 			spriteCollectionProxy.textureParams[slot].name = name;
-			spriteCollectionProxy.textureParams[slot].colliderType = tk2dSpriteCollectionDefinition.ColliderType.None;
-			spriteCollectionProxy.textureRefs[slot] = (Texture2D)obj;
+			spriteCollectionProxy.textureParams[slot].colliderType = tk2dSpriteCollectionDefinition.ColliderType.ForceNone;
+			spriteCollectionProxy.textureParams[slot].texture = (Texture2D)obj;
 			addedIndices.Add(slot);
 		}
 		// And now select them
@@ -591,7 +616,31 @@ public class tk2dSpriteCollectionEditorPopup : EditorWindow, IEditorHost
 		UpdateSelection();
 	}
 	
-	int leftBarWidth = 200;
+	// recursively find textures in path
+	List<Object> AddTexturesInPath(string path)
+	{
+		List<Object> localObjects = new List<Object>();
+		foreach (var q in System.IO.Directory.GetFiles(path))
+		{
+			string f = q.Replace('\\', '/');
+			System.IO.FileInfo fi = new System.IO.FileInfo(f);
+			if (fi.Extension.ToLower() == ".meta")
+				continue;
+			
+			Object obj = AssetDatabase.LoadAssetAtPath(f, typeof(Texture2D));
+			if (obj != null) localObjects.Add(obj);
+		}
+		foreach (var q in System.IO.Directory.GetDirectories(path)) 
+		{
+			string d = q.Replace('\\', '/');
+			localObjects.AddRange(AddTexturesInPath(d));
+		}
+		
+		return localObjects;
+	}
+	
+	int leftBarWidth { get { return tk2dPreferences.inst.spriteCollectionListWidth; } }
+
 	Object[] deferredDroppedObjects;
 	void DrawDropZone()
 	{
@@ -627,6 +676,8 @@ public class tk2dSpriteCollectionEditorPopup : EditorWindow, IEditorHost
 					var type = DragAndDrop.objectReferences[i].GetType();
 					if (type == typeof(Texture2D))
 						droppedObjectsList.Add(DragAndDrop.objectReferences[i]);
+					else if (type == typeof(Object) && System.IO.Directory.Exists(DragAndDrop.paths[i]))
+						droppedObjectsList.AddRange(AddTexturesInPath(DragAndDrop.paths[i]));
 				}
 				deferredDroppedObjects = droppedObjectsList.ToArray();
 				Repaint();
@@ -675,7 +726,7 @@ public class tk2dSpriteCollectionEditorPopup : EditorWindow, IEditorHost
 			DrawDropZone();
 		else
 			DrawSpriteList();
-		
+
 		if (settingsView.show || (spriteCollectionProxy != null && spriteCollectionProxy.Empty)) settingsView.Draw();
 		else if (fontView.Draw(selectedEntries)) { }
 		else if (spriteSheetView.Draw(selectedEntries)) { }

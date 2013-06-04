@@ -7,8 +7,8 @@ namespace tk2dEditor.TileMap
 {
 	public static class TileMapUtility
 	{
-		public static int MaxWidth = 256;
-		public static int MaxHeight = 256;
+		public static int MaxWidth = 512;
+		public static int MaxHeight = 512;
 		public static int MaxLayers = 32;
 		
 		public static void ResizeTileMap(tk2dTileMap tileMap, int width, int height, int partitionSizeX, int partitionSizeY)
@@ -97,6 +97,20 @@ namespace tk2dEditor.TileMap
 			tk2dRuntime.TileMap.BuilderUtil.InitDataStore(tileMap);
 			
 			return tileMap.data.NumLayers - 1;
+		}
+		
+		public static int FindOrCreateLayer(tk2dTileMap tileMap, string name)
+		{
+			int index = 0;
+			foreach (var v in tileMap.data.Layers)
+			{
+				if (v.name == name)
+					return index;
+				++index;
+			}
+			index = AddNewLayer(tileMap);
+			tileMap.data.Layers[index].name = name;
+			return index;
 		}
 		
 		public static void DeleteLayer(tk2dTileMap tileMap, int layerToDelete)

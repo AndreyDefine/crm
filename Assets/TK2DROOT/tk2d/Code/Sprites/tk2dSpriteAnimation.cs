@@ -32,20 +32,24 @@ public class tk2dSpriteAnimationFrame
 	/// Custom event data (float)
 	/// </summary>
 	public float eventFloat = 0.0f;
-	/// <summary>
-	/// The count.
-	/// </summary>
-	public int count = 1;
 	
 	public void CopyFrom(tk2dSpriteAnimationFrame source)
+	{
+		CopyFrom(source, true);
+	}
+	
+	public void CopyFrom(tk2dSpriteAnimationFrame source, bool full)
 	{
 		spriteCollection = source.spriteCollection;
 		spriteId = source.spriteId;
 		
-		triggerEvent = source.triggerEvent;
-		eventInfo = source.eventInfo;
-		eventInt = source.eventInt;
-		eventFloat = source.eventFloat;
+		if (full)
+		{
+			triggerEvent = source.triggerEvent;
+			eventInfo = source.eventInfo;
+			eventInt = source.eventInt;
+			eventFloat = source.eventFloat;		
+		}
 	}
 }
 
@@ -74,8 +78,6 @@ public class tk2dSpriteAnimationClip
 	/// Defines the start point of the loop when <see cref="WrapMode.LoopSection"/> is selected
 	/// </summary>
 	public int loopStart = 0;
-
-    public int count = 1;
 	
 	/// <summary>
 	/// Wrap mode for the clip
@@ -115,12 +117,7 @@ public class tk2dSpriteAnimationClip
 		/// <summary>
 		/// Switches to the selected sprite and stops.
 		/// </summary>
-		Single,
-	
-		/// <summary>
-		/// Plays many times.
-		/// </summary>
-		Many
+		Single
 	};
 	
 	/// <summary>

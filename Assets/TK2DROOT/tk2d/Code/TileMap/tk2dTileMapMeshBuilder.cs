@@ -16,7 +16,7 @@ namespace tk2dRuntime.TileMap
 			
 			int[] spriteIds = chunk.spriteIds;
 			Vector3 tileSize = tileMap.data.tileSize;
-			int spriteCount = tileMap.spriteCollection.spriteDefinitions.Length;
+			int spriteCount = tileMap.SpriteCollectionInst.spriteDefinitions.Length;
 			Object[] tilePrefabs = tileMap.data.tilePrefabs;
 			
 			Color32 clearColor = (useColor && tileMap.ColorChannel != null)?tileMap.ColorChannel.clearColor:Color.white;
@@ -32,17 +32,21 @@ namespace tk2dRuntime.TileMap
 				out x0, out x1, out dx,
 				out y0, out y1, out dy);
 			
-			List<int>[] meshIndices = new List<int>[tileMap.spriteCollection.materials.Length];
+			float xOffsetMult = 0.0f, yOffsetMult = 0.0f;
+			tileMap.data.GetTileOffset(out xOffsetMult, out yOffsetMult);
+			
+			List<int>[] meshIndices = new List<int>[tileMap.SpriteCollectionInst.materials.Length];
 			for (int j = 0; j < meshIndices.Length; ++j)
 				meshIndices[j] = new List<int>();
 			
 			int colorChunkSize = tileMap.partitionSizeX + 1;
 			for (int y = y0; y != y1; y += dy)
 			{
+				float xOffset = ((baseY + y) & 1) * xOffsetMult;
 				for (int x = x0; x != x1; x += dx)
 				{
 					int tile = spriteIds[y * tileMap.partitionSizeX + x];
-					Vector3 currentPos = new Vector3(tileSize.x * x, tileSize.y * y, 0);
+					Vector3 currentPos = new Vector3(tileSize.x * (x + xOffset), tileSize.y * y, 0);
 	
 					if (tile < 0 || tile >= spriteCount) 
 						continue;
@@ -50,7 +54,7 @@ namespace tk2dRuntime.TileMap
 					if (skipPrefabs && tilePrefabs[tile])
 						continue;
 					
-					var sprite = tileMap.spriteCollection.spriteDefinitions[tile];
+					var sprite = tileMap.SpriteCollectionInst.spriteDefinitions[tile];
 					
 					int baseVertex = meshVertices.Count;
 					for (int v = 0; v < sprite.positions.Length; ++v)
@@ -103,7 +107,7 @@ namespace tk2dRuntime.TileMap
 			{
 				if (indices.Count > 0)
 				{
-					materials.Add(tileMap.spriteCollection.materials[materialId]);
+					materials.Add(tileMap.SpriteCollectionInst.materials[materialId]);
 					subMeshCount++;
 				}
 				materialId++;
@@ -143,7 +147,8 @@ namespace tk2dRuntime.TileMap
 				var layer = tileMap.Layers[layerId];
 				if (layer.IsEmpty)
 					continue;
-				
+
+				var layerData = tileMap.data.Layers[layerId];
 				bool useColor = !tileMap.ColorChannel.IsEmpty && tileMap.data.Layers[layerId].useColor;
 	
 				for (int cellY = 0; cellY < layer.numRows; ++cellY)
@@ -166,7 +171,9 @@ namespace tk2dRuntime.TileMap
 						if (chunk.IsEmpty)
 							continue;
 						
-						BuildForChunk(tileMap, chunk, colorChunk, useColor, skipPrefabs, baseX, baseY);
+						if (editMode ||
+							(!editMode && !layerData.skipMeshGeneration))
+							BuildForChunk(tileMap, chunk, colorChunk, useColor, skipPrefabs, baseX, baseY);
 						
 						if (chunk.mesh != null)
 							tileMap.TouchMesh(chunk.mesh);

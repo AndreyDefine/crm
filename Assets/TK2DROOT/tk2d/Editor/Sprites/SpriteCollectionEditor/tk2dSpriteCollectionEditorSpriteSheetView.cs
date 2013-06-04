@@ -61,8 +61,8 @@ namespace tk2dEditor.SpriteCollectionEditor
 					GetTileCoordinateForSpriteSheet(spriteSheet, idX, idY, out x, out y);
 					
 					int spriteSlot = GetSpriteSlotForSpriteSheetCell(spriteSheetId, idX, idY);
-					SpriteCollection.textureRefs[spriteSlot] = spriteSheet.texture;
 					var param = SpriteCollection.textureParams[spriteSlot];
+					param.texture = spriteSheet.texture;
 					param.hasSpriteSheetId = true;
 					param.spriteSheetId = spriteSheetId;
 					param.spriteSheetX = idX;
@@ -73,6 +73,7 @@ namespace tk2dEditor.SpriteCollectionEditor
 					param.regionY = tex.height - spriteSheet.tileHeight - y;
 					param.regionW = spriteSheet.tileWidth;
 					param.regionH = spriteSheet.tileHeight;
+					param.pad = spriteSheet.pad;
 					int id = idY * numTilesX + idX;
 					param.name = tex.name + "/" + id.ToString();
 					usedSpriteCoordinates.Add(GetSpriteCoordinateHash(idX, idY));
@@ -90,7 +91,6 @@ namespace tk2dEditor.SpriteCollectionEditor
 					int coordinateHash = GetSpriteCoordinateHash(p.spriteSheetX, p.spriteSheetY);
 					if (usedSpriteCoordinates.IndexOf(coordinateHash) == -1)
 					{
-						SpriteCollection.textureRefs[i] = null;
 						SpriteCollection.textureParams[i].Clear();
 					}
 				}
@@ -102,8 +102,8 @@ namespace tk2dEditor.SpriteCollectionEditor
 		void GetNumTilesForSpriteSheet(tk2dSpriteSheetSource spriteSheet, out int numTilesX, out int numTilesY)
 		{
 			var tex = spriteSheet.texture;
-			numTilesX = (tex.width - spriteSheet.tileMarginX) / (spriteSheet.tileSpacingX + spriteSheet.tileWidth);
-			numTilesY = (tex.height - spriteSheet.tileMarginY) / (spriteSheet.tileSpacingY + spriteSheet.tileHeight);
+			numTilesX = (tex.width - spriteSheet.tileMarginX + spriteSheet.tileSpacingX) / (spriteSheet.tileSpacingX + spriteSheet.tileWidth);
+			numTilesY = (tex.height - spriteSheet.tileMarginY + spriteSheet.tileSpacingY) / (spriteSheet.tileSpacingY + spriteSheet.tileHeight);
 		}
 		
 		void GetTileCoordinateForSpriteSheet(tk2dSpriteSheetSource spriteSheet, int tileX, int tileY, out int coordX, out int coordY)
@@ -159,7 +159,7 @@ namespace tk2dEditor.SpriteCollectionEditor
 			int spriteSheetId = SpriteCollection.GetSpriteSheetId(spriteSheet);
 			if (rect.Contains(Event.current.mousePosition))
 			{
-				Vector2 localMousePos = Event.current.mousePosition / zoomAmount;
+				Vector2 localMousePos = (Event.current.mousePosition - new Vector2(rect.x, rect.y)) / zoomAmount;
 				int tileX = ((int)localMousePos.x - spriteSheet.tileMarginX) / (spriteSheet.tileSpacingX + spriteSheet.tileWidth);
 				int tileY = ((int)localMousePos.y - spriteSheet.tileMarginY) / (spriteSheet.tileSpacingY + spriteSheet.tileHeight);
 				int numTilesX, numTilesY;
@@ -240,7 +240,12 @@ namespace tk2dEditor.SpriteCollectionEditor
 		{
 			int spriteSheetId = SpriteCollection.GetSpriteSheetId(spriteSheet);
 			var tex = spriteSheet.texture;
-			Rect rect = GUILayoutUtility.GetRect(tex.width * zoomAmount, tex.height * zoomAmount, GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(false));
+			
+			int border = 16;
+			float width = tex.width * zoomAmount;
+			float height = tex.height * zoomAmount;
+			Rect baseRect = GUILayoutUtility.GetRect(border * 2 + width, border * 2 + height, GUILayout.ExpandWidth(false), GUILayout.ExpandHeight(false));
+			Rect rect = new Rect(baseRect.x + border, baseRect.y + border, width, height);
 			
 			if (Event.current.type == EventType.ScrollWheel)
 			{
@@ -354,7 +359,6 @@ namespace tk2dEditor.SpriteCollectionEditor
 			{
 				spriteSheet.texture.filterMode = FilterMode.Point;
 				DrawTextureView(spriteSheet);
-				host.OnSpriteCollectionChanged(true);
 			}
 			GUILayout.EndScrollView();
 			GUILayout.EndVertical();
@@ -370,8 +374,15 @@ namespace tk2dEditor.SpriteCollectionEditor
 			Texture2D newTexture = EditorGUILayout.ObjectField("Texture", spriteSheet.texture, typeof(Texture2D), false) as Texture2D;
 			if (newTexture != spriteSheet.texture)
 			{
+				bool needFullRebuild = false;
+				if (spriteSheet.texture == null)
+					needFullRebuild = true;
+				
 				spriteSheet.texture = newTexture;
-				host.OnSpriteCollectionSortChanged();
+				if (needFullRebuild)
+					host.OnSpriteCollectionChanged(true);
+				else
+					host.OnSpriteCollectionSortChanged();
 			}
 			GUILayout.FlexibleSpace();
 			if (GUILayout.Button("Delete", EditorStyles.miniButton)) doDelete = true;
@@ -434,6 +445,16 @@ namespace tk2dEditor.SpriteCollectionEditor
 					spriteSheet.tileSpacingX = EditorGUILayout.IntField("Tile Spacing X", spriteSheet.tileSpacingX);
 					spriteSheet.tileSpacingY = EditorGUILayout.IntField("Tile Spacing Y", spriteSheet.tileSpacingY);
 					
+					spriteSheet.pad = (tk2dSpriteCollectionDefinition.Pad)EditorGUILayout.EnumPopup("Pad", spriteSheet.pad);
+					if (spriteSheet.pad == tk2dSpriteCollectionDefinition.Pad.Default)
+					{
+						tk2dGuiUtility.InfoBox("The sprite sheet is configured to use default padding mode. " +
+							"It is advised to select an explicit padding mode depending on the usage of the " +
+							"sprites within the sprite sheet.\n\n" +
+							"BlackZeroAlpha - Recommended for animations\n" +
+							"Extend - Recommended for tilemaps", tk2dGuiUtility.WarningLevel.Warning);
+					}
+					
 					// Apply button
 					GUILayout.Space(8);
 					GUILayout.BeginHorizontal(); GUILayout.FlexibleSpace();
@@ -457,6 +478,10 @@ namespace tk2dEditor.SpriteCollectionEditor
 			
 			// /Body
 			GUILayout.EndScrollView();
+
+			// make dragable
+			tk2dPreferences.inst.spriteCollectionInspectorWidth -= (int)tk2dGuiUtility.DragableHandle(4819284, GUILayoutUtility.GetLastRect(), 0, tk2dGuiUtility.DragDirection.Horizontal);
+
 			GUILayout.EndHorizontal();
 			
 			if (doDelete)

@@ -10,17 +10,20 @@ namespace tk2dEditor
 		public tk2dTileMapEditorBrush brush;
 		public int brushHash;
 		public Mesh mesh;
+		public Material[] materials;
 		public Rect rect;
 	}
 	
 	public class BrushRenderer
 	{
+		tk2dTileMap tileMap;
 		tk2dSpriteCollectionData spriteCollection;
 		Dictionary<tk2dTileMapEditorBrush, BrushDictData> brushLookupDict = new  Dictionary<tk2dTileMapEditorBrush, BrushDictData>();
 		
-		public BrushRenderer(tk2dSpriteCollectionData spriteCollection)
+		public BrushRenderer(tk2dTileMap tileMap)
 		{
-			this.spriteCollection = spriteCollection;
+			this.tileMap = tileMap;
+			this.spriteCollection = tileMap.SpriteCollectionInst;
 		}
 		
 		public void Destroy()
@@ -37,14 +40,21 @@ namespace tk2dEditor
 		{
 			List<Vector3> vertices = new List<Vector3>();
 			List<Vector2> uvs = new List<Vector2>();
-			List<int> triangles = new List<int>();
+			Dictionary<Material, List<int>> triangles = new Dictionary<Material, List<int>>();
 			
 			// bounds of tile
-			Vector3 tileSize = spriteCollection.FirstValidDefinition.untrimmedBoundsData[1];
+			Vector3 spriteBounds = spriteCollection.FirstValidDefinition.untrimmedBoundsData[1];
+			Vector3 tileSize = brush.overrideWithSpriteBounds?
+								spriteBounds:
+								tileMap.data.tileSize;
 			float layerOffset = 0.001f;
 			
 			Vector3 boundsMin = new Vector3(1.0e32f, 1.0e32f, 1.0e32f);
 			Vector3 boundsMax = new Vector3(-1.0e32f, -1.0e32f, -1.0e32f);
+		
+			float tileOffsetX = 0, tileOffsetY = 0;
+			if (!brush.overrideWithSpriteBounds)
+				tileMap.data.GetTileOffset(out tileOffsetX, out tileOffsetY);
 			
 			if (brush.type == tk2dTileMapEditorBrush.Type.MultiSelect)
 			{
@@ -53,17 +63,22 @@ namespace tk2dEditor
 				if ((brush.multiSelectTiles.Length % tilesPerRow) == 0) tileY -=1;
 				foreach (var uncheckedSpriteId in brush.multiSelectTiles)
 				{
+					float xOffset = (tileY & 1) * tileOffsetX;
+				
 					// The origin of the tile in mesh space
-					Vector3 tileOrigin = new Vector3(tileX * tileSize.x, tileY * tileSize.y, 0.0f);
-					boundsMin = Vector3.Min(boundsMin, tileOrigin);
-					boundsMax = Vector3.Max(boundsMax, tileOrigin + tileSize);
+					Vector3 tileOrigin = new Vector3((tileX + xOffset) * tileSize.x, tileY * tileSize.y, 0.0f);
+					//if (brush.overrideWithSpriteBounds)
+					{
+						boundsMin = Vector3.Min(boundsMin, tileOrigin);
+						boundsMax = Vector3.Max(boundsMax, tileOrigin + tileSize);
+					}
 
 					if (uncheckedSpriteId != -1)
 					{
 						int indexRoot = vertices.Count;
 						int spriteId = Mathf.Clamp(uncheckedSpriteId, 0, spriteCollection.Count - 1);
-						var sprite = spriteCollection.spriteDefinitions[spriteId];
-			
+						tk2dSpriteDefinition sprite = spriteCollection.spriteDefinitions[spriteId];
+
 						for (int j = 0; j < sprite.positions.Length; ++j)
 						{
 							// Sprite vertex, centered around origin
@@ -72,13 +87,19 @@ namespace tk2dEditor
 							// Offset so origin is at bottom left
 							Vector3 v = centeredSpriteVertex + sprite.untrimmedBoundsData[1] * 0.5f;
 							
+							boundsMin = Vector3.Min(boundsMin, tileOrigin + v);
+							boundsMax = Vector3.Max(boundsMax, tileOrigin + v);
+							
 							vertices.Add(tileOrigin + v);
 							uvs.Add(sprite.uvs[j]);
 						}
 						
+						if (!triangles.ContainsKey(sprite.material))
+							triangles.Add(sprite.material, new List<int>());
+
 						for (int j = 0; j < sprite.indices.Length; ++j)
 						{
-							triangles.Add(indexRoot + sprite.indices[j]);
+							triangles[sprite.material].Add(indexRoot + sprite.indices[j]);
 						}
 					}
 					
@@ -95,10 +116,17 @@ namespace tk2dEditor
 				// the brush is centered around origin, x to the right, y up
 				foreach (var tile in brush.tiles)
 				{
+					float xOffset = (tile.y & 1) * tileOffsetX;
+					
 					// The origin of the tile in mesh space
-					Vector3 tileOrigin = new Vector3(tile.x * tileSize.x, tile.y * tileSize.y, tile.layer * layerOffset);
-					boundsMin = Vector3.Min(boundsMin, tileOrigin);
-					boundsMax = Vector3.Max(boundsMax, tileOrigin + tileSize);
+					Vector3 tileOrigin = new Vector3((tile.x + xOffset) * tileSize.x, tile.y * tileSize.y, tile.layer * layerOffset);
+					
+					//if (brush.overrideWithSpriteBounds)
+					{
+						boundsMin = Vector3.Min(boundsMin, tileOrigin);
+						boundsMax = Vector3.Max(boundsMax, tileOrigin + tileSize);
+					}
+
 
 					if (tile.spriteId == -1)
 						continue;
@@ -114,27 +142,51 @@ namespace tk2dEditor
 						
 						// Offset so origin is at bottom left
 						Vector3 v = centeredSpriteVertex + sprite.untrimmedBoundsData[1] * 0.5f;
+
+						boundsMin = Vector3.Min(boundsMin, tileOrigin + v);
+						boundsMax = Vector3.Max(boundsMax, tileOrigin + v);
 						
 						vertices.Add(tileOrigin + v);
 						uvs.Add(sprite.uvs[j]);
 					}
 					
+					if (!triangles.ContainsKey(sprite.material))
+						triangles.Add(sprite.material, new List<int>());
+
 					for (int j = 0; j < sprite.indices.Length; ++j)
 					{
-						triangles.Add(indexRoot + sprite.indices[j]);
+						triangles[sprite.material].Add(indexRoot + sprite.indices[j]);
 					}
 				}
 			}
 			
-			Mesh mesh = (dictData.mesh != null)?dictData.mesh:new Mesh();
+			if (dictData.mesh == null)
+			{
+				dictData.mesh = new Mesh();
+				dictData.mesh.hideFlags = HideFlags.DontSave;
+			}
+			
+			Mesh mesh = dictData.mesh;
 			mesh.Clear();
-			mesh.vertices = vertices.ToArray();
+			mesh.vertices = vertices.ToArray(); 
+			Color[] colors = new Color[vertices.Count];
+			for (int i = 0; i < vertices.Count; ++i)
+				colors[i] = Color.white;
+			mesh.colors = colors;
 			mesh.uv = uvs.ToArray();
-			mesh.triangles = triangles.ToArray();
+			mesh.subMeshCount = triangles.Keys.Count;
+
+			int subMeshId = 0;
+			foreach (Material mtl in triangles.Keys)
+			{
+				mesh.SetTriangles(triangles[mtl].ToArray(), subMeshId);
+				subMeshId++;
+			}
 			
 			dictData.brush = brush;
 			dictData.brushHash = brush.brushHash;
 			dictData.mesh = mesh;
+			dictData.materials = (new List<Material>(triangles.Keys)).ToArray();
 			dictData.rect = new Rect(boundsMin.x, boundsMin.y, boundsMax.x - boundsMin.x, boundsMax.y - boundsMin.y);
 		}
 		
@@ -183,12 +235,16 @@ namespace tk2dEditor
 			
 			if (Event.current.type == EventType.Repaint)
 			{
-				tileMap.spriteCollection.materials[0].SetPass(0);
 				Matrix4x4 mat = new Matrix4x4();
-				var spriteDef = tileMap.spriteCollection.spriteDefinitions[0];
+				var spriteDef = tileMap.SpriteCollectionInst.spriteDefinitions[0];
 				mat.SetTRS(new Vector3(rect.x, 
 									   rect.y + height, 0), Quaternion.identity, new Vector3(scale / spriteDef.texelSize.x, -scale / spriteDef.texelSize.y, 1));
-				Graphics.DrawMeshNow(atlasViewMesh, mat * GUI.matrix);
+					
+				for (int i = 0; i < dictData.materials.Length; ++i)
+				{
+					dictData.materials[i].SetPass(0);				
+					Graphics.DrawMeshNow(atlasViewMesh, mat * GUI.matrix, i);
+				}
 			}
 			
 			return rect;

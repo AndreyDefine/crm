@@ -29,7 +29,34 @@ public class tk2dTileMap : MonoBehaviour, tk2dRuntime.ISpriteCollectionForceBuil
 	/// <summary>
 	/// The sprite collection used by the tilemap
 	/// </summary>
-	public tk2dSpriteCollectionData spriteCollection;
+	[SerializeField]
+	private tk2dSpriteCollectionData spriteCollection = null;
+	public tk2dSpriteCollectionData Editor__SpriteCollection 
+	{ 
+		get 
+		{ 
+			return spriteCollection; 
+		} 
+		set
+		{
+			_spriteCollectionInst = null;
+			spriteCollection = value;
+			if (spriteCollection != null)
+				_spriteCollectionInst = spriteCollection.inst;
+		}
+	}
+	
+	tk2dSpriteCollectionData _spriteCollectionInst = null;
+	public tk2dSpriteCollectionData SpriteCollectionInst
+	{
+		get 
+		{
+			if (_spriteCollectionInst == null && spriteCollection != null)
+				_spriteCollectionInst = spriteCollection.inst;
+			return _spriteCollectionInst;
+		}
+	}
+	
 	[SerializeField]
 	int spriteCollectionKey;
 	
@@ -63,8 +90,11 @@ public class tk2dTileMap : MonoBehaviour, tk2dRuntime.ISpriteCollectionForceBuil
 	
 	void Awake()
 	{
+		if (spriteCollection != null)
+			_spriteCollectionInst = spriteCollection.inst;
+		
 		bool spriteCollectionKeyMatch = true;
-		if (spriteCollection && spriteCollection.buildKey != spriteCollectionKey) spriteCollectionKeyMatch = false;
+		if (SpriteCollectionInst && SpriteCollectionInst.buildKey != spriteCollectionKey) spriteCollectionKeyMatch = false;
 
 		if (Application.platform == RuntimePlatform.WindowsEditor ||
 			Application.platform == RuntimePlatform.OSXEditor)
@@ -85,8 +115,7 @@ public class tk2dTileMap : MonoBehaviour, tk2dRuntime.ISpriteCollectionForceBuil
 			}
 			else if (!spriteCollectionKeyMatch)
 			{
-				Debug.LogError("Tilemap  " + name + " has invalid sprite collection key." +
-				 	"Sprites may not match correctly.");
+				Build(BuildFlags.ForceBuild);
 			}
 		}
 	}
@@ -101,16 +130,46 @@ public class tk2dTileMap : MonoBehaviour, tk2dRuntime.ISpriteCollectionForceBuil
 	public void Build() { Build(BuildFlags.Default); }
 	public void ForceBuild() { Build(BuildFlags.ForceBuild); }
 	
+	// Clears all spawned instances, but retains the renderData object
+	void ClearSpawnedInstances()
+	{
+		if (layers == null)
+			return;
+
+		for (int layerIdx = 0; layerIdx < layers.Length; ++layerIdx)
+		{
+			Layer layer = layers[layerIdx];
+			for (int chunkIdx = 0; chunkIdx < layer.spriteChannel.chunks.Length; ++chunkIdx)
+			{
+				var chunk = layer.spriteChannel.chunks[chunkIdx];
+
+				if (chunk.gameObject == null)
+					continue;
+				
+				var transform = chunk.gameObject.transform;
+				List<Transform> children = new List<Transform>();
+				for (int i = 0; i < transform.GetChildCount(); ++i)
+					children.Add(transform.GetChild(i));
+				for (int i = 0; i < children.Count; ++i)
+					DestroyImmediate(children[i].gameObject);
+			}
+		}
+	}
+	
 	public void Build(BuildFlags buildFlags)
 	{
+		if (spriteCollection != null)
+			_spriteCollectionInst = spriteCollection.inst;
+		
+		
 #if UNITY_EDITOR || !UNITY_FLASH
 		// Sanitize tilePrefabs input, to avoid branches later
 		if (data != null)
 		{
 			if (data.tilePrefabs == null)
-				data.tilePrefabs = new Object[spriteCollection.Count];
-			else if (data.tilePrefabs.Length != spriteCollection.Count)
-				System.Array.Resize(ref data.tilePrefabs, spriteCollection.Count);
+				data.tilePrefabs = new Object[SpriteCollectionInst.Count];
+			else if (data.tilePrefabs.Length != SpriteCollectionInst.Count)
+				System.Array.Resize(ref data.tilePrefabs, SpriteCollectionInst.Count);
 			
 			// Fix up data if necessary
 			BuilderUtil.InitDataStore(this);
@@ -121,17 +180,20 @@ public class tk2dTileMap : MonoBehaviour, tk2dRuntime.ISpriteCollectionForceBuil
 		}
 
 		// Sanitize sprite collection material ids
-		if (spriteCollection)
-			spriteCollection.InitMaterialIds();
+		if (SpriteCollectionInst)
+			SpriteCollectionInst.InitMaterialIds();
 			
 		
 		bool editMode = (buildFlags & BuildFlags.EditMode) != 0;
 		bool forceBuild = (buildFlags & BuildFlags.ForceBuild) != 0;
-		
+
 		// When invalid, everything needs to be rebuilt
-		if (spriteCollection && spriteCollection.buildKey != spriteCollectionKey)
+		if (SpriteCollectionInst && SpriteCollectionInst.buildKey != spriteCollectionKey)
 			forceBuild = true;
-		
+
+		if (forceBuild)
+			ClearSpawnedInstances();
+
 		BuilderUtil.CreateRenderData(this, editMode);
 		
 		RenderMeshBuilder.Build(this, editMode, forceBuild);
@@ -152,8 +214,8 @@ public class tk2dTileMap : MonoBehaviour, tk2dRuntime.ISpriteCollectionForceBuil
 		buildKey = Random.Range(0, int.MaxValue);
 		
 		// Update sprite collection key
-		if (spriteCollection)
-			spriteCollectionKey = spriteCollection.buildKey;
+		if (SpriteCollectionInst)
+			spriteCollectionKey = SpriteCollectionInst.buildKey;
 #endif
 	}
 	
@@ -163,11 +225,78 @@ public class tk2dTileMap : MonoBehaviour, tk2dRuntime.ISpriteCollectionForceBuil
 	/// </summary>
 	public bool GetTileAtPosition(Vector3 position, out int x, out int y)
 	{
-		Vector3 localPosition = transform.worldToLocalMatrix.MultiplyPoint(position);
-		x = (int)((localPosition.x - data.tileOrigin.x) / data.tileSize.x);
-		y = (int)((localPosition.y - data.tileOrigin.y) / data.tileSize.y);
+		float ox, oy;
+		bool b = GetTileFracAtPosition(position, out ox, out oy);
+		x = (int)ox;
+		y = (int)oy;
+		return b;
+	}
+	
+	/// <summary>
+	/// Gets the tile coordinate at position. This can be used to obtain tile or color data explicitly from layers
+	/// The fractional value returned is the fraction into the current tile
+	/// Returns true if the position is within the tilemap bounds
+	/// </summary>
+	public bool GetTileFracAtPosition(Vector3 position, out float x, out float y)
+	{
+		switch (data.tileType)
+		{
+		case tk2dTileMapData.TileType.Rectangular:
+		{
+			Vector3 localPosition = transform.worldToLocalMatrix.MultiplyPoint(position);
+			x = (localPosition.x - data.tileOrigin.x) / data.tileSize.x;
+			y = (localPosition.y - data.tileOrigin.y) / data.tileSize.y;
+			return (x >= 0 && x <= width && y >= 0 && y <= height);
+		}
+		case tk2dTileMapData.TileType.Isometric:
+		{
+			if (data.tileSize.x == 0.0f)
+				break;
+
+			float tileAngle = Mathf.Atan2(data.tileSize.y, data.tileSize.x / 2.0f);
+			
+			Vector3 localPosition = transform.worldToLocalMatrix.MultiplyPoint(position);
+			x = (localPosition.x - data.tileOrigin.x) / data.tileSize.x;
+			y = ((localPosition.y - data.tileOrigin.y) / (data.tileSize.y));
+			
+			float fy = y * 0.5f;
+			int iy = (int)fy;
+			
+			float fry = fy - iy;
+			float frx = x % 1.0f;
+			
+			x = (int)x;
+			y = iy * 2;
+			
+			if (frx > 0.5f)
+			{
+				if (fry > 0.5f && Mathf.Atan2(1.0f - fry, (frx - 0.5f) * 2) < tileAngle)
+					y += 1;
+				else if (fry < 0.5f && Mathf.Atan2(fry, (frx - 0.5f) * 2) < tileAngle)
+					y -= 1;
+			}
+			else if (frx < 0.5f)
+			{
+				if (fry > 0.5f && Mathf.Atan2(fry - 0.5f, frx * 2) > tileAngle)
+				{
+					y += 1;
+					x -= 1;
+				}
+				
+				if (fry < 0.5f && Mathf.Atan2(fry, (0.5f - frx) * 2) < tileAngle)
+				{
+					y -= 1;
+					x -= 1;
+				}
+			}
+			
+			return (x >= 0 && x <= width && y >= 0 && y <= height);
+		}
+		}
 		
-		return (x >= 0 && x < width && y >= 0 && y < height);
+		x = 0.0f;
+		y = 0.0f;
+		return false;
 	}
 	
 	/// <summary>
@@ -255,7 +384,7 @@ public class tk2dTileMap : MonoBehaviour, tk2dRuntime.ISpriteCollectionForceBuil
 	// ISpriteCollectionBuilder
 	public bool UsesSpriteCollection(tk2dSpriteCollectionData spriteCollection)
 	{
-		return spriteCollection == this.spriteCollection;
+		return spriteCollection == this.spriteCollection || _spriteCollectionInst == spriteCollection;
 	}
 	
 #if UNITY_EDITOR
@@ -266,25 +395,12 @@ public class tk2dTileMap : MonoBehaviour, tk2dRuntime.ISpriteCollectionForceBuil
 		// Destroy all children
 		if (layers == null)
 			return;
-		
-		foreach (var layer in layers)
-		{
-			foreach (var chunk in layer.spriteChannel.chunks)
-			{
-				if (chunk.gameObject == null)
-					continue;
-				
-				var transform = chunk.gameObject.transform;
-				List<Transform> children = new List<Transform>();
-				for (int i = 0; i < transform.GetChildCount(); ++i)
-					children.Add(transform.GetChild(i));
-				children.ForEach((a) => DestroyImmediate(a.gameObject));
-			}
-		}
+
+		ClearSpawnedInstances();
 		
 		Build(BuildFlags.EditMode | BuildFlags.ForceBuild);
 	}
-	
+
 	public void EndEditMode()
 	{
 		_inEditMode = false;

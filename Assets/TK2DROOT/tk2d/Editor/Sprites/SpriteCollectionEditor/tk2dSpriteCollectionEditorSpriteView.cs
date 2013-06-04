@@ -6,6 +6,12 @@ namespace tk2dEditor.SpriteCollectionEditor
 {
 	public class SpriteView
 	{
+		enum CustomMeshType {
+			Default,
+			Diced,
+			Custom
+		};
+		
 		const int miniButtonWidth = 45;
 		
 		public SpriteCollectionProxy SpriteCollection { get { return host.SpriteCollection; } }
@@ -104,7 +110,7 @@ namespace tk2dEditor.SpriteCollectionEditor
 		{
 			var entry = entries[entries.Count - 1];
 			var param = SpriteCollection.textureParams[entry.index];
-			var spriteTexture = param.extractRegion?host.GetTextureForSprite(entry.index):SpriteCollection.textureRefs[entry.index];
+			var spriteTexture = param.extractRegion?host.GetTextureForSprite(entry.index):SpriteCollection.textureParams[entry.index].texture;
 
 			// Inspector
 			EditorGUILayout.BeginVertical();
@@ -112,16 +118,22 @@ namespace tk2dEditor.SpriteCollectionEditor
 			// Header
 			EditorGUILayout.BeginVertical(tk2dEditorSkin.SC_InspectorHeaderBG, GUILayout.MaxWidth(host.InspectorWidth), GUILayout.ExpandHeight(true));
 			if (entries.Count > 1)
+			{
 				EditorGUILayout.TextField("Name", param.name);
+			}
 			else
 			{
 				string name = EditorGUILayout.TextField("Name", param.name);
 				if (name != param.name)
 				{
 					param.name = name;
-					entries[entries.Count - 1].name = name;
+					entry.name = name;
 					host.OnSpriteCollectionSortChanged();
 				}
+				EditorGUILayout.BeginHorizontal();
+				EditorGUILayout.PrefixLabel("Sprite Id");
+				EditorGUILayout.SelectableLabel(entry.index.ToString(), EditorStyles.textField, GUILayout.ExpandWidth(true), GUILayout.Height(16));
+				EditorGUILayout.EndHorizontal();
 			}
 			GUILayout.BeginHorizontal();
 			bool doDelete = false;
@@ -132,7 +144,7 @@ namespace tk2dEditor.SpriteCollectionEditor
 				if (param.extractRegion)
 					EditorGUILayout.ObjectField("Texture", spriteTexture, typeof(Texture2D), false);
 				else
-					SpriteCollection.textureRefs[entry.index] = EditorGUILayout.ObjectField("Texture", spriteTexture, typeof(Texture2D), false) as Texture2D;
+					SpriteCollection.textureParams[entry.index].texture = EditorGUILayout.ObjectField("Texture", spriteTexture, typeof(Texture2D), false) as Texture2D;
 				GUILayout.FlexibleSpace();
 				GUILayout.BeginVertical();
 				if (editingSpriteSheet && GUILayout.Button("Edit...", EditorStyles.miniButton, GUILayout.Width(miniButtonWidth))) doSelect = true;
@@ -165,7 +177,10 @@ namespace tk2dEditor.SpriteCollectionEditor
 			}
 			GUILayout.EndHorizontal();
 			EditorGUILayout.EndVertical();
-			
+
+			// make dragable
+			tk2dPreferences.inst.spriteCollectionInspectorWidth -= (int)tk2dGuiUtility.DragableHandle(4819284, GUILayoutUtility.GetLastRect(), 0, tk2dGuiUtility.DragDirection.Horizontal);
+
 			// Body
 			EditorGUILayout.BeginVertical(tk2dEditorSkin.SC_InspectorBG, GUILayout.MaxWidth(host.InspectorWidth), GUILayout.ExpandHeight(true));
 			
@@ -207,7 +222,15 @@ namespace tk2dEditor.SpriteCollectionEditor
 			HandleMultiSelection(entries, (a,b) => a.scale == b.scale, (a,b) => b.scale = a.scale);
 			
 			// Anchor
-			param.anchor = (tk2dSpriteCollectionDefinition.Anchor)EditorGUILayout.EnumPopup("Anchor", param.anchor);
+			var newAnchor = (tk2dSpriteCollectionDefinition.Anchor)EditorGUILayout.EnumPopup("Anchor", param.anchor);
+			if (param.anchor != newAnchor)
+			{
+				// When anchor type is changed to custom, switch the editor to edit anchors
+				if (newAnchor == tk2dSpriteCollectionDefinition.Anchor.Custom)
+					textureEditor.SetMode(tk2dEditor.SpriteCollectionEditor.TextureEditor.Mode.Anchor);
+				param.anchor = newAnchor;
+			}
+
 			if (param.anchor == tk2dSpriteCollectionDefinition.Anchor.Custom)
 			{
 				EditorGUI.indentLevel++;
@@ -239,7 +262,16 @@ namespace tk2dEditor.SpriteCollectionEditor
 				HandleMultiSelection(entries, (a,b) => a.anchor == b.anchor, (a,b) => b.anchor = a.anchor);
 			}
 	
-			param.colliderType = (tk2dSpriteCollectionDefinition.ColliderType)EditorGUILayout.EnumPopup("Collider Type", param.colliderType);
+			var newColliderType = (tk2dSpriteCollectionDefinition.ColliderType)EditorGUILayout.EnumPopup("Collider Type", param.colliderType);
+			if (param.colliderType != newColliderType)
+			{
+				// when switching to custom collider mode, automatically switch editor mode
+				if (newColliderType == tk2dSpriteCollectionDefinition.ColliderType.BoxCustom ||
+					newColliderType == tk2dSpriteCollectionDefinition.ColliderType.Polygon)
+					textureEditor.SetMode(tk2dEditor.SpriteCollectionEditor.TextureEditor.Mode.Collider);
+				param.colliderType = newColliderType;
+			}
+
 			if (param.colliderType == tk2dSpriteCollectionDefinition.ColliderType.BoxCustom)
 			{
 				EditorGUI.indentLevel++;
@@ -282,48 +314,62 @@ namespace tk2dEditor.SpriteCollectionEditor
 				HandleMultiSelection(entries, (a,b) => a.colliderType == b.colliderType, (a,b) => b.colliderType = a.colliderType);				
 			}
 			
-			
-			bool allowDicing = !SpriteCollection.allowMultipleAtlases && !param.customSpriteGeometry;
-			bool allowCustomGeometry = !param.dice;
-			
-			// Custom geometry
-			if (allowCustomGeometry)
+			// Mesh type
+			if (param.dice && param.customSpriteGeometry) // sanity check
+				{ param.dice = false; param.customSpriteGeometry = false; }
+			CustomMeshType meshType = CustomMeshType.Default;
+			if (param.customSpriteGeometry) meshType = CustomMeshType.Custom;
+			else if (param.dice) meshType = CustomMeshType.Diced;
+			CustomMeshType newMeshType = (CustomMeshType)EditorGUILayout.EnumPopup("Render Mesh", meshType);
+			if (newMeshType != meshType)
 			{
-				param.customSpriteGeometry = EditorGUILayout.Toggle("Custom Shape", param.customSpriteGeometry);
-				HandleMultiSelection(entries, (a,b) => (a.customSpriteGeometry == b.customSpriteGeometry &&
-					ComparePolyCollider(a.geometryIslands, b.geometryIslands)),
-					delegate(tk2dSpriteCollectionDefinition a, tk2dSpriteCollectionDefinition b){
-						b.customSpriteGeometry = a.customSpriteGeometry;
-						b.dice = a.dice; // mutually exclusive
-						CopyPolyCollider(a.geometryIslands, ref b.geometryIslands);	
-				});
+				// Fix up
+				switch (newMeshType)
+				{
+				case CustomMeshType.Custom: param.customSpriteGeometry = true; 	param.dice = false; break;
+				case CustomMeshType.Diced:	param.customSpriteGeometry = false;	param.dice = true;	break;
+				case CustomMeshType.Default:param.customSpriteGeometry = false;	param.dice = false;	break;
+				}
+
+				// Automatically switch to custom geom edit mode when explicitly switched
+				if (param.customSpriteGeometry)
+					textureEditor.SetMode(tk2dEditor.SpriteCollectionEditor.TextureEditor.Mode.Texture);
 			}
 			
-			// Dicing
-			if (allowDicing)
+			// Sanity check dicing & multiple atlases
+			if (param.dice && SpriteCollection.allowMultipleAtlases)
 			{
-				param.dice = EditorGUILayout.Toggle("Dice", param.dice);
-				if (param.dice)
-				{
-					EditorGUI.indentLevel++;
-					param.diceUnitX = EditorGUILayout.IntField("X", param.diceUnitX);
-					param.diceUnitY = EditorGUILayout.IntField("Y", param.diceUnitY);
-					EditorGUI.indentLevel--;
-					EditorGUILayout.Separator();
+				EditorUtility.DisplayDialog("Sprite dicing", 
+					"Sprite dicing is unavailable when multiple atlases is enabled. " +
+					"Please disable it and try again.", "Ok");
+				param.dice = false;
+			}
+			
+			// Dicing parameters
+			if (param.dice)
+			{
+				EditorGUI.indentLevel++;
+				param.diceUnitX = EditorGUILayout.IntField("Dice X", param.diceUnitX);
+				param.diceUnitY = EditorGUILayout.IntField("Dice Y", param.diceUnitY);
+				EditorGUI.indentLevel--;
+				EditorGUILayout.Separator();
+			}
+			
+			HandleMultiSelection(entries, 
+				(a,b) => a.customSpriteGeometry == b.customSpriteGeometry && a.dice == b.dice && a.diceUnitX == b.diceUnitX && a.diceUnitY == b.diceUnitY, 
+				delegate(tk2dSpriteCollectionDefinition a, tk2dSpriteCollectionDefinition b) {
+					b.customSpriteGeometry = a.customSpriteGeometry;
+					b.dice = a.dice;
+					b.diceUnitX = a.diceUnitX;
+					b.diceUnitY = a.diceUnitY;
+			});
+			
 
-					HandleMultiSelection(entries, 
-						(a,b) => a.dice == b.dice && a.diceUnitX == b.diceUnitX && a.diceUnitY == b.diceUnitY, 
-						delegate(tk2dSpriteCollectionDefinition a, tk2dSpriteCollectionDefinition b) {
-							b.dice = a.dice;
-							b.customSpriteGeometry = a.customSpriteGeometry; // mutually exclusive
-							b.diceUnitX = a.diceUnitX;
-							b.diceUnitY = a.diceUnitY;
-					});
-				}
-				else
-				{
-					HandleMultiSelection(entries, (a,b) => a.dice == b.dice, (a,b) => b.dice = a.dice);
-				}
+			// Disable trimming
+			if (!SpriteCollection.disableTrimming)
+			{
+				param.disableTrimming = EditorGUILayout.Toggle("Disable Trimming", param.disableTrimming);
+				HandleMultiSelection(entries, (a,b) => a.disableTrimming == b.disableTrimming, (a,b) => b.disableTrimming = a.disableTrimming);
 			}
 			
 			// Pad amount
@@ -340,13 +386,16 @@ namespace tk2dEditor.SpriteCollectionEditor
 			
 			EditorGUILayout.EndVertical();
 			EditorGUILayout.EndVertical(); // inspector
+
+			// make dragable
+			tk2dPreferences.inst.spriteCollectionInspectorWidth -= (int)tk2dGuiUtility.DragableHandle(4819284, GUILayoutUtility.GetLastRect(), 0, tk2dGuiUtility.DragDirection.Horizontal);
 			
 			// Defer delete to avoid messing about anything else
-			if (doDelete)
+			if (doDelete &&
+				EditorUtility.DisplayDialog("Delete sprite", "Are you sure you want to delete the selected sprites?", "Yes", "No"))
 			{
 				foreach (var e in entries)
 				{
-					SpriteCollection.textureRefs[e.index] = null;
 					SpriteCollection.textureParams[e.index] = new tk2dSpriteCollectionDefinition();
 				}
 				SpriteCollection.Trim();
@@ -390,7 +439,7 @@ namespace tk2dEditor.SpriteCollectionEditor
 				return;
 			var entry = entries[entries.Count - 1];
 			var param = SpriteCollection.textureParams[entry.index];
-			var spriteTexture = param.extractRegion?host.GetTextureForSprite(entry.index):SpriteCollection.textureRefs[entry.index];
+			var spriteTexture = param.extractRegion?host.GetTextureForSprite(entry.index):SpriteCollection.textureParams[entry.index].texture;
 			EditorGUILayout.BeginHorizontal();
 	
 			// Cache texture or draw it
@@ -402,7 +451,7 @@ namespace tk2dEditor.SpriteCollectionEditor
 		
 		public void Draw(List<SpriteCollectionEditorEntry> entries)
 		{
-			EditorGUIUtility.LookLikeControls(100.0f, 100.0f);
+			EditorGUIUtility.LookLikeControls(110.0f, 100.0f);
 			
 			GUILayout.BeginVertical(GUILayout.ExpandWidth(false));
 			if (entries == null || entries.Count == 0)

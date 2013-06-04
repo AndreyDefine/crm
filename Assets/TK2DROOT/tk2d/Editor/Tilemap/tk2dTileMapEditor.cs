@@ -15,8 +15,37 @@ public class tk2dTileMapEditor : Editor, ITileMapEditorHost
 	tk2dTileMapEditorData editorData;
 
 	tk2dTileMapSceneGUI sceneGUI;
-	tk2dEditor.BrushRenderer brushRenderer;	
-	tk2dEditor.BrushBuilder guiBrushBuilder;
+	tk2dEditor.BrushRenderer _brushRenderer;
+	tk2dEditor.BrushRenderer brushRenderer
+	{
+		get {
+			if (_brushRenderer == null) _brushRenderer = new tk2dEditor.BrushRenderer(tileMap);
+			return _brushRenderer;
+		}
+		set {
+			if (value != null) { Debug.LogError("Only alloyed to set to null"); return; }
+			if (_brushRenderer != null)
+			{
+				_brushRenderer.Destroy();
+				_brushRenderer = null;
+			}
+		}
+	}
+	tk2dEditor.BrushBuilder _guiBrushBuilder;
+	tk2dEditor.BrushBuilder guiBrushBuilder
+	{
+		get {
+			if (_guiBrushBuilder == null) _guiBrushBuilder = new tk2dEditor.BrushBuilder();
+			return _guiBrushBuilder;
+		}
+		set {
+			if (value != null) { Debug.LogError("Only allowed to set to null"); return; }
+			if (_guiBrushBuilder != null)
+			{
+				_guiBrushBuilder = null;
+			}
+		}
+	}
 	
 	int width, height;
 	int partitionSizeX, partitionSizeY;
@@ -28,14 +57,9 @@ public class tk2dTileMapEditor : Editor, ITileMapEditorHost
 	{
 		get
 		{
-			if (_spriteCollection == null)
+			if (_spriteCollection != tileMap.SpriteCollectionInst)
 			{
-				_spriteCollection = tileMap.spriteCollection;
-			}
-			
-			if (_spriteCollection != tileMap.spriteCollection)
-			{
-				_spriteCollection = tileMap.spriteCollection;
+				_spriteCollection = tileMap.SpriteCollectionInst;
 			}
 			
 			return _spriteCollection;
@@ -49,23 +73,18 @@ public class tk2dTileMapEditor : Editor, ITileMapEditorHost
 			return;
 		
 		LoadTileMapData();
-		guiBrushBuilder = new tk2dEditor.BrushBuilder();
 	}
 	
 	void InitEditor()
 	{
 		// Initialize editor
 		LoadTileMapData();
-		guiBrushBuilder = new tk2dEditor.BrushBuilder();		
 	}
 	
 	void OnDisable()
 	{
-		if (brushRenderer != null)
-		{
-			brushRenderer.Destroy();
-			brushRenderer = null;
-		}
+		brushRenderer = null;
+		guiBrushBuilder = null;
 		
 		if (sceneGUI != null)
 		{
@@ -99,7 +118,7 @@ public class tk2dTileMapEditor : Editor, ITileMapEditorHost
 		if (tileMap.data && editorData)
 		{
 			// Rebuild the palette
-			editorData.CreateDefaultPalette(tileMap.spriteCollection, editorData.paletteBrush, editorData.paletteTilesPerRow);
+			editorData.CreateDefaultPalette(tileMap.SpriteCollectionInst, editorData.paletteBrush, editorData.paletteTilesPerRow);
 		}
 		
 		// Rebuild the render utility
@@ -110,11 +129,7 @@ public class tk2dTileMapEditor : Editor, ITileMapEditorHost
 		sceneGUI = new tk2dTileMapSceneGUI(this, tileMap, editorData);
 		
 		// Rebuild the brush renderer
-		if (brushRenderer != null)
-		{
-			brushRenderer.Destroy();
-		}
-		brushRenderer = new tk2dEditor.BrushRenderer(tileMap.spriteCollection);
+		brushRenderer = null;
 	}
 	
 	public void Build(bool force, bool incremental)
@@ -139,7 +154,7 @@ public class tk2dTileMapEditor : Editor, ITileMapEditorHost
 	{
 		get
 		{
-			return (tileMap != null && tileMap.data != null && editorData != null & tileMap.spriteCollection != null);
+			return (tileMap != null && tileMap.data != null && editorData != null & tileMap.SpriteCollectionInst != null);
 		}
 	}
 	
@@ -269,6 +284,7 @@ public class tk2dTileMapEditor : Editor, ITileMapEditorHost
 				}
 				else
 				{
+					GUILayout.BeginHorizontal();
 					bool layerSelVal = editorData.layer == layer;
 					bool newLayerSelVal = GUILayout.Toggle(layerSelVal, tileMap.data.Layers[layer].name,  EditorStyles.toggle, GUILayout.ExpandWidth(true));
 					if (newLayerSelVal != layerSelVal)
@@ -276,6 +292,17 @@ public class tk2dTileMapEditor : Editor, ITileMapEditorHost
 						editorData.layer = layer;
 						Repaint();
 					}
+					GUILayout.FlexibleSpace();
+					
+					var layerGameObject = tileMap.Layers[layer].gameObject;
+					if (layerGameObject)
+					{
+						bool b = GUILayout.Toggle(tk2dEditorUtility.IsGameObjectActive(layerGameObject), "V", EditorStyles.miniButton);
+						if (b != tk2dEditorUtility.IsGameObjectActive(layerGameObject))
+							tk2dEditorUtility.SetGameObjectActive(layerGameObject, b);
+					}
+					
+					GUILayout.EndHorizontal();
 				}
 			}
 			
@@ -287,13 +314,6 @@ public class tk2dTileMapEditor : Editor, ITileMapEditorHost
 				GUILayout.BeginHorizontal();
 				
 				GUILayout.FlexibleSpace();
-				
-				tk2dGuiUtility.BeginChangeCheck();
-				tileMap.data.Layers[layer].useColor = GUILayout.Toggle(tileMap.data.Layers[layer].useColor, "Color", EditorStyles.miniButton, GUILayout.ExpandWidth(false));
-				if (tk2dGuiUtility.EndChangeCheck())
-					Build(true);
-				
-				tileMap.data.Layers[layer].generateCollider = GUILayout.Toggle(tileMap.data.Layers[layer].generateCollider, "Collider", EditorStyles.miniButton, GUILayout.ExpandWidth(false));
 				
 				if (allowEditing && tileMap.data.NumLayers != 1)
 				{
@@ -336,7 +356,25 @@ public class tk2dTileMapEditor : Editor, ITileMapEditorHost
 				
 				GUILayout.EndHorizontal();
 				
+				
+				// Row 2
+				GUILayout.BeginHorizontal();
+				GUILayout.FlexibleSpace();
 
+				tk2dGuiUtility.BeginChangeCheck();
+				tileMap.data.Layers[layer].useColor = GUILayout.Toggle(tileMap.data.Layers[layer].useColor, "Color", EditorStyles.miniButton, GUILayout.ExpandWidth(false));
+				if (tk2dGuiUtility.EndChangeCheck())
+					Build(true);
+				
+				tk2dGuiUtility.BeginChangeCheck();
+				tileMap.data.Layers[layer].skipMeshGeneration = !GUILayout.Toggle(!tileMap.data.Layers[layer].skipMeshGeneration, "Mesh", EditorStyles.miniButton, GUILayout.ExpandWidth(false));
+				if (tk2dGuiUtility.EndChangeCheck())
+					Build(true);
+				
+				tileMap.data.Layers[layer].generateCollider = GUILayout.Toggle(tileMap.data.Layers[layer].generateCollider, "Collider", EditorStyles.miniButton, GUILayout.ExpandWidth(false));
+				
+				GUILayout.EndHorizontal();
+				
 				
 				GUILayout.BeginHorizontal();
 				
@@ -388,6 +426,24 @@ public class tk2dTileMapEditor : Editor, ITileMapEditorHost
 		GUILayout.EndVertical();
 		
 		GUILayout.EndVertical();
+	}
+	
+	bool Foldout(ref tk2dTileMapEditorData.SetupMode val, tk2dTileMapEditorData.SetupMode ident, string name)
+	{
+		bool selected = false;
+		if ((val & ident) != 0)
+			selected = true;
+		
+		//GUILayout.BeginHorizontal(EditorStyles.toolbar, GUILayout.ExpandWidth(true));
+		bool newSelected = GUILayout.Toggle(selected, name, EditorStyles.toolbarDropDown, GUILayout.ExpandWidth(true));
+		if (newSelected != selected)
+		{
+			if (selected == false)
+				val = ident;
+			else
+				val = 0;
+		}
+		return newSelected;
 	}
 	
 	void DrawSettingsPanel()
@@ -454,8 +510,17 @@ public class tk2dTileMapEditor : Editor, ITileMapEditorHost
 		}
 		
 		// Sprite collection
-		Object selectedSpriteCollectionObject = EditorGUILayout.ObjectField("Sprite Collection", tileMap.spriteCollection, typeof(Object), false) as Object;
-		if (selectedSpriteCollectionObject != tileMap.spriteCollection)
+		GUILayout.BeginHorizontal();
+		Object selectedSpriteCollectionObject = EditorGUILayout.ObjectField("Sprite Collection", tileMap.Editor__SpriteCollection, typeof(Object), false) as Object;
+		if (tileMap.Editor__SpriteCollection != null && GUILayout.Button(">", EditorStyles.miniButton, GUILayout.Width(19)))
+		{
+			tk2dSpriteCollectionEditorPopup v = EditorWindow.GetWindow( typeof(tk2dSpriteCollectionEditorPopup), false, "Sprite Collection Editor" ) as tk2dSpriteCollectionEditorPopup;
+			string assetPath = AssetDatabase.GUIDToAssetPath(tileMap.Editor__SpriteCollection.spriteCollectionGUID);
+			var spriteCollection = AssetDatabase.LoadAssetAtPath(assetPath, typeof(tk2dSpriteCollection)) as tk2dSpriteCollection;
+			v.SetGeneratorAndSelectedSprite(spriteCollection, 0);
+		}
+		GUILayout.EndHorizontal();
+		if (selectedSpriteCollectionObject != tileMap.Editor__SpriteCollection)
 		{
 			string assetPath = AssetDatabase.GetAssetPath(selectedSpriteCollectionObject);
 			string guid = AssetDatabase.AssetPathToGUID(assetPath);
@@ -475,7 +540,7 @@ public class tk2dTileMapEditor : Editor, ITileMapEditorHost
 					}
 					else
 					{
-						tileMap.spriteCollection = data;
+						tileMap.Editor__SpriteCollection = data;
 						data.InitMaterialIds();
 						LoadTileMapData();
 						
@@ -496,7 +561,8 @@ public class tk2dTileMapEditor : Editor, ITileMapEditorHost
 		if (!Ready)
 			return;
 		
-		tileMap.renderData = EditorGUILayout.ObjectField("Render Data", tileMap.renderData, typeof(GameObject), false) as GameObject;
+		// this is intentionally read only
+		EditorGUILayout.ObjectField("Render Data", tileMap.renderData, typeof(GameObject), false);
 		GUILayout.BeginHorizontal();
 		EditorGUILayout.PrefixLabel(" ");
 		if (GUILayout.Button("Make Unique"))
@@ -554,8 +620,8 @@ public class tk2dTileMapEditor : Editor, ITileMapEditorHost
 		GUILayout.EndHorizontal();
 		
 		// tile map size
-		editorData.showDimensions = EditorGUILayout.Foldout(editorData.showDimensions, "Dimensions");
-		if (editorData.showDimensions)
+		
+		if (Foldout(ref editorData.setupMode, tk2dTileMapEditorData.SetupMode.Dimensions, "Dimensions"))
 		{
 			EditorGUI.indentLevel++;
 			
@@ -591,8 +657,7 @@ public class tk2dTileMapEditor : Editor, ITileMapEditorHost
 			EditorGUI.indentLevel--;
 		}
 		
-		editorData.showLayers = EditorGUILayout.Foldout(editorData.showLayers, "Layers");
-		if (editorData.showLayers)
+		if (Foldout(ref editorData.setupMode, tk2dTileMapEditorData.SetupMode.Layers, "Layers"))
 		{
 			EditorGUI.indentLevel++;
 			
@@ -602,8 +667,7 @@ public class tk2dTileMapEditor : Editor, ITileMapEditorHost
 		}
 		
 		// tilemap info
-		editorData.showInfo = EditorGUILayout.Foldout(editorData.showInfo, "Info");
-		if (editorData.showInfo)
+		if (Foldout(ref editorData.setupMode, tk2dTileMapEditorData.SetupMode.Info, "Info"))
 		{
 			EditorGUI.indentLevel++;
 			
@@ -628,13 +692,13 @@ public class tk2dTileMapEditor : Editor, ITileMapEditorHost
 		}
 		
 		// tile properties
-		editorData.showTileProperties = EditorGUILayout.Foldout(editorData.showTileProperties, "Tile Properties");
-		if (editorData.showTileProperties)
+		if (Foldout(ref editorData.setupMode, tk2dTileMapEditorData.SetupMode.TileProperties, "Tile Properties"))
 		{
 			EditorGUI.indentLevel++;
 
 			// sort method
 			tk2dGuiUtility.BeginChangeCheck();
+			tileMap.data.tileType = (tk2dTileMapData.TileType)EditorGUILayout.EnumPopup("Tile Type", tileMap.data.tileType);
 			tileMap.data.sortMethod = (tk2dTileMapData.SortMethod)EditorGUILayout.EnumPopup("Sort Method", tileMap.data.sortMethod);
 			if (tk2dGuiUtility.EndChangeCheck())
 			{
@@ -658,8 +722,8 @@ public class tk2dTileMapEditor : Editor, ITileMapEditorHost
 			Vector3 tileOriginPixels = new Vector3(tileMap.data.tileOrigin.x / texelSize.x, tileMap.data.tileOrigin.y / texelSize.y, tileMap.data.tileOrigin.z);
 			Vector3 tileSizePixels = new Vector3(tileMap.data.tileSize.x / texelSize.x, tileMap.data.tileSize.y / texelSize.y, tileMap.data.tileSize.z);
 			
-			Vector3 newTileOriginPixels = EditorGUILayout.Vector3Field("Cursor Origin", tileOriginPixels);
-			Vector3 newTileSizePixels = EditorGUILayout.Vector3Field("Tile Size", tileSizePixels);
+			Vector3 newTileOriginPixels = EditorGUILayout.Vector3Field("Origin", tileOriginPixels);
+			Vector3 newTileSizePixels = EditorGUILayout.Vector3Field("Size", tileSizePixels);
 			
 			if (newTileOriginPixels != tileOriginPixels ||
 				newTileSizePixels != tileSizePixels)
@@ -671,8 +735,7 @@ public class tk2dTileMapEditor : Editor, ITileMapEditorHost
 			EditorGUI.indentLevel--;
 		}
 		
-		editorData.showPaletteProperties = EditorGUILayout.Foldout(editorData.showPaletteProperties, "Palette Properties");
-		if (editorData.showPaletteProperties)
+		if (Foldout(ref editorData.setupMode, tk2dTileMapEditorData.SetupMode.PaletteProperties, "Palette Properties"))
 		{
 			EditorGUI.indentLevel++;
 			int newTilesPerRow = Mathf.Clamp(EditorGUILayout.IntField("Tiles Per Row", editorData.paletteTilesPerRow),
@@ -682,7 +745,7 @@ public class tk2dTileMapEditor : Editor, ITileMapEditorHost
 				guiBrushBuilder.Reset();
 				
 				editorData.paletteTilesPerRow = newTilesPerRow;
-				editorData.CreateDefaultPalette(tileMap.spriteCollection, editorData.paletteBrush, editorData.paletteTilesPerRow);
+				editorData.CreateDefaultPalette(tileMap.SpriteCollectionInst, editorData.paletteBrush, editorData.paletteTilesPerRow);
 			}
 			
 			GUILayout.BeginHorizontal();
@@ -699,11 +762,25 @@ public class tk2dTileMapEditor : Editor, ITileMapEditorHost
 			brushRenderer.DrawBrush(tileMap, editorData.paletteBrush, editorData.brushDisplayScale, true, editorData.paletteTilesPerRow);
 			EditorGUI.indentLevel--;
 		}
-		
-//		editorData.showAdvancedProperties = EditorGUILayout.Foldout(editorData.showAdvancedProperties, "Advanced");
-//		if (editorData.showAdvancedProperties)
-//		{
-//		}
+
+		if (Foldout(ref editorData.setupMode, tk2dTileMapEditorData.SetupMode.Import, "Import"))
+		{
+			EditorGUI.indentLevel++;
+			
+			if (GUILayout.Button("Import TMX"))
+			{
+				if (tk2dEditor.TileMap.Importer.Import(tileMap, tk2dEditor.TileMap.Importer.Format.TMX)) 
+				{
+					Build(true);	
+					width = tileMap.width;
+					height = tileMap.height;
+					partitionSizeX = tileMap.partitionSizeX;
+					partitionSizeY = tileMap.partitionSizeY;
+				}
+			}
+			
+			EditorGUI.indentLevel--;
+		}
 	}
 	
 	void DrawColorPaintPanel()
@@ -771,13 +848,105 @@ public class tk2dTileMapEditor : Editor, ITileMapEditorHost
 		return selectedIndex;
 	}
 	
+	bool showSaveSection = false;
+	bool showLoadSection = false;
+
+	void DrawLoadSaveBrushSection(tk2dTileMapEditorBrush activeBrush)
+	{
+		// Brush load & save handling
+		bool startedSave = false;
+		bool prevGuiEnabled = GUI.enabled;
+		GUILayout.BeginHorizontal();
+		if (showLoadSection) GUI.enabled = false;
+		if (GUILayout.Button(showSaveSection?"Cancel":"Save"))
+		{
+			if (showSaveSection == false) startedSave = true;
+			showSaveSection = !showSaveSection;
+			if (showSaveSection) showLoadSection = false;
+			Repaint();
+		}
+		GUI.enabled = prevGuiEnabled;
+
+		if (showSaveSection) GUI.enabled = false;
+		if (GUILayout.Button(showLoadSection?"Cancel":"Load"))
+		{
+			showLoadSection = !showLoadSection;
+			if (showLoadSection) showSaveSection = false;
+		}
+		GUI.enabled = prevGuiEnabled;
+		GUILayout.EndHorizontal();
+
+		if (showSaveSection)
+		{
+			GUI.SetNextControlName("BrushNameEntry");
+			activeBrush.name = EditorGUILayout.TextField("Name", activeBrush.name);
+			if (startedSave)
+				GUI.FocusControl("BrushNameEntry");
+
+			if (GUILayout.Button("Save"))
+			{
+				if (activeBrush.name.Length == 0)
+				{
+					Debug.LogError("Active brush needs a name");
+				}
+				else
+				{
+					bool replaced = false;
+					for (int i = 0; i < editorData.brushes.Count; ++i)
+					{
+						if (editorData.brushes[i].name == activeBrush.name)
+						{
+							editorData.brushes[i] = new tk2dTileMapEditorBrush(activeBrush);
+							replaced = true;
+						}
+					}
+					if (!replaced)
+						editorData.brushes.Add(new tk2dTileMapEditorBrush(activeBrush));
+					showSaveSection = false;
+				}
+			}
+		}
+
+		if (showLoadSection)
+		{
+			GUILayout.Space(8);
+
+			if (editorData.brushes.Count == 0)
+				GUILayout.Label("No saved brushes.");
+
+			GUILayout.BeginVertical();
+			int deleteBrushId = -1;
+			for (int i = 0; i < editorData.brushes.Count; ++i)
+			{
+				var v = editorData.brushes[i];
+				GUILayout.BeginHorizontal();
+				if (GUILayout.Button(v.name, EditorStyles.miniButton))
+				{
+					showLoadSection = false;
+					editorData.activeBrush = new tk2dTileMapEditorBrush(v);
+				}
+				if (GUILayout.Button("X", EditorStyles.miniButton, GUILayout.Width(16)))
+				{
+					deleteBrushId = i;
+				}
+				GUILayout.EndHorizontal();
+			}
+			if (deleteBrushId != -1)
+			{
+				editorData.brushes.RemoveAt(deleteBrushId);
+				Repaint();
+			}
+			GUILayout.EndVertical();
+		}
+	}
+
 	void DrawPaintPanel()
 	{
 		var activeBrush = editorData.activeBrush;
 		
 		if (Ready && (activeBrush == null || activeBrush.Empty))
 		{
-			editorData.InitBrushes(tileMap.spriteCollection);
+			editorData.InitBrushes(tileMap.SpriteCollectionInst);
 		}
 		
 		// Draw layer selector
@@ -795,28 +964,44 @@ public class tk2dTileMapEditor : Editor, ITileMapEditorHost
 		// Brush properties
 		string[] toolBarButtonNames = System.Enum.GetNames(typeof(tk2dTileMapEditorBrush.PaintMode));
 		editorData.activeBrush.paintMode = (tk2dTileMapEditorBrush.PaintMode)InlineToolbar("Paint mode", (int)editorData.activeBrush.paintMode, toolBarButtonNames);
-		
+
+#if TK2D_TILEMAP_EXPERIMENTAL
+		DrawLoadSaveBrushSection(activeBrush);
+#endif
+
 		// Draw palette
-		editorData.showPalette = EditorGUILayout.Foldout(editorData.showPalette, "Palette");
-		if (editorData.showPalette)
+		if (!showLoadSection && !showSaveSection)
 		{
-			Rect rect = brushRenderer.DrawBrush(tileMap, editorData.paletteBrush, editorData.brushDisplayScale, true, editorData.paletteTilesPerRow);
-			float displayScale = brushRenderer.LastScale;
+			editorData.showPalette = EditorGUILayout.Foldout(editorData.showPalette, "Palette");
+			if (editorData.showPalette)
+			{
+				// brush name
+				string selectionDesc = "";
+				if (activeBrush.tiles.Length == 1 && activeBrush.tiles[0].spriteId >= 0)
+					selectionDesc = SpriteCollection.spriteDefinitions[activeBrush.tiles[0].spriteId].name;
+				GUILayout.Label(selectionDesc);
 			
-			Rect tileSize = new Rect(0, 0, brushRenderer.TileSizePixels.width * displayScale, brushRenderer.TileSizePixels.height * displayScale);
-			guiBrushBuilder.HandleGUI(rect, tileSize, editorData.paletteTilesPerRow, tileMap.spriteCollection, activeBrush);
+				// palette
+				Rect rect = brushRenderer.DrawBrush(tileMap, editorData.paletteBrush, editorData.brushDisplayScale, true, editorData.paletteTilesPerRow);
+				float displayScale = brushRenderer.LastScale;
+				
+				Rect tileSize = new Rect(0, 0, brushRenderer.TileSizePixels.width * displayScale, brushRenderer.TileSizePixels.height * displayScale);
+				guiBrushBuilder.HandleGUI(rect, tileSize, editorData.paletteTilesPerRow, tileMap.SpriteCollectionInst, activeBrush);
+				EditorGUILayout.Separator();
+			}
 			EditorGUILayout.Separator();
 		}
-		EditorGUILayout.Separator();
 
 		// Draw brush
-		editorData.showBrush = EditorGUILayout.Foldout(editorData.showBrush, "Brush");
-		if (editorData.showBrush)
+		if (!showLoadSection)
 		{
-			brushRenderer.DrawBrush(tileMap, editorData.activeBrush, editorData.brushDisplayScale, false, editorData.paletteTilesPerRow);
-			EditorGUILayout.Separator();
+			editorData.showBrush = EditorGUILayout.Foldout(editorData.showBrush, "Brush");
+			if (editorData.showBrush)
+			{
+				brushRenderer.DrawBrush(tileMap, editorData.activeBrush, editorData.brushDisplayScale, false, editorData.paletteTilesPerRow);
+				EditorGUILayout.Separator();
+			}
 		}
-		
 	}
 	
 	/// <summary>
@@ -825,8 +1010,8 @@ public class tk2dTileMapEditor : Editor, ITileMapEditorHost
 	/// </summary>
 	void Init(tk2dTileMapData tileMapData)
 	{
-		tileMapData.tileSize = tileMap.spriteCollection.spriteDefinitions[0].untrimmedBoundsData[1];
-		tileMapData.tileOrigin = this.tileMap.spriteCollection.spriteDefinitions[0].untrimmedBoundsData[0] - tileMap.spriteCollection.spriteDefinitions[0].untrimmedBoundsData[1] * 0.5f;
+		tileMapData.tileSize = tileMap.SpriteCollectionInst.spriteDefinitions[0].untrimmedBoundsData[1];
+		tileMapData.tileOrigin = this.tileMap.SpriteCollectionInst.spriteDefinitions[0].untrimmedBoundsData[0] - tileMap.SpriteCollectionInst.spriteDefinitions[0].untrimmedBoundsData[1] * 0.5f;
 	}
 	
 	public override void OnInspectorGUI()
@@ -841,6 +1026,13 @@ public class tk2dTileMapEditor : Editor, ITileMapEditorHost
 		{
 			tk2dGuiUtility.InfoBox("Editor disabled while game is running.", tk2dGuiUtility.WarningLevel.Error);
 			return;
+		}
+		
+		if (tileMap.renderData != null)
+		{
+			tileMap.renderData.transform.position = tileMap.transform.position;
+			tileMap.renderData.transform.rotation = tileMap.transform.rotation;
+			tileMap.renderData.transform.localScale = tileMap.transform.localScale;
 		}
 		
 		if (!tileMap.AllowEdit)
@@ -904,7 +1096,7 @@ public class tk2dTileMapEditor : Editor, ITileMapEditorHost
 		}
 		
 		if (editorData == null || tileMap.data == null || !tileMap.AreSpritesInitialized() ||
-			tileMap.spriteCollection == null)
+			tileMap.Editor__SpriteCollection == null)
 		{
 			DrawSettingsPanel();
 		}
@@ -959,7 +1151,7 @@ public class tk2dTileMapEditor : Editor, ITileMapEditorHost
 			tk2dTileMap sceneTileMaps = GameObject.FindObjectOfType(typeof(tk2dTileMap)) as tk2dTileMap;
 			if (sceneTileMaps)
 			{
-				sprColl = sceneTileMaps.spriteCollection;
+				sprColl = sceneTileMaps.Editor__SpriteCollection;
 			}
 		}
 
@@ -968,6 +1160,8 @@ public class tk2dTileMapEditor : Editor, ITileMapEditorHost
 			tk2dSpriteCollectionIndex[] spriteCollections = tk2dEditorUtility.GetOrCreateIndex().GetSpriteCollectionIndex();
 			foreach (var v in spriteCollections)
 			{
+				if (v.managedSpriteCollection) continue; // don't wanna pick a managed one
+				
 				GameObject scgo = AssetDatabase.LoadAssetAtPath(AssetDatabase.GUIDToAssetPath(v.spriteCollectionDataGUID), typeof(GameObject)) as GameObject;
 				var sc = scgo.GetComponent<tk2dSpriteCollectionData>();
 				if (sc != null && sc.spriteDefinitions != null && sc.spriteDefinitions.Length > 0 && sc.allowMultipleAtlases == false)
@@ -988,8 +1182,11 @@ public class tk2dTileMapEditor : Editor, ITileMapEditorHost
 		go.transform.position = Vector3.zero;
 		go.transform.rotation = Quaternion.identity;
 		tk2dTileMap tileMap = go.AddComponent<tk2dTileMap>();
-		tileMap.spriteCollection = sprColl;
+		tileMap.Editor__SpriteCollection = sprColl;
 		
 		tileMap.Build(tk2dTileMap.BuildFlags.ForceBuild);
+		
+		Selection.activeGameObject = go;
+		Undo.RegisterCreatedObjectUndo(go, "Create TileMap");
 	}
 }

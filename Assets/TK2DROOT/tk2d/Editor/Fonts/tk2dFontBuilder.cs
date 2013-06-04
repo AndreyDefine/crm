@@ -23,14 +23,16 @@ namespace tk2dEditor.Font
 	
 	public class Info
 	{
+		public string[] texturePaths = new string[0];
 		public int scaleW = 0, scaleH = 0;
 		public int lineHeight = 0;
+		public int numPages = 0;
 		
 		public List<Char> chars = new List<Char>();
 		public List<Kerning> kernings = new List<Kerning>();
 	};
 
-	public static class Builder
+	class BMFontXmlImporter
 	{
 		static int ReadIntAttribute(XmlNode node, string attribute)
 		{
@@ -40,13 +42,19 @@ namespace tk2dEditor.Font
 		{
 			return float.Parse(node.Attributes[attribute].Value, System.Globalization.NumberFormatInfo.InvariantInfo);
 		}
+		static string ReadStringAttribute(XmlNode node, string attribute)
+		{
+			return node.Attributes[attribute].Value;
+		}
 		static Vector2 ReadVector2Attributes(XmlNode node, string attributeX, string attributeY)
 		{
 			return new Vector2(ReadFloatAttribute(node, attributeX), ReadFloatAttribute(node, attributeY));
 		}
-		
-		static Info ParseBMFontXml(XmlDocument doc)
+
+		public static Info Parse(string path)
 		{
+			XmlDocument doc = new XmlDocument();
+			doc.Load(path);
 			Info fontInfo = new Info();
 			
 	        XmlNode nodeCommon = doc.SelectSingleNode("/font/common");
@@ -58,6 +66,15 @@ namespace tk2dEditor.Font
 			{
 				EditorUtility.DisplayDialog("Fatal error", "Only one page supported in font. Please change the setting and re-export.", "Ok");
 				return null;
+			}
+			fontInfo.numPages = pages;
+			fontInfo.texturePaths = new string[pages];
+			for (int i = 0; i < pages; ++i) fontInfo.texturePaths[i] = string.Empty;
+
+			foreach (XmlNode node in doc.SelectNodes("/font/pages/page"))
+			{
+				int id = ReadIntAttribute(node, "id");
+				fontInfo.texturePaths[id] = ReadStringAttribute(node, "file");
 			}
 	
 			foreach (XmlNode node in doc.SelectNodes(("/font/chars/char")))
@@ -89,7 +106,10 @@ namespace tk2dEditor.Font
 	
 			return fontInfo;
 		}
-		
+	}
+
+	class BMFontTextImporter
+	{
 		static string FindKeyValue(string[] tokens, string key)
 		{
 			string keyMatch = key + "=";
@@ -102,7 +122,7 @@ namespace tk2dEditor.Font
 			return "";
 		}
 		
-		static Info ParseBMFontText(string path)
+		public static Info Parse(string path)
 		{
 			Info fontInfo = new Info();
 			
@@ -124,6 +144,18 @@ namespace tk2dEditor.Font
 						EditorUtility.DisplayDialog("Fatal error", "Only one page supported in font. Please change the setting and re-export.", "Ok");
 						return null;
 					}
+					fontInfo.numPages = pages;
+					fontInfo.texturePaths = new string[pages];
+					for (int i = 0 ; i < pages; ++i)
+						fontInfo.texturePaths[i] = string.Empty;
+				}
+				else if (tokens[0] == "page")
+				{
+					int id = int.Parse(FindKeyValue(tokens, "id"));
+					string file = FindKeyValue(tokens, "file");
+					if (file[0] == '"' && file[file.Length - 1] == '"')
+						file = file.Substring(1, file.Length - 2);
+					fontInfo.texturePaths[id] = file;
 				}
 				else if (tokens[0] == "char")
 				{
@@ -150,25 +182,29 @@ namespace tk2dEditor.Font
 			reader.Close();
 			
 			return fontInfo;
-		}
-		
+		}		
+	}
+
+	public static class Builder
+	{
 		public static Info ParseBMFont(string path)
 		{
 			Info fontInfo = null;
 			
 			try
 			{
-				XmlDocument doc = new XmlDocument();
-				doc.Load(path);
-				fontInfo = ParseBMFontXml(doc);
+				fontInfo = BMFontXmlImporter.Parse(path);
 			}
 			catch
 			{
-				fontInfo = ParseBMFontText(path);
+				fontInfo = BMFontTextImporter.Parse(path);
 			}
 			
 			if (fontInfo == null || fontInfo.chars.Count == 0)
+			{
+				Debug.LogError("Font parsing returned 0 characters, check source bmfont file for errors");
 				return null;
+			}
 			
 			return fontInfo;
 		}
@@ -179,7 +215,9 @@ namespace tk2dEditor.Font
 	        float texHeight = fontInfo.scaleH;
 	        float lineHeight = fontInfo.lineHeight;
 	
+	        target.version = tk2dFontData.CURRENT_VERSION; 
 	        target.lineHeight = lineHeight * scale;
+	        target.texelSize = new Vector2(scale, scale);
 			
 			// Get number of characters (lastindex + 1)
 			int maxCharId = 0;
@@ -220,17 +258,14 @@ namespace tk2dEditor.Font
 				
 				// special case, if the width and height are zero, the origin doesn't need to be offset
 				// handles problematic case highlighted here:
-				// http://unikronsoftware.com/2dtoolkit/forum/index.php/topic,89.msg220.html
+				// http://2dtoolkit.com/forum/index.php/topic,89.msg220.html
 				if (width == 0 && height == 0)
 				{
 					xoffset = 0;
 					yoffset = 0;
 				}
-	
-	            // precompute required data
-	            float px = xoffset * scale;
-	            float py = (lineHeight - yoffset) * scale;
-				
+
+				// precompute required data
 				if (theChar.texOverride)
 				{
 					int w = theChar.texW;
@@ -241,16 +276,38 @@ namespace tk2dEditor.Font
 						w = theChar.texH;
 					}
 					
-		            thisChar.p0 = new Vector3(px + theChar.texOffsetX * scale, py - theChar.texOffsetY * scale, 0);
-		            thisChar.p1 = new Vector3(px + (theChar.texOffsetX + w) * scale, py - (theChar.texOffsetY + h) * scale, 0);
+		            float px = (xoffset + theChar.texOffsetX) * scale;
+					float py = (lineHeight - yoffset - theChar.texOffsetY) * scale;
+					
+		            thisChar.p0 = new Vector3(px, py , 0);
+		            thisChar.p1 = new Vector3(px + w * scale, py - h * scale, 0);
 	
 					thisChar.uv0 = new Vector2((theChar.texX) / texWidth, (theChar.texY + theChar.texH) / texHeight);
 		            thisChar.uv1 = new Vector2((theChar.texX + theChar.texW) / texWidth, (theChar.texY) / texHeight);
+		            if (flipTextureY)
+		            {
+		            	float tmp = 0;
+						if (theChar.texFlipped)
+						{
+							tmp = thisChar.uv1.x;
+							thisChar.uv1.x = thisChar.uv0.x;
+							thisChar.uv0.x = tmp;
+						}
+						else
+						{
+	 						tmp = thisChar.uv1.y;
+			            	thisChar.uv1.y = thisChar.uv0.y;
+			            	thisChar.uv0.y = tmp;							
+						}
+		            }
 					
 					thisChar.flipped = theChar.texFlipped;
 				}
 				else
 				{
+		            float px = xoffset * scale;
+		            float py = (lineHeight - yoffset) * scale;
+					
 		            thisChar.p0 = new Vector3(px, py, 0);
 		            thisChar.p1 = new Vector3(px + width * scale, py - height * scale, 0);
 					if (flipTextureY)
