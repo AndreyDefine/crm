@@ -7,7 +7,7 @@
 }
 
 -(void) startSession:(NSString*)InApiKey;
-//+(void)load;
++(void)load;
 +(void)createPlugin:(NSNotification *)notification;
 +(FlurryClient*)GetSharedFlurryClient;
 -(void)logEvent:(NSString*)InEvent;
