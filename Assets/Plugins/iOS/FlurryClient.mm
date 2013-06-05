@@ -3,7 +3,7 @@
 #import "Flurry.h"
 
 static FlurryClient* delegateObject = nil;
-static const char* GlobalApiKey = "CHKK77RVN3PJ5RZKTQTJ";
+static const char* GlobalApiKey;
 
 // Converts C style string to NSString///////////////////////////////////////////
 NSString* CreateNSString (const char* string)
@@ -29,10 +29,10 @@ char* MakeStringCopy (const char* string)
 //implementation
 @implementation FlurryClient
 
-+(void)load
-{
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createPlugin:)name:UIApplicationDidFinishLaunchingNotification object:nil];
-}
+//+(void)load
+//{
+    //[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(createPlugin:)name:UIApplicationDidFinishLaunchingNotification object:nil];
+//}
 
 - (id)init
 {
@@ -42,6 +42,7 @@ char* MakeStringCopy (const char* string)
 
 -(void) startSession:(NSString*)InApiKey
 {
+    NSLog(@"startSession ApiKey=%@",InApiKey);
     [Flurry startSession:InApiKey];
     NSLog(@"FlurrySessionStarted");
 }
@@ -54,7 +55,10 @@ char* MakeStringCopy (const char* string)
 
 + (void)createPlugin:(NSNotification *)notification
 {
-    [FlurryClient GetSharedFlurryClient];
+    if(GlobalApiKey)
+    {
+        [FlurryClient GetSharedFlurryClient];
+    }
 }
 
 +(FlurryClient*)GetSharedFlurryClient
@@ -76,127 +80,22 @@ char* MakeStringCopy (const char* string)
 }
 
 
-
-/*// Sent when browsing begins
-- (void)netServiceBrowserWillSearch:(NSNetServiceBrowser *)browser
-{
-    searching = YES;
-	status = @"Searching";
-	
-	[services removeAllObjects];
-}
-
-
-
-// Sent when browsing stops
-- (void)netServiceBrowserDidStopSearch:(NSNetServiceBrowser *)browser
-{
-    searching = NO;
-	status = @"Done";
-}
-
-
-
-// Sent if browsing fails
-- (void)netServiceBrowser:(NSNetServiceBrowser *)browser
-			 didNotSearch:(NSDictionary *)errorDict
-{
-    searching = NO;
-	NSString * msg = @"Failed.";	
-	status = [msg stringByAppendingString:[[errorDict objectForKey:NSNetServicesErrorCode] stringValue]];
-}
-
-
-
-// Sent when a service appears
-- (void)netServiceBrowser:(NSNetServiceBrowser *)browser
-		   didFindService:(NSNetService *)aNetService
-			   moreComing:(BOOL)moreComing
-{
-    [services addObject:aNetService];
-}
-
-
-
-// Sent when a service disappears
-- (void)netServiceBrowser:(NSNetServiceBrowser *)browser
-		 didRemoveService:(NSNetService *)aNetService
-			   moreComing:(BOOL)moreComing
-{
-    [services removeObject:aNetService];	
-}
-
-
-- (int)getCount
-{
-	return [services count];
-}
-
-- (NSNetService *)getService:(int)serviceNo
-{
-	return [services objectAtIndex:serviceNo];
-}
-
-- (NSString *)getStatus
-{
-	return status;
-}*/
-
 @end
 
 // When native code plugin is implemented in .mm / .cpp file, then functions
 // should be surrounded with extern "C" block to conform C function naming rules
 extern "C" {
     
-    void _FlurryStartSession()
+    void _FlurryStartSession(const char* inKey)
     {
-        [FlurryClient load];
+        GlobalApiKey = inKey;
+        [FlurryClient GetSharedFlurryClient];
+        //[FlurryClient load];
     }
     
     void _FlurryLogEvent(const char* EventName)
     {
         [[FlurryClient GetSharedFlurryClient]logEvent:CreateNSString(EventName)] ;
     }
-
-	/*void _StartLookup (const char* service, const char* domain)
-	{
-		if (delegateObject == nil)
-			delegateObject = [[NetServiceBrowserDelegate alloc] init];
-		
-		
-		if (serviceBrowser == nil)
-			serviceBrowser = [[NSNetServiceBrowser alloc] init];
-		
-		[serviceBrowser setDelegate:delegateObject];
-		
-		// Call "searchForServicesOfType" and pass NSStrings as parameters. By default mono
-		// marshals all .Net strings as UTF-8 C style strings.
-		[serviceBrowser searchForServicesOfType: CreateNSString(service) inDomain: CreateNSString(domain)];
-	}
-	
-	const char* _GetLookupStatus ()
-	{
-		// By default mono string marshaler creates .Net string for returned UTF-8 C string 
-		// and calls free for returned value, thus returned strings should be allocated on heap
-		return MakeStringCopy([[delegateObject getStatus] UTF8String]);
-	}
-	
-	int _GetServiceCount ()
-	{
-		return [delegateObject getCount];
-	}
-	
-	const char* _GetServiceName (int serviceNumber)
-	{
-		// By default mono string marshaler creates .Net string for returned UTF-8 C string 
-		// and calls free for returned value, thus returned strings should be allocated on heap
-		return MakeStringCopy([[[delegateObject getService:serviceNumber] name] UTF8String]);
-	}
-	
-	void _Stop()
-	{
-		[serviceBrowser stop];
-	}*/
-	
 }
 
