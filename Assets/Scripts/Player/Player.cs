@@ -680,6 +680,14 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		}
 	}
 	
+	public void Yahoo()
+	{
+		if(GlobalOptions.gameState==GameStates.GAME&&GlobalOptions.playerStates==PlayerStates.WALK)
+		{
+			bearAnimation.Yahoo();
+		}
+	}
+	
 	public void Stumble(Transform inTransform)
 	{
 		MoveCharacterControllerLeftRight(0);

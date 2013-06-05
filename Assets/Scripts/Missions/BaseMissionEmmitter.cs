@@ -96,6 +96,7 @@ public abstract class BaseMissionEmmitter : Abstract, IMissionEmmitter, IMission
 	public void MissionFinished (Mission mission)
 	{
 		finishedMissionsNumber++;
+		GlobalOptions.GetPlayerScript().Yahoo();
 		SetMissionFinished (mission.GetId ());
 		currentMissions.Remove (mission);
 		thisLifeFinishedMissions.Add (mission);

@@ -35,27 +35,36 @@ public class BearAnimation3D : Abstract{
 		
 		for(int i=0;i<clothesList.Count;i++)
 		{
-			(clothesList[i] as GameObject).animation["jump"].layer=1;
+			(clothesList[i] as GameObject).animation["jump1"].layer=1;
+			(clothesList[i] as GameObject).animation["jump2"].layer=1;
 			(clothesList[i] as GameObject).animation["left"].layer=1;
 			(clothesList[i] as GameObject).animation["right"].layer=1;
 			(clothesList[i] as GameObject).animation["down"].layer=1;
+			(clothesList[i] as GameObject).animation["yahoo"].layer=1;
 			(clothesList[i] as GameObject).animation["stumble"].layer=1;
 			(clothesList[i] as GameObject).animation["walk"].layer=0;
+			(clothesList[i] as GameObject).animation["idle"].layer=0;
 			(clothesList[i] as GameObject).animation["death"].layer=0;
 			
 			
 			(clothesList[i] as GameObject).animation["posilka_left"].layer=1;
 			(clothesList[i] as GameObject).animation["posilka_right"].layer=1;
 			
+			
+			/////////////////////////////////
 			(clothesList[i] as GameObject).animation["down"].speed=0.5f;
+			(clothesList[i] as GameObject).animation["yahoo"].speed=1f;
 			(clothesList[i] as GameObject).animation["stumble"].speed=1.5f;
-			(clothesList[i] as GameObject).animation["jump"].speed=0.7f;
+			(clothesList[i] as GameObject).animation["jump1"].speed=0.7f;
+			(clothesList[i] as GameObject).animation["jump2"].speed=0.8f;
 			(clothesList[i] as GameObject).animation["left"].speed=1f;
 			(clothesList[i] as GameObject).animation["right"].speed=1f;
 			(clothesList[i] as GameObject).animation["death"].speed=0.9f;
+			(clothesList[i] as GameObject).animation["walk"].speed=1.5f;
+			(clothesList[i] as GameObject).animation["idle"].speed=1f;
 			
-			(clothesList[i] as GameObject).animation["posilka_left"].speed=1.2f;
-			(clothesList[i] as GameObject).animation["posilka_right"].speed=1.2f;
+			(clothesList[i] as GameObject).animation["posilka_left"].speed=1f;
+			(clothesList[i] as GameObject).animation["posilka_right"].speed=1f;
 			
 			//(clothesList[i] as GameObject).animation["down"].weight=1;
 		}
@@ -84,9 +93,18 @@ public class BearAnimation3D : Abstract{
 	
 	private void CrossFadeAnimationForName(string inAnimationName)
 	{
-		if(curAnimationName!=inAnimationName)
+		string vspname="";
+		for (int j=0;j<inAnimationName.Length;j++)
 		{
-			curAnimationName=inAnimationName;
+			if(char.IsDigit(inAnimationName[j]))
+			{
+				break;
+			}
+			vspname+=inAnimationName[j];
+		}
+		if(curAnimationName!=vspname)
+		{
+			curAnimationName=vspname;
 			for(int i=0;i<clothesList.Count;i++)
 			{
 				(clothesList[i] as GameObject).animation.CrossFade(inAnimationName);
@@ -96,9 +114,18 @@ public class BearAnimation3D : Abstract{
 	
 	private void PlayAnimationForName(string inAnimationName)
 	{
-		if(curAnimationName!=inAnimationName)
+		string vspname="";
+		for (int j=0;j<inAnimationName.Length;j++)
 		{
-			curAnimationName=inAnimationName;
+			if(char.IsDigit(inAnimationName[j]))
+			{
+				break;
+			}
+			vspname+=inAnimationName[j];
+		}
+		if(curAnimationName!=vspname)
+		{
+			curAnimationName=vspname;
 			for(int i=0;i<clothesList.Count;i++)
 			{
 				(clothesList[i] as GameObject).animation.Play(inAnimationName);
@@ -137,7 +164,11 @@ public class BearAnimation3D : Abstract{
 	}
 	
 	public void Jump() {
-		CrossFadeAnimationForName("jump");
+		switch (Random.Range(0,2))
+		{
+			case 0:	CrossFadeAnimationForName("jump1"); break;
+			case 1: CrossFadeAnimationForName("jump2"); break;
+		}
 	}
 	
 	public void Stumble() {
@@ -147,6 +178,11 @@ public class BearAnimation3D : Abstract{
 	
 	public void Down() {
 		PlayAnimationForName("down");
+		//Debug.Log ("Down");
+	}
+	
+	public void Yahoo() {
+		PlayAnimationForName("yahoo");
 		//Debug.Log ("Down");
 	}
 	
