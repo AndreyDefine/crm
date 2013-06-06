@@ -6,7 +6,7 @@ public class FlurryPlugin
 {
 
 	/* Interface to native implementation */
-	#if UNITY_IPHONE
+	#if UNITY_IPHONE && !UNITY_EDITOR
 	[DllImport ("__Internal")]
 	private static extern void _FlurryStartSession (string inKey);
 
@@ -14,7 +14,7 @@ public class FlurryPlugin
 	private static extern void _FlurryLogEvent (string EventName);
 	#endif
 	
-	#if UNITY_ANDROID
+	#if UNITY_ANDROID && !UNITY_EDITOR
 	private static AndroidJavaObject _flurryAndroidPlugin;
 	#endif
 	private static string androidApiKey = "VX8CPY9YQBH4B3TH9KYP";
@@ -26,9 +26,9 @@ public class FlurryPlugin
 	public static void FlurryStartSession ()
 	{
 		// Call plugin only when running on real device
-		#if UNITY_IPHONE
+		#if UNITY_IPHONE && !UNITY_EDITOR
 			_FlurryStartSession(iosApiKey);
-		#elif UNITY_ANDROID
+		#elif UNITY_ANDROID && !UNITY_EDITOR
 			using (var pluginClass = new AndroidJavaClass( "com.ifree.flurryplugin.FlurryAndroidPlugin" ))
 					_flurryAndroidPlugin = pluginClass.CallStatic<AndroidJavaObject> ("instance");
 			_flurryAndroidPlugin.Call ("setApiKey", androidApiKey); 
@@ -42,9 +42,10 @@ public class FlurryPlugin
 	public static void FlurryLogEvent (string EventName)
 	{
 		// Call plugin only when running on real device
-		#if UNITY_IPHONE
+		#if UNITY_IPHONE && !UNITY_EDITOR
 			_FlurryLogEvent (EventName);
-		#elif UNITY_ANDROID
+		
+		#elif UNITY_ANDROID && !UNITY_EDITOR
 			bool logged = _flurryAndroidPlugin.Call<bool>("logEvent",EventName);
 		#else
 			Debug.Log ("FlurryPlugin: LogEvent=" + EventName);
