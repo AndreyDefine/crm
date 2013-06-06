@@ -128,11 +128,11 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		allMeters=0;
 		flagPosilka=false;
 		
+		UnMakeHeadStars();
 		UnMakePropeller();
 		UnMakeMagnit();
 		UnMakeVodka();
 		UnMakeMushrooms();
-		UnMakeHeadStars();
 		GlobalOptions.playerVelocity=startVelocity;
 		GlobalOptions.gameState=GameStates.GAME;
 		
@@ -621,7 +621,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 
 	public void GameOver(){
-		Debug.Log ("GameOver");
+		UnMakeHeadStars();
 		characterMarioC.Freeze();
 	}
 	
