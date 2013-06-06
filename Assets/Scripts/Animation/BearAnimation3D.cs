@@ -43,6 +43,7 @@ public class BearAnimation3D : Abstract{
 			(clothesList[i] as GameObject).animation["yahoo"].layer=1;
 			(clothesList[i] as GameObject).animation["stumble"].layer=1;
 			(clothesList[i] as GameObject).animation["walk"].layer=0;
+			(clothesList[i] as GameObject).animation["walk_alt1"].layer=1;
 			(clothesList[i] as GameObject).animation["idle"].layer=0;
 			(clothesList[i] as GameObject).animation["death"].layer=0;
 			
@@ -61,6 +62,7 @@ public class BearAnimation3D : Abstract{
 			(clothesList[i] as GameObject).animation["right"].speed=1f;
 			(clothesList[i] as GameObject).animation["death"].speed=0.9f;
 			(clothesList[i] as GameObject).animation["walk"].speed=1.5f;
+			(clothesList[i] as GameObject).animation["walk_alt1"].speed=0.8f;
 			(clothesList[i] as GameObject).animation["idle"].speed=1f;
 			
 			(clothesList[i] as GameObject).animation["posilka_left"].speed=1f;
@@ -168,6 +170,13 @@ public class BearAnimation3D : Abstract{
 		{
 			case 0:	CrossFadeAnimationForName("jump1"); break;
 			case 1: CrossFadeAnimationForName("jump2"); break;
+		}
+	}
+	
+	public void WalkAlt() {
+		switch (Random.Range(0,1))
+		{
+			case 0:	CrossFadeAnimationForName("walk_alt1"); break;
 		}
 	}
 	

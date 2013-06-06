@@ -4,10 +4,14 @@ using System.Collections;
 
 public class MonetaEnemy : AbstractEnemy {	
 	
-	private bool effectMade=false;
+	private int effectMade=0;
 	public int numberOfMoney=1;
 	private float rasstChuvstv=155;
 	private Transform parentTransform;
+	
+	private bool flagRotation=false;
+	
+	private float camx,camy;
 	
 	private bool flagPlusPlayerSpeed=false;
 	
@@ -15,10 +19,14 @@ public class MonetaEnemy : AbstractEnemy {
 	
 	public override void OnHit(Collider other)
 	{
-		GuiLayer.AddMoney(numberOfMoney);
-		PlayClipSound();
-		MakeInactive();
-		effectMade=false;
+		if(effectMade!=2)
+		{
+			PlayClipSound();
+			//MakeInactive();
+			effectMade=2;
+			camx=0;
+			camy=-5;
+		}
 	}
 	
 	void Update () {
@@ -38,11 +46,11 @@ public class MonetaEnemy : AbstractEnemy {
 	
 	public void Rotate()
 	{
-		if(GlobalOptions.gameState==GameStates.PAUSE_MENU)
+		if(GlobalOptions.gameState==GameStates.PAUSE_MENU||!flagRotation)
 		{
 			return;
 		}
-		singleTransform.Rotate(new Vector3(0,Time.deltaTime*200,0));
+		singleTransform.Rotate(new Vector3(0,Time.deltaTime*100,0));
 	}
 	
 	public override void initEnemy()
@@ -53,31 +61,36 @@ public class MonetaEnemy : AbstractEnemy {
 	public override void ReStart()
 	{
 		UnMakeEffect();
-		gameObject.SetActiveRecursively(true);	
+		//gameObject.SetActiveRecursively(true);	
 		singleTransform.rotation=Quaternion.Euler(0, 0, 0);
 	}
 	
 	public void TestPlayer()
 	{
-		if(!effectMade&&playerScript.GetMagnitFlag())
+		if(effectMade==0&&(!flagRotation||playerScript.GetMagnitFlag()))
 		{
-			float raznx,razny,raznz;
-			raznx=parentTransform.position.x-walkingBearTransform.position.x;
-			raznz=parentTransform.position.z-walkingBearTransform.position.z;
-			razny=parentTransform.position.y-walkingBearTransform.position.y;
-			if(raznx*raznx+raznz*raznz<=rasstChuvstv&&Mathf.Abs (razny)<20)
+			Vector3 razn;
+			razn=parentTransform.position-walkingBearTransform.position;
+			float gipot=razn.x*razn.x+razn.z*razn.z;
+			if(gipot<=rasstChuvstv&&Mathf.Abs (razn.y)<20&&playerScript.GetMagnitFlag())
 			{
 				MakeEffect();
+			}
+			
+			if(gipot<=5000&&Mathf.Abs (razn.y)<20)
+			{
+				flagRotation=true;
 			}
 		}
 	}
 	
 	private void MakeMagnit()
 	{
-		if(effectMade)
+		//этап 1
+		if(effectMade==1)
 		{
 			float raznx,raznz,razny,vspz;
-			float smex=0.12f;
+			float smex=0.125f;
 			raznx=-parentTransform.position.x+walkingBearTransform.position.x;
 			razny=-parentTransform.position.y+walkingBearTransform.position.y+1;
 			raznz=-parentTransform.position.z+walkingBearTransform.position.z;
@@ -111,17 +124,36 @@ public class MonetaEnemy : AbstractEnemy {
 			
 			parentTransform.position+=new Vector3(raznx,razny,raznz);	
 		}
+		
+		if(effectMade==2)
+		{
+			float smex=0.1f;
+			
+			camx+=smex;
+			camy+=smex*2.3f;
+			
+			parentTransform.position=new Vector3(playerScript.MainCamera.transform.position.x+camx,playerScript.MainCamera.transform.position.y+camy,walkingBearTransform.position.z+5);
+			
+			if(parentTransform.position.y>playerScript.MainCamera.transform.position.y+0.5)
+			{
+				GuiLayer.AddMoney(numberOfMoney);
+				flagRotation=false;
+				effectMade=3;
+			}
+		}
 	}
 	
 	private void MakeEffect()
 	{
-		effectMade=true;
+		effectMade=1;
 	}
 	
 	
 	private void UnMakeEffect()
 	{
-		effectMade=false;
+		Debug.Log ("UnMakeEffect()");
+		effectMade=0;
+		flagRotation=false;
 		flagPlusPlayerSpeed=false;
 	}
 }

@@ -20,7 +20,11 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	protected int accelPriority;
 	protected bool swallowAcceles;
-
+	
+	private bool flagYahoo=false;
+	private float timerYahoo;
+	private float timerAltWalk;
+	
 	private float force;
 	
 	private BearAnimation3D bearAnimation; 
@@ -101,6 +105,8 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		oneMeterz=0;
 		allMeters=0;
 		flagPosilka=false;
+		flagYahoo=false;
+		timerAltWalk=Time.time;
 				
 		accelPriority=1;
 		swallowAcceles=false;
@@ -127,6 +133,8 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		oneMeterz=0;
 		allMeters=0;
 		flagPosilka=false;
+		flagYahoo=false;
+		timerAltWalk=Time.time;
 		
 		UnMakeHeadStars();
 		UnMakePropeller();
@@ -272,6 +280,22 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		HeadStarsParticleEmitter.emit=false;
 	}
 	
+	private void MakeYahoo()
+	{
+		if(Time.time-timerYahoo>2)
+		{
+			flagYahoo=false;
+		}
+		else
+		{
+			if(GlobalOptions.gameState==GameStates.GAME&&GlobalOptions.playerStates==PlayerStates.WALK)
+			{
+				bearAnimation.Yahoo();
+				flagYahoo=false;
+			}
+		}
+	}
+	
 
 	// Update is called once per frame
 	void Update () {
@@ -284,6 +308,11 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 			{
 				worldFactoryScript=worldFactory.GetComponent<WorldFactory>();
 			}
+		}
+		
+		if(flagYahoo)
+		{
+			MakeYahoo();
 		}
 		
 		if(!worldFactoryScript)
@@ -302,10 +331,24 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		
 		SwitchAnimation();
 	}
-
+	
+	private void MakeAltWalk()
+	{
+		if(Time.time-timerAltWalk>10+Random.Range(0,20))
+		//if(Time.time-timerAltWalk>2+Random.Range(1,2))
+		{
+			timerAltWalk=Time.time;
+			if(GlobalOptions.gameState==GameStates.GAME&&GlobalOptions.playerStates==PlayerStates.WALK)
+			{
+				Debug.Log ("AltWalk");
+				bearAnimation.WalkAlt();
+			}
+		}
+	}
 	
 	private void SwitchAnimation()
 	{
+		MakeAltWalk();
 		if(flagPosilka)
 		{
 			if(Time.time-posilkaTimer>1)
@@ -493,7 +536,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 			}			
 			if(characterMarioC.isGliding()&&GlobalOptions.playerStates!=PlayerStates.DIE)
 			{
-				raznost-=3f;
+				//raznost-=3f;
 			}
 			if(GlobalOptions.playerStates==PlayerStates.DIE)
 			{
@@ -682,10 +725,8 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	public void Yahoo()
 	{
-		if(GlobalOptions.gameState==GameStates.GAME&&GlobalOptions.playerStates==PlayerStates.WALK)
-		{
-			bearAnimation.Yahoo();
-		}
+		flagYahoo=true;
+		timerYahoo=Time.time;
 	}
 	
 	public void Stumble(Transform inTransform)
