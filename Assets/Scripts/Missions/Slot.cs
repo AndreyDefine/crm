@@ -28,8 +28,8 @@ public class Slot : Abstract{
 	}
 	
 	public void BuySlot(){
-		PersonInfo.AddCoins(-coin);
-		PersonInfo.AddGold(-gold);
-		bought = true;
+		if(PersonInfo.TryToBuy(coin,gold)){
+			bought = true;
+		}
 	}
 }

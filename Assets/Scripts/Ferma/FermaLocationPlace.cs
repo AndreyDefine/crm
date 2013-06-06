@@ -80,10 +80,11 @@ public class FermaLocationPlace : Abstract {
 	}
 	
 	public void Buy(){
-		bought = true;
-		night.TurnOffNight();
-		PersonInfo.AddCoins(-price);
-		CloseDialog();
+		if(PersonInfo.TryToBuy(price, 0)){
+			bought = true;
+			night.TurnOffNight();
+			CloseDialog();
+		}
 	}
 	
 	public void NightOff(){

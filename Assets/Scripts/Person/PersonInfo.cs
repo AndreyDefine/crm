@@ -36,6 +36,14 @@ public class PersonInfo {
         }
     }
 	
+	public static void AddGold(int addGold){
+		PlayerPrefs.SetInt(TAG+"gold",gold+addGold);
+		GlobalGold[] globalGold = GameObject.FindObjectsOfType(typeof(GlobalGold)) as GlobalGold[];
+		for(int i=0;i<globalGold.Length;i++){
+			globalGold[i].SetGold(gold);	
+		}
+	}
+	
 	public static int post {
         get {
             return PlayerPrefs.GetInt(TAG+"post",0);
@@ -46,14 +54,6 @@ public class PersonInfo {
 		PlayerPrefs.SetInt(TAG+"post",post+addPost);
 	}
 	
-	public static void AddGold(int addGold){
-		PlayerPrefs.SetInt(TAG+"gold",gold+addGold);
-		GlobalGold[] globalGold = GameObject.FindObjectsOfType(typeof(GlobalGold)) as GlobalGold[];
-		for(int i=0;i<globalGold.Length;i++){
-			globalGold[i].SetGold(gold);	
-		}
-	}
-	
 	public static string lastFactoryName{
 		get {
             return PlayerPrefs.GetString(TAG+"lastFactory","1_Village");
@@ -61,5 +61,20 @@ public class PersonInfo {
 		set{
 			PlayerPrefs.SetString(TAG+"lastFactory",value);
 		}
+	}
+	
+	public static bool TryToBuy(int needCoins, int needGold){
+		int needMoreCoins = needCoins-coins;
+		int needMoreGold = needGold - gold;
+		if(needMoreCoins>0||needMoreGold>0){
+			GameObject dialogGoToCartGameObj = GameObject.Instantiate(Resources.Load("Screens/DialogGoToCart")) as GameObject;
+			DialogGoToCart dialogGoToCart = dialogGoToCartGameObj.GetComponent<DialogGoToCart>();
+			dialogGoToCart.SetNeedMoneyGold(needMoreCoins>0?needMoreCoins:0,needMoreGold>0?needMoreGold:0);
+			dialogGoToCart.Show();
+			return false;
+		}
+		AddCoins(-needCoins);
+		AddGold(-needGold);
+		return true;
 	}
 }
