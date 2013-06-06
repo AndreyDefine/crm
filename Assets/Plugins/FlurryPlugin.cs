@@ -6,14 +6,15 @@ public class FlurryPlugin
 {
 
 	/* Interface to native implementation */
-	
+	#if UNITY_IPHONE
 	[DllImport ("__Internal")]
 	private static extern void _FlurryStartSession (string inKey);
 
 	[DllImport ("__Internal")]
 	private static extern void _FlurryLogEvent (string EventName);
+	#endif
 	
-	#if UNITY_ANDROID && !UNITY_EDITOR
+	#if UNITY_ANDROID
 	private static AndroidJavaObject _flurryAndroidPlugin;
 	#endif
 	private static string androidApiKey = "VX8CPY9YQBH4B3TH9KYP";
@@ -25,36 +26,28 @@ public class FlurryPlugin
 	public static void FlurryStartSession ()
 	{
 		// Call plugin only when running on real device
-		if (Application.platform == RuntimePlatform.IPhonePlayer) {
+		#if UNITY_IPHONE
 			_FlurryStartSession(iosApiKey);
-		}
-		#if UNITY_ANDROID && !UNITY_EDITOR
-			else if (Application.platform == RuntimePlatform.Android) {
+		#elif UNITY_ANDROID
 			using (var pluginClass = new AndroidJavaClass( "com.ifree.flurryplugin.FlurryAndroidPlugin" ))
-				_flurryAndroidPlugin = pluginClass.CallStatic<AndroidJavaObject> ("instance");
+					_flurryAndroidPlugin = pluginClass.CallStatic<AndroidJavaObject> ("instance");
 			_flurryAndroidPlugin.Call ("setApiKey", androidApiKey); 
 			bool started = _flurryAndroidPlugin.Call<bool> ("onStart"); 
-		}
-		#endif
-		else {
+		#else
 			Debug.Log ("FlurryPlugin: Application.platform==RuntimePlatform.OSXEditor||RuntimePlatform.AndroidEditor!!!");
-		}
+		#endif
 	}
 	
 	// Starts lookup for some bonjour registered service inside specified domain
 	public static void FlurryLogEvent (string EventName)
 	{
 		// Call plugin only when running on real device
-		if (Application.platform == RuntimePlatform.IPhonePlayer) {
+		#if UNITY_IPHONE
 			_FlurryLogEvent (EventName);
-		}
-		#if UNITY_ANDROID && !UNITY_EDITOR
-		else if (Application.platform == RuntimePlatform.Android) {
+		#elif UNITY_ANDROID
 			bool logged = _flurryAndroidPlugin.Call<bool>("logEvent",EventName);
-		}
-		#endif
-		else{
+		#else
 			Debug.Log ("FlurryPlugin: LogEvent=" + EventName);
-		}
+		#endif
 	}
 }

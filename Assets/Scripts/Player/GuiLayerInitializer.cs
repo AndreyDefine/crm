@@ -449,7 +449,6 @@ public class GuiLayerInitializer : Abstract {
 			{
 				DeadEvent="Dead";
 			}
-			Debug.Log(DeadEvent);
 			FlurryPlugin.FlurryLogEvent(DeadEvent);
 		}
 		curLife=curLife<0?0:curLife;
