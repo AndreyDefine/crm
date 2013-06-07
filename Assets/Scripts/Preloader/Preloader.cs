@@ -29,7 +29,7 @@ public class Preloader : Abstract {
 		curTime=0;
 		GUIcamera = Cameras.GetGUICamera(); 
 		
-		Application.targetFrameRate = 300;
+		Application.targetFrameRate = 60;
 		
 		InitSprites();
 		if(GlobalOptions.UnityPro){
