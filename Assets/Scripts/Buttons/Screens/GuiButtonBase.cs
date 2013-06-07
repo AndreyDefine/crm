@@ -42,7 +42,7 @@ public class GuiButtonBase : SpriteTouch {
 	}
 	
 	virtual protected void MakeOnTouch(){
-
+		Debug.Log("MakeOnTouch");
 	}
 	
 }
