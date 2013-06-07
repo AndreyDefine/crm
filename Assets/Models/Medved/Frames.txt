@@ -1,0 +1,14 @@
+5-23 walk  loop addloopframe
+25-39 - jump1  addloopframe
+40-50 - right
+60-70 - left
+80-105 - death
+110-135 - stumble
+136-149 - down
+
+151-173 - walk_alt1 loop addloopframe
+175-189 - jump2
+190-450 - idle  loop addloopframe
+455-473 - posilka_left
+475-493 - posilka_right
+495-513 - yahoo
