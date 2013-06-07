@@ -76,7 +76,6 @@ public class MonetaEnemy : AbstractEnemy {
 			{
 				MakeEffect();
 			}
-			
 			if(gipot<=5000&&Mathf.Abs (razn.y)<20)
 			{
 				flagRotation=true;
