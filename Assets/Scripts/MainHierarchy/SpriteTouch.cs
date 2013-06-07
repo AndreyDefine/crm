@@ -124,7 +124,7 @@ public class SpriteTouch : Abstract,TouchTargetedDelegate {
 			ParsePath();
 		}
 		
-		if(gameObject&&gameObject.activeSelf==false&&!invisibleTouch){
+		if(gameObject&&(gameObject.activeSelf==false||gameObject.activeInHierarchy==false)&&!invisibleTouch){
 			return false;
 		}
 		
