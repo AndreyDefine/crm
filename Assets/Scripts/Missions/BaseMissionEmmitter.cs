@@ -1,10 +1,11 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public abstract class BaseMissionEmmitter : Abstract, IMissionEmmitter, IMissionNotify, IMissionListener
 {
 	protected ArrayList availableMissionsPrefabs = new ArrayList ();
-	protected Hashtable prefabKeyHashTable = new Hashtable ();
+	protected Dictionary<Mission, string> prefabKeyDictionary = new Dictionary<Mission, string> ();
 	protected ArrayList currentMissions = new ArrayList ();
 	protected ArrayList thisLifeFinishedMissions = new ArrayList ();
 	public string missionEmmitterName;
@@ -297,7 +298,7 @@ public abstract class BaseMissionEmmitter : Abstract, IMissionEmmitter, IMission
 	//Только так она создастся правильно
 	protected Mission InstantiateMission (Mission missionPrefab)
 	{
-		string id = (string)prefabKeyHashTable [missionPrefab];
+		string id = (string)prefabKeyDictionary [missionPrefab];
 		Mission mission = (Instantiate (missionPrefab) as Mission);
 		mission.singleTransform.parent = singleTransform;
 		mission.AddMissionListener (this);

@@ -11,7 +11,7 @@ public class CurrentMissionNotifier : BaseNotifier, IMissionListener
 	private Mission mission;
 	
 	void Start(){
-		complete.active = false;	
+		complete.SetActive(false);	
 	}
 		
 	protected override void OnDestroy ()
@@ -41,8 +41,8 @@ public class CurrentMissionNotifier : BaseNotifier, IMissionListener
 	
 	public void MissionFinished (Mission mission)
 	{
-		complete.active = true;
-		crmFont.gameObject.SetActiveRecursively(false);
+		complete.SetActive(true);
+		crmFont.gameObject.SetActive(false);
 		FlyOut();
 	}
 	

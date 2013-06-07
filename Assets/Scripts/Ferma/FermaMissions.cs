@@ -6,13 +6,7 @@ public class FermaMissions : Abstract, IFermaMissionEmmitterListener {
 	public FermaMission[] fermaMissions;
 	private FermaLocationPlace place;
 	private FermaMissionEmmitter fermaMissionEmmitter;
-	
-	void Start(){
-		for(int i=0;i<3;i++){
-			fermaMissions[i].SetFermaMissions(this);
-		}
-	}
-	
+		
 	public FermaLocationPlace GetFermaLocationPlace(){
 		return place;
 	}

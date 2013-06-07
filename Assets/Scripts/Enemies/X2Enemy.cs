@@ -28,6 +28,6 @@ public class X2Enemy : EnemyWithBoost {
 	
 	public override void ReStart()
 	{
-		gameObject.SetActiveRecursively(true);	
+		gameObject.SetActive(true);	
 	}
 }

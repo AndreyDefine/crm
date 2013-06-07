@@ -20,13 +20,13 @@ public class GuiMissions : Abstract
 				mission = thisLifeFinishedMissions [thisLifeFinishedMissions.Count - 1] as Mission;
 			}
 			if (mission != null) {
-				guiMissions [j].gameObject.SetActiveRecursively (true);
+				guiMissions [j].gameObject.SetActive (true);
 				guiMissions [j].SetMission (mission);
 				j++;
 			}
 		}
 		for (; j<3; j++) {
-			guiMissions [j].gameObject.SetActiveRecursively (false);
+			guiMissions [j].gameObject.SetActive (false);
 		}
 	}
 }

@@ -30,9 +30,6 @@ public class GuiLayerInitializer : Abstract {
 	
 	public BoostNotifierController boostNotifierController;
 	
-	private ArrayList FinalMissionPlashkaArray=new ArrayList();
-
-	
 	public int MaxLife;
 	
 	private GameObject Timer;
@@ -109,7 +106,7 @@ public class GuiLayerInitializer : Abstract {
 		
 		SetMoney(GlobalOptions.GetLevelStartMoney());
 		SetPoints (GlobalOptions.GetLevelStartPoints());
-		pause.active = true;
+		pause.SetActive(true);
 		
 		GlobalOptions.GetMissionEmmitters().RestartActiveMissions();
 		
@@ -164,7 +161,7 @@ public class GuiLayerInitializer : Abstract {
 	}
 	
 	public void Resume(){
-		pause.active = true;
+		pause.SetActive(true);
 		GlobalOptions.GetPlayerScript().ResumeGame();		
 	}
 	
@@ -352,7 +349,7 @@ public class GuiLayerInitializer : Abstract {
 		playerScript.GameOver();
 		flagGameOver=true;
 		GameOverTime=Time.time;
-		pause.active = false;
+		pause.SetActive(false);
 	}
 	
 	private void MakeGameOver()

@@ -13,9 +13,9 @@ public class GuiMissionPlace : GuiButtonBase {
 	public void SetMission(Mission mission){
 		this.mission = mission;
 		if(mission.GetState()==MissionStates.FINISHED){
-			complete.active = true;
+			complete.SetActive(true);
 		}else{
-			complete.active = false;	
+			complete.SetActive(false);	
 		}
 		hasMission = true;
 		missionIco = Instantiate(mission.iconPrefab) as MissionIco;

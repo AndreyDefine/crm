@@ -47,7 +47,8 @@ public class ZoomMap : SpriteTouch {
 	}
 	
 	// Use this for initialization
-	void Start () {
+	protected override void Start () {
+		base.Start();
 		ZoomMap.instance = this;
 		swallowTouches=true;
         init();
@@ -202,13 +203,13 @@ public class ZoomMap : SpriteTouch {
 			Camera guiCamera = Cameras.GetGUICamera();
 			
 			Vector3 wordCenterFingerCurrent = guiCamera.ScreenToWorldPoint(new Vector3(centerFingerCurrent.x, centerFingerCurrent.y,1f));
-			Vector2 smCurrent = curScale*wordCenterFingerCurrent;
+			//Vector2 smCurrent = curScale*wordCenterFingerCurrent;
 			Vector2 smPrevNewCenter = prevScale*wordCenterFingerCurrent;
 			
 			
 			Vector3 wordCenterFingerPrev = guiCamera.ScreenToWorldPoint(new Vector3(centerFingerPrev.x, centerFingerPrev.y,1f));
 			Vector2 smPrev = prevScale*wordCenterFingerPrev;
-			Vector2 smPrevNewScale = curScale*wordCenterFingerPrev;
+			//Vector2 smPrevNewScale = curScale*wordCenterFingerPrev;
 			
 			//Debug.LogWarning(wordCenterFingerPrev.x+ " "+wordCenterFingerPrev.y+ " " +wordCenterFingerCurrent.x+" "+wordCenterFingerCurrent.y);
 				

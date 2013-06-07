@@ -39,7 +39,6 @@ public class DialogFermaBuySlot : SpriteTouch {
 	}
 	
 	public void ScaleInEnd(){
-		float radius = 0.005f;
 		AnimationFactory.MoveRound(this,2.5f,0.015f,"MoveRound");
 	}
 		

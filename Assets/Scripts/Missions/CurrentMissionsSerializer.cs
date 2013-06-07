@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class CurrentMissionsSerializer
 {
@@ -33,9 +34,9 @@ public class CurrentMissionsSerializer
 		return PlayerPrefs.GetString(CURRENT_MISSION_DATA_TAG+missionId,"");
 	}
 	
-	public static Hashtable GetCurrentMissionsKeyData (string tag)
+	public static Dictionary<string, string> GetCurrentMissionsKeyData (string tag)
 	{
-		Hashtable currentMissionsKeyData = new Hashtable ();
+		Dictionary<string, string> currentMissionsKeyData = new Dictionary<string, string> ();
 		string currentMissionsData = PlayerPrefs.GetString (tag, "");
 		if (!currentMissionsData.Equals ("")) {
 			char[] splitData = new char[] { '|' };

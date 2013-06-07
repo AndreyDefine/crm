@@ -44,14 +44,14 @@ public class AbstractEnemy : AbstractBaseEnemy {
 	
 	public virtual void MakeInactive()
 	{
-		gameObject.SetActiveRecursively(false);
+		gameObject.SetActive(false);
 		
 		PutToInactiveList();
 	}
 	
 	public virtual void MakeInactiveParent()
 	{
-		transform.parent.gameObject.SetActiveRecursively(false);
+		transform.parent.gameObject.SetActive(false);
 		
 		PutToInactiveList();
 	}

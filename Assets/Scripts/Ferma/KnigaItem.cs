@@ -8,7 +8,8 @@ public class KnigaItem : SpriteTouch {
 	
 	private GameObject curItemToShow=null;
 	// Use this for initialization
-	void Start () {
+	protected override void Start () {
+		base.Start();
 		GetKnigaKlukvControllerScript();
 		swallowTouches=true;
         init();
@@ -36,7 +37,7 @@ public class KnigaItem : SpriteTouch {
 		knigaKlukvControllerScript.HideCurKnigaItem();
 		curItemToShow=Instantiate(itemToShow) as GameObject;
 		if(itemShining){
-			itemShining.active=true;
+			itemShining.SetActive(true);
 		}
 		knigaKlukvControllerScript.curKnigaItem=this;
 	}
@@ -46,9 +47,9 @@ public class KnigaItem : SpriteTouch {
 		{
 			alreadyTouched=false;
 			(curItemToShow.GetComponent("SpriteTouch") as SpriteTouch).removeFromDispatcher();
-			curItemToShow.active=false;
+			curItemToShow.SetActive(false);
 			if(itemShining){
-				itemShining.active=false;
+				itemShining.SetActive(false);
 			}
 			Destroy(curItemToShow);
 			curItemToShow=null;

@@ -6,7 +6,7 @@ public class GuiButtonShowScreenAndPauseGame : GuiButtonShowScreen {
 	override protected void MakeOnTouch(){
 		if(GlobalOptions.gameState==GameStates.GAME)
 		{
-			gameObject.active = false;
+			gameObject.SetActive(false);
 			screenLoader.LoadScreenByName(screenToShow);
 			GlobalOptions.GetPlayerScript().PauseGame();
 		}

@@ -28,6 +28,6 @@ public class PropellerEnemy : AbstractEnemy {
 	
 	public override void ReStart()
 	{
-		gameObject.SetActiveRecursively(true);	
+		gameObject.SetActive(true);	
 	}
 }

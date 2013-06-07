@@ -24,6 +24,6 @@ public class MushroomEnemy : AbstractEnemy {
 	
 	public override void ReStart()
 	{
-		gameObject.SetActiveRecursively(true);	
+		gameObject.SetActive(true);	
 	}
 }

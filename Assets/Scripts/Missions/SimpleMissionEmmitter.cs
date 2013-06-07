@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class SimpleMissionEmmitter : BaseMissionEmmitter
 {
@@ -10,13 +11,13 @@ public class SimpleMissionEmmitter : BaseMissionEmmitter
 	{
 		//PlayerPrefs.DeleteAll();//TODO: delete this
 		//Ищем только миссии, которые еще не выполнялись и текущие тоже ищем
-		Hashtable currentMissionsKeyData = CurrentMissionsSerializer.GetCurrentMissionsKeyData (misionCurrentTag);
+		Dictionary<string, string> currentMissionsKeyData = CurrentMissionsSerializer.GetCurrentMissionsKeyData (misionCurrentTag);
 		for (int i=0; i<missions.Length; i++) {
 			Mission missionPrefab = missions [i];
 			string id = missionPrefab.name;
 			missionPrefab.SetId(id);
 			if (!IsMissionFinished (id)) {
-				prefabKeyHashTable [missionPrefab] = id;
+				prefabKeyDictionary [missionPrefab] = id;
 				if (currentMissionsKeyData.ContainsKey (id)) {
 					Mission mission = InstantiateMission (missionPrefab);	
 					mission.Unserialize (currentMissionsKeyData [id].ToString ());

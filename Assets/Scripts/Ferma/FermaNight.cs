@@ -19,7 +19,7 @@ public class FermaNight : SpriteTouch {
 	
 	public void SetActive(bool a){
 		getTouches = a;
-		gameObject.active = a;
+		gameObject.SetActive(a);
 	}
 	
 	public void TurnOffNight(){

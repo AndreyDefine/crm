@@ -15,10 +15,10 @@ public class GuiFermaMission : Abstract {
 		progress.SetProgressWithColor(mission.GetProgress());
 		progressBlick.SetProgress(mission.GetProgress());
 		if(mission.GetState()==MissionStates.FINISHED){
-			complete.active = true;
+			complete.SetActive(true);
 			missionName.text = mission.missionFinishedText;
 		}else{
-			complete.active = false;	
+			complete.SetActive(false);	
 			missionName.text = mission.missionName;
 		}
 		MissionIco missionIco = Instantiate(mission.iconPrefab) as MissionIco;

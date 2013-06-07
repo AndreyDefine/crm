@@ -16,7 +16,7 @@ public class MenuLevel2ControllerScript : Abstract,ScreenControllerToShow {
 		{
 			curObject=(levelPoints[i] as GameObject);
 			if(i>curOpened&&!openAll){
-				curObject.active=false;
+				curObject.SetActive(false);
 			}
 		}	
 
@@ -26,7 +26,7 @@ public class MenuLevel2ControllerScript : Abstract,ScreenControllerToShow {
 		{
 			curObject=(levelMasks[i] as GameObject);
 			if((curObject.GetComponent("MaskTag")as MaskTag).playingLevelNumber<curOpened||openAll){
-				curObject.active=false;
+				curObject.SetActive(false);
 			}
 		}
 	}

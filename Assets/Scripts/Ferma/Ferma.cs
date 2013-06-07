@@ -1,9 +1,10 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Ferma : Abstract {
 	
-	private Hashtable placesHashtable = new Hashtable();
+	private Dictionary<string, FermaLocationPlace> placesDictionary = new Dictionary<string, FermaLocationPlace>();
 	public DialogFermaBuy dialogFermaBuyPrefab;
 	public DialogFermaPlay dialogFermaPlayPrefab;
 	private DialogFerma dialogFerma;	
@@ -14,11 +15,11 @@ public class Ferma : Abstract {
 	void Start(){
 		for(int i=0;i<places.Length;i++){
 			FermaLocationPlace fact = places[i];
-			placesHashtable.Add(fact.name,fact);	
+			placesDictionary.Add(fact.name,fact);	
 			fact.SetFerma(this);
 		}
 		
-		FermaLocationPlace place = placesHashtable[PersonInfo.lastFactoryName] as FermaLocationPlace;
+		FermaLocationPlace place = placesDictionary[PersonInfo.lastFactoryName] as FermaLocationPlace;
 		if(place!=null){
 			GetComponent<ZoomMap>().SetPos(new Vector3(-place.singleTransform.localPosition.x,-place.singleTransform.localPosition.y,singleTransform.position.z));
 			//place.ShowPlayDialog();

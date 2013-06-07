@@ -20,7 +20,7 @@ public class FermaLocationPlace : Abstract {
 	
 	public Factory factory;
 	public FermaNight night=null;
-	public FermaLight light=null;
+	public FermaLight fermaLight=null;
 	
 	private Ferma ferma;
 	private bool play;
@@ -62,8 +62,8 @@ public class FermaLocationPlace : Abstract {
 			night.SetFermaLocationPlace(this);
 			night.SetActive(!bought);
 		}
-		if(light!=null){
-			light.SetActive(!bought);
+		if(fermaLight!=null){
+			fermaLight.SetActive(!bought);
 		}
 	}
 	
@@ -88,7 +88,7 @@ public class FermaLocationPlace : Abstract {
 	}
 	
 	public void NightOff(){
-		light.SetActive(false);
+		fermaLight.SetActive(false);
 		factory.SetActive(true);
 	}
 	

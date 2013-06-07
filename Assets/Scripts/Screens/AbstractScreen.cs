@@ -18,7 +18,7 @@ public class AbstractScreen : Abstract {
 	public virtual void ShowScreen()
 	{
 		if(makeInactive){
-			gameObject.SetActiveRecursively(true);
+			gameObject.SetActive(true);
 		}
 		InitSprites();
 		ShowObjects();
@@ -29,7 +29,7 @@ public class AbstractScreen : Abstract {
 		RemoveSprites();
 		HideObjects();
 		if(makeInactive){
-			gameObject.SetActiveRecursively(false);
+			gameObject.SetActive(false);
 		}
 	}
 	

@@ -17,7 +17,7 @@ public class KnigaKlukvControllerScript : Abstract,ScreenControllerToShow {
 		for(i=0;i<items.Length;i++)
 		{
 			curObject=(items[i] as GameObject);
-			curObject.active=false;
+			curObject.SetActive(false);
 			//if(i>curOpened&&!openAll){
 			//	curObject.active=false;
 			//}

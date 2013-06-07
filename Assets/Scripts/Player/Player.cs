@@ -76,7 +76,9 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	private GuiLayerInitializer guiLayer;
 	// Use this for initialization
-	void Start () {
+	
+	
+	protected override void Start () {
 		characterMarioC=Character.GetComponent<CharacterMarioC>();
 		PlayerFirstPos=singleTransform.position;
 		CameraFirstPos=MainCamera.transform.position;

@@ -16,7 +16,7 @@ public class Splash : Abstract {
 	// Update is called once per frame
 	void Update () {
 		if(Time.time-curTime>timeToSplash){
-			MakeSplash.active=!MakeSplash.active;
+			MakeSplash.SetActive(!MakeSplash.activeSelf);
 			curTime=Time.time;
 		}
 	}

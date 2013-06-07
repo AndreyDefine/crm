@@ -9,8 +9,7 @@ public class SwypeDetector : SpriteTouch {
 	
 	private bool alreadySwyped;
     
-    private void Start() {
-		
+    protected override void Start () {
 		Player=GlobalOptions.GetPlayer();
 		if(Player)
 			playerScript = Player.GetComponent<Player>();

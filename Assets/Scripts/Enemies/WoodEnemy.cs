@@ -27,7 +27,7 @@ public class WoodEnemy : AbstractEnemy {
 	
 	public override void ReStart()
 	{
-		transform.parent.gameObject.SetActiveRecursively(true);
+		singleTransform.parent.gameObject.SetActive(true);
 	}
 	
 }

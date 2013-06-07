@@ -22,10 +22,10 @@ public class KapkanEnemy : AbstractEnemy {
 		{
 			kapkan2=singleTransform.parent.GetChild(1).gameObject;
 		}
-		gameObject.active=false;
+		gameObject.SetActive(false);
 		if(kapkan2)
 		{
-			kapkan2.active=true;
+			kapkan2.SetActive(true);
 		}
 	}
 	
@@ -35,10 +35,10 @@ public class KapkanEnemy : AbstractEnemy {
 		{
 			kapkan2=singleTransform.parent.GetChild(1).gameObject;
 		}
-		gameObject.active=true;
+		gameObject.SetActive(true);
 		if(kapkan2)
 		{
-			kapkan2.active=false;
+			kapkan2.SetActive(false);
 		}
 	}
 }

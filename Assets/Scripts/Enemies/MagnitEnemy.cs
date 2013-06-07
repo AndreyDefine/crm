@@ -27,6 +27,6 @@ public class MagnitEnemy : EnemyWithBoost {
 	
 	public override void ReStart()
 	{
-		gameObject.SetActiveRecursively(true);	
+		gameObject.SetActive(true);	
 	}
 }

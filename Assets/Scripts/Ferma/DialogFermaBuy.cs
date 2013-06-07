@@ -12,15 +12,15 @@ public class DialogFermaBuy : DialogFerma {
 	{
 		base.SetFermaLocationPlace (place);
 		if(place.needLevel>PersonInfo.personLevel){
-			money.SetActiveRecursively(false);
-			errorText.gameObject.SetActiveRecursively(true);
+			money.SetActive(false);
+			errorText.gameObject.SetActive(true);
 			errorText.text = string.Format("You need {0} level", place.needLevel);
-			buyButton.SetActiveRecursively(false);
+			buyButton.SetActive(false);
 		}else{
-			money.SetActiveRecursively(true);
+			money.SetActive(true);
 			priceValue.text = string.Format("{0}", place.price);
-			errorText.gameObject.SetActiveRecursively(false);
-			buyButton.SetActiveRecursively(true);
+			errorText.gameObject.SetActive(false);
+			buyButton.SetActive(true);
 		}
 	}
 }

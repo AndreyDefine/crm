@@ -20,13 +20,7 @@ public class FermaMission : GuiButtonBase {
 	DialogFermaMissionInfo dialogInfo = null;
 	MissionIco missionIco = null;
 	
-	private FermaMissions fermaMissions;
-	
 	Mission mission;
-	
-	public void SetFermaMissions(FermaMissions fermaMissions){
-		this.fermaMissions = fermaMissions;
-	}
 	
 	public void SetClosed ()
 	{
@@ -34,8 +28,8 @@ public class FermaMission : GuiButtonBase {
 		state = FermaMissionStates.CLOSED;
 		getTouches = false;
 		GetComponent<tk2dSprite>().color = new Color(0.5f,0.5f,0.5f,1f);
-		emmitTime.gameObject.SetActiveRecursively(false);
-		plus.gameObject.active = false;
+		emmitTime.gameObject.SetActive(false);
+		plus.gameObject.SetActive(false);
 	}
 	
 	public void SetOpened ()
@@ -45,8 +39,8 @@ public class FermaMission : GuiButtonBase {
 		state = FermaMissionStates.OPENED;
 		getTouches = true;
 		GetComponent<tk2dSprite>().color = new Color(1f,1f,1f,1f);
-		emmitTime.gameObject.SetActiveRecursively(false);
-		plus.gameObject.active = false;
+		emmitTime.gameObject.SetActive(false);
+		plus.gameObject.SetActive(false);
 	}
 	
 	public void SetForBuy(){
@@ -54,8 +48,8 @@ public class FermaMission : GuiButtonBase {
 		state = FermaMissionStates.FORBUY;
 		getTouches = true;
 		GetComponent<tk2dSprite>().color = new Color(1f,1f,1f,1f);
-		emmitTime.gameObject.SetActiveRecursively(false);
-		plus.gameObject.active = true;
+		emmitTime.gameObject.SetActive(false);
+		plus.gameObject.SetActive(true);
 	}
 	
 	public void SetSlot(Slot slot){
@@ -65,9 +59,9 @@ public class FermaMission : GuiButtonBase {
 	public void SetMission(Mission mission){
 		this.mission = mission;
 		hasMission = true;
-		emmitTime.gameObject.SetActiveRecursively(false);
+		emmitTime.gameObject.SetActive(false);
 		GetComponent<tk2dSprite>().color = new Color(1f,1f,1f,1f);
-		plus.gameObject.active = false;
+		plus.gameObject.SetActive(false);
 		missionIco = Instantiate(mission.iconPrefab) as MissionIco;
 		missionIco.singleTransform.parent = missionIcoPlace.singleTransform;
 		missionIco.singleTransform.localPosition = new Vector3(0f,0f,-0.1f);
@@ -83,7 +77,7 @@ public class FermaMission : GuiButtonBase {
 	void Update(){
 		if(state==FermaMissionStates.OPENED){
 			if(!hasMission){
-				emmitTime.gameObject.SetActiveRecursively(true);
+				emmitTime.gameObject.SetActive(true);
 				long secondsLeft = GlobalOptions.GetMissionEmmitters().GetFermaMissionEmmitter().GetNextEmmitInSeconds();
 				emmitTime.text = string.Format("{0:00}:{1:00}",secondsLeft/60,secondsLeft%60);
 			}

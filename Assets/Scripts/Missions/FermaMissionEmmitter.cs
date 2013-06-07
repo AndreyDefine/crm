@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class FermaMissionEmmitter : BaseMissionEmmitter, IMissionListener
 {
@@ -54,14 +55,14 @@ public class FermaMissionEmmitter : BaseMissionEmmitter, IMissionListener
 	{
 		this.name = this.name.Replace ("(Clone)", "");
 		//Ищем только миссии, которые еще не выполнялись и текущие тоже ищем
-		Hashtable currentMissionsKeyData = CurrentMissionsSerializer.GetCurrentMissionsKeyData (misionCurrentTag);
-		Hashtable emittedMissionsKeyData = CurrentMissionsSerializer.GetCurrentMissionsKeyData (misionEmmittedTag);
+		Dictionary<string, string> currentMissionsKeyData = CurrentMissionsSerializer.GetCurrentMissionsKeyData (misionCurrentTag);
+		Dictionary<string, string> emittedMissionsKeyData = CurrentMissionsSerializer.GetCurrentMissionsKeyData (misionEmmittedTag);
 		for (int i=0; i<missions.Length; i++) {
 			Mission missionPrefab = missions [i];
 			string id = missionPrefab.name;
 			missionPrefab.SetId(id);
 			if (!IsMissionFinished (id)) {
-				prefabKeyHashTable [missionPrefab] = id;
+				prefabKeyDictionary [missionPrefab] = id;
 				if (currentMissionsKeyData.ContainsKey (id)) {
 					Mission mission = InstantiateMission (missionPrefab);	
 					mission.Unserialize (currentMissionsKeyData [id].ToString ());
@@ -164,13 +165,6 @@ public class FermaMissionEmmitter : BaseMissionEmmitter, IMissionListener
 	public ArrayList GetAvailableMissionsPrefabs ()
 	{
 		return availableMissionsPrefabs;
-	}
-	
-	public void MissionProgressChanged (Mission mission)
-	{
-		if (!mission.oneLife) {
-			CurrentMissionsSerializer.SaveMissionData (mission);
-		}
 	}
 	
 	public override int GetCountFinishedMissions ()
