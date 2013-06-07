@@ -1,20 +1,86 @@
 fileFormatVersion: 2
 guid: b1a7e3cf3a6c8466aab54b9a095006ab
 ModelImporter:
+  serializedVersion: 15
   fileIDToRecycleName:
+    100000: //RootNode
+    100002: spine_C0_4_shd
+    100004: spine_C0_0_shd
+    100006: spine_C0_shd_org
+    100008: neck_C0_head_shd
+    100010: neck_C0_2_shd
+    100012: neck_C0_shd_org
+    100014: leg_R1_5_shd
+    100016: leg_R1_2_shd
+    100018: leg_R1_0_shd
+    100020: leg_R1_end_shd
+    100022: leg_R1_shd_org
+    100024: leg_R0_5_shd
+    100026: leg_R0_2_shd
+    100028: leg_R0_0_shd
+    100030: leg_R0_end_shd
+    100032: leg_R0_shd_org
+    100034: leg_L1_5_shd
+    100036: leg_L1_2_shd
+    100038: leg_L1_0_shd
+    100040: leg_L1_end_shd
+    100042: leg_L1_shd_org
+    100044: leg_L0_5_shd
+    100046: leg_L0_2_shd
+    100048: leg_L0_0_shd
+    100050: leg_L0_end_shd
+    100052: leg_L0_shd_org
+    100054: foot_R1_shd_org
+    100056: foot_R0_shd_org
+    100058: foot_L1_shd_org
+    100060: foot_L0_shd_org
+    100062: body_C0_shd_org
+    100064: moose
+    400000: //RootNode
+    400002: spine_C0_4_shd
+    400004: spine_C0_0_shd
+    400006: spine_C0_shd_org
+    400008: neck_C0_head_shd
+    400010: neck_C0_2_shd
+    400012: neck_C0_shd_org
+    400014: leg_R1_5_shd
+    400016: leg_R1_2_shd
+    400018: leg_R1_0_shd
+    400020: leg_R1_end_shd
+    400022: leg_R1_shd_org
+    400024: leg_R0_5_shd
+    400026: leg_R0_2_shd
+    400028: leg_R0_0_shd
+    400030: leg_R0_end_shd
+    400032: leg_R0_shd_org
+    400034: leg_L1_5_shd
+    400036: leg_L1_2_shd
+    400038: leg_L1_0_shd
+    400040: leg_L1_end_shd
+    400042: leg_L1_shd_org
+    400044: leg_L0_5_shd
+    400046: leg_L0_2_shd
+    400048: leg_L0_0_shd
+    400050: leg_L0_end_shd
+    400052: leg_L0_shd_org
+    400054: foot_R1_shd_org
+    400056: foot_R0_shd_org
+    400058: foot_L1_shd_org
+    400060: foot_L0_shd_org
+    400062: body_C0_shd_org
+    400064: moose
     4300000: moose
-    7400000: Take 001 //// for_unity
-    7400002: Take 001 //// moose
-    7400004: Take_001 //// moose
-  serializedVersion: 10
+    7400002: Take 001
+    7400004: Take_001
+    11100000: //RootNode
+    13700000: moose
   materials:
     importMaterials: 1
     materialName: 0
     materialSearch: 1
   animations:
-    generateAnimations: 3
+    legacyGenerateAnimations: 3
     bakeSimulation: 0
-    splitAnimations: 1
     animationCompression: 1
     animationRotationError: .5
     animationPositionError: .5
@@ -22,19 +88,37 @@ ModelImporter:
     animationWrapMode: 0
     clipAnimations:
     - name: Take_001
+      takeName: 
       firstFrame: 1
       lastFrame: 25
       wrapMode: 2
+      orientationOffsetY: 0
+      level: 0
+      cycleOffset: 0
       loop: 0
+      loopBlend: 0
+      loopBlendOrientation: 0
+      loopBlendPositionY: 0
+      loopBlendPositionXZ: 0
+      keepOriginalOrientation: 0
+      keepOriginalPositionY: 1
+      keepOriginalPositionXZ: 0
+      heightFromFeet: 0
+      mirror: 0
+      keepAdditionalBonesAnimation: 1
+      bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
+      curves: []
+      skeletonMaskElements: []
+    isReadable: 0
   meshes:
     lODScreenPercentages: []
     globalScale: .200000003
-    meshCompression: 3
-    addColliders: 1
+    meshCompression: 0
+    addColliders: 0
     swapUVChannels: 0
     generateSecondaryUV: 0
     useFileUnits: 1
-    optimizeMesh: 1
+    optimizeMeshForGPU: 1
     secondaryUVAngleDistortion: 8
     secondaryUVAreaDistortion: 15.000001
     secondaryUVHardAngle: 88
@@ -44,241 +128,21 @@ ModelImporter:
     splitTangentsAcrossUV: 1
     normalImportMode: 0
     tangentImportMode: 1
-  textMetaNamesToFileIDs:
-    //RootNode:
-      data:
-        first: 1
-        second: a0860100
-      data:
-        first: 4
-        second: 801a0600
-      data:
-        first: 111
-        second: 605fa900
-    body_C0_shd_org:
-      data:
-        first: 1
-        second: de860100
-      data:
-        first: 4
-        second: be1a0600
-    foot_L0_shd_org:
-      data:
-        first: 1
-        second: dc860100
-      data:
-        first: 4
-        second: bc1a0600
-    foot_L1_shd_org:
-      data:
-        first: 1
-        second: da860100
-      data:
-        first: 4
-        second: ba1a0600
-    foot_R0_shd_org:
-      data:
-        first: 1
-        second: d8860100
-      data:
-        first: 4
-        second: b81a0600
-    foot_R1_shd_org:
-      data:
-        first: 1
-        second: d6860100
-      data:
-        first: 4
-        second: b61a0600
-    leg_L0_0_shd:
-      data:
-        first: 1
-        second: d0860100
-      data:
-        first: 4
-        second: b01a0600
-    leg_L0_2_shd:
-      data:
-        first: 1
-        second: ce860100
-      data:
-        first: 4
-        second: ae1a0600
-    leg_L0_5_shd:
-      data:
-        first: 1
-        second: cc860100
-      data:
-        first: 4
-        second: ac1a0600
-    leg_L0_end_shd:
-      data:
-        first: 1
-        second: d2860100
-      data:
-        first: 4
-        second: b21a0600
-    leg_L0_shd_org:
-      data:
-        first: 1
-        second: d4860100
-      data:
-        first: 4
-        second: b41a0600
-    leg_L1_0_shd:
-      data:
-        first: 1
-        second: c6860100
-      data:
-        first: 4
-        second: a61a0600
-    leg_L1_2_shd:
-      data:
-        first: 1
-        second: c4860100
-      data:
-        first: 4
-        second: a41a0600
-    leg_L1_5_shd:
-      data:
-        first: 1
-        second: c2860100
-      data:
-        first: 4
-        second: a21a0600
-    leg_L1_end_shd:
-      data:
-        first: 1
-        second: c8860100
-      data:
-        first: 4
-        second: a81a0600
-    leg_L1_shd_org:
-      data:
-        first: 1
-        second: ca860100
-      data:
-        first: 4
-        second: aa1a0600
-    leg_R0_0_shd:
-      data:
-        first: 1
-        second: bc860100
-      data:
-        first: 4
-        second: 9c1a0600
-    leg_R0_2_shd:
-      data:
-        first: 1
-        second: ba860100
-      data:
-        first: 4
-        second: 9a1a0600
-    leg_R0_5_shd:
-      data:
-        first: 1
-        second: b8860100
-      data:
-        first: 4
-        second: 981a0600
-    leg_R0_end_shd:
-      data:
-        first: 1
-        second: be860100
-      data:
-        first: 4
-        second: 9e1a0600
-    leg_R0_shd_org:
-      data:
-        first: 1
-        second: c0860100
-      data:
-        first: 4
-        second: a01a0600
-    leg_R1_0_shd:
-      data:
-        first: 1
-        second: b2860100
-      data:
-        first: 4
-        second: 921a0600
-    leg_R1_2_shd:
-      data:
-        first: 1
-        second: b0860100
-      data:
-        first: 4
-        second: 901a0600
-    leg_R1_5_shd:
-      data:
-        first: 1
-        second: ae860100
-      data:
-        first: 4
-        second: 8e1a0600
-    leg_R1_end_shd:
-      data:
-        first: 1
-        second: b4860100
-      data:
-        first: 4
-        second: 941a0600
-    leg_R1_shd_org:
-      data:
-        first: 1
-        second: b6860100
-      data:
-        first: 4
-        second: 961a0600
-    moose:
-      data:
-        first: 1
-        second: e0860100
-      data:
-        first: 4
-        second: c01a0600
-      data:
-        first: 137
-        second: a00bd100
-    neck_C0_2_shd:
-      data:
-        first: 1
-        second: aa860100
-      data:
-        first: 4
-        second: 8a1a0600
-    neck_C0_head_shd:
-      data:
-        first: 1
-        second: a8860100
-      data:
-        first: 4
-        second: 881a0600
-    neck_C0_shd_org:
-      data:
-        first: 1
-        second: ac860100
-      data:
-        first: 4
-        second: 8c1a0600
-    spine_C0_0_shd:
-      data:
-        first: 1
-        second: a4860100
-      data:
-        first: 4
-        second: 841a0600
-    spine_C0_4_shd:
-      data:
-        first: 1
-        second: a2860100
-      data:
-        first: 4
-        second: 821a0600
-    spine_C0_shd_org:
-      data:
-        first: 1
-        second: a6860100
-      data:
-        first: 4
-        second: 861a0600
+  importAnimation: 1
+  copyAvatar: 0
+  humanDescription:
+    human: []
+    skeleton: []
+    handles: []
+    armTwist: .5
+    foreArmTwist: .5
+    upperLegTwist: .5
+    legTwist: .5
+    armStretch: .0500000007
+    legStretch: .0500000007
+    feetSpacing: 0
+    rootMotionBoneName: 
+  lastHumanDescriptionAvatarSource: {instanceID: 0}
+  additionalBone: 1
+  animationType: 1
+  userData: 

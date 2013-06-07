@@ -417,11 +417,11 @@ ModelImporter:
       bodyMask: 01000000010000000100000001000000010000000100000001000000010000000100000001000000010000000100000001000000
       curves: []
       skeletonMaskElements: []
-    isReadable: 1
+    isReadable: 0
   meshes:
     lODScreenPercentages: []
     globalScale: .209999993
-    meshCompression: 3
+    meshCompression: 0
     addColliders: 0
     swapUVChannels: 0
     generateSecondaryUV: 0
