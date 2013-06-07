@@ -78,7 +78,7 @@ public class GuiLayerInitializer : Abstract {
 		StarsList=new ArrayList();
 		GUIcamera = Cameras.GetGUICamera(); 
 		
-		playerScript=GlobalOptions.GetPlayer().GetComponent("Player")as Player;
+		playerScript=GlobalOptions.GetPlayerScript();
 
 		InitSprites();
 		Restart();

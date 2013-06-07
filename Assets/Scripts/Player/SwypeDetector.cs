@@ -4,15 +4,12 @@ using System.Collections;
 public class SwypeDetector : SpriteTouch {	
 	private float Epsilonxx,Epsilonxy,Epsilonyx,Epsilonyy;
 	
-	protected GameObject Player;
 	protected Player playerScript; 
 	
 	private bool alreadySwyped;
     
     protected override void Start () {
-		Player=GlobalOptions.GetPlayer();
-		if(Player)
-			playerScript = Player.GetComponent<Player>();
+		playerScript = GlobalOptions.GetPlayerScript();
 		
 		touchPriority=3;
 		swallowTouches=false;

@@ -7,7 +7,7 @@ public class AbstractFactory : Abstract {
 	protected int numberOfTerrains;
 	protected Vector3 whereToBuildLocal;
 	protected float drawnPerspective;
-	protected GameObject Player;
+	protected Player player;
 	protected float terrainLength;
 	
 	protected Vector3 initialPos=new Vector3(0,0,0);
@@ -19,7 +19,7 @@ public class AbstractFactory : Abstract {
 	
 	public void LoadLevelFromGlobalOptions()
 	{
-		Player=GlobalOptions.GetPlayer();
+		player=GlobalOptions.GetPlayerScript();
 		drawnPerspective=GlobalOptions.globalPerspective;
 		
 		oldObjectPos=initialPos;

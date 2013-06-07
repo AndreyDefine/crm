@@ -15,7 +15,7 @@ public class AbstractEnemy : AbstractBaseEnemy {
 	void Start(){
 		GuiLayer=GlobalOptions.GetGuiLayer();	
 		playerScript=GlobalOptions.GetPlayerScript();
-		playertransform=GlobalOptions.GetPlayer().transform;
+		playertransform=GlobalOptions.GetPlayerScript().singleTransform;
 		characterTransform=playerScript.Character.transform;
 		walkingBearTransform=playerScript.GetWalkingBear();
 		initEnemy();
@@ -28,7 +28,7 @@ public class AbstractEnemy : AbstractBaseEnemy {
 	
 	public virtual void PutToInactiveList()
 	{
-		Transform curtransform=transform;
+		Transform curtransform=singleTransform;
 		
 		
 		//Ищем террейн
@@ -51,8 +51,7 @@ public class AbstractEnemy : AbstractBaseEnemy {
 	
 	public virtual void MakeInactiveParent()
 	{
-		transform.parent.gameObject.SetActive(false);
-		
+		singleTransform.parent.gameObject.SetActive(false);
 		PutToInactiveList();
 	}
 	
@@ -70,7 +69,7 @@ public class AbstractEnemy : AbstractBaseEnemy {
 	{
 		if(playOnHit)
 		{
-			AudioSource.PlayClipAtPoint(playOnHit, transform.position);
+			AudioSource.PlayClipAtPoint(playOnHit, singleTransform.position);
 		}
 	}
 }

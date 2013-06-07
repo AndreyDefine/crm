@@ -205,7 +205,7 @@ public class GlobalOptions {
 		return screenLoader;
 	}
 	
-	public static GameObject GetPlayer(){
+	private static GameObject GetPlayer(){
 		if(!player)
 		{
 			player=GameObject.Find("/ScreenGame/Player");
