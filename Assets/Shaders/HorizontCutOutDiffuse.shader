@@ -4,6 +4,7 @@ Properties
     _MainTex ("Texture", 2D) = "white" {}
     _Cutoff ("Alpha cutoff", Range(0,1)) = 0.5
 }
+
 SubShader 
 {
     Cull Off    
@@ -17,7 +18,6 @@ SubShader
     CGINCLUDE
 
 		#include "UnityCG.cginc"
-
             sampler2D _MainTex;
             float _Cutoff;
 			

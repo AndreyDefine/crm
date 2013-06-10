@@ -38,7 +38,7 @@ public class AbstractEnemy : AbstractBaseEnemy {
 		parentTerrainTag=curtransform.gameObject.GetComponent("TerrainTag") as TerrainTag;
 		
 		if(parentTerrainTag){
-			parentTerrainTag.PutToInactiveList(gameObject);
+			parentTerrainTag.PutToInactiveList(this);
 		}
 	}
 	

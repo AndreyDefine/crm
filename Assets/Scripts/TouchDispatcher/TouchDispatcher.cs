@@ -33,6 +33,7 @@ public class TouchDispatcher : MonoBehaviour
 		if(instance==null)
 		{
 			instance=(new GameObject()).AddComponent<TouchDispatcher>();
+			instance.name="TouchDispatcher";
 		}
 		return instance;	
 	}

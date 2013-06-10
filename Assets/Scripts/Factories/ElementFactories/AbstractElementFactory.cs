@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class AbstractElementFactory: Abstract{
 	public string pathInResources="";
@@ -11,13 +12,13 @@ public class AbstractElementFactory: Abstract{
 	private string []terrain1=null;
 	
 	private GameObject terrainToDel1,terrainToDel2;
-	protected ArrayList terrainsList=new ArrayList();
-	protected ArrayList terrainsListToDel=new ArrayList();
+	protected List<AbstractTag> terrainsList = new List<AbstractTag>();
+	protected List<AbstractTag> terrainsListToDel = new List<AbstractTag>();
 	
 	public AbstractTag GetLastObject(){
 		if(terrainsList.Count!=0)
 		{
-			return terrainsList[0]  as AbstractTag;
+			return terrainsList[0];
 		}
 		else{
 			return null;
@@ -27,7 +28,7 @@ public class AbstractElementFactory: Abstract{
 	public AbstractTag GetLastAddedObject(){
 		if(terrainsList.Count!=0)
 		{
-			return terrainsList[terrainsList.Count-1] as AbstractTag;
+			return terrainsList[terrainsList.Count-1];
 		}
 		else{
 			return null;
@@ -53,10 +54,10 @@ public class AbstractElementFactory: Abstract{
 		int i;
 		Vector3 newPos=new Vector3(-9999,-9999,-9999);
 		for(i=0;i<terrainsListToDel.Count;i++){
-			(terrainsListToDel[i]as AbstractTag).singleTransform.position=newPos;
+			terrainsListToDel[i].singleTransform.position=newPos;
 		}
 		for(i=0;i<terrainsList.Count;i++){
-			(terrainsList[i]as AbstractTag).singleTransform.position=newPos;
+			terrainsList[i].singleTransform.position=newPos;
 			terrainsListToDel.Add(terrainsList[i]);
 		}
 		
@@ -67,7 +68,7 @@ public class AbstractElementFactory: Abstract{
 	{
 		if(terrainsList.Count>0)
 		{
-			AbstractTag newterrainToDel=terrainsList[0] as AbstractTag;
+			AbstractTag newterrainToDel=terrainsList[0];
 			terrainsList.Remove(newterrainToDel);			
 			terrainsListToDel.Add(newterrainToDel);
 		}
@@ -115,7 +116,7 @@ public class AbstractElementFactory: Abstract{
 		if(terrainsListToDel.Count>0){
 			AbstractTag newTerrainTag;
 			int RandIndex=Random.Range(0,terrainsListToDel.Count);
-			newTerrainTag=(terrainsListToDel[RandIndex] as AbstractTag);
+			newTerrainTag=terrainsListToDel[RandIndex];
 			terrainsListToDel.Remove(newTerrainTag);		
 			//put object to first state
 			PutToFirstState(newTerrainTag);
@@ -131,8 +132,8 @@ public class AbstractElementFactory: Abstract{
 			if(preloadNames=="")
 			{
 				int RandIndex=Random.Range(0,terrainsList.Count);
-				newTerrain	= Instantiate((terrainsList[RandIndex] as AbstractTag).gameObject) as GameObject;
-				newTerrain.name=(terrainsList[RandIndex] as AbstractTag).gameObject.name;
+				newTerrain	= Instantiate(terrainsList[RandIndex].gameObject) as GameObject;
+				newTerrain.name=terrainsList[RandIndex].gameObject.name;
 			}
 			else
 			{
@@ -153,13 +154,13 @@ public class AbstractElementFactory: Abstract{
 	{
 		AbstractTag newTerrain=null;
 		for (int i=0; i<terrainsListToDel.Count;i++){
-			newTerrain	= terrainsListToDel[i] as AbstractTag;
+			newTerrain	= terrainsListToDel[i];
 			Destroy(newTerrain.gameObject);
 		}
 		terrainsListToDel.Clear();
 		
 		for (int i=0; i<terrainsList.Count;i++){
-			newTerrain	= terrainsList[i] as AbstractTag;
+			newTerrain	= terrainsList[i];
 			Destroy(newTerrain.gameObject);
 		}
 		terrainsList.Clear();
@@ -191,8 +192,8 @@ public class AbstractElementFactory: Abstract{
 			{
 				//нашли
 				AbstractTag newTerrainTag;
-				if((terrainsListToDel[i] as AbstractTag).name==instr){
-					newTerrainTag=(terrainsListToDel[i] as AbstractTag);
+				if(terrainsListToDel[i].name==instr){
+					newTerrainTag=terrainsListToDel[i];
 					terrainsListToDel.Remove(newTerrainTag);
 					PutToFirstState(newTerrainTag);
 					newTerrain=newTerrainTag.gameObject;
@@ -235,7 +236,7 @@ public class AbstractElementFactory: Abstract{
 		}
 		else
 		{
-			Debug.Log ("NOT addTagToObject");
+			//Debug.Log ("NOT addTagToObject");
 		}
 		
 		

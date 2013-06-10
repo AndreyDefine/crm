@@ -65,8 +65,8 @@ public class TerrainTag : AbstractTag{
 	int customDotIndex=1;
 	float customPos=0;
 	
-	protected ArrayList AllElements=new ArrayList();
-	protected ArrayList InactiveElements=new ArrayList();
+	protected List<AbstractTag> AllElements = new List<AbstractTag>();
+	protected List<AbstractEnemy> InactiveElements = new List<AbstractEnemy>();
 	
 	private float mnoshitel;
 	
@@ -501,23 +501,23 @@ public class TerrainTag : AbstractTag{
 		return returnXandYandAngle;	
 	}
 	
-	public void PushToAllElements(GameObject inobj){
+	public void PushToAllElements(AbstractTag inobj){
 		AllElements.Add(inobj);
 	}
 	
-	public ArrayList GetAllElements(){
+	public List<AbstractTag> GetAllElements(){
 		return AllElements;
 	}
 	
-	public void PutToInactiveList(GameObject inobj){
+	public void PutToInactiveList(AbstractEnemy inobj){
 		InactiveElements.Add(inobj);
 	}
 	
 	public void MakeAllActive()
 	{
-		foreach (GameObject obj in InactiveElements)
+		foreach (AbstractEnemy obj in InactiveElements)
 		{
-			obj.GetComponent<AbstractEnemy>().ReStart();
+			obj.ReStart();
 		}
 		InactiveElements.Clear();
 	}

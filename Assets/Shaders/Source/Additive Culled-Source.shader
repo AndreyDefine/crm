@@ -1,4 +1,4 @@
-Shader "Shaders/FX/Additive Culled" {
+Shader "Shaders/Source/Additive Culled-Source" {
 Properties {
 	//_TintColor ("Tint Color", Color) = (0.5,0.5,0.5,0.5)
 	_MainTex ("Particle Texture", 2D) = "white" {}
@@ -15,19 +15,6 @@ Category {
 		Bind "Vertex", vertex
 		Bind "TexCoord", texcoord
 	}
-	
-	// ---- Dual texture cards
-	//SubShader {
-	//	Pass {
-	//		SetTexture [_MainTex] {
-	//			constantColor [_TintColor]
-	//			combine constant * primary
-	//		}
-	//		SetTexture [_MainTex] {
-	//			combine texture * previous DOUBLE
-	//		}
-	//	}
-	//}
 	
 	// ---- Single texture cards (does not do color tint)
 	SubShader {
