@@ -62,6 +62,8 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	float posilkaTimer;
 	
+	private Transform whereToLookTransform,characterTransform,walkingBearTransform,mainCameraTransform;
+	
 	private GameObject walkingBear;
 	
 	public bool GetMagnitFlag()
@@ -71,7 +73,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	public Transform GetWalkingBear()
 	{
-		return walkingBear.transform;
+		return walkingBearTransform;
 	}
 	
 	private GuiLayerInitializer guiLayer;
@@ -79,15 +81,22 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	
 	protected override void Start () {
+		//transforms
+		whereToLookTransform=WhereToLook.transform;
+		characterTransform=Character.transform;	
+		mainCameraTransform=MainCamera.transform;
+		
+		walkingBear=characterTransform.FindChild("WalkingBear").gameObject;
+		walkingBearTransform=walkingBear.transform;
+		////////////
+		
 		characterMarioC=Character.GetComponent<CharacterMarioC>();
 		PlayerFirstPos=singleTransform.position;
-		CameraFirstPos=MainCamera.transform.position;
-		CameraFirstRotation=MainCamera.transform.rotation;
-		CharacterFirstPos=Character.transform.localPosition;
-		firstWhereToLookLocalPos=WhereToLook.transform.localPosition;
+		CameraFirstPos=mainCameraTransform.position;
+		CameraFirstRotation=mainCameraTransform.rotation;
+		CharacterFirstPos=characterTransform.localPosition;
+		firstWhereToLookLocalPos=whereToLookTransform.localPosition;
 		raznFromWhereToLookAndCharacter=firstWhereToLookLocalPos-CharacterFirstPos;
-		
-		walkingBear=Character.transform.FindChild("WalkingBear").gameObject;
 		
 		
 		HeadStarsParticleEmitter=GameObject.Find("HeadBoomParticle").GetComponent<ParticleEmitter>();
@@ -209,7 +218,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	private void DropPosilkaRight()
 	{
 		GameObject posilka=Instantiate(PosilkaRight) as GameObject;
-		posilka.transform.position=Character.transform.position+new Vector3(0,2,0);
+		posilka.transform.position=characterTransform.position+new Vector3(0,2,0);
 		posilka.transform.GetChild(0).animation.Play("DropPostalRight");
 		Destroy(posilka,2);
 	}
@@ -217,7 +226,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	private void DropPosilkaLeft()
 	{
 		GameObject posilka=Instantiate(PosilkaRight) as GameObject;
-		posilka.transform.position=Character.transform.position+new Vector3(0,2,0);
+		posilka.transform.position=characterTransform.position+new Vector3(0,2,0);
 		posilka.transform.GetChild(0).animation.Play("DropPostalLeft");
 		Destroy(posilka,2);
 	}
@@ -417,7 +426,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	public Vector3 GetCharacterPosition()
 	{
-		return Character.transform.position;
+		return characterTransform.position;
 	}
 	
 	public void ChangePath(bool toRight)
@@ -453,7 +462,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		//Ezxtra test out of bounds
 		if(typeOfControl==0||typeOfControl==1)
 		{		
-			float forcex=(-Character.transform.localPosition.x+PathNumber*meshPath)*roadChangeForce;
+			float forcex=(-characterTransform.localPosition.x+PathNumber*meshPath)*roadChangeForce;
 			//меняем дорожку
 			if(PathChanging){	
 				if(Mathf.Abs (forcex)<0.09*roadChangeForce)
@@ -513,19 +522,16 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		{
 			return dumping;
 		}
-		//Vector3 walkbearpos=walkingBear.transform.localPosition;
-		Vector3 charpos=Character.transform.localPosition;
-		//Vector3 charpos=Character.transform.position;
+		Vector3 charpos=characterTransform.localPosition;
 		float raznost=raznFromWhereToLookAndCharacter.y;
 		float heightDamping=2f;
 		
-		//WhereToLook.transform.position=new Vector3(0,WhereToLook.transform.position.y,charpos.z-5);
 		if((characterMarioC.isJumping())&&GlobalOptions.gameState!=GameStates.GAME_OVER)
 		{
 			//Debug.Log ("characterMarioC");
-			float currentHeight = Mathf.Lerp (WhereToLook.transform.localPosition.y, raznost, heightDamping * Time.deltaTime);
+			float currentHeight = Mathf.Lerp (whereToLookTransform.localPosition.y, raznost, heightDamping * Time.deltaTime);
 
-			WhereToLook.transform.localPosition=new Vector3(charpos.x*whereToLookParalax, currentHeight,WhereToLook.transform.localPosition.z);
+			whereToLookTransform.localPosition=new Vector3(charpos.x*whereToLookParalax, currentHeight,whereToLookTransform.localPosition.z);
 			
 			dumping=0;
 		}
@@ -545,8 +551,8 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 				raznost-=2;
 				heightDamping=2f;
 			}
-			float currentHeight = Mathf.Lerp (WhereToLook.transform.localPosition.y, raznost, heightDamping * Time.deltaTime);
-			WhereToLook.transform.localPosition=new Vector3(charpos.x*whereToLookParalax,currentHeight,WhereToLook.transform.localPosition.z);
+			float currentHeight = Mathf.Lerp (whereToLookTransform.localPosition.y, raznost, heightDamping * Time.deltaTime);
+			whereToLookTransform.localPosition=new Vector3(charpos.x*whereToLookParalax,currentHeight,whereToLookTransform.localPosition.z);
 		}
 		
 		return dumping;
@@ -563,15 +569,15 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		GlobalOptions.whereToBuild=new Vector3(0,0,1);
 		RotatePlayer(0);	
 		singleTransform.position=PlayerFirstPos;		
-		Character.transform.localPosition=new Vector3(0,0,20);
-		walkingBear.transform.localPosition=new Vector3(0,0,0);
+		characterTransform.localPosition=new Vector3(0,0,20);
+		walkingBearTransform.localPosition=new Vector3(0,0,0);
 		//PlaceBearToControl();
 
 		CharacterControllerRespawn();
 		
 		//MainCamera
-		MainCamera.transform.position=CameraFirstPos;
-		MainCamera.transform.rotation=CameraFirstRotation;
+		mainCameraTransform.position=CameraFirstPos;
+		mainCameraTransform.rotation=CameraFirstRotation;
 	}
 	
 	
@@ -701,7 +707,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		float forward=GetRealVelocityWithNoDeltaTime();
 		characterMarioC.SetMovement(forward);
 		
-		if(Character.transform.position.z>worldFactoryScript.GetCurTerrainEnd().z+20)
+		if(characterTransform.position.z>worldFactoryScript.GetCurTerrainEnd().z+20)
 		{
 			worldFactoryScript.TryAddTerrrain();
 		}
@@ -710,8 +716,8 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	private void MakeRotationCharacterController(float inangle)
 	{
 		//Debug.Log (inangle);
-		Character.transform.rotation=Quaternion.Euler(0, inangle, 0);
-		WhereToLook.transform.rotation=Quaternion.Euler(0, inangle, 0);
+		characterTransform.rotation=Quaternion.Euler(0, inangle, 0);
+		whereToLookTransform.rotation=Quaternion.Euler(0, inangle, 0);
 	}
 	
 	private void CharacterControllerRespawn(){
@@ -719,7 +725,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	}
 	
 	private void TestIsFallen(){
-		if(Character.transform.position.y+10<worldFactoryScript.GetCurTerrainCenter())
+		if(characterTransform.position.y+10<worldFactoryScript.GetCurTerrainCenter())
 		{
 			guiLayer.ShowGameOver();
 		}
@@ -751,9 +757,9 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	
 	public void PlaceCharacterFirstly(Vector3 inpos)
 	{
-		Character.transform.position=inpos;
-		Vector3 walkbearpos=walkingBear.transform.localPosition;
-		Vector3 charpos=Character.transform.localPosition;
-		WhereToLook.transform.localPosition=new Vector3(charpos.x*whereToLookParalax,charpos.y+walkbearpos.y+raznFromWhereToLookAndCharacter.y,raznFromWhereToLookAndCharacter.z+charpos.z);
+		characterTransform.position=inpos;
+		Vector3 walkbearpos=walkingBearTransform.localPosition;
+		Vector3 charpos=characterTransform.localPosition;
+		whereToLookTransform.localPosition=new Vector3(charpos.x*whereToLookParalax,charpos.y+walkbearpos.y+raznFromWhereToLookAndCharacter.y,raznFromWhereToLookAndCharacter.z+charpos.z);
 	}
 }

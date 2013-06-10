@@ -14,7 +14,7 @@ public class BearAnimation3D : Abstract{
 	void Start ()
 	{
 		GameObject newobj;
-		Transform curtransform;
+		Transform curtransform,newobjTransform;
 		
 		//add all clothes to bear walking
 		walkingBear=singleTransform.FindChild("WalkingBear").gameObject;
@@ -23,8 +23,9 @@ public class BearAnimation3D : Abstract{
 		for (int i=0;i<clothes.Length;i++)
 		{
 			newobj	= Instantiate (clothes[i]) as GameObject;
-			newobj.transform.parent=curtransform;
-			newobj.transform.Translate(initPos+singleTransform.position);
+			newobjTransform=newobj.transform;
+			newobjTransform.parent=curtransform;
+			newobjTransform.Translate(initPos+singleTransform.position);
 			clothesList.Add(newobj);
 			
 			//make other invisible

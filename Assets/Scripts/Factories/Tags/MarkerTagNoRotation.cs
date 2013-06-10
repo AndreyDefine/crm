@@ -7,6 +7,6 @@ public class MarkerTagNoRotation : MarkerTag {
 	{
 		Vector3 angles=inRotation.eulerAngles-inRotationParent.eulerAngles;
 		angles.y=0;
-		transform.rotation=Quaternion.Euler(angles+inRotationParent.eulerAngles);
+		singleTransform.rotation=Quaternion.Euler(angles+inRotationParent.eulerAngles);
 	}
 }

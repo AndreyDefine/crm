@@ -136,7 +136,7 @@ public class TerrainTag : AbstractTag{
 
 		if(EndOfTerrain)
 		{
-			endOfTerrain=EndOfTerrain.transform.position;
+			endOfTerrain=EndOfTerrain.position;
 		}
 		else
 		{
@@ -356,7 +356,7 @@ public class TerrainTag : AbstractTag{
 			{
 				int newCurDot=1;
 				GlobalOptions.GetWorldFactory().GetComponent<WorldFactory>().TryAddTerrrain();
-				(abstractElementFactory as TerrainElementFactory).SetNextCurrentTerrain(next.gameObject);
+				(abstractElementFactory as TerrainElementFactory).SetNextCurrentTerrain(next);
 		
 				next.SetCurDotIndexAndCurPos(newCurDot,tekPos);
 				return next.GetXandYandAngleSmexForZ(inposition,usecustomDotIndexAndCustomPos);

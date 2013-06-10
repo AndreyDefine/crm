@@ -14,20 +14,20 @@ public class AbstractElementFactory: Abstract{
 	protected ArrayList terrainsList=new ArrayList();
 	protected ArrayList terrainsListToDel=new ArrayList();
 	
-	public GameObject GetLastObject(){
+	public AbstractTag GetLastObject(){
 		if(terrainsList.Count!=0)
 		{
-			return terrainsList[0] as GameObject;
+			return terrainsList[0]  as AbstractTag;
 		}
 		else{
 			return null;
 		}
 	}
 	
-	public GameObject GetLastAddedObject(){
+	public AbstractTag GetLastAddedObject(){
 		if(terrainsList.Count!=0)
 		{
-			return terrainsList[terrainsList.Count-1] as GameObject;
+			return terrainsList[terrainsList.Count-1] as AbstractTag;
 		}
 		else{
 			return null;
@@ -53,10 +53,10 @@ public class AbstractElementFactory: Abstract{
 		int i;
 		Vector3 newPos=new Vector3(-9999,-9999,-9999);
 		for(i=0;i<terrainsListToDel.Count;i++){
-			(terrainsListToDel[i]as GameObject).transform.position=newPos;
+			(terrainsListToDel[i]as AbstractTag).singleTransform.position=newPos;
 		}
 		for(i=0;i<terrainsList.Count;i++){
-			(terrainsList[i]as GameObject).transform.position=newPos;
+			(terrainsList[i]as AbstractTag).singleTransform.position=newPos;
 			terrainsListToDel.Add(terrainsList[i]);
 		}
 		
@@ -67,16 +67,16 @@ public class AbstractElementFactory: Abstract{
 	{
 		if(terrainsList.Count>0)
 		{
-			GameObject newterrainToDel=terrainsList[0] as GameObject;
+			AbstractTag newterrainToDel=terrainsList[0] as AbstractTag;
 			terrainsList.Remove(newterrainToDel);			
 			terrainsListToDel.Add(newterrainToDel);
 		}
 	}
 	
-	public void DeleteCurrent(GameObject inObject){
+	public void DeleteCurrent(AbstractTag inObject){
 		terrainsList.Remove(inObject);			
 		terrainsListToDel.Add(inObject);
-		inObject.transform.parent=null;
+		inObject.singleTransform.parent=null;
 	}
 	
 	public void AddExtraObjectInPull()
@@ -97,27 +97,30 @@ public class AbstractElementFactory: Abstract{
 			if(terrain1[i]==instr){
 				newTerrain	= Instantiate(Resources.Load(pathInResources+"/"+terrain1[i])) as GameObject;
 				addTagToObject(newTerrain);	
-				terrainsListToDel.Add(newTerrain);
+				terrainsListToDel.Add(newTerrain.GetComponent<AbstractTag>());
 				newTerrain.name=instr;
 				break;
 			}
 		}	
 	}
 	
-	public virtual void PutToFirstState(GameObject newTerrain){
-		newTerrain.transform.position=new Vector3(-200,-200,-200);
-		newTerrain.transform.rotation=Quaternion.identity;
-		newTerrain.GetComponent<AbstractTag>().ReStart();
+	public virtual void PutToFirstState(AbstractTag newTerrain){
+		newTerrain.singleTransform.position=new Vector3(-9999,-9999,-9999);
+		newTerrain.singleTransform.rotation=Quaternion.identity;
+		newTerrain.ReStart();
 	}
 	
 	public virtual GameObject GetNewObject(){
 		GameObject newTerrain=null;
 		if(terrainsListToDel.Count>0){
+			AbstractTag newTerrainTag;
 			int RandIndex=Random.Range(0,terrainsListToDel.Count);
-			newTerrain=terrainsListToDel[RandIndex] as GameObject;
-			terrainsListToDel.Remove(newTerrain);		
+			newTerrainTag=(terrainsListToDel[RandIndex] as AbstractTag);
+			terrainsListToDel.Remove(newTerrainTag);		
 			//put object to first state
-			PutToFirstState(newTerrain);
+			PutToFirstState(newTerrainTag);
+			terrainsList.Add(newTerrainTag);
+			newTerrain=newTerrainTag.gameObject;
 		}else
 		{
 			if(terrain1==null&&preloadNames!="")
@@ -128,8 +131,8 @@ public class AbstractElementFactory: Abstract{
 			if(preloadNames=="")
 			{
 				int RandIndex=Random.Range(0,terrainsList.Count);
-				newTerrain	= Instantiate(terrainsList[RandIndex] as GameObject) as GameObject;
-				newTerrain.name=(terrainsList[RandIndex] as GameObject).name;
+				newTerrain	= Instantiate((terrainsList[RandIndex] as AbstractTag).gameObject) as GameObject;
+				newTerrain.name=(terrainsList[RandIndex] as AbstractTag).gameObject.name;
 			}
 			else
 			{
@@ -139,24 +142,25 @@ public class AbstractElementFactory: Abstract{
 			}
 
 			addTagToObject(newTerrain);	
-			PutToFirstState(newTerrain);
+			PutToFirstState(newTerrain.GetComponent<AbstractTag>());
+			
+			terrainsList.Add(newTerrain.GetComponent<AbstractTag>());
 		}
-		terrainsList.Add(newTerrain);
 		return newTerrain;
 	}
 	
 	public virtual void DestroyPullObjects()
 	{
-		GameObject newTerrain=null;
+		AbstractTag newTerrain=null;
 		for (int i=0; i<terrainsListToDel.Count;i++){
-			newTerrain	= terrainsListToDel[i] as GameObject;
-			Destroy(newTerrain);
+			newTerrain	= terrainsListToDel[i] as AbstractTag;
+			Destroy(newTerrain.gameObject);
 		}
 		terrainsListToDel.Clear();
 		
 		for (int i=0; i<terrainsList.Count;i++){
-			newTerrain	= terrainsList[i] as GameObject;
-			Destroy(newTerrain);
+			newTerrain	= terrainsList[i] as AbstractTag;
+			Destroy(newTerrain.gameObject);
 		}
 		terrainsList.Clear();
 	}
@@ -174,7 +178,7 @@ public class AbstractElementFactory: Abstract{
 			newTerrain.name=terrain1[i];
 			addTagToObject(newTerrain);	
 			newTerrain.transform.position=new Vector3(-9999,-9999,-9999);
-			terrainsListToDel.Add (newTerrain);
+			terrainsListToDel.Add (newTerrain.GetComponent<AbstractTag>());
 		}
 	}
 	
@@ -186,11 +190,12 @@ public class AbstractElementFactory: Abstract{
 			for(i=0;i<terrainsListToDel.Count;i++)
 			{
 				//нашли
-				if((terrainsListToDel[i] as GameObject).name==instr){
-					newTerrain=terrainsListToDel[i] as GameObject;
-					terrainsListToDel.Remove(newTerrain);
-					PutToFirstState(newTerrain);
-					//Debug.Log ("Loaded "+instr);
+				AbstractTag newTerrainTag;
+				if((terrainsListToDel[i] as AbstractTag).name==instr){
+					newTerrainTag=(terrainsListToDel[i] as AbstractTag);
+					terrainsListToDel.Remove(newTerrainTag);
+					PutToFirstState(newTerrainTag);
+					newTerrain=newTerrainTag.gameObject;
 					break;
 				}
 			}
@@ -210,20 +215,30 @@ public class AbstractElementFactory: Abstract{
 			if(newTerrain)
 			{
 				addTagToObject(newTerrain);	
-				PutToFirstState(newTerrain);
+				PutToFirstState(newTerrain.GetComponent<AbstractTag>());
 				newTerrain.name=instr;
 			}
 		}
 		if(newTerrain)
 		{
-			terrainsList.Add(newTerrain);
+			terrainsList.Add(newTerrain.GetComponent<AbstractTag>());
 		}
 		return newTerrain;
 	}
 	
 	public virtual void addTagToObject(GameObject newTerrain){
-		newTerrain.AddComponent("AbstractTag");
 		AbstractTag curTag;
+		
+		if(!newTerrain.GetComponent<AbstractTag>())
+		{
+			newTerrain.AddComponent("AbstractTag");
+		}
+		else
+		{
+			Debug.Log ("NOT addTagToObject");
+		}
+		
+		
 		curTag=newTerrain.GetComponent("AbstractTag") as AbstractTag;
 		curTag.addFactory(this);
 	}

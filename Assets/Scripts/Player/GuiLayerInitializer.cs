@@ -472,7 +472,6 @@ public class GuiLayerInitializer : Abstract {
 	public void AddHeadStars()
 	{
 		playerScript.MakeHeadStars();
-		Debug.Log ("public void AddHeadStars()");
 		flagHeadStars=true;
 		headStarsTime=Time.time;
 	}
