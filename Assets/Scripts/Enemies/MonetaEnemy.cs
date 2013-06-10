@@ -15,6 +15,8 @@ public class MonetaEnemy : AbstractEnemy {
 	
 	private bool flagPlusPlayerSpeed=false;
 	
+	private Transform cameraTransform;
+	
 	//private Transform oldParent;
 	
 	public override void OnHit(Collider other)
@@ -56,6 +58,7 @@ public class MonetaEnemy : AbstractEnemy {
 	public override void initEnemy()
 	{
 		parentTransform=singleTransform.parent.parent;
+		cameraTransform=playerScript.MainCamera.transform;
 	}
 	
 	public override void ReStart()
@@ -131,9 +134,9 @@ public class MonetaEnemy : AbstractEnemy {
 			camx+=smex;
 			camy+=smex*2.3f;
 			
-			parentTransform.position=new Vector3(playerScript.MainCamera.transform.position.x+camx,playerScript.MainCamera.transform.position.y+camy,walkingBearTransform.position.z+5);
+			parentTransform.position=new Vector3(cameraTransform.position.x+camx,cameraTransform.position.y+camy,walkingBearTransform.position.z+5);
 			
-			if(parentTransform.position.y>playerScript.MainCamera.transform.position.y+0.5)
+			if(parentTransform.position.y>cameraTransform.position.y+0.5)
 			{
 				GuiLayer.AddMoney(numberOfMoney);
 				flagRotation=false;
@@ -150,7 +153,6 @@ public class MonetaEnemy : AbstractEnemy {
 	
 	private void UnMakeEffect()
 	{
-		Debug.Log ("UnMakeEffect()");
 		effectMade=0;
 		flagRotation=false;
 		flagPlusPlayerSpeed=false;

@@ -40,6 +40,7 @@ public class CharacterMarioC : Abstract {
 	private CapsuleCollider walkinbearCollider;
 	
 	private GameObject walkingBear;
+	private Transform walkingBearTransform;
 	
 	private float flyingYsmex=8,groundYsmex=0;
 	
@@ -67,6 +68,8 @@ public class CharacterMarioC : Abstract {
 		controller = GetComponent<CharacterController>();
 		walkingBear=singleTransform.FindChild("WalkingBear").gameObject;
 		walkinbearCollider=walkingBear.collider as CapsuleCollider;
+		
+		walkingBearTransform=walkingBear.transform;
 	}
 	
 	void Update() {
@@ -280,12 +283,12 @@ public class CharacterMarioC : Abstract {
 		groundingFlag=false;
 		playerScript.Character.layer=11;
 		movingToFlyGround=false;
-		walkingBear.transform.localPosition=new Vector3(0,groundYsmex,0);
+		walkingBearTransform.localPosition=new Vector3(0,groundYsmex,0);
 	}
 	
 	private void MoveToFlyGround()
 	{
-		float ypos=walkingBear.transform.localPosition.y;
+		float ypos=walkingBearTransform.localPosition.y;
 		//взлёт
 		if(flying)
 		{
@@ -325,7 +328,7 @@ public class CharacterMarioC : Abstract {
 				}
 			}
 		}
-		walkingBear.transform.localPosition=new Vector3(0,ypos,0);
+		walkingBearTransform.localPosition=new Vector3(0,ypos,0);
 	}
 	
 	public void Freeze()

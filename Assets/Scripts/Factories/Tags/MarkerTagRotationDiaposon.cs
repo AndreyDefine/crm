@@ -11,6 +11,6 @@ public class MarkerTagRotationDiaposon : MarkerTag {
 		Vector3 angles=inRotation.eulerAngles-inRotationParent.eulerAngles;
 		angles.y=angles.y>minYRotation?minYRotation:angles.y;
 		angles.y=angles.y<-minYRotation?-minYRotation:angles.y;
-		transform.rotation=Quaternion.Euler(angles+inRotationParent.eulerAngles);
+		singleTransform.rotation=Quaternion.Euler(angles+inRotationParent.eulerAngles);
 	}
 }

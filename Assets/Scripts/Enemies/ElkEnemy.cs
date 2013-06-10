@@ -16,6 +16,6 @@ public class ElkEnemy : AbstractEnemy {
 	
 	public override void ReStart()
 	{
-		transform.parent.gameObject.SetActive(true);
+		singleTransform.parent.gameObject.SetActive(true);
 	}
 }

@@ -50,7 +50,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	
 	public string GetCurrentObstacleSet()
 	{
-		return terrainElementFactory.GetCurrentTerrainForZ().GetComponent<TerrainTag>().obstacleSetName;
+		return terrainElementFactory.GetCurrentTerrainForZ().obstacleSetName;
 	}
 	
 	public override void init(){
@@ -680,8 +680,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		Vector3 newpos=new Vector3(0,0,0);
 		
 		Vector3 oldWhereToBuild=GlobalOptions.whereToBuild;
-		
-		
+			
 		if(terrainElementFactory.flagGenerate){
 			Vector3 lastAddedEndOfTerrain;
 			
@@ -695,6 +694,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 			}
 			
 			newTerrain=AddTerrain();
+			
 			terrainTag=newTerrain.GetComponent("TerrainTag") as TerrainTag;
 			
 			if(terrainTag.isEndOfTerrain())
@@ -820,7 +820,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	
 	public Vector3 GetCurTerrainEnd()
 	{
-		return terrainElementFactory.GetCurrentTerrainForZ().GetComponent<TerrainTag>().GetEndOfTerrain();
+		return terrainElementFactory.GetCurrentTerrainForZ().GetEndOfTerrain();
 	}
 	
 	public override float GetTerrainLength()

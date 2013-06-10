@@ -13,12 +13,12 @@ public class AbstractTag : Abstract{
 	}
 	
 	public virtual void DeleteFromUsed(){
-		abstractElementFactory.DeleteCurrent(gameObject);
+		abstractElementFactory.DeleteCurrent(this);
 	}
 	
 	public virtual void ReStart()
 	{
-		if(enemyScripts.Length>0)
+		if(enemyScripts!=null&&enemyScripts.Length>0)
 		{
 			for(int i=0;i<enemyScripts.Length;i++)
 			{
