@@ -63,6 +63,16 @@ public class PersonInfo {
 		}
 	}
 	
+	public static bool tutorial {
+        get {
+            return PlayerPrefs.GetInt(TAG+"tutorial",0)==0?true:false;
+        }
+    }
+	
+	public static void FinishTutorial(){
+		PlayerPrefs.SetInt(TAG+"tutorial",1);
+	}
+	
 	public static bool TryToBuy(int needCoins, int needGold){
 		int needMoreCoins = needCoins-coins;
 		int needMoreGold = needGold - gold;
@@ -77,4 +87,5 @@ public class PersonInfo {
 		AddGold(-needGold);
 		return true;
 	}
+	
 }

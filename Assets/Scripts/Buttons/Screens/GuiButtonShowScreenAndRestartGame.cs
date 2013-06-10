@@ -7,3 +7,4 @@ public class GuiButtonShowScreenAndRestartGame : GuiButtonShowScreen {
 		//GlobalOptions.GetPlayerScript().Restart();
 	}
 }
+ 
