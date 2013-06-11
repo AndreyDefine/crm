@@ -197,6 +197,7 @@ public class CharacterMarioC : Abstract {
 			glideTimer=Time.time;
 			walkinbearCollider.height=heightslide;
 			walkinbearCollider.center=new Vector3(walkinbearCollider.center.x,walkinbearCollider.center.y-(heightnormal-heightslide)/2,walkinbearCollider.center.z);
+			GlobalOptions.GetMissionEmmitters().NotifySlide(1);
 		}
 	}
 	

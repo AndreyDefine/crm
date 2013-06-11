@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class Player : SpriteTouch,AccelerometerTargetedDelegate {
+public class Player : SpriteTouch {
 	public GameObject Character;
 	public GameObject WhereToLook;
 	public float startVelocity;
@@ -11,7 +11,6 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 	public float meshPath;
 	public int pathNumberLeftRight;
 	public float whereToLookParalax;
-	public int typeOfControl;
 	public GameObject MainCamera;
 	
 	public GameObject PosilkaRight;
@@ -123,10 +122,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		swallowAcceles=false;
 		
         init();
-		#if UNITY_IPHONE || UNITY_ANDROID
-        if(GlobalOptions.UsingAcceleration)
-			initaccel ();
-		#endif
+
 		guiLayer=GlobalOptions.GetGuiLayer();
 		GlobalOptions.gameState=GameStates.GAME;
 		GlobalOptions.playerStates=PlayerStates.WALK;
@@ -384,6 +380,7 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 			{
 				bearAnimation.Left();
 				characterMarioC.PathChangeJump();
+				
 			}
 			
 			if(GlobalOptions.playerStatesPathChanging==PlayerStatesPathChanging.RIGHT&&!flyingPathChange)
@@ -414,15 +411,6 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		GlobalOptions.MainThemeMusicScript.SetMusicPitch(GetRealVelocityWithNoDeltaTime()/startVelocity*GlobalOptions.startMusicPitch);
 	}
 	
-	protected void GetSharedAccelerateDispatcher(){
-		sharedAccelerometerDispatcher = AccelerometerDispatcher.GetSharedAccelerateDispatcher();
-	}
-	
-	protected virtual void initaccel(){
-		GetSharedAccelerateDispatcher();
-		sharedAccelerometerDispatcher.addTargetedDelegate(this,accelPriority,swallowAcceles);
-	}
-	
 	public Vector3 GetCharacterPosition()
 	{
 		return characterTransform.position;
@@ -438,6 +426,9 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 			prevPathNumber=PathNumber;
 			PathNumber--;
 			PathNumber=PathNumber<-pathNumberLeftRight?-pathNumberLeftRight:PathNumber;
+			if(prevPathNumber!=PathNumber){
+				GlobalOptions.GetMissionEmmitters().NotifyLeft(1);
+			}
 		}
 		
 		if(toRight){
@@ -447,6 +438,9 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 			prevPathNumber=PathNumber;
 			PathNumber++;
 			PathNumber=PathNumber>pathNumberLeftRight?pathNumberLeftRight:PathNumber;
+			if(prevPathNumber!=PathNumber){
+				GlobalOptions.GetMissionEmmitters().NotifyRight(1);
+			}
 		}
 	}
 	
@@ -458,23 +452,20 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		}
 		Vector3 smex=new Vector3(0,0,GetRealVelocity());
 		
-		//Ezxtra test out of bounds
-		if(typeOfControl==0||typeOfControl==1)
-		{		
-			float forcex=(-characterTransform.localPosition.x+PathNumber*meshPath)*roadChangeForce;
-			//меняем дорожку
-			if(PathChanging){	
-				if(Mathf.Abs (forcex)<0.09*roadChangeForce)
-				{
-					MoveCharacterControllerLeftRight(0);
-					PathChanging=false;
-					GlobalOptions.playerStatesPathChanging=PlayerStatesPathChanging.FORWARD;
-				}
-				else{
-					MoveCharacterControllerLeftRight(forcex);
-				}
+		//Ezxtra test out of bounds	
+		float forcex=(-characterTransform.localPosition.x+PathNumber*meshPath)*roadChangeForce;
+		//меняем дорожку
+		if(PathChanging){	
+			if(Mathf.Abs (forcex)<0.09*roadChangeForce)
+			{
+				MoveCharacterControllerLeftRight(0);
+				PathChanging=false;
+				GlobalOptions.playerStatesPathChanging=PlayerStatesPathChanging.FORWARD;
 			}
-		}	
+			else{
+				MoveCharacterControllerLeftRight(forcex);
+			}
+		}
 		
 		
 		if(GlobalOptions.flagOnlyFizik)
@@ -584,36 +575,6 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 		if(Input.GetAxis ("Horizontal")!=0){
 			force=Input.GetAxis ("Horizontal");
 		}
-	}
-	
-	public virtual bool Accelerate(Vector3 acceleration,int infingerId) {
-		force = acceleration.x*2f;
-		if(typeOfControl==1){
-			float epsilonForse=0.6f;
-			//right??
-			if(force>epsilonForse&&PathNumber<=0)
-			{
-				
-				PathChanging=true;
-				GlobalOptions.playerStates=PlayerStates.WALK;
-				prevPathNumber=PathNumber;
-				PathNumber=1;
-			}			
-			if(force<-epsilonForse&&PathNumber>=0)
-			{
-				PathChanging=true;
-				GlobalOptions.playerStates=PlayerStates.WALK;
-				prevPathNumber=PathNumber;
-				PathNumber=-1;
-			}
-			if(force>=-epsilonForse/3&&force<=epsilonForse/3&&PathNumber!=0){
-				PathChanging=true;
-				GlobalOptions.playerStates=PlayerStates.WALK;
-				prevPathNumber=PathNumber;
-				PathNumber=0;
-			}
-		}
-		return true;
 	}
 	
 	public float GetVelocityCurMnoshitel()
