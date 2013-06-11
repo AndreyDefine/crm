@@ -85,7 +85,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		curFactoryObject=Instantiate (MoneyFactory) as GameObject;
 		moneyElementFactory=curFactoryObject.GetComponent("AbstractElementFactory") as AbstractElementFactory;
 		
-		numberOfTerrains=2;
+		numberOfTerrains=3;
 		
 		//Get current level
 		LoadCurrentLevel();
@@ -171,6 +171,10 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		//really need this!!!
 		//obstacleSetElementFactory.PreloadPullObjects();
 		boostElementFactory.PreloadPullObjects();
+		moneyElementFactory.PreloadPullObjects();
+		obstacleElementFactory.PreloadPullObjects();
+		uniqueElementFactory.PreloadPullObjects();
+		obstacleSetElementFactory.PreloadPullObjects();
 	}
 	
 	public override void ReStart(){
@@ -278,7 +282,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 				}	
 			}
 			
-			if(FlagCoRoutine&&i%100==0) yield return null;
+			if(FlagCoRoutine&&i%50==0) yield return null;
 		}
 		
 		//unique terrains
@@ -402,7 +406,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 				if(!curname.Contains("Left")&&!curname.Contains("Right"))
 				{
 					addOneUniqueAtMarker(curUnique,interrainTag);
-					if(FlagCoRoutine&&i%1==0) yield return null;
+					if(FlagCoRoutine) yield return null;
 				}
 			}
 		}
@@ -411,7 +415,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		for(i=0;i<markedObjectsTrees.Count;i++){
 			if(curversionForCoRoutine!=versionForCoRoutine) yield break;
 			addOneTreeAtMarker(markedObjectsTrees[i] as Transform,interrainTag);
-			if(FlagCoRoutine&&i%1==0) yield return null;
+			if(FlagCoRoutine) yield return null;
 		}
 		
 		if(curversionForCoRoutine!=versionForCoRoutine) yield break;
@@ -470,6 +474,18 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 				Transform[] allChildren = Container.gameObject.GetComponentsInChildren<Transform>();
 				//обрабатываем все трансформы
 				for(j=1;j<allChildren.Length;j++){
+					//bug with NUULLS
+					if(allChildren[j].name=="money")
+					{
+						addOneMoneyAtMarker(allChildren[j],Container2,interrainTag);
+						continue;
+					}
+					
+					if(allChildren[j].name=="boost")
+					{
+						addOneBoostAtMarker(allChildren[j],Container2,interrainTag);
+						continue;
+					}
 					//reqursively
 					addOneObstacleFromSetAtMarker(allChildren[j],Container2,interrainTag,recursion+1);
 				}

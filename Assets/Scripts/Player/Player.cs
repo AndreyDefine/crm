@@ -281,7 +281,10 @@ public class Player : SpriteTouch {
 	
 	public void MakeHeadStars()
 	{
-		HeadStarsParticleEmitter.emit=true;
+		if(GlobalOptions.gameState!=GameStates.GAME_OVER)
+		{
+			HeadStarsParticleEmitter.emit=true;
+		}
 	}
 	
 	public void UnMakeHeadStars()
