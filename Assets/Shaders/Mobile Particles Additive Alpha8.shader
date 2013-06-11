@@ -43,7 +43,7 @@ Shader "Shaders/Mobile Particles Additive Alpha8" {
 			    if(zOff<-nechuvstv)
 			    {
 			    	zOff+=nechuvstv;
-			   		//vPos += _QOffset*zOff*zOff;
+			   		vPos += _QOffset*zOff*zOff;
 			    }
 			    
 			    o.pos = mul (UNITY_MATRIX_P, vPos);
