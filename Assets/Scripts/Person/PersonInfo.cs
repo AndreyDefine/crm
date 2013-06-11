@@ -71,6 +71,14 @@ public class PersonInfo {
 	
 	public static void FinishTutorial(){
 		PlayerPrefs.SetInt(TAG+"tutorial",1);
+		MissionEmmitters missionEmmitters = GlobalOptions.GetMissionEmmitters();
+		if(missionEmmitters!=null){
+			missionEmmitters.Init();
+		}
+		GuiLayerInitializer guiLayer = GlobalOptions.GetGuiLayer();
+		if(guiLayer!=null){
+			guiLayer.upNotifierController.SetCurrentMissions();
+		}
 	}
 	
 	public static bool TryToBuy(int needCoins, int needGold){

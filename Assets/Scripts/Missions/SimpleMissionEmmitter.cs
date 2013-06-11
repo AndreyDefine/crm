@@ -43,7 +43,7 @@ public class SimpleMissionEmmitter : BaseMissionEmmitter
 		EmmitMissions(true);
 	}
 	
-	public void EmmitMissions (bool force = false)
+	public virtual void EmmitMissions (bool force = false)
 	{
 		if(!force&&(GlobalOptions.gameState!=GameStates.GAME||IsTimeOut())){
 			return;

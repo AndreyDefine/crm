@@ -6,12 +6,12 @@ public class MissionNotifier : BaseNotifier
 {
 	public Abstract missionIconPlace;
 	public TwoLineText missionName;
-	private Mission mission;
+	protected Mission mission;
 	private MissionIco missionIco;
 	
 	private float flyOutTime;
 	
-	public void SetMission(Mission mission){
+	public virtual void SetMission(Mission mission){
 		this.mission = mission;
 		SetMissionIcon(Instantiate(mission.iconPrefab) as MissionIco);
 		SetMissionText(mission.missionName);
@@ -28,7 +28,7 @@ public class MissionNotifier : BaseNotifier
 		missionName.text = text;
 	}
 	
-	void Update(){
+	protected virtual void Update(){
 		if(state==NotifierStates.SHOWN&&Time.time-flyOutTime>SHOW_TIME){
 			GlobalOptions.GetGuiLayer().AddCurrentMission(this);
 			FlyOut();	

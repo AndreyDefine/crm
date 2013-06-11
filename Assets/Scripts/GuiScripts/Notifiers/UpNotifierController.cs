@@ -6,24 +6,42 @@ public class UpNotifierController : BaseNotifierController {
 	float NOTIFIER_HEIGHT = 0.396f;
 	float Z_INDEX_PER_POSITION = 0.15f;
 	
+	//mission notifier
+	public MissionNotifier missionNotifierPrefab;
+	public TutorialMissionNotifier tutorialMissionNotifierPrefab;
+	
+	
 	public override void Restart ()
 	{
 		base.Restart ();
 		SetCurrentMissions();
 	}
 	
-	private void SetCurrentMissions(){
-		ArrayList missions = GlobalOptions.GetMissionEmmitters().GetCurrentMissions();
+	public void SetCurrentMissions(){
+		ArrayList missions;
+		missions = GlobalOptions.GetMissionEmmitters().GetCurrentMissions();
 		for(int i=0;i<missions.Count;i++){
 			Mission mission = (Mission)missions[i];
-			if(mission.GetState()==MissionStates.NOT_ACTIVE){
-				AddMissionNotifier(mission);
+			if(PersonInfo.tutorial){
+				AddTutorialMissionNotifier(mission);
+			}else{
+				if(mission.GetState()==MissionStates.NOT_ACTIVE){
+					AddMissionNotifier(mission);
+				}
 			}
 		}
 	}
 	
-	//mission notifier
-	public MissionNotifier missionNotifierPrefab;
+	private TutorialMissionNotifier GetTutorialMissionNotifier(){
+		TutorialMissionNotifier notifier = Instantiate(tutorialMissionNotifierPrefab) as TutorialMissionNotifier;	
+		return notifier;
+	}
+	
+	public void AddTutorialMissionNotifier(Mission mission){
+		TutorialMissionNotifier notifier = GetTutorialMissionNotifier();
+		notifier.SetMission(mission);
+		AddNotifier(notifier);
+	}
 	
 	private MissionNotifier GetMissionNotifier(){
 		MissionNotifier notifier = Instantiate(missionNotifierPrefab) as MissionNotifier;	

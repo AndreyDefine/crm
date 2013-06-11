@@ -8,7 +8,11 @@ public class GuiMissions : Abstract
 	
 	public void InitMissions ()
 	{
-		BaseMissionEmmitter[] emmitters = GlobalOptions.GetMissionEmmitters ().missionEmmitters;
+		BaseMissionEmmitter[] emmitters = new BaseMissionEmmitter[3];
+		MissionEmmitters missionEmmitters = GlobalOptions.GetMissionEmmitters();
+		emmitters[0] = missionEmmitters.GetFermaMissionEmmitter();
+		emmitters[1] = missionEmmitters.collectMissionEmmitter;
+		emmitters[2] = missionEmmitters.runMissionEmmitter;
 		int j = 0;
 		for (int i=0; i<3; i++) {
 			Mission mission = null;

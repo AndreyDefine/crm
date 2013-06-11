@@ -186,7 +186,11 @@ public class GuiLayerInitializer : Abstract {
 	}
 	
 	public void AddMission(Mission mission){
-		upNotifierController.AddMissionNotifier(mission);
+		if(PersonInfo.tutorial){
+			upNotifierController.AddTutorialMissionNotifier(mission);
+		}else{
+			upNotifierController.AddMissionNotifier(mission);
+		}
 	}
 	
 	public void AddCurrentMission(MissionNotifier missionNotifier){

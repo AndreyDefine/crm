@@ -3,75 +3,102 @@ using System.Collections;
 
 public class MissionEmmitters : Abstract, IMissionEmmitter, IMissionNotify
 {
-	public BaseMissionEmmitter[] missionEmmitters;
-	public int begin = 1;
+	ArrayList currentMissionEmmitters = new ArrayList();
+	
+	public TutorialMissionEmmitter tutorialMissionEmmitter;
+	
+	public BaseMissionEmmitter collectMissionEmmitter;
+	public BaseMissionEmmitter runMissionEmmitter;
+	
+	private FermaMissionEmmitter fermaMissionEmmitter = null;
+	
+	void Awake(){
+		Init();
+	}
+	
+	public ArrayList GetCurrentMissionEmmitters(){
+		return currentMissionEmmitters;
+	}
+	
+	public void Init(){
+		currentMissionEmmitters.Clear();
+		if(PersonInfo.tutorial){
+			currentMissionEmmitters.Add(tutorialMissionEmmitter);
+		}else{
+			if(fermaMissionEmmitter!=null){
+				currentMissionEmmitters.Add(fermaMissionEmmitter);
+			}
+			currentMissionEmmitters.Add(collectMissionEmmitter);
+			currentMissionEmmitters.Add(runMissionEmmitter);
+		}
+	}
 	
 	public void LevelBegin ()
 	{
-		for(int i=begin;i<missionEmmitters.Length;i++){
-			missionEmmitters[i].LevelBegin();
+		for(int i=0;i<currentMissionEmmitters.Count;i++){
+			((BaseMissionEmmitter)currentMissionEmmitters[i]).LevelBegin();
 		}
 	}	
 	
 	public void RestartActiveMissions ()
 	{
-		for(int i=begin;i<missionEmmitters.Length;i++){
-			missionEmmitters[i].RestartActiveMissions();
+		for(int i=0;i<currentMissionEmmitters.Count;i++){
+			((BaseMissionEmmitter)currentMissionEmmitters[i]).RestartActiveMissions();
 		}
 	}
 	
 	public void NotifyCoinsCollected(int coins){
-		for(int i=begin;i<missionEmmitters.Length;i++){
-			missionEmmitters[i].NotifyCoinsCollected(coins);
+		for(int i=0;i<currentMissionEmmitters.Count;i++){
+			((BaseMissionEmmitter)currentMissionEmmitters[i]).NotifyCoinsCollected(coins);
 		}
 	}
 	
 	public void NotifyPostCollected (int post)
 	{
-		for(int i=begin;i<missionEmmitters.Length;i++){
-			missionEmmitters[i].NotifyPostCollected(post);
+		for(int i=0;i<currentMissionEmmitters.Count;i++){
+			((BaseMissionEmmitter)currentMissionEmmitters[i]).NotifyPostCollected(post);
 		}
 	}
 	
 	public void NotifyVodkaCollected (int vodka)
 	{
-		for(int i=begin;i<missionEmmitters.Length;i++){
-			missionEmmitters[i].NotifyVodkaCollected(vodka);
+		for(int i=0;i<currentMissionEmmitters.Count;i++){
+			((BaseMissionEmmitter)currentMissionEmmitters[i]).NotifyVodkaCollected(vodka);
 		}
 	}
 	
 	public void NotifyMagnitCollected (int magnit)
 	{
-		for(int i=begin;i<missionEmmitters.Length;i++){
-			missionEmmitters[i].NotifyMagnitCollected(magnit);
+		for(int i=0;i<currentMissionEmmitters.Count;i++){
+			((BaseMissionEmmitter)currentMissionEmmitters[i]).NotifyMagnitCollected(magnit);
 		}
 	}
 	
 	public void NotifyX2Collected (int x2)
 	{
-		for(int i=begin;i<missionEmmitters.Length;i++){
-			missionEmmitters[i].NotifyX2Collected(x2);
+		for(int i=0;i<currentMissionEmmitters.Count;i++){
+			((BaseMissionEmmitter)currentMissionEmmitters[i]).NotifyX2Collected(x2);
 		}
 	}
 	
 	public void NotifySenoDeath (int senoDeath)
 	{
-		for(int i=begin;i<missionEmmitters.Length;i++){
-			missionEmmitters[i].NotifySenoDeath(senoDeath);
+		for(int i=0;i<currentMissionEmmitters.Count;i++){
+			((BaseMissionEmmitter)currentMissionEmmitters[i]).NotifySenoDeath(senoDeath);
 		}
 	}
 	
 	public void NotifyTraktorDeath (int traktorDeath)
 	{
-		for(int i=begin;i<missionEmmitters.Length;i++){
-			missionEmmitters[i].NotifyTraktorDeath(traktorDeath);
+		for(int i=0;i<currentMissionEmmitters.Count;i++){
+			((BaseMissionEmmitter)currentMissionEmmitters[i]).NotifyTraktorDeath(traktorDeath);
 		}
 	}
 	
 	public ArrayList GetCurrentMissions(){
 		ArrayList currentMissions = new ArrayList();
-		for(int i=begin;i<missionEmmitters.Length;i++){
-			currentMissions.AddRange(missionEmmitters[i].GetCurrentMissions());
+		for(int i=0;i<currentMissionEmmitters.Count;i++){
+			currentMissions.AddRange(((BaseMissionEmmitter)currentMissionEmmitters[i]).GetCurrentMissions());
 		}
 		return currentMissions;
 	}
@@ -79,102 +106,102 @@ public class MissionEmmitters : Abstract, IMissionEmmitter, IMissionNotify
 	public ArrayList GetThisLifeFinishedMissions ()
 	{
 		ArrayList thisLifeFinishedMissions = new ArrayList();
-		for(int i=begin;i<missionEmmitters.Length;i++){
-			thisLifeFinishedMissions.AddRange(missionEmmitters[i].GetThisLifeFinishedMissions());
+		for(int i=0;i<currentMissionEmmitters.Count;i++){
+			thisLifeFinishedMissions.AddRange(((BaseMissionEmmitter)currentMissionEmmitters[i]).GetThisLifeFinishedMissions());
 		}
 		return thisLifeFinishedMissions;
 	}
 	
 	public void NotifyScarecrowDeath (int scarecrowDeath)
 	{
-		for(int i=begin;i<missionEmmitters.Length;i++){
-			missionEmmitters[i].NotifyScarecrowDeath(scarecrowDeath);
+		for(int i=0;i<currentMissionEmmitters.Count;i++){
+			((BaseMissionEmmitter)currentMissionEmmitters[i]).NotifyScarecrowDeath(scarecrowDeath);
 		}
 	}
 	
 	//run
 	public void NotifyMetersRunned(int meter){
-		for(int i=begin;i<missionEmmitters.Length;i++){
-			missionEmmitters[i].NotifyMetersRunned(meter);
+		for(int i=0;i<currentMissionEmmitters.Count;i++){
+			((BaseMissionEmmitter)currentMissionEmmitters[i]).NotifyMetersRunned(meter);
 		}
 	}
 	
 	public void NotifySlideUnderSomething (int something)
 	{
-		for(int i=begin;i<missionEmmitters.Length;i++){
-			missionEmmitters[i].NotifySlideUnderSomething(something);
+		for(int i=0;i<currentMissionEmmitters.Count;i++){
+			((BaseMissionEmmitter)currentMissionEmmitters[i]).NotifySlideUnderSomething(something);
 		}
 	}
 	
 	public void NotifyJump (int jump)
 	{
-		for(int i=begin;i<missionEmmitters.Length;i++){
-			missionEmmitters[i].NotifyJump(jump);
+		for(int i=0;i<currentMissionEmmitters.Count;i++){
+			((BaseMissionEmmitter)currentMissionEmmitters[i]).NotifyJump(jump);
 		}
 	}
 	
 	public void NotifyPointsAdded (int points)
 	{
-		for(int i=begin;i<missionEmmitters.Length;i++){
-			missionEmmitters[i].NotifyPointsAdded(points);
+		for(int i=0;i<currentMissionEmmitters.Count;i++){
+			((BaseMissionEmmitter)currentMissionEmmitters[i]).NotifyPointsAdded(points);
 		}
 	}
 	
 	public void NotifyJumpOverCaw (int caws)
 	{
-		for(int i=begin;i<missionEmmitters.Length;i++){
-			missionEmmitters[i].NotifyJumpOverCaw(caws);
+		for(int i=0;i<currentMissionEmmitters.Count;i++){
+			((BaseMissionEmmitter)currentMissionEmmitters[i]).NotifyJumpOverCaw(caws);
 		}
 	}
 	
 	public void NotifyJumpOverDrova (int drova)
 	{
-		for(int i=begin;i<missionEmmitters.Length;i++){
-			missionEmmitters[i].NotifyJumpOverDrova(drova);
+		for(int i=0;i<currentMissionEmmitters.Count;i++){
+			((BaseMissionEmmitter)currentMissionEmmitters[i]).NotifyJumpOverDrova(drova);
 		}
 	}
 	
 	public void NotifySlideUnderRope (int rope)
 	{
-		for(int i=begin;i<missionEmmitters.Length;i++){
-			missionEmmitters[i].NotifySlideUnderRope(rope);
+		for(int i=0;i<currentMissionEmmitters.Count;i++){
+			((BaseMissionEmmitter)currentMissionEmmitters[i]).NotifySlideUnderRope(rope);
 		}
 	}
 	
 	public void NotifyJumpOverHaystack (int haystack)
 	{
-		for(int i=begin;i<missionEmmitters.Length;i++){
-			missionEmmitters[i].NotifyJumpOverHaystack(haystack);
+		for(int i=0;i<currentMissionEmmitters.Count;i++){
+			((BaseMissionEmmitter)currentMissionEmmitters[i]).NotifyJumpOverHaystack(haystack);
 		}
 	}
 	
 	public void NotifyDodgeBaran (int baran)
 	{
-		for(int i=begin;i<missionEmmitters.Length;i++){
-			missionEmmitters[i].NotifyDodgeBaran(baran);
+		for(int i=0;i<currentMissionEmmitters.Count;i++){
+			((BaseMissionEmmitter)currentMissionEmmitters[i]).NotifyDodgeBaran(baran);
 		}
 	}
 	
 	public void NotifyDodgeTractor (int tractor)
 	{
-		for(int i=begin;i<missionEmmitters.Length;i++){
-			missionEmmitters[i].NotifyDodgeTractor(tractor);
+		for(int i=0;i<currentMissionEmmitters.Count;i++){
+			((BaseMissionEmmitter)currentMissionEmmitters[i]).NotifyDodgeTractor(tractor);
 		}
 	}
 	
 	//drop
 	public void NotifyPostDropped (int post)
 	{
-		for(int i=begin;i<missionEmmitters.Length;i++){
-			missionEmmitters[i].NotifyPostDropped(post);
+		for(int i=0;i<currentMissionEmmitters.Count;i++){
+			((BaseMissionEmmitter)currentMissionEmmitters[i]).NotifyPostDropped(post);
 		}
 	}
 	
 	public int GetCountFinishedMissions ()
 	{
 		int finishedMissionsNumber = 0;
-		for(int i=begin;i<missionEmmitters.Length;i++){
-			finishedMissionsNumber+=missionEmmitters[i].GetCountFinishedMissions();
+		for(int i=0;i<currentMissionEmmitters.Count;i++){
+			finishedMissionsNumber+=((BaseMissionEmmitter)currentMissionEmmitters[i]).GetCountFinishedMissions();
 		}
 		return finishedMissionsNumber;
 	}
@@ -182,8 +209,8 @@ public class MissionEmmitters : Abstract, IMissionEmmitter, IMissionNotify
 	public int GetCountMissions ()
 	{
 		int missionsNumber = 0;
-		for(int i=begin;i<missionEmmitters.Length;i++){
-			missionsNumber+=missionEmmitters[i].GetCountMissions();
+		for(int i=0;i<currentMissionEmmitters.Count;i++){
+			missionsNumber+=((BaseMissionEmmitter)currentMissionEmmitters[i]).GetCountMissions();
 		}
 		return missionsNumber;
 	}
@@ -192,20 +219,20 @@ public class MissionEmmitters : Abstract, IMissionEmmitter, IMissionNotify
 	{
 		int missionsNumber = 0;
 		int finishedMissionsNumber = 0;
-		for(int i=begin;i<missionEmmitters.Length;i++){
-			missionsNumber+=missionEmmitters[i].GetCountMissions();
-			finishedMissionsNumber+=missionEmmitters[i].GetCountFinishedMissions();
+		for(int i=0;i<currentMissionEmmitters.Count;i++){
+			missionsNumber+=((BaseMissionEmmitter)currentMissionEmmitters[i]).GetCountMissions();
+			finishedMissionsNumber+=((BaseMissionEmmitter)currentMissionEmmitters[i]).GetCountFinishedMissions();
 		}
 		return finishedMissionsNumber/(float)missionsNumber;
 	}
 	
-	public void SetFermaMissionEmmitter(BaseMissionEmmitter missionEmmitter){
-		missionEmmitters[0] = missionEmmitter;
+	public void SetFermaMissionEmmitter(FermaMissionEmmitter missionEmmitter){
+		fermaMissionEmmitter = missionEmmitter;
 		missionEmmitter.singleTransform.parent = singleTransform;
-		begin = 0;
+		Init();
 	}
 	
 	public FermaMissionEmmitter GetFermaMissionEmmitter(){
-		return missionEmmitters[0] as FermaMissionEmmitter;
+		return fermaMissionEmmitter;
 	}
 }
