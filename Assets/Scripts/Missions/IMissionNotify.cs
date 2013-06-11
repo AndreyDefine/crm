@@ -2,6 +2,10 @@ using UnityEngine;
 using System.Collections;
 
 public interface IMissionNotify{
+	//tutorial
+	void NotifySlide (int slide);
+	void NotifyRight (int right);
+	void NotifyLeft (int left);
 	//run
 	void NotifyMetersRunned (int meters);
 	void NotifyJump (int jump);

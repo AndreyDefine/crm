@@ -127,6 +127,18 @@ public class Mission : Abstract, IMissionNotify {
 	{
 		
 	}
+	//tutorial
+	public virtual void NotifySlide (int slide)
+	{
+	}
+	
+	public virtual void NotifyRight (int right)
+	{
+	}
+	
+	public virtual void NotifyLeft (int left)
+	{
+	}
 	//run
 	public virtual void NotifyMetersRunned (int meters){
 	}

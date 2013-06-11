@@ -119,6 +119,27 @@ public class MissionEmmitters : Abstract, IMissionEmmitter, IMissionNotify
 		}
 	}
 	
+	//tutorial
+	public void NotifySlide (int slide)
+	{
+		for(int i=0;i<currentMissionEmmitters.Count;i++){
+			((BaseMissionEmmitter)currentMissionEmmitters[i]).NotifySlide(slide);
+		}
+	}
+	
+	public void NotifyRight (int right)
+	{
+		for(int i=0;i<currentMissionEmmitters.Count;i++){
+			((BaseMissionEmmitter)currentMissionEmmitters[i]).NotifyRight(right);
+		}
+	}
+	
+	public void NotifyLeft (int left)
+	{
+		for(int i=0;i<currentMissionEmmitters.Count;i++){
+			((BaseMissionEmmitter)currentMissionEmmitters[i]).NotifyLeft(left);
+		}
+	}
 	//run
 	public void NotifyMetersRunned(int meter){
 		for(int i=0;i<currentMissionEmmitters.Count;i++){

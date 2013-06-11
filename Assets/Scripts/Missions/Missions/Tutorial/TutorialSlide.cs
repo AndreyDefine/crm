@@ -3,8 +3,8 @@ using System.Collections;
 
 public class TutorialSlide : BaseTutorialMission {
 	
-	public override void NotifyJump (int jump)
+	public override void NotifySlide (int slide)
 	{
-		base.AddNumber(jump);
+		base.AddNumber(slide);
 	}
 }

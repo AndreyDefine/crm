@@ -124,6 +124,32 @@ public abstract class BaseMissionEmmitter : Abstract, IMissionEmmitter, IMission
 	{
 		PlayerPrefs.SetInt (misionFinishedTag + id, 1);
 	}
+	
+	//tutorial
+	public void NotifySlide (int slide)
+	{
+		ArrayList missions = GetActiveCurrentMissions ();
+		for (int i=0; i<missions.Count; i++) {
+			Mission mission = (Mission)missions [i];
+			mission.NotifySlide (slide);
+		}
+	}
+	public void NotifyRight (int right)
+	{
+		ArrayList missions = GetActiveCurrentMissions ();
+		for (int i=0; i<missions.Count; i++) {
+			Mission mission = (Mission)missions [i];
+			mission.NotifyRight (right);
+		}
+	}
+	public void NotifyLeft (int left)
+	{
+		ArrayList missions = GetActiveCurrentMissions ();
+		for (int i=0; i<missions.Count; i++) {
+			Mission mission = (Mission)missions [i];
+			mission.NotifyLeft (left);
+		}
+	}
 	//run
 	public void NotifyMetersRunned (int meter)
 	{

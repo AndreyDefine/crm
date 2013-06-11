@@ -3,8 +3,8 @@ using System.Collections;
 
 public class TutorialRight : BaseTutorialMission {
 	
-	public override void NotifyJump (int jump)
+	public override void NotifyRight (int right)
 	{
-		base.AddNumber(jump);
+		base.AddNumber(right);
 	}
 }
