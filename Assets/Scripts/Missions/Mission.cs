@@ -24,7 +24,7 @@ public class Mission : Abstract, IMissionNotify {
 	private ArrayList missionListeners = new ArrayList();
 	private string id;
 	
-	public void SetActive(){
+	public virtual void SetActive(){
 		if(state!=MissionStates.ACTIVE){
 			state = MissionStates.ACTIVE;
 			MissionActivated();

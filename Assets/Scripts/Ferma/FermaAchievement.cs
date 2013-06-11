@@ -11,8 +11,6 @@ public class FermaAchievement : Abstract {
 	public void SetMissionEmmitter(BaseMissionEmmitter missionEmmitter){
 		
 		ArrayList missions = missionEmmitter.GetCurrentMissions();
-		Debug.Log(missions.Count);
-		
 		GuiMissionPlace missionPlace = Instantiate(missionPlacePrefab) as GuiMissionPlace;
 		missionPlace.singleTransform.parent = singleTransform;
 		missionPlace.singleTransform.localPosition = new Vector3(0f, 0f, -0.04f);
