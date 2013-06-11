@@ -77,6 +77,7 @@ public class PersonInfo {
 		}
 		GuiLayerInitializer guiLayer = GlobalOptions.GetGuiLayer();
 		if(guiLayer!=null){
+			guiLayer.upNotifierController.AddTutorialFinihsedNotifier();
 			guiLayer.upNotifierController.SetCurrentMissions();
 		}
 	}

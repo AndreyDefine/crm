@@ -9,6 +9,7 @@ public class UpNotifierController : BaseNotifierController {
 	//mission notifier
 	public MissionNotifier missionNotifierPrefab;
 	public TutorialMissionNotifier tutorialMissionNotifierPrefab;
+	public TutorialFinihsedNotifier tutorialFinihsedNotifierPrefab;
 	
 	
 	public override void Restart ()
@@ -30,6 +31,16 @@ public class UpNotifierController : BaseNotifierController {
 				}
 			}
 		}
+	}
+	
+	private TutorialFinihsedNotifier GetTutorialFinihsedNotifier(){
+		TutorialFinihsedNotifier notifier = Instantiate(tutorialFinihsedNotifierPrefab) as TutorialFinihsedNotifier;	
+		return notifier;
+	}
+	
+	public void AddTutorialFinihsedNotifier(){
+		TutorialFinihsedNotifier notifier = GetTutorialFinihsedNotifier();
+		AddNotifier(notifier);
 	}
 	
 	private TutorialMissionNotifier GetTutorialMissionNotifier(){
