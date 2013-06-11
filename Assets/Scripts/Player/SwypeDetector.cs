@@ -53,22 +53,19 @@ public class SwypeDetector : SpriteTouch {
 		}
 		
 		//только если управление 1
-		if(playerScript.typeOfControl==0)
+		//right
+		if(currentTouchLocation.x>(firstTouchLocation.x+Epsilonxx))
 		{
-			//right
-			if(currentTouchLocation.x>(firstTouchLocation.x+Epsilonxx))
-			{
-				alreadySwyped=true;
-				firstTouchLocation=currentTouchLocation;
-				SwypeRight(); 
-			}
-			//left
-			if(currentTouchLocation.x<(firstTouchLocation.x-Epsilonxx))
-			{
-				alreadySwyped=true;
-				firstTouchLocation=currentTouchLocation;
-				SwypeLeft(); 
-			}
+			alreadySwyped=true;
+			firstTouchLocation=currentTouchLocation;
+			SwypeRight(); 
+		}
+		//left
+		if(currentTouchLocation.x<(firstTouchLocation.x-Epsilonxx))
+		{
+			alreadySwyped=true;
+			firstTouchLocation=currentTouchLocation;
+			SwypeLeft(); 
 		}
 		
 		//up
