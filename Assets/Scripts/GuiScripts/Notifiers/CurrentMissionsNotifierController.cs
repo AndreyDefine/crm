@@ -13,6 +13,9 @@ public class CurrentMissionsNotifierController : BaseNotifierController {
 	}
 	
 	private void SetCurrentMissions(){
+		if(PersonInfo.tutorial){
+			return;
+		}
 		ArrayList missions = GlobalOptions.GetMissionEmmitters().GetCurrentMissions();
 		for(int i=0;i<missions.Count;i++){
 			Mission mission = (Mission)missions[i];

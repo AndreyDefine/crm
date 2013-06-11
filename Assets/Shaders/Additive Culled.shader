@@ -1,6 +1,6 @@
 Shader "Shaders/Additive Culled" {
 	Properties {
-		_MainTex ("Base", 2D) = "white" {}
+		_MainTex ("Particle Texture (Alpha8)", 2D) = "white" {}
 	}
 	
 	CGINCLUDE
@@ -57,11 +57,7 @@ Shader "Shaders/Additive Culled" {
 		AlphaTest Greater .01
 		ColorMask RGB
 		Cull Back Lighting Off ZWrite Off Fog { Mode Off }
-		//BindChannels {
-		//	Bind "Color", color
-		//	Bind "Vertex", vertex
-		//	Bind "TexCoord", texcoord
-		//}
+
 		
 	Pass {
 	
