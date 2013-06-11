@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class TerrainElementFactory: AbstractElementFactory{	
 	private TerrainTag currentTerrain=null;
@@ -9,8 +10,8 @@ public class TerrainElementFactory: AbstractElementFactory{
 		currentTerrain=null;
 		for(int i=0;i<terrainsListToDel.Count;i++)
 		{
-			Abstract newterrainToDel=terrainsListToDel[i] as Abstract;
-			ArrayList AllElements=(newterrainToDel.GetComponent("TerrainTag") as TerrainTag).GetAllElements();
+			AbstractTag newterrainToDel=terrainsListToDel[i];
+			List<AbstractTag> AllElements=(newterrainToDel.GetComponent("TerrainTag") as TerrainTag).GetAllElements();
 			AllElements.Clear();	
 		}
 	}
@@ -20,14 +21,12 @@ public class TerrainElementFactory: AbstractElementFactory{
 		if(terrainsList.Count>0)
 		{
 			
-			Abstract newterrainToDel=terrainsList[0] as Abstract;
-			ArrayList AllElements=(newterrainToDel.GetComponent("TerrainTag") as TerrainTag).GetAllElements();
+			AbstractTag newterrainToDel=terrainsList[0];
+			List<AbstractTag> AllElements=(newterrainToDel.GetComponent("TerrainTag") as TerrainTag).GetAllElements();
 			for(int i=0;i<AllElements.Count;i++)
 			{
-				AbstractTag curTag;
-				curTag=(AllElements[i] as GameObject).GetComponent("AbstractTag") as AbstractTag;
-				if(curTag){
-					curTag.DeleteFromUsed();
+				if(AllElements[i]){
+					AllElements[i].DeleteFromUsed();
 				}
 			}
 			

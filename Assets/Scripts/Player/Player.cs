@@ -351,7 +351,6 @@ public class Player : SpriteTouch,AccelerometerTargetedDelegate {
 			timerAltWalk=Time.time;
 			if(GlobalOptions.gameState==GameStates.GAME&&GlobalOptions.playerStates==PlayerStates.WALK)
 			{
-				Debug.Log ("AltWalk");
 				bearAnimation.WalkAlt();
 			}
 		}

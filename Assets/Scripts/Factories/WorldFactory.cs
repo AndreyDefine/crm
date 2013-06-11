@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class WorldFactory : AbstractFactory,ScreenControllerToShow {	
 	
@@ -384,7 +385,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 							interrainTag.RemoveFromobstacleSetNamesArrayUniqueAt(randomIndexOfSet);
 						}
 						//добавим в terrain
-						interrainTag.PushToAllElements(curSet);
+						interrainTag.PushToAllElements(curSet.GetComponent<AbstractTag>());
 					}
 				}
 			}
@@ -437,7 +438,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		newObject.transform.rotation=marker.rotation;
 	
 		if(interrainTag){
-			interrainTag.PushToAllElements(newObject);
+			interrainTag.PushToAllElements(newObject.GetComponent<AbstractTag>());
 		}
 		
 		//if compiled object
@@ -544,7 +545,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		}
 	
 		if(interrainTag){
-			interrainTag.PushToAllElements(newObject);
+			interrainTag.PushToAllElements(newObject.GetComponent<AbstractTag>());
 		}
 		
 		if(MakeTerrains)
@@ -576,7 +577,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		newObject.transform.rotation=marker.rotation;
 	
 		if(interrainTag){
-			interrainTag.PushToAllElements(newObject);
+			interrainTag.PushToAllElements(newObject.GetComponent<AbstractTag>());
 		}
 		
 		if(!MakeObstacleSet)
@@ -626,7 +627,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		}
 	
 		if(interrainTag){
-			interrainTag.PushToAllElements(newObject);
+			interrainTag.PushToAllElements(newObject.GetComponent<AbstractTag>());
 		}
 		
 		if(MakeTerrains)
@@ -664,7 +665,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		}
 		
 		if(interrainTag){
-			interrainTag.PushToAllElements(newObject);
+			interrainTag.PushToAllElements(newObject.GetComponent<AbstractTag>());
 		}
 		
 		if(!MakeObstacleSet)

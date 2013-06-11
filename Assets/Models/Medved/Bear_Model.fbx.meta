@@ -267,7 +267,7 @@ ModelImporter:
       takeName: Anim_S_Rykzakov(NOT_Texture)
       firstFrame: 151
       lastFrame: 173
-      wrapMode: 2
+      wrapMode: 1
       orientationOffsetY: 0
       level: 0
       cycleOffset: 0
