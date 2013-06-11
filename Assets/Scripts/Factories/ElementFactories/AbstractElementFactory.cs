@@ -224,6 +224,10 @@ public class AbstractElementFactory: Abstract{
 		{
 			terrainsList.Add(newTerrain.GetComponent<AbstractTag>());
 		}
+		if(newTerrain==null)
+		{
+			Debug.Log ("NUUUUUUUUUUUUUL factory="+name+"name= "+instr);
+		}
 		return newTerrain;
 	}
 	

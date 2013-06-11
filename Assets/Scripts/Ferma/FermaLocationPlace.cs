@@ -131,6 +131,7 @@ public class FermaLocationPlace : Abstract {
 			{
 				tutorial=Instantiate(initTutorial) as GameObject;
 				tutorial.transform.position=new Vector3(singleTransform.position.x,singleTransform.position.y,1);
+				tutorial.transform.parent=singleTransform;
 			}
 	}
 	public void Buy(){
