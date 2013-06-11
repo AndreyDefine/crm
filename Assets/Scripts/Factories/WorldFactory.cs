@@ -282,7 +282,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 				}	
 			}
 			
-			if(FlagCoRoutine&&i%100==0) yield return null;
+			if(FlagCoRoutine&&i%50==0) yield return null;
 		}
 		
 		//unique terrains
@@ -406,7 +406,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 				if(!curname.Contains("Left")&&!curname.Contains("Right"))
 				{
 					addOneUniqueAtMarker(curUnique,interrainTag);
-					if(FlagCoRoutine&&i%1==0) yield return null;
+					if(FlagCoRoutine) yield return null;
 				}
 			}
 		}
@@ -415,7 +415,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		for(i=0;i<markedObjectsTrees.Count;i++){
 			if(curversionForCoRoutine!=versionForCoRoutine) yield break;
 			addOneTreeAtMarker(markedObjectsTrees[i] as Transform,interrainTag);
-			if(FlagCoRoutine&&i%1==0) yield return null;
+			if(FlagCoRoutine) yield return null;
 		}
 		
 		if(curversionForCoRoutine!=versionForCoRoutine) yield break;
