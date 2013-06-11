@@ -85,7 +85,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		curFactoryObject=Instantiate (MoneyFactory) as GameObject;
 		moneyElementFactory=curFactoryObject.GetComponent("AbstractElementFactory") as AbstractElementFactory;
 		
-		numberOfTerrains=3;
+		numberOfTerrains=2;
 		
 		//Get current level
 		LoadCurrentLevel();
@@ -269,8 +269,8 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 				markedObjectsUniqueTerrains.Add (allChildren[i]);
 			}	
 			
-			//berry
-			if(currentRoadPos>1||!firstTimeInit)
+			//Obstacle Set
+			if((currentRoadPos>1||!firstTimeInit)&&!PersonInfo.tutorial)
 			{
 				//Obstacle Set
 				if(allChildren[i].name=="ObstacleSet"){
@@ -299,7 +299,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		
 		int jset;
 		//obstacles
-		if(currentRoadPos>1||!firstTimeInit)
+		if((currentRoadPos>1||!firstTimeInit)&&!PersonInfo.tutorial)
 		{
 			ArrayList terrainObstacleSetList=interrainTag.GetObstacleSetNamesArrayUnique();
 			for(jset=0;jset<terrainObstacleSetList.Count&&(MakeObstacleSet||jset==0);jset++)
