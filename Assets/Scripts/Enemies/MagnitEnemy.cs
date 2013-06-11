@@ -6,6 +6,7 @@ public class MagnitEnemy : EnemyWithBoost {
 	// Use this for initialization
 	public override void OnHit(Collider other)
 	{
+		base.OnHit(other);
 		GuiLayer.AddMagnit(boostPrefab);
 		PlayClipSound();
 		//audio.Play();

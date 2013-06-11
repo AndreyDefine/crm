@@ -7,6 +7,7 @@ public class VodkaEnemy : EnemyWithBoost {
 	
 	public override void OnHit(Collider other)
 	{
+		base.OnHit(other);
 		GuiLayer.AddVodka(boostPrefab);
 		PlayClipSound();
 		//audio.Play();

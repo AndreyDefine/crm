@@ -7,6 +7,7 @@ public class X2Enemy : EnemyWithBoost {
 	
 	public override void OnHit(Collider other)
 	{
+		base.OnHit(other);
 		GuiLayer.AddX2(boostPrefab);
 		PlayClipSound();
 		//audio.Play();

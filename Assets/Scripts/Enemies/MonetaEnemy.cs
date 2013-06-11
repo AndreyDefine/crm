@@ -23,6 +23,7 @@ public class MonetaEnemy : AbstractEnemy {
 	{
 		if(effectMade!=2)
 		{
+			GlobalOptions.GetPlayerScript().moneyCollected.Play();
 			PlayClipSound();
 			//MakeInactive();
 			effectMade=2;
