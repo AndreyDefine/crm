@@ -5,7 +5,6 @@ using System.Collections.Generic;
 public class SimpleMissionEmmitter : BaseMissionEmmitter
 {
 	public int priority;
-	public int missionRespaunTime;
 	
 	void Start ()
 	{

@@ -232,7 +232,11 @@ public class GlobalOptions {
 	public static GuiLayerInitializer GetGuiLayer(){
 		if(!guiLayerInitializer)
 		{
-			guiLayerInitializer=GameObject.Find("/ScreenGame/GUILayer").GetComponent<GuiLayerInitializer>();
+			GameObject vsp = GameObject.Find("/ScreenGame/GUILayer");
+			if(vsp==null){
+				return null;
+			}
+			guiLayerInitializer=vsp.GetComponent<GuiLayerInitializer>();
 		}
 		return guiLayerInitializer;
 	}

@@ -103,7 +103,11 @@ public abstract class BaseMissionEmmitter : Abstract, IMissionEmmitter, IMission
 		thisLifeFinishedMissions.Add (mission);
 		CurrentMissionsSerializer.SaveCurrentMissions (currentMissions, misionCurrentTag);
 		CurrentMissionsSerializer.RemoveMissionData (mission);
-		timeOutTime = Time.time+Random.Range(5f,10f);
+		timeOutTime = Time.time+GetTimeOut();
+	}
+	
+	protected virtual float GetTimeOut(){
+		return Random.Range(5f,10f);
 	}
 	
 	public void MissionActivated (Mission mission)

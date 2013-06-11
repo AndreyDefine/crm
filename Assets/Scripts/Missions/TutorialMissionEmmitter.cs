@@ -22,4 +22,9 @@ public class TutorialMissionEmmitter : SimpleMissionEmmitter
 			CurrentMissionsSerializer.SaveCurrentMissions (currentMissions, misionCurrentTag);
 		}
 	}
+	
+	protected override float GetTimeOut ()
+	{
+		return 1f;
+	}
 }
