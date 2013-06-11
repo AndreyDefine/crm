@@ -9,5 +9,6 @@ public class BaseTutorialMission : BaseOneNumberMission {
 	{
 		base.SetActive ();
 		tutorial = Instantiate(tutorialPrefab) as Abstract;
+		tutorial.singleTransform.position = new Vector3(0f, 0f, 1f);
 	}
 }
