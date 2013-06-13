@@ -78,7 +78,7 @@ public class Player : SpriteTouch {
 	private GuiLayerInitializer guiLayer;
 	// Use this for initialization
 	
-	public ParticleSystem boostCollected;
+	public BoostFX boostFx;
 	public ParticleSystem moneyCollected;
 	
 	protected override void Start () {

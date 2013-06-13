@@ -8,6 +8,6 @@ public class EnemyWithBoost : AbstractEnemy {
 	public override void OnHit (Collider other)
 	{
 		base.OnHit (other);
-		GlobalOptions.GetPlayerScript().boostCollected.Play();
+		GlobalOptions.GetPlayerScript().boostFx.Play();
 	}
 }

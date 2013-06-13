@@ -8,7 +8,7 @@ public class PostalEnemy : AbstractEnemy {
 	public override void OnHit(Collider other)
 	{
 		base.OnHit(other);
-		GlobalOptions.GetPlayerScript().boostCollected.Play();
+		GlobalOptions.GetPlayerScript().boostFx.Play();
 		PersonInfo.AddPost(1);
 		GuiLayer.AddPostal();
 		PlayClipSound();
