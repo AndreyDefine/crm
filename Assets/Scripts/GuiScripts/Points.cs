@@ -7,7 +7,8 @@ public class Points : Abstract {
 	private int points;
 	public X x;
 	
-	void Awake(){
+	public override void Awake(){
+		base.Awake();
 		Vector3 pos=new Vector3(GlobalOptions.Vsizex-15,GlobalOptions.Vsizey-37,singleTransform.position.z);
 		pos=GlobalOptions.NormalisePos(pos);
 		pos=Cameras.GetGUICamera().ScreenToWorldPoint(pos);

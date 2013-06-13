@@ -2,8 +2,9 @@ using UnityEngine;
 using System.Collections;
 
 public class QualitySwitcher : Abstract {    
-    void Awake() {
-        if (!GlobalOptions.qualitySeted) {
+    public override void Awake() {
+        base.Awake();
+		if (!GlobalOptions.qualitySeted) {
             GlobalOptions.qualitySeted = true;
             SetCorrectQuality ();
         }

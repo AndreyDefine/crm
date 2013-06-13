@@ -12,7 +12,8 @@ public class MissionEmmitters : Abstract, IMissionEmmitter, IMissionNotify
 	
 	private FermaMissionEmmitter fermaMissionEmmitter = null;
 	
-	void Awake(){
+	public override void Awake(){
+		base.Awake();
 		Init();
 	}
 	

@@ -12,7 +12,8 @@ public class ButtonScreenPosition : Abstract {
 	public float paddingRight;
 	public float paddingLeft;
 	// Use this for initialization
-	void Awake () {
+	public override void Awake () {
+		base.Awake();
 		if(top&&bottom||right&&left){
 			Debug.LogError("check "+gameObject.name);
 		}

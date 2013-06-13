@@ -6,8 +6,11 @@ using System.Collections;
 /// </summary>
 public class Abstract : MonoBehaviour {
 
-    private Transform _singleTransform = null;
-    public Transform singleTransform {
+	public Transform singleTransform = null;
+	public Renderer singleRenderer = null;
+	
+    //private Transform _singleTransform = null;
+    /*public Transform singleTransform {
         get {
             if (_singleTransform == null) {
                 _singleTransform = transform;
@@ -17,9 +20,9 @@ public class Abstract : MonoBehaviour {
         protected set {
             _singleTransform = value;
         }
-    }
+    }*/
 	
-	private Renderer _singleRenderer = null;
+	/*private Renderer _singleRenderer = null;
     public Renderer singleRenderer {
         get {
             if (_singleRenderer == null) {
@@ -30,7 +33,12 @@ public class Abstract : MonoBehaviour {
         protected set {
             _singleRenderer = value;
         }
-    }
+    }*/
+	
+	public virtual void Awake(){
+		singleTransform = transform;
+		singleRenderer = renderer;
+	}
 	
 	public Transform GetParent(int number){
 		Transform current = singleTransform;
