@@ -18,22 +18,34 @@ public class TerrainElementFactory: AbstractElementFactory{
 	
 	public override void DeleteOneFirstTerrain()
 	{
+		StartCoroutine(ClearTerrainFactory());	
+	}
+		
+	private IEnumerator ClearTerrainFactory(){	
+		
 		if(terrainsList.Count>0)
 		{
 			
 			AbstractTag newterrainToDel=terrainsList[0];
-			List<AbstractTag> AllElements=(newterrainToDel.GetComponent("TerrainTag") as TerrainTag).GetAllElements();
+			TerrainTag terrainTag=newterrainToDel.GetComponent("TerrainTag") as TerrainTag;
+			List<AbstractTag> AllElements=terrainTag.GetAllElements();
+			terrainTag.RemakeAllElementsList();
+			yield return null;
+			terrainsList.Remove(newterrainToDel);			
+			terrainsListToDel.Add(newterrainToDel);	
+			yield return null;
 			for(int i=0;i<AllElements.Count;i++)
 			{
 				if(AllElements[i]){
 					AllElements[i].DeleteFromUsed();
 				}
+				if(i%5==0)yield return null;
 			}
 			
 			AllElements.Clear();
-			terrainsList.Remove(newterrainToDel);			
-			terrainsListToDel.Add(newterrainToDel);	
+			AllElements=null;
 		}
+		yield return null;
 	}
 	
 	public override void PutToFirstState(AbstractTag newTerrain){
@@ -43,7 +55,7 @@ public class TerrainElementFactory: AbstractElementFactory{
 		TerrainTag terrainTag=newTerrain.GetComponent("TerrainTag") as TerrainTag;
 		
 		terrainTag.ParseObstacleSets();
-		terrainTag.MakeAllActive();
+		//terrainTag.MakeAllActive();
 		if(!GlobalOptions.flagOnlyFizik)
 		{
 			terrainTag.RecalculateRoadPathArray();
