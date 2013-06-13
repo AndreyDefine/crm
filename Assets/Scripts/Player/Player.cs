@@ -4,6 +4,8 @@ using System.Collections;
 public class Player : SpriteTouch {
 	public GameObject Character;
 	public GameObject WhereToLook;
+	public GameObject Particles;
+	
 	public float startVelocity;
 	public float maxVelocity;
 	public float acceleration;
@@ -61,9 +63,21 @@ public class Player : SpriteTouch {
 	
 	float posilkaTimer;
 	
+	private Transform particlesTransform;
+	
 	private Transform whereToLookTransform,characterTransform,walkingBearTransform,mainCameraTransform;
 	
 	private GameObject walkingBear;
+	
+	public void MoveParticlesDown()
+	{
+		Particles.transform.localPosition=new Vector3(0,-0.9f,0);
+	}
+	
+	public void MoveParticlesUp()
+	{
+		Particles.transform.localPosition=new Vector3(0,0,0);
+	}
 	
 	public bool GetMagnitFlag()
 	{
@@ -86,6 +100,7 @@ public class Player : SpriteTouch {
 		whereToLookTransform=WhereToLook.transform;
 		characterTransform=Character.transform;	
 		mainCameraTransform=MainCamera.transform;
+		particlesTransform=Particles.transform;
 		
 		walkingBear=characterTransform.FindChild("WalkingBear").gameObject;
 		walkingBearTransform=walkingBear.transform;
@@ -539,7 +554,7 @@ public class Player : SpriteTouch {
 			}			
 			if(characterMarioC.isGliding()&&GlobalOptions.playerStates!=PlayerStates.DIE)
 			{
-				//raznost-=3f;
+				raznost-=1f;
 			}
 			if(GlobalOptions.playerStates==PlayerStates.DIE)
 			{

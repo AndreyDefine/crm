@@ -47,21 +47,6 @@ public class CharacterMarioC : Abstract {
 	private CharacterController controller;
 	// Update is called once per frame
 	
-	
-	private void UpdateSmoothedMovementDirection ()
-	{
-		/*if(!GlobalOptions.flagOnlyFizik)
-		{
-			if(moveforward>=0)
-			{
-				moveforward=-0.00001f;
-			}else
-			{
-				moveforward=0.00001f;
-			}
-		}*/
-	}
-	
 	void Start()
 	{
 		playerScript=GlobalOptions.GetPlayerScript();
@@ -76,7 +61,6 @@ public class CharacterMarioC : Abstract {
 		if(GlobalOptions.gameState==GameStates.GAME||GlobalOptions.gameState==GameStates.GAME_OVER)
 		{
 			AddAllTimes();
-			UpdateSmoothedMovementDirection();
 		
 			if (grounded&&!jumping&&!flagPathChangeJump) {
 				verticalSpeed = 0;
@@ -98,11 +82,7 @@ public class CharacterMarioC : Abstract {
 			
 			
 			
-			Vector3 movement = moveforward*forward + new Vector3 (0, verticalSpeed, 0) + forcex*right;
-			
-			
-			//Debug.Log (controller.velocity.z);
-			
+			Vector3 movement = moveforward*forward + new Vector3 (0, verticalSpeed, 0) + forcex*right;			
 			
 			
 			movement *= Time.deltaTime;
@@ -196,6 +176,7 @@ public class CharacterMarioC : Abstract {
 			glideFlag=true;
 			glideTimer=Time.time;
 			walkinbearCollider.height=heightslide;
+			playerScript.MoveParticlesDown();
 			walkinbearCollider.center=new Vector3(walkinbearCollider.center.x,walkinbearCollider.center.y-(heightnormal-heightslide)/2,walkinbearCollider.center.z);
 			GlobalOptions.GetMissionEmmitters().NotifySlide(1);
 		}
@@ -206,6 +187,7 @@ public class CharacterMarioC : Abstract {
 		if(glideFlag)
 		{
 			walkinbearCollider.height=heightnormal;
+			playerScript.MoveParticlesUp();
 			walkinbearCollider.center=new Vector3(walkinbearCollider.center.x,walkinbearCollider.center.y+(heightnormal-heightslide)/2,walkinbearCollider.center.z);
 			glideFlag=false;
 		}
