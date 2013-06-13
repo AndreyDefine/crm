@@ -240,6 +240,8 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		int randIndex;
 		string curname;
 		
+		//Debug.Log (FlagCoRoutine);
+		
 		int curversionForCoRoutine=versionForCoRoutine;
 		//tree
 		ArrayList markedObjectsTrees=new ArrayList();	
@@ -378,7 +380,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 							{
 								if(!flagCompiled)
 								{
-									addOneObstacleFromSetAtMarker(OneObstacle,curSet.transform,interrainTag,0);
+									StartCoroutine(addOneObstacleFromSetAtMarker(OneObstacle,curSet.transform,interrainTag,0,FlagCoRoutine));
 								}
 							}
 							if(FlagCoRoutine) yield return null;
@@ -422,7 +424,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		if(FlagCoRoutine) yield return null;
 	}
 	
-	private GameObject addOneObstacleFromSetAtMarker(Transform marker,Transform inparent,TerrainTag interrainTag, int recursion){
+	private IEnumerator addOneObstacleFromSetAtMarker(Transform marker,Transform inparent,TerrainTag interrainTag, int recursion,bool FlagCoRoutine){
 		GameObject newObject,vspObject;
 		bool flagCompiled=false;
 	
@@ -433,7 +435,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		if(!newObject)
 		{
 			//Debug.Log (marker.name+" NOT FOUND!!!");
-			return null;
+			if(FlagCoRoutine) yield return null;
 		}
 		
 		//set position & rotation
@@ -487,7 +489,8 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 						continue;
 					}
 					//reqursively
-					addOneObstacleFromSetAtMarker(allChildren[j],Container2,interrainTag,recursion+1);
+					if(FlagCoRoutine) yield return null;
+					StartCoroutine(addOneObstacleFromSetAtMarker(allChildren[j],Container2,interrainTag,recursion+1,FlagCoRoutine));
 				}
 				if(MakeObstacleSet)
 				{
@@ -533,7 +536,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 			newObject.transform.parent=inparent;
 		}
 		
-		return newObject;
+		if(FlagCoRoutine) yield return null;
 	}
 	
 	private void addOneUniqueAtMarker(Transform marker,TerrainTag interrainTag){
