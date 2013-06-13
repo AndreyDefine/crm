@@ -309,7 +309,7 @@ public class Player : SpriteTouch {
 	
 	private void MakeYahoo()
 	{
-		if(Time.time-timerYahoo>2)
+		if(Time.time-timerYahoo>4)
 		{
 			flagYahoo=false;
 		}
@@ -361,7 +361,7 @@ public class Player : SpriteTouch {
 	
 	private void MakeAltWalk()
 	{
-		if(Time.time-timerAltWalk>10+Random.Range(0,20))
+		if(Time.time-timerAltWalk>10+Random.Range(0,5))
 		//if(Time.time-timerAltWalk>2+Random.Range(1,2))
 		{
 			timerAltWalk=Time.time;

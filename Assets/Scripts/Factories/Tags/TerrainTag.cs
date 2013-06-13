@@ -509,6 +509,11 @@ public class TerrainTag : AbstractTag{
 		return AllElements;
 	}
 	
+	public void RemakeAllElementsList()
+	{
+		AllElements = new List<AbstractTag>();
+	}
+	
 	public void PutToInactiveList(AbstractEnemy inobj){
 		InactiveElements.Add(inobj);
 	}
