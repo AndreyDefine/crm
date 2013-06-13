@@ -5,14 +5,10 @@ using System.Collections;
 public class CurrentMissionNotifier : BaseNotifier, IMissionListener
 {
 	public Abstract missionIconPlace;
-	public GameObject complete;
+	public CompleteFX completePrefab;
 	public CrmFont crmFont;
 	private MissionFlyingIco missionFlyingIco = null;
 	private Mission mission;
-	
-	void Start(){
-		complete.SetActive(false);	
-	}
 		
 	protected override void OnDestroy ()
 	{
@@ -41,7 +37,10 @@ public class CurrentMissionNotifier : BaseNotifier, IMissionListener
 	
 	public void MissionFinished (Mission mission)
 	{
-		complete.SetActive(true);
+		CompleteFX completeFx = Instantiate(completePrefab) as CompleteFX;
+		completeFx.singleTransform.parent = missionIconPlace.singleTransform;
+		completeFx.singleTransform.localPosition = new Vector3(0f,0f,-0.2f);
+		completeFx.Play();
 		crmFont.gameObject.SetActive(false);
 		FlyOut();
 	}
@@ -77,7 +76,7 @@ public class CurrentMissionNotifier : BaseNotifier, IMissionListener
 	public void MissionFlyingIcoFlyStopped(){
 		MissionIco missionIco = missionFlyingIco.GetMissionIco();
 		missionIco.singleTransform.parent = missionIconPlace.singleTransform;
-		AnimationFactory.FlyXYZ(missionIco, new Vector3(0f,0f,-0.01f),0.8f,"flyXYZFin");
+		AnimationFactory.FlyXYZ(missionIco, new Vector3(0f,0f,-0.01f),0.2f,"flyXYZFin");
 		Destroy(missionFlyingIco.gameObject);
 		missionFlyingIco = null;
 	}

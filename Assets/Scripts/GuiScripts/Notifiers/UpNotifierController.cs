@@ -75,6 +75,17 @@ public class UpNotifierController : BaseNotifierController {
 		return outPosition;
 	}
 	
+	public override void NotifierWantsToFlyOut (BaseNotifier notifier)
+	{
+		int position = notifiersInProgress.IndexOf(notifier)-1;
+		notifiersInProgress.Remove(notifier);
+		notifier.singleTransform.localPosition = new Vector3(notifier.singleTransform.localPosition.x, notifier.singleTransform.localPosition.y, -position*Z_INDEX_PER_POSITION);
+		notifier.FlyOut(GetOutNotifierPlace(position));
+		ChangePlaces();
+		//base.NotifierWantsToFlyOut (notifier);
+		//
+	}
+	
 	protected override Vector3 GetInNotifierPlace(int position){
 		Vector3 inPostion;
 		

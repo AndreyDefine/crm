@@ -4,8 +4,8 @@ using System.Collections;
 
 public class TutorialMissionNotifier : MissionNotifier , IMissionListener
 {
-	public GameObject complete;
 	Abstract tutorial = null;
+	public CompleteFX completePrefab;
 	protected override void OnDestroy ()
 	{
 		base.OnDestroy ();
@@ -16,7 +16,6 @@ public class TutorialMissionNotifier : MissionNotifier , IMissionListener
 	{
 		base.SetMission (mission);
 		mission.AddMissionListener(this);
-		complete.SetActive(false);
 	}
 	
 	public void MissionProgressChanged (Mission mission)
@@ -31,7 +30,10 @@ public class TutorialMissionNotifier : MissionNotifier , IMissionListener
 	
 	public void MissionFinished (Mission mission)
 	{
-		complete.SetActive(true);
+		CompleteFX completeFx = Instantiate(completePrefab) as CompleteFX;
+		completeFx.singleTransform.parent = missionIconPlace.singleTransform;
+		completeFx.singleTransform.localPosition = new Vector3(0f,0f,-0.2f);
+		completeFx.Play();
 		FlyOut();
 	}	
 	
