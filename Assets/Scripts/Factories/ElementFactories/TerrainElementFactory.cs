@@ -39,7 +39,7 @@ public class TerrainElementFactory: AbstractElementFactory{
 				if(AllElements[i]){
 					AllElements[i].DeleteFromUsed();
 				}
-				if(i%5==0)yield return null;
+				yield return null;
 			}
 			
 			AllElements.Clear();

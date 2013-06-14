@@ -248,13 +248,13 @@ public class Player : SpriteTouch {
 	public void MakeVodka()
 	{
 		VelocityVodka=1.1f;
-		(MainCamera.GetComponent("MotionBlur") as MotionBlur).enabled=true;
+		//(MainCamera.GetComponent("MotionBlur") as MotionBlur).enabled=true;
 	}
 	
 	public void UnMakeVodka()
 	{
 		VelocityVodka=1;
-		(MainCamera.GetComponent("MotionBlur") as MotionBlur).enabled=false;
+		//(MainCamera.GetComponent("MotionBlur") as MotionBlur).enabled=false;
 	}
 	
 	public void MakeMagnit()
