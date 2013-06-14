@@ -11,7 +11,10 @@ public class ElkEnemy : AbstractEnemy {
 		GuiLayer.AddHeadStars();
 		PlayClipSound();
 		if(playerScript.isVodka())
+		{
+			playerScript.MakeVodkaBoom();
 			MakeInactiveParent();
+		}
 	}
 	
 	public override void ReStart()

@@ -71,12 +71,12 @@ public class Player : SpriteTouch {
 	
 	public void MoveParticlesDown()
 	{
-		Particles.transform.localPosition=new Vector3(0,-0.9f,0);
+		particlesTransform.localPosition=new Vector3(0,-0.9f,0);
 	}
 	
 	public void MoveParticlesUp()
 	{
-		Particles.transform.localPosition=new Vector3(0,0,0);
+		particlesTransform.localPosition=new Vector3(0,0,0);
 	}
 	
 	public bool GetMagnitFlag()
@@ -95,6 +95,11 @@ public class Player : SpriteTouch {
 	public BoostFX boostFx;
 	public ParticleSystem moneyCollected;
 	public ParticleSystem vodkaBoom;
+	
+	public void MakeVodkaBoom()
+	{
+		vodkaBoom.Play();
+	}
 	
 	protected override void Start () {
 		//transforms

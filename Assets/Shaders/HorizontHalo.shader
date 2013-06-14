@@ -22,5 +22,5 @@ Properties {
         }
         ENDCG
     } 
-    FallBack "Diffuse"
+    FallBack Off
 }

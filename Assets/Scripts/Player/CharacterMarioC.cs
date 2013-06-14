@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class CharacterMarioC : Abstract {	
 	public float jumpSpeed = 12f;
@@ -17,7 +18,10 @@ public class CharacterMarioC : Abstract {
 	private bool movingToFlyGround=false;
 	private float vsletAcceleration=10;
 	private Transform curStumbleTransform=null;
-	private Transform prevcurStumbleTransform=null;
+	
+	private int numberOfTransformsToStumble=3;
+	private List<Transform> ListToChangeTransforms=new List<Transform>();
+	private List<int> ListToChangeLayers=new List<int>();
 	
 	private int curStumbleTransformLayer;
 	//private bool downing=false;
@@ -57,9 +61,26 @@ public class CharacterMarioC : Abstract {
 		walkingBearTransform=walkingBear.transform;
 	}
 	
+	private void ClearStumbleList()
+	{
+		while((ListToChangeTransforms.Count>numberOfTransformsToStumble&&playerScript.isVodka())||
+			(ListToChangeTransforms.Count>0&&!playerScript.isVodka()))
+		{
+			ListToChangeTransforms[0].gameObject.layer=ListToChangeLayers[0];
+			ListToChangeTransforms[0].parent.gameObject.SetActive(true);
+			ListToChangeTransforms.RemoveAt(0);
+			ListToChangeLayers.RemoveAt(0);
+		}
+	}
+	
 	void Update() {
 		if(GlobalOptions.gameState==GameStates.GAME||GlobalOptions.gameState==GameStates.GAME_OVER)
 		{
+			if(GlobalOptions.gameState==GameStates.GAME)
+			{
+				ClearStumbleList();
+			}
+			
 			AddAllTimes();
 		
 			if (grounded&&!jumping&&!flagPathChangeJump) {
@@ -79,8 +100,6 @@ public class CharacterMarioC : Abstract {
 				moveforward=0;
 				forcex=0;
 			}
-			
-			
 			
 			Vector3 movement = moveforward*forward + new Vector3 (0, verticalSpeed, 0) + forcex*right;			
 			
@@ -104,9 +123,13 @@ public class CharacterMarioC : Abstract {
 				//под водкой
 				if(playerScript.isVodka())
 				{
+					ListToChangeTransforms.Add (curStumbleTransform);
+					ListToChangeLayers.Add (curStumbleTransform.gameObject.layer);
 					needStumble=false;
-					curStumbleTransformLayer=curStumbleTransform.gameObject.layer;
 					curStumbleTransform.gameObject.layer=10;
+					playerScript.MakeVodkaBoom();
+					
+					curStumbleTransform.parent.gameObject.SetActive(false);
 				}
 				
 				if(needStumble)
@@ -364,11 +387,6 @@ public class CharacterMarioC : Abstract {
 		
 		if(pushDir.x!=0||pushDir.z!=0)
 		{
-			prevcurStumbleTransform=curStumbleTransform;
-			if(prevcurStumbleTransform)
-			{
-				prevcurStumbleTransform.gameObject.layer=curStumbleTransformLayer;
-			}
 			curStumbleTransform=hit.collider.transform;
 		}
 	}

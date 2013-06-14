@@ -22,7 +22,10 @@ public class WoodEnemy : AbstractEnemy {
 		GuiLayer.AddHeadStars();
 		PlayClipSound();
 		if(playerScript.isVodka())
-			MakeInactiveParent();
+		{
+			//playerScript.MakeVodkaBoom();
+			//MakeInactiveParent();
+		}
 	}
 	
 	public override void ReStart()
