@@ -94,6 +94,7 @@ public class Player : SpriteTouch {
 	
 	public BoostFX boostFx;
 	public ParticleSystem moneyCollected;
+	public ParticleSystem vodkaBoom;
 	
 	protected override void Start () {
 		//transforms
