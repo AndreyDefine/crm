@@ -13,11 +13,11 @@ public abstract class BaseMissionEmmitter : Abstract, IMissionEmmitter, IMission
 	public Mission[] missions;
 	
 	private ArrayList listeners = new ArrayList();
-	public void AddMissionListener(IMissionEmmitterListener listener){
+	public void AddMissionEmmitterListener(IMissionEmmitterListener listener){
 		listeners.Add(listener);	
 	}
 	
-	public void RemoveMissionListener(IMissionEmmitterListener listener){
+	public void RemoveMissionEmmitterListener(IMissionEmmitterListener listener){
 		listeners.Remove(listener);	
 	}
 	
