@@ -445,10 +445,10 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		//set position & rotation
 		newObject.transform.position=marker.position;
 		
-		MarkerTag marderTag=newObject.GetComponent<MarkerTag>();
-		if(marderTag)
+		MarkerTag markerTag=newObject.GetComponent<MarkerTag>();
+		if(markerTag)
 		{
-			marderTag.ApplyRotation(marker.rotation,interrainTag.singleTransform.rotation);
+			markerTag.ApplyRotation(marker.rotation,interrainTag.singleTransform.rotation);
 		}
 		else
 		{
@@ -461,6 +461,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		
 		if(marker.name=="TochkaSbora")
 		{
+			fermaMissionEmmiter.AddMissionEmmitterListener(newObject.GetComponentInChildren<TochkaSbora>());
 			if(fermaMissionEmmiter.GetCurrentMissions().Count==0)
 			{
 				Debug.Log("TochkaSbora");
