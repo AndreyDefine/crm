@@ -3,10 +3,12 @@ using System.Collections;
 
 
 public class TochkaSbora : AbstractEnemy,IMissionEmmitterListener {	
-	// Use this for initialization
+
+	private bool flagMadeOnHit=false;
 	
 	public override void OnHit(Collider other)
 	{
+		flagMadeOnHit=true;
 		GuiLayer.AddPosilka();
 		PlayClipSound();
 	}
@@ -14,6 +16,7 @@ public class TochkaSbora : AbstractEnemy,IMissionEmmitterListener {
 	public override void ReStart()
 	{
 		singleTransform.parent.gameObject.SetActive(true);	
+		flagMadeOnHit=false;
 	}
 	
 	
@@ -24,7 +27,10 @@ public class TochkaSbora : AbstractEnemy,IMissionEmmitterListener {
 	
 	public void NoMissions (BaseMissionEmmitter missionEmmitter)
 	{
-		MakeInactiveParent();
+		if(!flagMadeOnHit)
+		{
+			MakeInactiveParent();
+		}
 	}
 	
 	protected virtual void OnDestroy(){
