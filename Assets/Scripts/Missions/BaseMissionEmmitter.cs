@@ -11,6 +11,30 @@ public abstract class BaseMissionEmmitter : Abstract, IMissionEmmitter, IMission
 	public string missionEmmitterName;
 	protected int finishedMissionsNumber = 0;
 	public Mission[] missions;
+	
+	private ArrayList listeners = new ArrayList();
+	public void AddMissionListener(IMissionEmmitterListener listener){
+		listeners.Add(listener);	
+	}
+	
+	public void RemoveMissionListener(IMissionEmmitterListener listener){
+		listeners.Remove(listener);	
+	}
+	
+	protected void NotifyHasMissions(){
+		for(int i=0;i<listeners.Count;i++){
+			((IMissionEmmitterListener)listeners[i]).HasMissions(this);
+		}
+	}
+	
+	protected void NotifyNoMissions(){
+		for(int i=0;i<listeners.Count;i++){
+			((IMissionEmmitterListener)listeners[i]).NoMissions(this);
+		}
+	}
+	
+	
+	
 	public virtual void LevelBegin(){
 		for(int i=0;i<thisLifeFinishedMissions.Count;i++){
 			Destroy(((Mission)thisLifeFinishedMissions[i]).gameObject);

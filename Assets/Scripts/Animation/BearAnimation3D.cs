@@ -26,7 +26,7 @@ public class BearAnimation3D : Abstract{
 			newobjTransform=newobj.transform;
 			newobjTransform.parent=curtransform;
 			newobjTransform.Translate(initPos+singleTransform.position);
-			clothesList.Add(newobj);
+			clothesList.Add(newobj.transform.GetChild(0).gameObject);
 			
 			//make other invisible
 			if(i!=0){

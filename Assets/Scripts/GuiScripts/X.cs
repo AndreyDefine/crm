@@ -8,6 +8,10 @@ public class X : Abstract {
 		singleTransform.localPosition = new Vector3(-0.19f-leftOf.text.Length*0.08f, singleTransform.localPosition.y, singleTransform.localPosition.z);//govnocod
 	}
 	
+	public void setColor(Color color){
+		x2Value.color = color;
+	}
+	
 	public void SetValue(int x){
 		x2Value.text = string.Format("x{0}", x);
 	}

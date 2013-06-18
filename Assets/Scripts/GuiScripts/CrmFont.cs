@@ -18,4 +18,13 @@ public class CrmFont : Abstract {
 			}
         }
     }
+	
+    public Color color {
+        set {
+			for(int i=0;i<textMeshes.Length;i++){
+				textMeshes[i].color = value;
+				textMeshes[i].Commit();
+			}
+        }
+    }
 }
