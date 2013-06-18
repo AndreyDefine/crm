@@ -34,7 +34,6 @@ public class GuiLayerInitializer : Abstract {
 	private bool flagPostal,flagGameOver;
 	private float ScoreScaleTime,scoreTime,headStarsTime,GameOverTime, addToLifeTime;
 	private bool flagX2=false;
-	private bool flagHeadStart=false;
 	private bool flagNotTwinkled=true;
 	int curX2 = 0;
 	
@@ -94,7 +93,6 @@ public class GuiLayerInitializer : Abstract {
 		
 		curLife=MaxLife;
 		nullTime=0;
-		flagHeadStart=false;
 		flagHeadStars=false;
 		flagGameOver=false;
 		scoreTime=Time.time;
