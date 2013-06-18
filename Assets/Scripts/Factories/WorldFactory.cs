@@ -49,6 +49,8 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	
 	private int versionForCoRoutine=0;
 	
+	private FermaMissionEmmitter fermaMissionEmmiter;
+	
 	public string GetCurrentObstacleSet()
 	{
 		return terrainElementFactory.GetCurrentTerrainForZ().obstacleSetName;
@@ -56,6 +58,8 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	
 	public override void init(){
 		GameObject curFactoryObject;
+		
+		fermaMissionEmmiter=GlobalOptions.GetMissionEmmitters().GetFermaMissionEmmitter();
 		
 		//terrain
 		curFactoryObject=Instantiate (terrainFactory) as GameObject;
@@ -185,6 +189,8 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		int i;
 		
 		versionForCoRoutine++;
+		
+		fermaMissionEmmiter=GlobalOptions.GetMissionEmmitters().GetFermaMissionEmmitter();
 		
 		terrainElementFactory.ReStart();
 		uniqueElementFactory.ReStart();
@@ -429,9 +435,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		bool flagCompiled=false;
 	
 		newObject = obstacleElementFactory.GetNewObjectWithName(marker.name);
-		
-		//Debug.Log ("marker.name="+marker.name);
-		
+				
 		if(!newObject)
 		{
 			//Debug.Log (marker.name+" NOT FOUND!!!");
@@ -453,6 +457,15 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	
 		if(interrainTag){
 			interrainTag.PushToAllElements(newObject.GetComponent<AbstractTag>());
+		}
+		
+		if(marker.name=="TochkaSbora")
+		{
+			if(fermaMissionEmmiter.GetCurrentMissions().Count==0)
+			{
+				Debug.Log("TochkaSbora");
+				newObject.GetComponentInChildren<AbstractEnemy>().MakeInactiveParent();
+			}
 		}
 		
 		//if compiled object

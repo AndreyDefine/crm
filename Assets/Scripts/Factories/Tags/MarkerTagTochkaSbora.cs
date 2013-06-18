@@ -12,7 +12,6 @@ public class MarkerTagTochkaSbora : MarkerTag {
 		angles.y=0;
 		singleTransform.rotation=Quaternion.Euler(angles+inRotationParent.eulerAngles);
 		
-		Debug.Log (singleTransform.localPosition);
 		//place yashik
 		Transform curTransformYashik=Yashik.transform;
 		if(singleTransform.localPosition.x>2)

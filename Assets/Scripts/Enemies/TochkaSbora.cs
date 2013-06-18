@@ -10,4 +10,9 @@ public class TochkaSbora : AbstractEnemy {
 		GuiLayer.AddPosilka();
 		PlayClipSound();
 	}
+	
+	public override void ReStart()
+	{
+		singleTransform.parent.gameObject.SetActive(true);	
+	}
 }
