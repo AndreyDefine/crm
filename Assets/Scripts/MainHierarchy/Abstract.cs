@@ -6,34 +6,26 @@ using System.Collections;
 /// </summary>
 public class Abstract : MonoBehaviour {
 
-	public Transform singleTransform = null;
-	public Renderer singleRenderer = null;
+	private Transform _singleTransform = null;
+	private Renderer _singleRenderer = null;
 	
-    //private Transform _singleTransform = null;
-    /*public Transform singleTransform {
+    public Transform singleTransform {
         get {
-            if (_singleTransform == null) {
-                _singleTransform = transform;
-            }
             return _singleTransform;
         }
         protected set {
             _singleTransform = value;
         }
-    }*/
+    }
 	
-	/*private Renderer _singleRenderer = null;
     public Renderer singleRenderer {
         get {
-            if (_singleRenderer == null) {
-                _singleRenderer = renderer;
-            }
             return _singleRenderer;
         }
         protected set {
             _singleRenderer = value;
         }
-    }*/
+    }
 	
 	public virtual void Awake(){
 		singleTransform = transform;
