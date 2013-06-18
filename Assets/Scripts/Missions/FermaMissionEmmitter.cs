@@ -109,6 +109,7 @@ public class FermaMissionEmmitter : BaseMissionEmmitter, IMissionListener
 			if(currentMissions.Count==0){//инициализируем текущую
 				currentMission = GetOneMissionObject();	
 				if(currentMission!=null){
+					NotifyHasMissions();
 					currentMissions.Add(currentMission);
 				}
 				CurrentMissionsSerializer.SaveCurrentMissions (currentMissions, misionCurrentTag);

@@ -50,6 +50,7 @@ public class SimpleMissionEmmitter : BaseMissionEmmitter
 		if (currentMissions.Count == 0) {//инициализируем текущую
 			Mission currentMission = GetOneMissionObject ();	
 			if (currentMission != null) {
+				NotifyHasMissions();
 				currentMissions.Add (currentMission);
 			}
 			CurrentMissionsSerializer.SaveCurrentMissions (currentMissions, misionCurrentTag);

@@ -22,12 +22,14 @@ public abstract class BaseMissionEmmitter : Abstract, IMissionEmmitter, IMission
 	}
 	
 	protected void NotifyHasMissions(){
+		Debug.LogWarning("NotifyHasMissions");
 		for(int i=0;i<listeners.Count;i++){
 			((IMissionEmmitterListener)listeners[i]).HasMissions(this);
 		}
 	}
 	
 	protected void NotifyNoMissions(){
+		Debug.LogWarning("NotifyNoMissions");
 		for(int i=0;i<listeners.Count;i++){
 			((IMissionEmmitterListener)listeners[i]).NoMissions(this);
 		}
@@ -124,6 +126,9 @@ public abstract class BaseMissionEmmitter : Abstract, IMissionEmmitter, IMission
 		GlobalOptions.GetPlayerScript().Yahoo();
 		SetMissionFinished (mission.GetId ());
 		currentMissions.Remove (mission);
+		if(currentMissions.Count==0){
+			NotifyNoMissions();
+		}
 		thisLifeFinishedMissions.Add (mission);
 		CurrentMissionsSerializer.SaveCurrentMissions (currentMissions, misionCurrentTag);
 		CurrentMissionsSerializer.RemoveMissionData (mission);
