@@ -464,7 +464,6 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 			fermaMissionEmmiter.AddMissionEmmitterListener(newObject.GetComponentInChildren<TochkaSbora>());
 			if(fermaMissionEmmiter.GetCurrentMissions().Count==0)
 			{
-				Debug.Log("TochkaSbora");
 				newObject.GetComponentInChildren<AbstractEnemy>().MakeInactiveParent();
 			}
 		}

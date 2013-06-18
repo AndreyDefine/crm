@@ -34,6 +34,9 @@ public class TochkaSbora : AbstractEnemy,IMissionEmmitterListener {
 	}
 	
 	protected virtual void OnDestroy(){
-		GlobalOptions.GetMissionEmmitters().GetFermaMissionEmmitter().RemoveMissionEmmitterListener(this);
+		if(GlobalOptions.GetMissionEmmitters())
+		{
+			GlobalOptions.GetMissionEmmitters().GetFermaMissionEmmitter().RemoveMissionEmmitterListener(this);
+		}
 	}
 }
