@@ -41,7 +41,7 @@ public class BoostNotifier : BaseNotifier,IBoostListener
 		boostIco.singleTransform.localPosition = new Vector3(0f,0f,-0.01f);
 	}
 	
-	public void BoostFinished (Boost boost)
+	public void BoostFinished (Boost boost)//Переписать бы надо, а что делать(
 	{
 		FlyOut();
 		if(boost.GetType()==typeof(VodkaBoost)){
@@ -52,6 +52,9 @@ public class BoostNotifier : BaseNotifier,IBoostListener
 		}
 		if(boost.GetType()==typeof(X2Boost)){
 			GlobalOptions.GetGuiLayer().StopX2();
+		}
+		if(boost.GetType()==typeof(HeadStartBoost)){
+			GlobalOptions.GetGuiLayer().StopHeadStart();
 		}
 		Destroy(boost.gameObject);
 	}

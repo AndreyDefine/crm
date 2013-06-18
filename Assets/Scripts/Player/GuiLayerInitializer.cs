@@ -25,7 +25,7 @@ public class GuiLayerInitializer : Abstract {
 	
 	public BoostNotifierController boostNotifierController;		
 	
-	public HeadStartBoost headStartBoost;
+	public HeadStartBoost headStartBoostPrefab;
 	
 	private float Vsizex,Vsizey;
 	private float nullTime;
@@ -84,7 +84,14 @@ public class GuiLayerInitializer : Abstract {
 	public void MakeHeadStartButtonPushed(float indistance)
 	{
 		HeadStart.StopTwinkling();
+		HeadStartBoost.longTime = indistance;
+		boostNotifierController.AddBoostNotifier(headStartBoostPrefab);
 		playerScript.MakeHeadStart();
+	}
+	
+	public void StopHeadStart()
+	{
+		playerScript.UnMakeHeadStart();
 	}
 	
 	public void Restart()
