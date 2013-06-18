@@ -5,7 +5,10 @@ using System.Collections.Generic;
 public class TerrainElementFactory: AbstractElementFactory{	
 	private TerrainTag currentTerrain=null;
 	
+	private int versionForCoRoutine=0;
+	
 	public override void ReStart(){
+		versionForCoRoutine++;
 		base.ReStart();
 		currentTerrain=null;
 		for(int i=0;i<terrainsListToDel.Count;i++)
@@ -23,25 +26,29 @@ public class TerrainElementFactory: AbstractElementFactory{
 		
 	private IEnumerator ClearTerrainFactory(){	
 		
+		int curversionForCoRoutine=versionForCoRoutine;
 		if(terrainsList.Count>0)
 		{
-			
+			if(curversionForCoRoutine!=versionForCoRoutine) yield break;
 			AbstractTag newterrainToDel=terrainsList[0];
 			TerrainTag terrainTag=newterrainToDel.GetComponent("TerrainTag") as TerrainTag;
 			List<AbstractTag> AllElements=terrainTag.GetAllElements();
 			terrainTag.RemakeAllElementsList();
 			yield return null;
+			if(curversionForCoRoutine!=versionForCoRoutine) yield break;
 			terrainsList.Remove(newterrainToDel);			
 			terrainsListToDel.Add(newterrainToDel);	
+			if(curversionForCoRoutine!=versionForCoRoutine) yield break;
 			yield return null;
 			for(int i=0;i<AllElements.Count;i++)
 			{
+				if(curversionForCoRoutine!=versionForCoRoutine) yield break;
 				if(AllElements[i]){
 					AllElements[i].DeleteFromUsed();
 				}
 				yield return null;
 			}
-			
+			if(curversionForCoRoutine!=versionForCoRoutine) yield break;
 			AllElements.Clear();
 			AllElements=null;
 		}
