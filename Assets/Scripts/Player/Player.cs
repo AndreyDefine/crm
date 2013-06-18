@@ -47,6 +47,7 @@ public class Player : SpriteTouch {
 	private bool PathChanging;
 	
 	private float VelocityVodka;
+	private float VelocityHeadStart;
 	private float VelocityMushroom;
 	
 	private ParticleEmitter HeadStarsParticleEmitter;
@@ -133,6 +134,7 @@ public class Player : SpriteTouch {
 		prevPathNumber=0;
 		PathChanging=false;
 		VelocityVodka=1;
+		VelocityHeadStart=1;
 		VelocityMushroom=1;
 		oldMetersz=0;
 		oneMeterz=0;
@@ -197,7 +199,7 @@ public class Player : SpriteTouch {
 	
 	public bool isVodka()
 	{
-		if(VelocityVodka>1)
+		if(VelocityVodka>1||VelocityHeadStart>1)
 		{
 			return true;
 		}
@@ -260,6 +262,16 @@ public class Player : SpriteTouch {
 	{
 		VelocityVodka=1;
 		//(MainCamera.GetComponent("MotionBlur") as MotionBlur).enabled=false;
+	}
+	
+	public void MakeHeadStart()
+	{
+		VelocityHeadStart=1.8f;
+	}
+	
+	public void UnMakeHeadStart()
+	{
+		VelocityHeadStart=1;
 	}
 	
 	public void MakeMagnit()
@@ -615,12 +627,12 @@ public class Player : SpriteTouch {
 	
 	public float GetRealVelocityWithNoDeltaTime()
 	{
-		return GlobalOptions.playerVelocity*VelocityVodka*VelocityMushroom;
+		return GlobalOptions.playerVelocity*VelocityVodka*VelocityHeadStart*VelocityMushroom;
 	}
 	
 	public float GetRealVelocityWithDeltaTimeAndNoAcceleration()
 	{
-		return startVelocity*VelocityVodka*VelocityMushroom*Time.deltaTime;;
+		return startVelocity*VelocityVodka*VelocityHeadStart*VelocityMushroom*Time.deltaTime;;
 	}
 		
 	

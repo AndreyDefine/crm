@@ -118,7 +118,6 @@ public class CharacterMarioC : Abstract {
 				if(curStumbleTransform&&curStumbleTransform.name.Contains("Zabiratsa"))
 				{
 					needStumble=false;
-					Debug.Log ("Zabiratsa");
 				}
 				//под водкой
 				if(playerScript.isVodka())

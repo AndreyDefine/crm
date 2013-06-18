@@ -3,6 +3,8 @@ using System.Collections;
 
 public class GuiLayerInitializer : Abstract {	
 	//final
+	public GuiHeadStart GUIHeadStart;
+	
 	public GameObject pause;
 	
 	public ResumeTimer resumeTimerPrefab;
@@ -32,7 +34,11 @@ public class GuiLayerInitializer : Abstract {
 	private bool flagPostal,flagGameOver;
 	private float ScoreScaleTime,scoreTime,headStarsTime,GameOverTime, addToLifeTime;
 	private bool flagX2=false;
+	private bool flagHeadStart=false;
+	private bool flagNotTwinkled=true;
 	int curX2 = 0;
+	
+	private GuiHeadStart HeadStart;
 	
 	float stopTime=0,startstopTime=0;//время остановки
 	
@@ -61,6 +67,25 @@ public class GuiLayerInitializer : Abstract {
 		Restart();
 	}
 	
+	private void MakeHeadStart()
+	{
+		flagNotTwinkled=false;
+		if(!PersonInfo.tutorial)
+		{
+			HeadStart.StartTwinkling();
+		}
+		else
+		{
+			HeadStart.StopTwinkling();
+		}
+	}
+	
+	public void MakeHeadStartButtonPushed(float indistance)
+	{
+		HeadStart.StopTwinkling();
+		playerScript.MakeHeadStart();
+	}
+	
 	public void Restart()
 	{
 		StarsList.Clear();
@@ -69,6 +94,7 @@ public class GuiLayerInitializer : Abstract {
 		
 		curLife=MaxLife;
 		nullTime=0;
+		flagHeadStart=false;
 		flagHeadStars=false;
 		flagGameOver=false;
 		scoreTime=Time.time;
@@ -77,6 +103,7 @@ public class GuiLayerInitializer : Abstract {
 		AddToLife(0,null);
 	
 		flagX2 = false;
+		flagNotTwinkled=true;
 		//simply set X
 		SetMultiplier();
 		
@@ -90,6 +117,7 @@ public class GuiLayerInitializer : Abstract {
 		upNotifierController.Restart();
 		boostNotifierController.Restart();
 		downNotifierController.Restart();
+		HeadStart.ResetTwinkling();
 	}
 	
 	void Update () {
@@ -107,7 +135,11 @@ public class GuiLayerInitializer : Abstract {
 			{
 				MakeHeadStars();
 			}
-
+			
+			if(flagNotTwinkled)
+			{
+				MakeHeadStart();
+			}
 		}
 		else
 		{
@@ -175,6 +207,9 @@ public class GuiLayerInitializer : Abstract {
 	
 	private void InitSprites()
 	{	
+		//Head Start
+		HeadStart=(Instantiate(GUIHeadStart) as GuiHeadStart);
+		
 		//simply set score 
 		SetPoints(0);
 		
@@ -314,6 +349,7 @@ public class GuiLayerInitializer : Abstract {
 	
 	private void MakeGameOver()
 	{
+		HeadStart.StopTwinkling();
 		//gameover
 		if(Time.time-GameOverTime>2)
 		{
