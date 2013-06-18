@@ -22,14 +22,12 @@ public abstract class BaseMissionEmmitter : Abstract, IMissionEmmitter, IMission
 	}
 	
 	protected void NotifyHasMissions(){
-		Debug.LogWarning("NotifyHasMissions");
 		for(int i=0;i<listeners.Count;i++){
 			((IMissionEmmitterListener)listeners[i]).HasMissions(this);
 		}
 	}
 	
 	protected void NotifyNoMissions(){
-		Debug.LogWarning("NotifyNoMissions");
 		for(int i=0;i<listeners.Count;i++){
 			((IMissionEmmitterListener)listeners[i]).NoMissions(this);
 		}

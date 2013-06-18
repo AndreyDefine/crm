@@ -23,6 +23,8 @@ public class GuiLayerInitializer : Abstract {
 	
 	public BoostNotifierController boostNotifierController;		
 	
+	public HeadStartBoost headStartBoost;
+	
 	private float Vsizex,Vsizey;
 	private float nullTime;
 	private int curLife;
