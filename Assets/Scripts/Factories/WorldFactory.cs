@@ -441,7 +441,15 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		//set position & rotation
 		newObject.transform.position=marker.position;
 		
-		newObject.transform.rotation=marker.rotation;
+		MarkerTag marderTag=newObject.GetComponent<MarkerTag>();
+		if(marderTag)
+		{
+			marderTag.ApplyRotation(marker.rotation,interrainTag.singleTransform.rotation);
+		}
+		else
+		{
+			newObject.transform.rotation=marker.rotation;
+		}
 	
 		if(interrainTag){
 			interrainTag.PushToAllElements(newObject.GetComponent<AbstractTag>());

@@ -1,20 +1,13 @@
 using UnityEngine;
 using System.Collections;
 
-public class GuiLayerInitializer : Abstract {
-	public GameObject GuiTimer;
-	public GameObject GuiStar;
-	public GameObject GuiChangeControl;
-	
-	public GameObject GuiBearFace;
-	public GameObject []GuiBottle;
-	public GameObject GuiLifeHeart;
-	public GameObject GuiScoreScale;
-	
+public class GuiLayerInitializer : Abstract {	
 	//final
 	public GameObject pause;
 	
 	public ResumeTimer resumeTimerPrefab;
+	
+	public int MaxLife;
 	
 	public Money money;
 	
@@ -28,24 +21,11 @@ public class GuiLayerInitializer : Abstract {
 	
 	public CurrentMissionsNotifierController currentMissionsNotifierController;
 	
-	public BoostNotifierController boostNotifierController;
-	
-	public int MaxLife;
-	
-	private GameObject Timer;
-	private GameObject ChangeControl;
-	
-	private GameObject BearFace;
-	private GameObject RightHUD;
-	private GameObject ScoreScale;
-
-	private GameObject Star;
+	public BoostNotifierController boostNotifierController;		
 	
 	private float Vsizex,Vsizey;
 	private float nullTime;
 	private int curLife;
-
-	private float curStarPos=250;
 	
 	private Player playerScript;
 	private bool flagHeadStars;
@@ -56,9 +36,7 @@ public class GuiLayerInitializer : Abstract {
 	
 	float stopTime=0,startstopTime=0;//время остановки
 	
-	private float zindex=8;
 	private ArrayList StarsList;
-	Camera GUIcamera;
 	
 	private void AddAllTimes()
 	{
@@ -76,7 +54,6 @@ public class GuiLayerInitializer : Abstract {
 	// Use this for initialization
 	void Start() {
 		StarsList=new ArrayList();
-		GUIcamera = Cameras.GetGUICamera(); 
 		
 		playerScript=GlobalOptions.GetPlayerScript();
 
@@ -87,7 +64,6 @@ public class GuiLayerInitializer : Abstract {
 	public void Restart()
 	{
 		StarsList.Clear();
-		curStarPos=250;
 		stopTime=0;
 		startstopTime=0;
 		
@@ -198,35 +174,12 @@ public class GuiLayerInitializer : Abstract {
 	}
 	
 	private void InitSprites()
-	{
-		//Vector3 pos;	
-		
-		SetLife(MaxLife);
-		
+	{	
 		//simply set score 
 		SetPoints(0);
 		
 		//simply set money 
 		SetMoney(0);
-		
-		//ScoreScale
-		ScoreScale=(GameObject)Instantiate(GuiScoreScale);
-		PosScoreScale();
-		ScoreScale.transform.parent=transform;
-				
-		//timer left coner up
-		/*Timer=(GameObject)Instantiate(GuiTimer);
-		//Timer.transform.localScale=GlobalOptions.NormaliseScale();
-		
-		pos=new Vector3(8,GlobalOptions.Vsizey-152,zindex-10);
-		pos=GlobalOptions.NormalisePos(pos);
-		pos=GUIcamera.ScreenToWorldPoint(pos);
-		pos.y-=Timer.renderer.bounds.extents.y;
-		
-		pos.x=bearFaceRight;
-		
-		Timer.transform.position=pos;
-		Timer.transform.parent=transform;*/
 	}
 	
 	private void MakeHeadStars()
@@ -388,33 +341,6 @@ public class GuiLayerInitializer : Abstract {
 		}
 	}
 	
-	/*private void PosScore(){
-		Vector3 pos;
-		pos=new Vector3(GlobalOptions.Vsizex-20,GlobalOptions.Vsizey-60,zindex-1);
-		pos=GlobalOptions.NormalisePosRight(pos);
-		pos=GUIcamera.ScreenToWorldPoint(pos);
-		
-		Score.transform.position=pos;
-	}*/
-	
-	/*private void PosMoney(){
-		Vector3 pos;
-		pos=new Vector3(GlobalOptions.Vsizex-20,GlobalOptions.Vsizey-135,zindex-1);
-		pos=GlobalOptions.NormalisePosRight(pos);
-		pos=GUIcamera.ScreenToWorldPoint(pos);
-		
-		Money.transform.position=pos;
-	}*/
-	
-	private void PosScoreScale(){
-		Vector3 pos;
-		pos=new Vector3(406,GlobalOptions.Vsizey-32,zindex+50);
-		pos=GlobalOptions.NormalisePosRight(pos);
-		pos=GUIcamera.ScreenToWorldPoint(pos);
-		
-		ScoreScale.transform.position=pos;
-	}
-	
 	private void PlusLife(){
 		curLife++;
 		curLife=curLife>MaxLife?MaxLife:curLife;
@@ -454,51 +380,12 @@ public class GuiLayerInitializer : Abstract {
 		}
 		curLife=curLife<0?0:curLife;
 		curLife=curLife>MaxLife?MaxLife:curLife;
-		
-		SetLife(curLife);
 	}
 	
-	private void SetLife(int inlife){
-		/*int numberOfOnHearts=(int)((LifeHeart.Length+1)*((float)inlife/MaxLife));
-		for(int i=0;i<LifeHeart.Length;i++)
-		{
-			if(i>numberOfOnHearts-1)
-			{
-				LifeHeart[i].active=false;
-			}
-			else
-			{
-				LifeHeart[i].active=true;
-			}
-		}*/
-	}
-		
 	public void AddHeadStars()
 	{
 		playerScript.MakeHeadStars();
 		flagHeadStars=true;
 		headStarsTime=Time.time;
-	}
-	
-	public void ShowStar(){
-		if(StarsList.Count<7)
-		{
-			Debug.Log(StarsList.Count);
-			Vector3 pos;
-			//Star
-			Star = (GameObject)Instantiate(GuiStar);
-			
-			pos=new Vector3(8,curStarPos,zindex-1);
-			pos=GlobalOptions.NormalisePos(pos);
-			pos=GUIcamera.ScreenToWorldPoint(pos);
-			pos.x+=Star.renderer.bounds.extents.x;
-			pos.y+=Star.renderer.bounds.extents.y;
-			
-			curStarPos+=75;
-			
-			Star.transform.position=pos;
-			
-			StarsList.Add(Star);
-		}
 	}
 }
