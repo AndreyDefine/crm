@@ -131,6 +131,75 @@ public static class AnimationFactory {
             obj.animation.Play (clipName);
         }
     }
+	
+	public static void RotateXYZ(Abstract obj, Vector3 rotateTo, float secs, string clipName, string stopFunctionName = null, bool play = true) {
+        AddAnimation (obj.gameObject);
+        DeleteClipIfExists (obj.gameObject, clipName);
+    
+        AnimationClip animClip = new AnimationClip ();
+		Quaternion rotateToQuaternion = Quaternion.Euler(rotateTo);
+        AnimationCurve curveX = AnimationCurve.Linear(0, obj.singleTransform.localRotation.x, secs, rotateToQuaternion.x);
+        AnimationCurve curveY = AnimationCurve.Linear(0, obj.singleTransform.localRotation.y, secs, rotateToQuaternion.y);
+        AnimationCurve curveZ = AnimationCurve.Linear(0, obj.singleTransform.localRotation.z, secs, rotateToQuaternion.z);
+		AnimationCurve curveW = AnimationCurve.Linear(0, obj.singleTransform.localRotation.w, secs, rotateToQuaternion.w);
+        animClip.SetCurve("", typeof(Transform), "localRotation.x", curveX);
+        animClip.SetCurve("", typeof(Transform), "localRotation.y", curveY);
+        animClip.SetCurve("", typeof(Transform), "localRotation.z", curveZ);
+		animClip.SetCurve("", typeof(Transform), "localRotation.w", curveW);
+
+        if (stopFunctionName != null && stopFunctionName != "None") {
+            AnimationEvent eventStop = new AnimationEvent ();
+            eventStop.functionName = stopFunctionName;
+            eventStop.time = secs;
+            animClip.AddEvent (eventStop);
+        }
+
+        obj.animation.AddClip (animClip, clipName);
+        obj.animation [clipName].layer = 1;
+		obj.animation.wrapMode = WrapMode.Once;
+        if (play) {
+            obj.animation.Play (clipName);
+        }
+    }
+	
+	public static void FlyXYZRotateXYZ(Abstract obj, Vector3 moveTo,Vector3 rotateTo, float secs, string clipName, string stopFunctionName = null, bool play = true) {
+        AddAnimation (obj.gameObject);
+        DeleteClipIfExists (obj.gameObject, clipName);
+    
+		AnimationClip animClip = new AnimationClip ();
+		
+        AnimationCurve curveX = AnimationCurve.Linear(0, obj.singleTransform.localPosition.x, secs, moveTo.x);
+        AnimationCurve curveY = AnimationCurve.Linear(0, obj.singleTransform.localPosition.y, secs, moveTo.y);
+        AnimationCurve curveZ = AnimationCurve.Linear(0, obj.singleTransform.localPosition.z, secs, moveTo.z);
+        animClip.SetCurve("", typeof(Transform), "localPosition.x", curveX);
+        animClip.SetCurve("", typeof(Transform), "localPosition.y", curveY);
+        animClip.SetCurve("", typeof(Transform), "localPosition.z", curveZ);
+		
+		Quaternion rotateToQuaternion = Quaternion.Euler(rotateTo);
+        AnimationCurve rotateX = AnimationCurve.Linear(0, obj.singleTransform.localRotation.x, secs, rotateToQuaternion.x);
+        AnimationCurve rotateY = AnimationCurve.Linear(0, obj.singleTransform.localRotation.y, secs, rotateToQuaternion.y);
+        AnimationCurve rotateZ = AnimationCurve.Linear(0, obj.singleTransform.localRotation.z, secs, rotateToQuaternion.z);
+		AnimationCurve rotateW = AnimationCurve.Linear(0, obj.singleTransform.localRotation.w, secs, rotateToQuaternion.w);
+        animClip.SetCurve("", typeof(Transform), "localRotation.x", rotateX);
+        animClip.SetCurve("", typeof(Transform), "localRotation.y", rotateY);
+        animClip.SetCurve("", typeof(Transform), "localRotation.z", rotateZ);
+		animClip.SetCurve("", typeof(Transform), "localRotation.w", rotateW);
+
+        if (stopFunctionName != null && stopFunctionName != "None") {
+            AnimationEvent eventStop = new AnimationEvent ();
+            eventStop.functionName = stopFunctionName;
+            eventStop.time = secs;
+            animClip.AddEvent (eventStop);
+        }
+
+        obj.animation.AddClip (animClip, clipName);
+        obj.animation [clipName].layer = 1;
+		obj.animation.wrapMode = WrapMode.Once;
+        if (play) {
+            obj.animation.Play (clipName);
+        }
+    }
+    
     
     public static void Bounce(Abstract obj, float secs, float scaleTo, string clipName, string stopFunctionName = null, bool play = true) {
         AddAnimation (obj.gameObject);

@@ -49,6 +49,7 @@ public class GuiLayerInitializer : Abstract {
 	{
 		if(startstopTime!=0)
 		{
+			HeadStart.ResumeTwinkling();
 			ScoreScaleTime+=stopTime;
 			scoreTime+=stopTime;
 			headStarsTime+=stopTime;
@@ -129,10 +130,7 @@ public class GuiLayerInitializer : Abstract {
 	
 	void Update () {
 		
-		if(GlobalOptions.gameState==GameStates.GAME){
-			
-			AddAllTimes();
-			
+		if(GlobalOptions.gameState==GameStates.GAME){			
 			AddScoreForVelocity();
 			AddLifeForVelocity();
 			SetMultiplier();//Пока так.
@@ -156,7 +154,7 @@ public class GuiLayerInitializer : Abstract {
 				{
 					startstopTime=Time.time;
 				}
-
+				HeadStart.PauseTwinkling();
 				stopTime=Time.time-startstopTime;
 			}
 		}
@@ -176,6 +174,7 @@ public class GuiLayerInitializer : Abstract {
 	}
 	
 	public void Resume(){
+		AddAllTimes();
 		pause.SetActive(true);
 		GlobalOptions.GetPlayerScript().ResumeGame();		
 	}
@@ -238,8 +237,11 @@ public class GuiLayerInitializer : Abstract {
 		if(Time.time-scoreTime>=playerScript.GetRealVelocityWithNoDeltaTime()/1000)
 		{
 			//так редко меняем счёт
-			AddPoints(GlobalOptions.GetScoreScale());
-			scoreTime=Time.time;
+			if(!PersonInfo.tutorial)
+			{
+				AddPoints(GlobalOptions.GetScoreScale());
+			}
+				scoreTime=Time.time;
 		}
 	}
 	
@@ -311,9 +313,9 @@ public class GuiLayerInitializer : Abstract {
 		playerScript.MakeVodka();
 	}
 	
-	public void AddPosilka()
+	public void AddPosilka(Vector3 moveTo)
 	{
-		playerScript.MakePosilka();
+		playerScript.MakePosilka(moveTo);
 	}
 	
 	public void StopVodka(){

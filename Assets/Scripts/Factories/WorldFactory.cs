@@ -314,7 +314,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		if((currentRoadPos>1||!firstTimeInit)&&!PersonInfo.tutorial)
 		{
 			ArrayList terrainObstacleSetList=interrainTag.GetObstacleSetNamesArrayUnique();
-			for(jset=0;jset<terrainObstacleSetList.Count&&(MakeObstacleSet||jset==0);jset++)
+			for(jset=0;interrainTag.obstacleSetNames!=""&&jset<terrainObstacleSetList.Count&&(MakeObstacleSet||jset==0);jset++)
 			{				
 				//ObstacleSet
 				GameObject curSet;

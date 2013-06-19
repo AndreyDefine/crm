@@ -174,7 +174,7 @@ public class AbstractElementFactory: Abstract{
 			parseTerrainNames();
 		}
 		GameObject newTerrain=null;
-		for (int i=0; i<terrain1.Length;i++){
+		for (int i=0; terrain1!=null&&i<terrain1.Length;i++){
 			newTerrain	= Instantiate(Resources.Load(pathInResources+"/"+terrain1[i])) as GameObject;
 			newTerrain.name=terrain1[i];
 			addTagToObject(newTerrain);	

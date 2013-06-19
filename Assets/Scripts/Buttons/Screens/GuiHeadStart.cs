@@ -4,10 +4,15 @@ using System.Collections;
 public class GuiHeadStart : Abstract {
 	
 	private int numberOfBlinks;
-	private int nedeedNumberOfBlinks=7;
+	private int nedeedNumberOfBlinks=3;
 	private float timeToEase;
-	private float neededTimeToEase=1.3f;
+	private float neededTimeToEase=1.6f;
 	private int directionOfTwinkling;
+	
+	private float startstopTime=0,stopTime=0;//время остановки
+	
+	bool flagPaused=false;
+	
 	
 	private Transform[] allTransforms;
 	
@@ -23,15 +28,63 @@ public class GuiHeadStart : Abstract {
 	
 	public void StartTwinkling()
 	{
+		flagPaused=false;
+		stopTime=0;
+		startstopTime=0;
 		directionOfTwinkling=1;
 		numberOfBlinks=0;
 		gameObject.SetActive(true);
+		SetGetTouches(true);
 		timeToEase=Time.time;
+	}
+	
+	public void PauseTwinkling()
+	{
+		if(numberOfBlinks<=nedeedNumberOfBlinks)
+		{
+			if(startstopTime==0)
+			{
+				flagPaused=true;
+				startstopTime=Time.time;
+				
+				SetGetTouches(false);
+			}
+
+			stopTime=Time.time-startstopTime;
+		}
+	}
+	
+	private void SetGetTouches(bool inGetTouches)
+	{
+		if(allTransforms!=null)
+		{
+			SpriteTouch curSpriteTouch;
+			for (int i=0;i<allTransforms.Length;i++)
+			{
+				curSpriteTouch=allTransforms[i].GetComponent<SpriteTouch>();
+				if(curSpriteTouch)
+				{
+					curSpriteTouch.getTouches=inGetTouches;
+				}
+			}
+		}
+	}
+	
+	public void ResumeTwinkling()
+	{
+		if(flagPaused&&numberOfBlinks<=nedeedNumberOfBlinks)
+		{
+			timeToEase+=stopTime;
+			stopTime=0;
+			startstopTime=0;
+			flagPaused=false;
+			SetGetTouches(true);
+		}
 	}
 	
 	private void Update()
 	{
-		if(numberOfBlinks<=nedeedNumberOfBlinks)
+		if(!flagPaused&&numberOfBlinks<=nedeedNumberOfBlinks)
 		{
 			tk2dSprite curSprite;
 			tk2dTextMesh curMesh;

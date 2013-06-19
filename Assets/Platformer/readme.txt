@@ -1,2 +1,0 @@
-This pack contains buildings, bridges, platforms and decoration objects to create games, where you walk, climb or jump from platform to platform. There are 103 models (including all lod-stages, 64 unique models) and 6 ground textures.
-Additional textures for normal, height and spec maps are included.
