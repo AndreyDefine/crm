@@ -26,6 +26,8 @@ public class Player : SpriteTouch {
 	private float timerYahoo;
 	private float timerAltWalk;
 	
+	private float curVelocityWithNoDeltaTime;
+	
 	private float force;
 	
 	private BearAnimation3D bearAnimation; 
@@ -68,7 +70,7 @@ public class Player : SpriteTouch {
 	
 	private Transform particlesTransform;
 	
-	private Transform whereToLookTransform,characterTransform,walkingBearTransform,mainCameraTransform;
+	private Transform whereToLookTransform,characterTransform,walkingBearTransform,mainCameraTransform,blobTransform;
 	
 	private GameObject walkingBear;
 	
@@ -363,7 +365,9 @@ public class Player : SpriteTouch {
 	
 
 	// Update is called once per frame
-	void Update () {		
+	void Update () {
+		
+		SetRealVelocityWithNoDeltaTime();
 		if(!worldFactoryScript)
 		{
 			//Get world factory script
@@ -575,7 +579,7 @@ public class Player : SpriteTouch {
 		Vector3 charpos=characterTransform.localPosition;
 		float raznost=raznFromWhereToLookAndCharacter.y;
 		float heightDamping=2f;
-		
+				
 		if((characterMarioC.isJumping())&&GlobalOptions.gameState!=GameStates.GAME_OVER)
 		{
 			//Debug.Log ("characterMarioC");
@@ -647,9 +651,14 @@ public class Player : SpriteTouch {
 		return GetRealVelocityWithNoDeltaTime()*Time.deltaTime;
 	}
 	
+	public void SetRealVelocityWithNoDeltaTime()
+	{
+		curVelocityWithNoDeltaTime=GlobalOptions.playerVelocity*VelocityVodka*VelocityHeadStart*VelocityPosilka;
+	}
+	
 	public float GetRealVelocityWithNoDeltaTime()
 	{
-		return GlobalOptions.playerVelocity*VelocityVodka*VelocityHeadStart*VelocityPosilka;
+		return curVelocityWithNoDeltaTime;
 	}
 	
 	public float GetRealVelocityWithDeltaTimeAndNoAcceleration()

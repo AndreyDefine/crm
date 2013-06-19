@@ -24,7 +24,7 @@ public class X2Enemy : EnemyWithBoost {
 		{
 			return;
 		}
-		singleTransform.Rotate(new Vector3(0,Time.deltaTime*200,0));
+		singleTransform.Rotate(new Vector3(0,Time.deltaTime*playerScript.GetRealVelocityWithNoDeltaTime()*5,0));
 	}
 	
 	public override void ReStart()

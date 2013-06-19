@@ -4,6 +4,7 @@ using System.Collections;
 public class GuiLayerInitializer : Abstract {	
 	//final
 	public GuiHeadStart GUIHeadStart;
+	public GuiResurrection GUIRess;
 	
 	public GameObject pause;
 	

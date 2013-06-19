@@ -120,7 +120,7 @@ public class CharacterMarioC : Abstract {
 					needStumble=false;
 				}
 				//под водкой
-				if(playerScript.isVodka())
+				if(playerScript.isVodka()&&needStumble)
 				{
 					ListToChangeTransforms.Add (curStumbleTransform);
 					ListToChangeLayers.Add (curStumbleTransform.gameObject.layer);
