@@ -4,7 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 
 
-public class GoogleIABEventListener : MonoBehaviour
+public class GoogleIABEventListenerCRM : MonoBehaviour
 {
 #if UNITY_ANDROID
 	void OnEnable()
@@ -40,27 +40,72 @@ public class GoogleIABEventListener : MonoBehaviour
 
 	void billingSupportedEvent()
 	{
-		Debug.Log( "billingSupportedEvent" );
+		ShopEvents.InapSupported();
 	}
 
 
 	void billingNotSupportedEvent( string error )
 	{
-		Debug.Log( "billingNotSupportedEvent" );
+		ShopEvents.InapNotSupported(error);
 	}
 
 
 	void queryInventorySucceededEvent( List<GooglePurchase> purchases, List<GoogleSkuInfo> skus )
 	{
-		Debug.Log( "queryInventorySucceededEvent" );
+		Dictionary<string,PurchaseData> inventory = new Dictionary<string, PurchaseData>();
 		Prime31.Utils.logObject( purchases );
 		Prime31.Utils.logObject( skus );
+		for(int i=0;i<skus.Count;i++){
+			GoogleSkuInfo sku = skus[i];
+			PurchaseData purchaseData = new PurchaseData();
+			string productId = sku.productId;
+			string id = GetIdFromProductId(productId);
+			
+			purchaseData.id = id;
+			purchaseData.name = sku.title;
+			purchaseData.description = sku.description;
+			purchaseData.price = sku.price;
+			purchaseData.productId = productId;
+			inventory.Add(id,purchaseData);
+		}
+		ShopEvents.QueryInventorySucceeded(inventory);
+	}
+	
+	private string GetIdFromProductId(string productId){
+		string id="";
+	
+		if(productId.Equals(AndroidInap.inapKeys[0])){
+			id = ShopEvents.COIN_PACK_1;	
+		}
+		if(productId.Equals(AndroidInap.inapKeys[1])){
+			id = ShopEvents.COIN_PACK_2;	
+		}
+		if(productId.Equals(AndroidInap.inapKeys[2])){
+			id = ShopEvents.COIN_PACK_3;	
+		}
+		if(productId.Equals(AndroidInap.inapKeys[3])){
+			id = ShopEvents.COIN_PACK_4;	
+		}
+		
+		if(productId.Equals(AndroidInap.inapKeys[4])){
+			id = ShopEvents.GOLD_PACK_1;	
+		}
+		if(productId.Equals(AndroidInap.inapKeys[5])){
+			id = ShopEvents.GOLD_PACK_2;	
+		}
+		if(productId.Equals(AndroidInap.inapKeys[6])){
+			id = ShopEvents.GOLD_PACK_3;	
+		}
+		if(productId.Equals(AndroidInap.inapKeys[7])){
+			id = ShopEvents.GOLD_PACK_4;	
+		}
+		return id;
 	}
 
 
 	void queryInventoryFailedEvent( string error )
 	{
-		Debug.Log( "queryInventoryFailedEvent: " + error );
+		ShopEvents.QueryInventoryFailed(error);
 	}
 
 
@@ -72,6 +117,8 @@ public class GoogleIABEventListener : MonoBehaviour
 
 	void purchaseSucceededEvent( GooglePurchase purchase )
 	{
+		string id = GetIdFromProductId(purchase.productId);
+		ShopEvents.PurchaseSucceeded(id);
 		Debug.Log( "purchaseSucceededEvent: " + purchase );
 	}
 
@@ -79,21 +126,23 @@ public class GoogleIABEventListener : MonoBehaviour
 	void purchaseFailedEvent( string error )
 	{
 		Debug.Log( "purchaseFailedEvent: " + error );
+		ShopEvents.PurchaseFailed(error);
 	}
 
 
 	void consumePurchaseSucceededEvent( GooglePurchase purchase )
 	{
+		string id = GetIdFromProductId(purchase.productId);
+		ShopEvents.PurchaseSucceeded(id);
 		Debug.Log( "consumePurchaseSucceededEvent: " + purchase );
 	}
 
 
 	void consumePurchaseFailedEvent( string error )
 	{
+		ShopEvents.PurchaseFailed(error);
 		Debug.Log( "consumePurchaseFailedEvent: " + error );
 	}
-
-
 #endif
 }
 

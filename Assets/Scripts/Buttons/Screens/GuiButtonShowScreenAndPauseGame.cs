@@ -9,6 +9,8 @@ public class GuiButtonShowScreenAndPauseGame : GuiButtonShowScreen {
 			gameObject.SetActive(false);
 			screenLoader.LoadScreenByName(screenToShow);
 			GlobalOptions.GetPlayerScript().PauseGame();
+		}else{
+			screenLoader.LoadScreenByName(screenToShow);
 		}
 	}
 }
