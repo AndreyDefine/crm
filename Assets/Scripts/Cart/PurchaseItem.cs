@@ -4,7 +4,7 @@ using System.Collections;
 public class PurchaseItem : Abstract {
 	
 	public CrmFont price;
-	public CrmFont name;
+	public CrmFont purchaseItemName;
 	public ButtonBuyPerchaseItem button;
 	
 	private PurchaseData purchaseData;
@@ -15,7 +15,6 @@ public class PurchaseItem : Abstract {
 		
 	public void setPurchaseData(PurchaseData purchaseData){
 		this.purchaseData = purchaseData;
-		name.text = purchaseData.name;
 		price.text = purchaseData.price;
 	} 
 	

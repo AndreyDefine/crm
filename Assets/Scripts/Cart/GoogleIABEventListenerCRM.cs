@@ -55,6 +55,14 @@ public class GoogleIABEventListenerCRM : MonoBehaviour
 		Dictionary<string,PurchaseData> inventory = new Dictionary<string, PurchaseData>();
 		Prime31.Utils.logObject( purchases );
 		Prime31.Utils.logObject( skus );
+		
+		ShopEvents.purchasedProductIds = new ArrayList();
+		
+		for(int i=0;i<purchases.Count;i++){
+			GooglePurchase purchase = purchases[i];
+			ShopEvents.purchasedProductIds.Add(purchase.productId);
+		}
+		
 		for(int i=0;i<skus.Count;i++){
 			GoogleSkuInfo sku = skus[i];
 			PurchaseData purchaseData = new PurchaseData();
@@ -88,16 +96,23 @@ public class GoogleIABEventListenerCRM : MonoBehaviour
 		}
 		
 		if(productId.Equals(AndroidInap.inapKeys[4])){
+			id = ShopEvents.COIN_PACK_5;	
+		}
+		
+		if(productId.Equals(AndroidInap.inapKeys[5])){
 			id = ShopEvents.GOLD_PACK_1;	
 		}
-		if(productId.Equals(AndroidInap.inapKeys[5])){
+		if(productId.Equals(AndroidInap.inapKeys[6])){
 			id = ShopEvents.GOLD_PACK_2;	
 		}
-		if(productId.Equals(AndroidInap.inapKeys[6])){
+		if(productId.Equals(AndroidInap.inapKeys[7])){
 			id = ShopEvents.GOLD_PACK_3;	
 		}
-		if(productId.Equals(AndroidInap.inapKeys[7])){
+		if(productId.Equals(AndroidInap.inapKeys[8])){
 			id = ShopEvents.GOLD_PACK_4;	
+		}
+		if(productId.Equals(AndroidInap.inapKeys[9])){
+			id = ShopEvents.GOLD_PACK_5;	
 		}
 		return id;
 	}
@@ -117,6 +132,7 @@ public class GoogleIABEventListenerCRM : MonoBehaviour
 
 	void purchaseSucceededEvent( GooglePurchase purchase )
 	{
+		ShopEvents.purchasedProductIds.Add(purchase.productId);
 		string id = GetIdFromProductId(purchase.productId);
 		ShopEvents.PurchaseSucceeded(id);
 		Debug.Log( "purchaseSucceededEvent: " + purchase );
@@ -132,8 +148,8 @@ public class GoogleIABEventListenerCRM : MonoBehaviour
 
 	void consumePurchaseSucceededEvent( GooglePurchase purchase )
 	{
-		string id = GetIdFromProductId(purchase.productId);
-		ShopEvents.ConsumePurchaseSucceeded(id);
+		ShopEvents.purchasedProductIds.Remove(purchase.productId);
+		ShopEvents.ConsumePurchaseSucceeded(purchase.productId);
 		Debug.Log( "consumePurchaseSucceededEvent: " + purchase );
 	}
 

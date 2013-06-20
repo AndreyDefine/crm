@@ -5,7 +5,7 @@ public interface IInap {
 
 	void InitPurchase();
 	void QueryInventory();
-	void Purchase(PurchaseData purchaseData);
-	void Consume(PurchaseData purchaseData);
+	void Purchase(string productId);
+	void Consume(string productId);
 	
 }

@@ -10,19 +10,20 @@ public class AndroidInap : Abstract, IInap{
 		"coins_pack2",
 		"coins_pack3",
 		"coins_pack4",
+		"coins_pack5",
 		"gold_pack1",
 		"gold_pack2",
 		"gold_pack3",
-		"gold_pack4"
+		"gold_pack4",
+		"gold_pack5"
 	};
 #endif
 	
 #if UNITY_ANDROID
-	void Start(){
+	void OnEnable()
+	{
 		ShopEvents.inap = this;
-		if(ShopEvents.inventory==null){
-			InitPurchase();
-		}
+		ShopEvents.InitPurchase();
 	}
 #endif
 	
@@ -38,15 +39,19 @@ public class AndroidInap : Abstract, IInap{
 		#endif
 	}
 	
-	public void Purchase(PurchaseData purchaseData){
+	public void Purchase(string productId){
 		#if UNITY_ANDROID
-		GoogleIAB.purchaseProduct(purchaseData.productId);
+		if(ShopEvents.purchasedProductIds.Contains(productId)){
+			GoogleIAB.consumeProduct(productId);
+		}else{
+			GoogleIAB.purchaseProduct(productId);
+		}
 		#endif
 	}
 	
-	public void Consume(PurchaseData purchaseData){
+	public void Consume(string productId){
 		#if UNITY_ANDROID
-		GoogleIAB.consumeProduct(purchaseData.productId);
+		GoogleIAB.consumeProduct(productId);
 		#endif
 	}
 }

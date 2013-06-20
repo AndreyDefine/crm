@@ -2,7 +2,12 @@ using UnityEngine;
 using System.Collections;
 
 public class GlobalGold : Abstract {
-
+	
+	void OnEnable()
+	{
+		SetGold(PersonInfo.gold);
+	}
+	
 	public CrmFont crmFont;
 	private bool animationAdded = false;
 	
