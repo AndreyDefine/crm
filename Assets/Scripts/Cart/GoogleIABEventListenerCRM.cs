@@ -133,14 +133,14 @@ public class GoogleIABEventListenerCRM : MonoBehaviour
 	void consumePurchaseSucceededEvent( GooglePurchase purchase )
 	{
 		string id = GetIdFromProductId(purchase.productId);
-		ShopEvents.PurchaseSucceeded(id);
+		ShopEvents.ConsumePurchaseSucceeded(id);
 		Debug.Log( "consumePurchaseSucceededEvent: " + purchase );
 	}
 
 
 	void consumePurchaseFailedEvent( string error )
 	{
-		ShopEvents.PurchaseFailed(error);
+		ShopEvents.ConsumePurchaseFailed(error);
 		Debug.Log( "consumePurchaseFailedEvent: " + error );
 	}
 #endif

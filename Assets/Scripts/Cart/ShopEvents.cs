@@ -43,18 +43,31 @@ public class ShopEvents{
 	}
 	
 	public static void PurchaseSucceeded(string id){
+		//do nothing
+	}
+	
+	public static void ConsumePurchaseSucceeded(string id){
 		if(id.Equals(COIN_PACK_1)){
 			PersonInfo.AddCoins(1000);
 		}
 	}
 	
+	
 	public static void PurchaseFailed(string error){
+		ShowErrorDialog(error);
+	}
+	
+	public static void ConsumePurchaseFailed(string error){
 		ShowErrorDialog(error);
 	}
 	
 	
 	public static void Purchase(PurchaseData purchaseData){
 		inap.Purchase(purchaseData);
+	}
+	
+	public static void Consume(PurchaseData purchaseData){
+		inap.Consume(purchaseData);
 	}
 	
 	//listeners

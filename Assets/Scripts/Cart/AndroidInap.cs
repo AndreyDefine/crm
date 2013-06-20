@@ -43,4 +43,10 @@ public class AndroidInap : Abstract, IInap{
 		GoogleIAB.purchaseProduct(purchaseData.productId);
 		#endif
 	}
+	
+	public void Consume(PurchaseData purchaseData){
+		#if UNITY_ANDROID
+		GoogleIAB.consumeProduct(purchaseData.productId);
+		#endif
+	}
 }
