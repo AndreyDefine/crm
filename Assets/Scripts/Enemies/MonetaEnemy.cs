@@ -53,7 +53,7 @@ public class MonetaEnemy : AbstractEnemy {
 		{
 			return;
 		}
-		singleTransform.Rotate(new Vector3(0,Time.deltaTime*100,0));
+		singleTransform.Rotate(new Vector3(0,Time.deltaTime*playerScript.GetRealVelocityWithNoDeltaTime()*5,0));
 	}
 	
 	public override void initEnemy()

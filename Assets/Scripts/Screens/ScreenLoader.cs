@@ -107,7 +107,7 @@ public class ScreenLoader : MonoBehaviour {
 		}
 		else 
 		{
-			Debug.Log ("2dScreen "+instr);
+			//Debug.Log ("2dScreen "+instr);
 			ActiveScreen=curScreenScript;
 			ActiveScreen.ShowScreen();
 		}

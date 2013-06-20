@@ -26,6 +26,8 @@ public class Player : SpriteTouch {
 	private float timerYahoo;
 	private float timerAltWalk;
 	
+	private float curVelocityWithNoDeltaTime;
+	
 	private float force;
 	
 	private BearAnimation3D bearAnimation; 
@@ -40,6 +42,8 @@ public class Player : SpriteTouch {
 	private Vector3 raznFromWhereToLookAndCharacter;
 	private bool flyingPathChange=false;
 	
+	private GameObject posilka=null;
+	
 	private Vector3 firstWhereToLookLocalPos;
 	
 	private int PathNumber,prevPathNumber;
@@ -48,7 +52,7 @@ public class Player : SpriteTouch {
 	
 	private float VelocityVodka;
 	private float VelocityHeadStart;
-	private float VelocityMushroom;
+	private float VelocityPosilka;
 	
 	private ParticleEmitter HeadStarsParticleEmitter;
 	
@@ -66,9 +70,11 @@ public class Player : SpriteTouch {
 	
 	private Transform particlesTransform;
 	
-	private Transform whereToLookTransform,characterTransform,walkingBearTransform,mainCameraTransform;
+	private Transform whereToLookTransform,characterTransform,walkingBearTransform,mainCameraTransform,blobTransform;
 	
 	private GameObject walkingBear;
+	
+	float stopTime=0,startstopTime=0;//время остановки
 	
 	public void MoveParticlesDown()
 	{
@@ -135,13 +141,16 @@ public class Player : SpriteTouch {
 		PathChanging=false;
 		VelocityVodka=1;
 		VelocityHeadStart=1;
-		VelocityMushroom=1;
+		VelocityPosilka=1;
 		oldMetersz=0;
 		oneMeterz=0;
 		allMeters=0;
 		flagPosilka=false;
 		flagYahoo=false;
 		timerAltWalk=Time.time;
+		
+		stopTime=0;
+		startstopTime=0;
 				
 		accelPriority=1;
 		swallowAcceles=false;
@@ -168,11 +177,13 @@ public class Player : SpriteTouch {
 		flagYahoo=false;
 		timerAltWalk=Time.time;
 		
+		stopTime=0;
+		startstopTime=0;
+		
 		UnMakeHeadStars();
 		UnMakePropeller();
 		UnMakeMagnit();
 		UnMakeVodka();
-		UnMakeMushrooms();
 		GlobalOptions.playerVelocity=startVelocity;
 		GlobalOptions.gameState=GameStates.GAME;
 		
@@ -189,12 +200,29 @@ public class Player : SpriteTouch {
 	{
 		GlobalOptions.gameState=GameStates.PAUSE_MENU;
 		bearAnimation.StopAnimation();
+		if(posilka)
+		{
+			posilka.animation["FlyXYZRotateXYZ"].speed=0;
+		}
+		
+		if(startstopTime==0)
+		{
+			startstopTime=Time.time;
+		}
 	}
 	
 	public void ResumeGame()
 	{
+		stopTime=Time.time-startstopTime;
+		
+		AddAllTimes();
+		
 		GlobalOptions.gameState=GameStates.GAME;
 		bearAnimation.ResumeAnimation();
+		if(posilka)
+		{
+			posilka.animation["FlyXYZRotateXYZ"].speed=1;
+		}
 	}
 	
 	public bool isVodka()
@@ -206,50 +234,46 @@ public class Player : SpriteTouch {
 		return false;
 	}
 	
-	public void MakePosilka()
+	public void MakePosilka(Vector3 moveTo)
 	{
 		
 		GlobalOptions.GetMissionEmmitters().NotifyPostDropped(1);
-		int curPathNumber;
-		//if(PathChanging)
-		//{
-		//	curPathNumber=prevPathNumber;
-		//}
-		//else
+		if(moveTo.x>0)
 		{
-			curPathNumber=PathNumber;
-		}
-		if(curPathNumber==1)
-		{
-			DropPosilkaRight();
+			DropPosilkaDynamic(moveTo);
 			bearAnimation.Posilka_Right();	
-			flagPosilka=true;
-			posilkaTimer=Time.time;
 		}
 		
-		if(curPathNumber==-1)
+		if(moveTo.x<0)
 		{
-			DropPosilkaLeft();
+			DropPosilkaDynamic(moveTo);
 			bearAnimation.Posilka_Left();
-			flagPosilka=true;
-			posilkaTimer=Time.time;
 		}
 	}
 	
-	private void DropPosilkaRight()
+	public void RemovePosilka()
 	{
-		GameObject posilka=Instantiate(PosilkaRight) as GameObject;
-		posilka.transform.position=characterTransform.position+new Vector3(0,2,0);
-		posilka.transform.GetChild(0).animation.Play("DropPostalRight");
-		Destroy(posilka,2);
+		posilka=null;
 	}
 	
-	private void DropPosilkaLeft()
+	private void DropPosilkaDynamic(Vector3 moveTo)
 	{
-		GameObject posilka=Instantiate(PosilkaRight) as GameObject;
-		posilka.transform.position=characterTransform.position+new Vector3(0,2,0);
-		posilka.transform.GetChild(0).animation.Play("DropPostalLeft");
-		Destroy(posilka,2);
+		flagPosilka=true;
+		posilkaTimer=Time.time;
+		VelocityPosilka=0.1f;
+		posilka=Instantiate(PosilkaRight) as GameObject;
+		
+		Abstract posilkaAbstract = posilka.GetComponent<Abstract>();
+		posilkaAbstract.singleTransform.position=characterTransform.position+new Vector3(0,2,2);
+		float flyTime=0.3f/(GetRealVelocityWithNoDeltaTime()/startVelocity);
+		if(moveTo.x>0)
+		{
+			AnimationFactory.FlyXYZRotateXYZ(posilkaAbstract,moveTo,new Vector3(0f,180f,0f), flyTime,"FlyXYZRotateXYZ","FlyXYZRotateXYZStop");
+		}
+		else
+		{
+			AnimationFactory.FlyXYZRotateXYZ(posilkaAbstract,moveTo,new Vector3(0f,-180f,0f), flyTime,"FlyXYZRotateXYZ","FlyXYZRotateXYZStop");
+		}
 	}
 	
 	public void MakeVodka()
@@ -266,7 +290,7 @@ public class Player : SpriteTouch {
 	
 	public void MakeHeadStart()
 	{
-		VelocityHeadStart=1.8f;
+		VelocityHeadStart=2f;
 	}
 	
 	public void UnMakeHeadStart()
@@ -300,18 +324,6 @@ public class Player : SpriteTouch {
 		MakeFlyingUnCharacterControllerEmmidiately(false);
 	}
 	
-	public void MakeMushrooms()
-	{
-		VelocityMushroom=0.7f;
-		(MainCamera.GetComponent("ColorCorrectionEffect") as ColorCorrectionEffect).enabled=true;
-	}
-	
-	public void UnMakeMushrooms()
-	{
-		VelocityMushroom=1;
-		(MainCamera.GetComponent("ColorCorrectionEffect") as ColorCorrectionEffect).enabled=false;
-	}
-	
 	public void MakeHeadStars()
 	{
 		if(GlobalOptions.gameState!=GameStates.GAME_OVER)
@@ -341,9 +353,21 @@ public class Player : SpriteTouch {
 		}
 	}
 	
+	private void AddAllTimes()
+	{
+		if(startstopTime!=0)
+		{
+			posilkaTimer+=stopTime;
+			stopTime=0;
+			startstopTime=0;
+		}
+	}
+	
 
 	// Update is called once per frame
 	void Update () {
+		
+		SetRealVelocityWithNoDeltaTime();
 		if(!worldFactoryScript)
 		{
 			//Get world factory script
@@ -392,12 +416,14 @@ public class Player : SpriteTouch {
 	
 	private void SwitchAnimation()
 	{
-		MakeAltWalk();
-		if(flagPosilka)
+		//no altwalk
+		//MakeAltWalk();
+		if(flagPosilka&&GlobalOptions.gameState==GameStates.GAME)
 		{
-			if(Time.time-posilkaTimer>1)
+			if(Time.time-posilkaTimer>3)
 			{
 				flagPosilka=false;
+				VelocityPosilka=1;
 			}
 		}
 		if(GlobalOptions.playerStates==PlayerStates.WALK||GlobalOptions.playerStates==PlayerStates.FLY){
@@ -553,7 +579,7 @@ public class Player : SpriteTouch {
 		Vector3 charpos=characterTransform.localPosition;
 		float raznost=raznFromWhereToLookAndCharacter.y;
 		float heightDamping=2f;
-		
+				
 		if((characterMarioC.isJumping())&&GlobalOptions.gameState!=GameStates.GAME_OVER)
 		{
 			//Debug.Log ("characterMarioC");
@@ -625,14 +651,19 @@ public class Player : SpriteTouch {
 		return GetRealVelocityWithNoDeltaTime()*Time.deltaTime;
 	}
 	
+	public void SetRealVelocityWithNoDeltaTime()
+	{
+		curVelocityWithNoDeltaTime=GlobalOptions.playerVelocity*VelocityVodka*VelocityHeadStart*VelocityPosilka;
+	}
+	
 	public float GetRealVelocityWithNoDeltaTime()
 	{
-		return GlobalOptions.playerVelocity*VelocityVodka*VelocityHeadStart*VelocityMushroom;
+		return curVelocityWithNoDeltaTime;
 	}
 	
 	public float GetRealVelocityWithDeltaTimeAndNoAcceleration()
 	{
-		return startVelocity*VelocityVodka*VelocityHeadStart*VelocityMushroom*Time.deltaTime;;
+		return startVelocity*VelocityVodka*VelocityHeadStart*VelocityPosilka*Time.deltaTime;;
 	}
 		
 	

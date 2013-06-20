@@ -51,8 +51,11 @@ public class AbstractEnemy : AbstractBaseEnemy {
 	
 	public virtual void MakeInactiveParent()
 	{
-		singleTransform.parent.gameObject.SetActive(false);
-		PutToInactiveList();
+		if(singleTransform)
+		{
+			singleTransform.parent.gameObject.SetActive(false);
+			PutToInactiveList();
+		}
 	}
 	
 	public virtual void MakeAction()

@@ -1,7 +1,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class GuiHeadStart : Abstract {
+public class GuiResurrection : Abstract {
 	
 	private int numberOfBlinks;
 	private int nedeedNumberOfBlinks=3;

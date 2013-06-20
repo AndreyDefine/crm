@@ -23,7 +23,7 @@ public class PropellerEnemy : AbstractEnemy {
 		{
 			return;
 		}
-		singleTransform.Rotate(new Vector3(Time.deltaTime*200,0,0));
+		singleTransform.Rotate(new Vector3(Time.deltaTime*playerScript.GetRealVelocityWithNoDeltaTime()*5,0,0));
 	}
 	
 	public override void ReStart()

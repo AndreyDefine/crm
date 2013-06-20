@@ -104,11 +104,15 @@ public class TerrainTag : AbstractTag{
 	{
 		//получили массив террейнов
 		char []separator={',','\n',' '};
-		string []names=obstacleSetNames.Split(separator);;
+		string []names=obstacleSetNames.Split(separator);
 		obstacleSetNamesArray=names;
 		
-		
 		ReloadUniqueSets();
+	}
+	
+	public string []GetobstacleSetNamesArray()
+	{
+		return obstacleSetNamesArray;
 	}
 	
 	public void ReloadUniqueSets()

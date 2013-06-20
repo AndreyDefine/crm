@@ -242,7 +242,7 @@ public class GlobalOptions {
 	}
 	
 	public static MissionEmmitters GetMissionEmmitters(){
-		if(!missionEmmitters)
+		if(!missionEmmitters&&GameObject.Find("/MissionEmmitters"))
 		{
 			missionEmmitters=GameObject.Find("/MissionEmmitters").GetComponent<MissionEmmitters>();
 		}
