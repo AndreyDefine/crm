@@ -17,6 +17,11 @@ public class PostalEnemy : AbstractEnemy {
 	
 	void Update () {
 		Rotate();
+		
+		if(PersonInfo.post>2)
+		{
+			MakeInactive();
+		}
 	}
 	
 	public void Rotate()

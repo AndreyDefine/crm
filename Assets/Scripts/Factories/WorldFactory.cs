@@ -606,6 +606,12 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 	
 	private void addOneBoostAtMarker(Transform marker,Transform inparent,TerrainTag interrainTag){
 		GameObject newObject;
+		
+		if(Random.Range (0,2)<1)
+		{
+			return;
+		}
+		
 		do
 		{
 			newObject = boostElementFactory.GetNewObject();

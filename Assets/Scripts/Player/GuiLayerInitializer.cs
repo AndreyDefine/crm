@@ -34,13 +34,13 @@ public class GuiLayerInitializer : Abstract {
 	
 	private Player playerScript;
 	private bool flagHeadStars;
-	private bool flagPostal,flagGameOver;
-	private float ScoreScaleTime,scoreTime,headStarsTime,GameOverTime, addToLifeTime;
+	private float ScoreScaleTime,scoreTime,headStarsTime, addToLifeTime;
 	private bool flagX2=false;
 	private bool flagNotTwinkled=true;
 	int curX2 = 0;
 	
 	private GuiHeadStart HeadStart;
+	private GuiResurrection Ress;
 	
 	float stopTime=0,startstopTime=0;//время остановки
 	
@@ -54,7 +54,6 @@ public class GuiLayerInitializer : Abstract {
 			ScoreScaleTime+=stopTime;
 			scoreTime+=stopTime;
 			headStarsTime+=stopTime;
-			GameOverTime+=stopTime;
 			addToLifeTime+=stopTime;
 			stopTime=0;
 			startstopTime=0;
@@ -86,9 +85,21 @@ public class GuiLayerInitializer : Abstract {
 	public void MakeHeadStartButtonPushed(float indistance)
 	{
 		HeadStart.StopTwinkling();
+		playerScript.MakeHeadStart();
+		
 		HeadStartBoost.longTime = indistance;
 		boostNotifierController.AddBoostNotifier(headStartBoostPrefab);
-		playerScript.MakeHeadStart();
+	}
+	
+	public void MakeRessButtonPushed()
+	{
+		Ress.StopTwinkling();
+		playerScript.MakeRess();
+		curLife=MaxLife;
+		
+		HeadStartBoost.longTime = 5;
+		boostNotifierController.AddBoostNotifier(headStartBoostPrefab);
+		pause.SetActive(true);
 	}
 	
 	public void StopHeadStart()
@@ -105,7 +116,6 @@ public class GuiLayerInitializer : Abstract {
 		curLife=MaxLife;
 		nullTime=0;
 		flagHeadStars=false;
-		flagGameOver=false;
 		scoreTime=Time.time;
 		addToLifeTime=Time.time;
 		StopVodka();
@@ -142,6 +152,8 @@ public class GuiLayerInitializer : Abstract {
 				MakeHeadStars();
 			}
 			
+			
+			//headStart
 			if(flagNotTwinkled)
 			{
 				MakeHeadStart();
@@ -157,14 +169,6 @@ public class GuiLayerInitializer : Abstract {
 				}
 				HeadStart.PauseTwinkling();
 				stopTime=Time.time-startstopTime;
-			}
-		}
-		
-		if(GlobalOptions.gameState==GameStates.GAME_OVER)
-		{
-			if(flagGameOver)
-			{
-				MakeGameOver();
 			}
 		}
 	}
@@ -216,6 +220,10 @@ public class GuiLayerInitializer : Abstract {
 	{	
 		//Head Start
 		HeadStart=(Instantiate(GUIHeadStart) as GuiHeadStart);
+		HeadStart.StopTwinkling();
+		
+		Ress=(Instantiate(GUIRess) as GuiResurrection);
+		Ress.StopTwinkling();
 		
 		//simply set score 
 		SetPoints(0);
@@ -347,34 +355,29 @@ public class GuiLayerInitializer : Abstract {
 		downNotifierController.AddMetersNotifier(string.Format ("{0}", inMeters));
 	}
 	
-	public void ShowGameOver()
+	public void GameOver()
 	{
+		HeadStart.StopTwinkling();
 		GlobalOptions.playerStates=PlayerStates.DIE;
 		GlobalOptions.gameState=GameStates.GAME_OVER;
 		playerScript.GameOver();
-		flagGameOver=true;
-		GameOverTime=Time.time;
 		pause.SetActive(false);
+		
+		Ress.StartTwinkling();
 	}
 	
-	private void MakeGameOver()
+	public void ShowGameOverScreen()
 	{
-		HeadStart.StopTwinkling();
-		//gameover
-		if(Time.time-GameOverTime>2)
+		ScreenLoader screenLoader;
+		screenLoader=GlobalOptions.GetScreenLoader();
+		//есть почта
+		if(PersonInfo.post<=0)
 		{
-			flagGameOver=false;
-			ScreenLoader screenLoader;
-			screenLoader=GlobalOptions.GetScreenLoader();
-			//есть почта
-			if(PersonInfo.post<=0)
-			{
-				screenLoader.LoadScreenByName("ScreenGameOver");
-			}
-			else
-			{
-				screenLoader.LoadScreenByName("ScreenPost");
-			}
+			screenLoader.LoadScreenByName("ScreenGameOver");
+		}
+		else
+		{
+			screenLoader.LoadScreenByName("ScreenPost");
 		}
 	}
 	
@@ -410,7 +413,7 @@ public class GuiLayerInitializer : Abstract {
 		curLife+=inlife;
 		if(curLife<=0&&oldlife>0)
 		{
-			ShowGameOver();
+			GameOver();
 			string DeadEvent;
 			if(inTransform)
 			{

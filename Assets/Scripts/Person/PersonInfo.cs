@@ -2,6 +2,9 @@ using UnityEngine;
 using System.Collections;
 
 public class PersonInfo {
+	//кэш
+	private static int _post=-100;
+	
 	private static string TAG = "personal_info_";
 	
 	public static int personLevel{
@@ -18,7 +21,7 @@ public class PersonInfo {
 	
 	public static int coins {
         get {
-            return PlayerPrefs.GetInt(TAG+"coins",2000);
+            return PlayerPrefs.GetInt(TAG+"coins",20000);
         }
     }
 	
@@ -32,7 +35,7 @@ public class PersonInfo {
 	
 	public static int gold {
         get {
-            return PlayerPrefs.GetInt(TAG+"gold",1);
+            return PlayerPrefs.GetInt(TAG+"gold",10);
         }
     }
 	
@@ -46,12 +49,16 @@ public class PersonInfo {
 	
 	public static int post {
         get {
-            return PlayerPrefs.GetInt(TAG+"post",0);
+			
+			if(_post<0){
+            _post=PlayerPrefs.GetInt(TAG+"post",0);}
+			return _post;
         }
     }
 	
 	public static void AddPost(int addPost){
-		PlayerPrefs.SetInt(TAG+"post",post+addPost);
+		_post=post+addPost;
+		PlayerPrefs.SetInt(TAG+"post",_post);
 	}
 	
 	public static string lastFactoryName{
