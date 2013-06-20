@@ -102,6 +102,7 @@ public class Player : SpriteTouch {
 	public BoostFX boostFx;
 	public ParticleSystem moneyCollected;
 	public ParticleSystem vodkaBoom;
+	public ParticleSystem resBoom;
 	
 	public void MakeVodkaBoom()
 	{
@@ -179,6 +180,9 @@ public class Player : SpriteTouch {
 		
 		stopTime=0;
 		startstopTime=0;
+		
+		VelocityPosilka=1;
+		VelocityHeadStart=1;
 		
 		UnMakeHeadStars();
 		UnMakePropeller();
@@ -260,7 +264,16 @@ public class Player : SpriteTouch {
 	{
 		flagPosilka=true;
 		posilkaTimer=Time.time;
-		VelocityPosilka=0.1f;
+		if(VelocityHeadStart>1)
+		{
+			VelocityPosilka=0.6f;
+		}
+		else
+		{
+			VelocityPosilka=0.2f;
+		}
+		
+		SetRealVelocityWithNoDeltaTime();
 		posilka=Instantiate(PosilkaRight) as GameObject;
 		
 		Abstract posilkaAbstract = posilka.GetComponent<Abstract>();
@@ -290,7 +303,18 @@ public class Player : SpriteTouch {
 	
 	public void MakeHeadStart()
 	{
-		VelocityHeadStart=2f;
+		VelocityHeadStart=2.5f;
+	}
+	
+	public void MakeRess()
+	{
+		VelocityHeadStart=1.2f;
+		GlobalOptions.playerStates=PlayerStates.WALK;
+		GlobalOptions.gameState=GameStates.GAME;
+		
+		resBoom.Play();
+		
+		characterMarioC.Respawn();
 	}
 	
 	public void UnMakeHeadStart()
@@ -420,7 +444,7 @@ public class Player : SpriteTouch {
 		//MakeAltWalk();
 		if(flagPosilka&&GlobalOptions.gameState==GameStates.GAME)
 		{
-			if(Time.time-posilkaTimer>3)
+			if(Time.time-posilkaTimer>5/GetRealVelocityWithNoDeltaTime())
 			{
 				flagPosilka=false;
 				VelocityPosilka=1;
@@ -529,6 +553,10 @@ public class Player : SpriteTouch {
 			else{
 				MoveCharacterControllerLeftRight(forcex);
 			}
+		}
+		else
+		{
+			MoveCharacterControllerLeftRight(forcex);
 		}
 		
 		
@@ -661,10 +689,10 @@ public class Player : SpriteTouch {
 		return curVelocityWithNoDeltaTime;
 	}
 	
-	public float GetRealVelocityWithDeltaTimeAndNoAcceleration()
+	/*public float GetRealVelocityWithDeltaTimeAndNoAcceleration()
 	{
 		return startVelocity*VelocityVodka*VelocityHeadStart*VelocityPosilka*Time.deltaTime;;
-	}
+	}*/
 		
 	
 	protected override void InitTouchZone() {
@@ -756,7 +784,7 @@ public class Player : SpriteTouch {
 	private void TestIsFallen(){
 		if(characterTransform.position.y+10<worldFactoryScript.GetCurTerrainCenter())
 		{
-			guiLayer.ShowGameOver();
+			guiLayer.GameOver();
 		}
 	}
 	

@@ -19,7 +19,7 @@ public class CharacterMarioC : Abstract {
 	private float vsletAcceleration=10;
 	private Transform curStumbleTransform=null;
 	
-	private int numberOfTransformsToStumble=3;
+	private int numberOfTransformsToStumble=10;
 	private List<Transform> ListToChangeTransforms=new List<Transform>();
 	private List<int> ListToChangeLayers=new List<int>();
 	
