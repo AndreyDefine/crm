@@ -12,9 +12,7 @@ public class MonetaEnemy : AbstractEnemy {
 	private bool flagRotation=false;
 	
 	private float camx,camy;
-	
-	private bool flagPlusPlayerSpeed=false;
-	
+		
 	private Transform cameraTransform;
 	
 	//private Transform oldParent;
@@ -107,9 +105,8 @@ public class MonetaEnemy : AbstractEnemy {
 				razny=Mathf.Sign(razny)*smex;
 			}
 			
-			if(raznz>smex||flagPlusPlayerSpeed)
+			if(raznz>smex)
 			{
-				flagPlusPlayerSpeed=true;
 				vspz=playerScript.GetRealVelocity();
 			}
 			else
@@ -156,6 +153,5 @@ public class MonetaEnemy : AbstractEnemy {
 	{
 		effectMade=0;
 		flagRotation=false;
-		flagPlusPlayerSpeed=false;
 	}
 }
