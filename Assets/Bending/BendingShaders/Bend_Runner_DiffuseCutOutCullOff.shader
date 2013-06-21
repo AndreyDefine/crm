@@ -1,25 +1,27 @@
-Shader "Shaders/HorizontCutOutDiffuse" {
-Properties 
-{
-    _MainTex ("Texture", 2D) = "white" {}
-    _Cutoff ("Alpha cutoff", Range(0,1)) = 0.5
-}
-
-SubShader 
-{
-    Cull Off    
-    Tags 
-    {
-        "Queue" = "Transparent" 
-        "IgnoreProjector" = "True" 
-        "RenderType" = "TransparentCutoff"
+Shader "BendingShaders/Bend_Runner_DiffuseCutOutCullOff" {
+   Properties {
+      _MainTex ("Texture", 2D) = "white" {}
+      _QOffset ("Offset", Vector) = (14,-12,0,0)
+	  _Dist ("Distance", Float) = 80.0
+	  _Insensitive ("Insensitive", Float) = 0.40
+	  _Cutoff ("Alpha cutoff", Range(0,1)) = 0.5
     }
     
-    	CGINCLUDE
+    SubShader {
+     Tags {  "Queue" = "Transparent" "IgnoreProjector" = "True" "RenderType" = "TransparentCutoff"}
+     Cull Off
+     Pass
+		{
+			CGPROGRAM
+			#pragma vertex vert
+			#pragma fragment frag
+			#include "UnityCG.cginc"
 
-		#include "UnityCG.cginc"
             sampler2D _MainTex;
-            float _Cutoff;
+            float4 _QOffset;
+			float _Dist;
+			float _Insensitive;
+			float _Cutoff;
 			
 			struct v2f {
 			    float4 pos : SV_POSITION;
@@ -27,10 +29,7 @@ SubShader
 			};
 
 			v2f vert (appdata_full v)
-			{
-				float _Dist=80;
-				float nechuvstv=0.40;
-				
+			{				
 			    v2f o;
 			    float4 vPos = mul (UNITY_MATRIX_MV, v.vertex);
 			    
@@ -39,10 +38,10 @@ SubShader
 			    float zOff = vPos.z/_Dist;
 			    
 			    float4	_QOffset=float4(14*xsmeh,-12,0,0);
-			    
-			    if(zOff<-nechuvstv)
+
+			    if(zOff<-_Insensitive)
 			    {
-			    	zOff+=nechuvstv;
+			    	zOff+=_Insensitive;
 			   		vPos += _QOffset*zOff*zOff;
 			    }
 			    
@@ -58,18 +57,6 @@ SubShader
 			    return col;
 			}
 			ENDCG
-    
-    Pass {
-	
-		CGPROGRAM
-		
-		#pragma vertex vert
-		#pragma fragment frag
-		//#pragma fragmentoption ARB_precision_hint_fastest 
-		
-		ENDCG
-		 
 		}
-				
-	} 
+	}
 }
