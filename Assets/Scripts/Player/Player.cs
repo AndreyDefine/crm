@@ -303,7 +303,7 @@ public class Player : SpriteTouch {
 	
 	public void MakeHeadStart()
 	{
-		VelocityHeadStart=2.5f;
+		VelocityHeadStart=1.5f;
 	}
 	
 	public void MakeRess()
