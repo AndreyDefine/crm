@@ -1,14 +1,9 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Cart/AndroidInap.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Player/Player.cs">
     <Files>
-      <File FileName="Assets/Scripts/Cart/ShopEvents.cs" Line="17" Column="45" />
-      <File FileName="Assets/Scripts/Cart/IInap.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Cart/AndroidInap.cs" Line="43" Column="19" />
-      <File FileName="Assets/Scripts/Cart/PurchaseItem.cs" Line="22" Column="22" />
-      <File FileName="Assets/Scripts/Cart/ButtonBuyPerchaseItem.cs" Line="12" Column="24" />
-      <File FileName="Assets/Scripts/Cart/GoogleIABEventListenerCRM.cs" Line="155" Column="1" />
-      <File FileName="Assets/Scripts/Cart/PurchaseData.cs" Line="4" Column="14" />
+      <File FileName="Assets/Scripts/Enemies/MonetaEnemy.cs" Line="110" Column="1" />
+      <File FileName="Assets/Scripts/Player/Player.cs" Line="306" Column="24" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
