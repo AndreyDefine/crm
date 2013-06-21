@@ -389,7 +389,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 									StartCoroutine(addOneObstacleFromSetAtMarker(OneObstacle,curSet.transform,interrainTag,0,FlagCoRoutine));
 								}
 							}
-							if(FlagCoRoutine) yield return null;
+							if(FlagCoRoutine&&j%2==0) yield return null;
 						}
 						
 						if(!MakeObstacleSet)
@@ -414,7 +414,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 				if(!curname.Contains("Left")&&!curname.Contains("Right"))
 				{
 					addOneUniqueAtMarker(curUnique,interrainTag);
-					if(FlagCoRoutine) yield return null;
+					if(FlagCoRoutine&&j%2==0) yield return null;
 				}
 			}
 		}
@@ -423,7 +423,7 @@ public class WorldFactory : AbstractFactory,ScreenControllerToShow {
 		for(i=0;i<markedObjectsTrees.Count;i++){
 			if(curversionForCoRoutine!=versionForCoRoutine) yield break;
 			addOneTreeAtMarker(markedObjectsTrees[i] as Transform,interrainTag);
-			if(FlagCoRoutine) yield return null;
+			if(FlagCoRoutine&&i%2==0) yield return null;
 		}
 		
 		if(curversionForCoRoutine!=versionForCoRoutine) yield break;
